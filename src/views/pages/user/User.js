@@ -7,11 +7,9 @@ import {
   CFormInput,
   CImage,
   CInputGroup,
-  CInputGroupText,
   CNav,
   CNavItem,
   CNavLink,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -35,122 +33,139 @@ import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
 import AddUser from './AddUser'
 import Department from './Department'
 
-export default class User extends Component {
-  render() {
-    return (
-      <>
-        <CNav className="user-nav">
-          <CNavItem>
-            <CNavLink aria-current="page" href="#">
-              <CForm>
-                <CInputGroup>
-                  <CFormInput placeholder="Search" />
-                  <CButton color="secondary">
-                    <i className="fa fa-search"></i>
-                  </CButton>
-                </CInputGroup>
-              </CForm>
-            </CNavLink>
-          </CNavItem>
+const User = () => {
+  const [showAddUserForm, setshowAddUserForm] = React.useState(false)
+  const [showDepartment, setshowDepartment] = React.useState(false)
+
+  return (
+    <>
+      <CNav className="user-nav">
+        <CNavItem>
+          <CNavLink aria-current="page" href="#">
+            <CForm>
+              <CInputGroup>
+                <CFormInput placeholder="Search" />
+                <CButton color="secondary">
+                  <i className="fa fa-search"></i>
+                </CButton>
+              </CInputGroup>
+            </CForm>
+          </CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink className="nav-link" href="#">
+            <CButton
+              className="btn-secondary"
+              onClick={() => {
+                setshowAddUserForm(showAddUserForm ? false : true)
+              }}
+            >
+              + Add a new user
+            </CButton>
+          </CNavLink>
+        </CNavItem>
+        <span className="user-icon-list">
           <CNavItem>
             <CNavLink className="nav-link" href="#">
-              <CButton className="btn-secondary">+ Add a new user</CButton>
+              <CImage src={ImportKPIIcon}></CImage>
             </CNavLink>
           </CNavItem>
-          <span className="user-icon-list">
-            <CNavItem>
-              <CNavLink className="nav-link" href="#">
-                <CImage src={ImportKPIIcon}></CImage>
-              </CNavLink>
-            </CNavItem>
-            <CNavItem>
-              <CNavLink className="nav-link" href="#">
-                <CImage src={UserIcon}></CImage>
-              </CNavLink>
-            </CNavItem>
-          </span>
-        </CNav>
-        <Department />
-        <AddUser />
-        <CContainer className="user-table-container">
-          <span className="table-show-container">
-            <h6>Show</h6>
-            <CFormSelect aria-label="Show" style={{ width: '100px', marginLeft: '10px' }}>
-              <option>10</option>
-              <option value="1">20</option>
-              <option value="2">50</option>
-              <option value="3">100</option>
-            </CFormSelect>
-          </span>
-          {/*Table*/}
-          <CTable>
-            <CTableHead>
-              <CTableRow color="dark">
-                <CTableHeaderCell scope="col">
-                  <CFormCheck />
-                </CTableHeaderCell>
-                <CTableHeaderCell scope="col">NAME</CTableHeaderCell>
-                <CTableHeaderCell scope="col">EMAIL</CTableHeaderCell>
-                <CTableHeaderCell scope="col">DEPARTMENT</CTableHeaderCell>
-                <CTableHeaderCell scope="col">TYPE</CTableHeaderCell>
-                <CTableHeaderCell scope="col">STATUS</CTableHeaderCell>
-                <CTableHeaderCell scope="col">ACTION</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
+          <CNavItem>
+            <CNavLink
+              className="nav-link"
+              href="#"
+              onClick={() => {
+                setshowDepartment(showDepartment ? false : true)
+              }}
+            >
+              <CImage src={UserIcon}></CImage>
+            </CNavLink>
+          </CNavItem>
+        </span>
+      </CNav>
+      {showDepartment ? <Department /> : null}
+      {showAddUserForm ? <AddUser /> : null}
 
-            <CTableBody>
-              <CTableRow>
-                <CTableHeaderCell scope="row">
-                  <CFormCheck />
-                </CTableHeaderCell>
-                <CTableDataCell className="user-table-name">
-                  <CAvatar src={avatar1} color="primary" className="table-avatar" />
-                  <span>
-                    <h6>Edgar Jones</h6>
-                    <p>Systems Administrator</p>
-                  </span>
-                </CTableDataCell>
-                <CTableDataCell>wsomerlie1l@accuweather.com</CTableDataCell>
-                <CTableDataCell>Marketing</CTableDataCell>
-                <CTableDataCell>Admin</CTableDataCell>
-                <CTableDataCell className="text-success">Active</CTableDataCell>
-                <CTableDataCell>Action</CTableDataCell>
-              </CTableRow>
+      <CContainer className="user-table-container">
+        <span className="table-show-container">
+          <h6>Show</h6>
+          <CFormSelect aria-label="Show" style={{ width: '100px', marginLeft: '10px' }}>
+            <option>10</option>
+            <option value="1">20</option>
+            <option value="2">50</option>
+            <option value="3">100</option>
+          </CFormSelect>
+        </span>
+        {/*Table*/}
+        <CTable>
+          <CTableHead>
+            <CTableRow color="dark">
+              <CTableHeaderCell scope="col">
+                <CFormCheck />
+              </CTableHeaderCell>
+              <CTableHeaderCell scope="col">NAME</CTableHeaderCell>
+              <CTableHeaderCell scope="col">EMAIL</CTableHeaderCell>
+              <CTableHeaderCell scope="col">DEPARTMENT</CTableHeaderCell>
+              <CTableHeaderCell scope="col">TYPE</CTableHeaderCell>
+              <CTableHeaderCell scope="col">STATUS</CTableHeaderCell>
+              <CTableHeaderCell scope="col">ACTION</CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
 
-              <CTableRow>
-                <CTableHeaderCell scope="row">
-                  <CFormCheck />
-                </CTableHeaderCell>
-                <CTableDataCell className="user-table-name">
-                  <CAvatar src={avatar2} color="warning" className="table-avatar" />
-                  <span>
-                    <h6>Edgar Jones</h6>
-                    <p>Systems Administrator</p>
-                  </span>
-                </CTableDataCell>
-                <CTableDataCell>wsomerlie1l@accuweather.com</CTableDataCell>
-                <CTableDataCell>Marketing</CTableDataCell>
-                <CTableDataCell>Admin</CTableDataCell>
-                <CTableDataCell className="text-warning">Block</CTableDataCell>
-                <CTableDataCell>Action</CTableDataCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-          <div className="table-page-container">
-            <CPagination aria-label="Page navigation example">
-              <CPaginationItem aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </CPaginationItem>
-              <CPaginationItem active>1</CPaginationItem>
-              <CPaginationItem>2</CPaginationItem>
-              <CPaginationItem>3</CPaginationItem>
-              <CPaginationItem aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </CPaginationItem>
-            </CPagination>
-          </div>
-        </CContainer>
-      </>
-    )
-  }
+          <CTableBody>
+            <CTableRow>
+              <CTableHeaderCell scope="row">
+                <CFormCheck />
+              </CTableHeaderCell>
+              <CTableDataCell className="user-table-name">
+                <CAvatar src={avatar1} color="primary" className="table-avatar" />
+                <span>
+                  <h6>Edgar Jones</h6>
+                  <p>Systems Administrator</p>
+                </span>
+              </CTableDataCell>
+              <CTableDataCell>wsomerlie1l@accuweather.com</CTableDataCell>
+              <CTableDataCell>Marketing</CTableDataCell>
+              <CTableDataCell>Admin</CTableDataCell>
+              <CTableDataCell className="text-success">Active</CTableDataCell>
+              <CTableDataCell>Action</CTableDataCell>
+            </CTableRow>
+
+            <CTableRow>
+              <CTableHeaderCell scope="row">
+                <CFormCheck />
+              </CTableHeaderCell>
+              <CTableDataCell className="user-table-name">
+                <CAvatar src={avatar2} color="warning" className="table-avatar" />
+                <span>
+                  <h6>Edgar Jones</h6>
+                  <p>Systems Administrator</p>
+                </span>
+              </CTableDataCell>
+              <CTableDataCell>wsomerlie1l@accuweather.com</CTableDataCell>
+              <CTableDataCell>Marketing</CTableDataCell>
+              <CTableDataCell>Admin</CTableDataCell>
+              <CTableDataCell className="text-warning">Block</CTableDataCell>
+              <CTableDataCell>Action</CTableDataCell>
+            </CTableRow>
+          </CTableBody>
+        </CTable>
+        <div className="table-page-container">
+          <CPagination aria-label="Page navigation example">
+            <CPaginationItem aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </CPaginationItem>
+            <CPaginationItem active>1</CPaginationItem>
+            <CPaginationItem>2</CPaginationItem>
+            <CPaginationItem>3</CPaginationItem>
+            <CPaginationItem aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </CPaginationItem>
+          </CPagination>
+        </div>
+      </CContainer>
+    </>
+  )
 }
+
+export default User
