@@ -14,7 +14,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 
-import { AppBreadcrumb } from './index'
+import { AppBreadcrumb, AppNavbar } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 
@@ -35,7 +35,7 @@ const AppHeader = () => {
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-          <CNavItem>
+          {/*<CNavItem>
             <CNavLink to="/dashboard" component={NavLink} activeClassName="active">
               Dashboard
             </CNavLink>
@@ -45,7 +45,7 @@ const AppHeader = () => {
           </CNavItem>
           <CNavItem>
             <CNavLink href="#">Settings</CNavLink>
-          </CNavItem>
+          </CNavItem>*/}
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
@@ -70,7 +70,7 @@ const AppHeader = () => {
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>
-        <AppBreadcrumb />
+        <AppNavbar />
       </CContainer>
     </CHeader>
   )

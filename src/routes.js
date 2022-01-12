@@ -50,6 +50,9 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
+const UserInfo = React.lazy(() => import('./views/userinfo/UserInfo'))
+const KpiAdmin = React.lazy(() => import('./views/kpi/KpiAdmin'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
@@ -95,6 +98,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', component: Modals },
   { path: '/notifications/toasts', name: 'Toasts', component: Toasts },
   { path: '/widgets', name: 'Widgets', component: Widgets },
+  { path: '/info', name: 'Info', component: UserInfo },
+  { path: '/kpiadmin', name: 'KPI Admin', component: KpiAdmin },
 ]
 
 export default routes
