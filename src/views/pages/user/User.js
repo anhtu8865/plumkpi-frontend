@@ -72,7 +72,7 @@ export default class User extends Component {
         </CNav>
         <Department />
         <AddUser />
-        <CContainer style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', padding: '30px' }}>
+        <CContainer className="user-table-container">
           <span className="table-show-container">
             <h6>Show</h6>
             <CFormSelect aria-label="Show" style={{ width: '100px', marginLeft: '10px' }}>
@@ -104,7 +104,7 @@ export default class User extends Component {
                   <CFormCheck />
                 </CTableHeaderCell>
                 <CTableDataCell className="user-table-name">
-                  <CAvatar src={avatar1} color="primary" style={{ margin: '8px' }} />
+                  <CAvatar src={avatar1} color="primary" className="table-avatar" />
                   <span>
                     <h6>Edgar Jones</h6>
                     <p>Systems Administrator</p>
@@ -122,7 +122,7 @@ export default class User extends Component {
                   <CFormCheck />
                 </CTableHeaderCell>
                 <CTableDataCell className="user-table-name">
-                  <CAvatar src={avatar2} color="warning" style={{ margin: '8px' }} />
+                  <CAvatar src={avatar2} color="warning" className="table-avatar" />
                   <span>
                     <h6>Edgar Jones</h6>
                     <p>Systems Administrator</p>
