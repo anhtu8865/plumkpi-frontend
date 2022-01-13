@@ -68,10 +68,10 @@ const AppHeader = () => {
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-      <CHeaderDivider />
+      {/*<CHeaderDivider />
       <CContainer fluid>
         <AppNavbar />
-      </CContainer>
+      </CContainer>*/}
     </CHeader>
   )
 }
