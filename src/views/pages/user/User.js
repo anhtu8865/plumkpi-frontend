@@ -39,13 +39,13 @@ const User = () => {
 
   return (
     <>
-      <CNav className="user-nav">
+      <CNav className="user-nav bg-light">
         <CNavItem>
           <CNavLink aria-current="page" href="#">
             <CForm>
               <CInputGroup>
-                <CFormInput placeholder="Search" />
-                <CButton color="secondary">
+                <CFormInput placeholder="Tìm kiếm" />
+                <CButton>
                   <i className="fa fa-search"></i>
                 </CButton>
               </CInputGroup>
@@ -55,12 +55,11 @@ const User = () => {
         <CNavItem>
           <CNavLink className="nav-link" href="#">
             <CButton
-              className="btn-secondary"
               onClick={() => {
                 setshowAddUserForm(showAddUserForm ? false : true)
               }}
             >
-              + Add a new user
+              + Thêm nhân viên
             </CButton>
           </CNavLink>
         </CNavItem>
@@ -88,7 +87,7 @@ const User = () => {
 
       <CContainer className="user-table-container">
         <span className="table-show-container">
-          <h6>Show</h6>
+          <h6>Hiển thị</h6>
           <CFormSelect aria-label="Show" style={{ width: '100px', marginLeft: '10px' }}>
             <option>10</option>
             <option value="1">20</option>
@@ -97,18 +96,18 @@ const User = () => {
           </CFormSelect>
         </span>
         {/*Table*/}
-        <CTable>
+        <CTable striped>
           <CTableHead>
-            <CTableRow color="dark">
+            <CTableRow>
               <CTableHeaderCell scope="col">
                 <CFormCheck />
               </CTableHeaderCell>
-              <CTableHeaderCell scope="col">NAME</CTableHeaderCell>
+              <CTableHeaderCell scope="col">HỌ VÀ TÊN</CTableHeaderCell>
               <CTableHeaderCell scope="col">EMAIL</CTableHeaderCell>
-              <CTableHeaderCell scope="col">DEPARTMENT</CTableHeaderCell>
-              <CTableHeaderCell scope="col">TYPE</CTableHeaderCell>
-              <CTableHeaderCell scope="col">STATUS</CTableHeaderCell>
-              <CTableHeaderCell scope="col">ACTION</CTableHeaderCell>
+              <CTableHeaderCell scope="col">PHÒNG BAN</CTableHeaderCell>
+              <CTableHeaderCell scope="col">CHỨC VỤ</CTableHeaderCell>
+              <CTableHeaderCell scope="col">TRẠNG THÁI</CTableHeaderCell>
+              <CTableHeaderCell scope="col">TÙY CHỌN</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
 
@@ -128,7 +127,10 @@ const User = () => {
               <CTableDataCell>Marketing</CTableDataCell>
               <CTableDataCell>Admin</CTableDataCell>
               <CTableDataCell className="text-success">Active</CTableDataCell>
-              <CTableDataCell>Action</CTableDataCell>
+              <CTableDataCell>
+                <i className="fas fa-edit" style={{ marginRight: '10px' }}></i>
+                <i className="fas fa-trash-alt"></i>
+              </CTableDataCell>
             </CTableRow>
 
             <CTableRow>
@@ -146,7 +148,10 @@ const User = () => {
               <CTableDataCell>Marketing</CTableDataCell>
               <CTableDataCell>Admin</CTableDataCell>
               <CTableDataCell className="text-warning">Block</CTableDataCell>
-              <CTableDataCell>Action</CTableDataCell>
+              <CTableDataCell>
+                <i className="fas fa-edit" style={{ marginRight: '10px' }}></i>
+                <i className="fas fa-trash-alt"></i>
+              </CTableDataCell>
             </CTableRow>
           </CTableBody>
         </CTable>
