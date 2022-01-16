@@ -17,7 +17,7 @@ const AddUser = (props) => {
   return (
     <div className="container">
       <CForm className="userform">
-        <h3 className="userform-item-title">Thêm người dùng mới</h3>
+        <h3 className="userform-item-title">Nhập thông tin cá nhân</h3>
         <div className="userform-item">
           <CRow className="mb-5">
             <CFormLabel htmlFor="inputFirstName" className="col-sm-4 col-form-label">
@@ -96,12 +96,6 @@ const AddUser = (props) => {
               />
             </CCol>
           </fieldset>
-        </div>
-        <div>
-          <CButton className="btn-secondary" style={{ marginRight: '10px' }}>
-            Hủy
-          </CButton>
-          <CButton>Thêm</CButton>
         </div>
       </CForm>
     </div>
