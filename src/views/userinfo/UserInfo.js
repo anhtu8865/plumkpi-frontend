@@ -11,42 +11,21 @@ import {
   CFormInput,
   CFormSelect,
   CRow,
+  CFormFloating,
 } from '@coreui/react'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import { TabPanel, a11yProps } from 'src/components/TabPanel'
-import avatar8 from 'src/assets/images/avatars/8.jpg'
-import Box from '@mui/material/Box'
+import { Tabs, Tab, Box, Button } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
 import LockIcon from '@mui/icons-material/Lock'
-import TextField from '@mui/material/TextField'
-import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
 import CheckIcon from '@mui/icons-material/Check'
+import { TabPanel, a11yProps } from 'src/components/TabPanel'
+import avatar8 from 'src/assets/images/avatars/8.jpg'
 import { styled } from '@mui/material/styles'
-
-const depts = [
-  {
-    value: 'Sales',
-    label: 'Sales',
-  },
-  {
-    value: 'Marketing',
-    label: 'Marketing',
-  },
-]
 
 const UserInfo = () => {
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  }
-
-  const [dept, setDept] = React.useState('Marketing')
-
-  const handleDeptSelectChange = (event) => {
-    setDept(event.target.value)
   }
 
   const Input = styled('input')({
@@ -84,42 +63,32 @@ const UserInfo = () => {
       <>
         <CRow className="mt-2">
           <CCol xs>
-            <TextField
-              fullWidth
-              id="username"
-              label="Họ và tên"
-              defaultValue="John Doe"
-              variant="filled"
-            />
+            <CFormFloating>
+              <CFormInput id="username" placeholder="John Doe" defaultValue="John Doe" />
+              <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
+            </CFormFloating>
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs>
-            <TextField
-              fullWidth
-              id="useremail"
-              type="email"
-              label="Email"
-              defaultValue="johndoe@abc.com"
-              variant="filled"
-            />
+            <CFormFloating>
+              <CFormInput
+                type="email"
+                id="useremail"
+                placeholder="johndoe@abc.com"
+                defaultValue="johndoe@abc.com"
+              />
+              <CFormLabel htmlFor="useremail">Email</CFormLabel>
+            </CFormFloating>
           </CCol>
           <CCol xs>
-            <TextField
-              fullWidth
-              id="userdept"
-              select
-              label="Phòng ban"
-              variant="filled"
-              value={dept}
-              onChange={handleDeptSelectChange}
-            >
-              {depts.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            <CFormFloating>
+              <CFormSelect id="userdept">
+                <option value="1">Sales</option>
+                <option value="2">Marketing</option>
+              </CFormSelect>
+              <CFormLabel htmlFor="userdept">Phòng ban</CFormLabel>
+            </CFormFloating>
           </CCol>
         </CRow>
       </>
@@ -145,29 +114,26 @@ const UserInfo = () => {
       <>
         <CRow>
           <CCol xs={12}>
-            <TextField
-              fullWidth
-              id="oldpw"
-              type="password"
-              label="Mật khẩu hiện tại"
-              variant="filled"
-            />
+            <CFormFloating>
+              <CFormInput type="password" id="oldpw" placeholder="Password" />
+              <CFormLabel htmlFor="oldpw">Mật khẩu hiện tại</CFormLabel>
+            </CFormFloating>
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12}>
-            <TextField fullWidth id="newpw" type="password" label="Mật khẩu mới" variant="filled" />
+            <CFormFloating>
+              <CFormInput type="password" id="newpw" placeholder="Password" />
+              <CFormLabel htmlFor="newpw">Mật khẩu mới</CFormLabel>
+            </CFormFloating>
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12}>
-            <TextField
-              fullWidth
-              id="retypenewpw"
-              type="password"
-              label="Nhập lại mật khẩu mới"
-              variant="filled"
-            />
+            <CFormFloating>
+              <CFormInput type="password" id="retypepw" placeholder="Password" />
+              <CFormLabel htmlFor="retypepw">Nhập lại mật khẩu mới</CFormLabel>
+            </CFormFloating>
           </CCol>
         </CRow>
       </>
