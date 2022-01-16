@@ -68,9 +68,7 @@ const UserInfo = () => {
                   Tải lên
                 </Button>
               </label>
-              <Button variant="outlined" color="error">
-                Xóa bỏ
-              </Button>
+              <Button variant="outlined">Xóa bỏ</Button>
             </div>
           </CCol>
           <CCol xs={12}>
@@ -86,7 +84,13 @@ const UserInfo = () => {
       <>
         <CRow className="mt-2">
           <CCol xs>
-            <TextField fullWidth id="username" label="Họ và tên" defaultValue="John Doe" />
+            <TextField
+              fullWidth
+              id="username"
+              label="Họ và tên"
+              defaultValue="John Doe"
+              variant="filled"
+            />
           </CCol>
         </CRow>
         <CRow className="mt-4">
@@ -97,6 +101,7 @@ const UserInfo = () => {
               type="email"
               label="Email"
               defaultValue="johndoe@abc.com"
+              variant="filled"
             />
           </CCol>
           <CCol xs>
@@ -105,6 +110,7 @@ const UserInfo = () => {
               id="userdept"
               select
               label="Phòng ban"
+              variant="filled"
               value={dept}
               onChange={handleDeptSelectChange}
             >
@@ -139,17 +145,29 @@ const UserInfo = () => {
       <>
         <CRow>
           <CCol xs={12}>
-            <TextField fullWidth id="oldpw" type="password" label="Mật khẩu hiện tại" />
+            <TextField
+              fullWidth
+              id="oldpw"
+              type="password"
+              label="Mật khẩu hiện tại"
+              variant="filled"
+            />
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12}>
-            <TextField fullWidth id="newpw" type="password" label="Mật khẩu mới" />
+            <TextField fullWidth id="newpw" type="password" label="Mật khẩu mới" variant="filled" />
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12}>
-            <TextField fullWidth id="retypenewpw" type="password" label="Nhập lại mật khẩu mới" />
+            <TextField
+              fullWidth
+              id="retypenewpw"
+              type="password"
+              label="Nhập lại mật khẩu mới"
+              variant="filled"
+            />
           </CCol>
         </CRow>
       </>
