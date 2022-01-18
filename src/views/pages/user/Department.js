@@ -8,12 +8,12 @@ export default class Department extends Component {
     return (
       <div className="container">
         <CForm className="department-container">
-          <h3>Departments</h3>
+          <h3>Quản lý phòng ban</h3>
 
           <CInputGroup className="mb-3 department-item">
-            <CInputGroupText>Name</CInputGroupText>
+            <CInputGroupText>Tên</CInputGroupText>
             <CFormInput
-              placeholder="Add a new department"
+              placeholder="Thêm phòng ban mới"
               aria-label="Example text with button addon"
               aria-describedby="button-addon1"
             />

@@ -33,10 +33,8 @@ const Login = () => {
                 <CCardBody>
                   <CForm>
                     <CImage src={KPIlogo} className="login-logo" alt="logo" />
-                    <h4 className="login-title">Welcome to KPI! 👋🏻</h4>
-                    <p className="text-medium-emphasis">
-                      Please sign-in to your account and start the adventure
-                    </p>
+                    <h4 className="login-title">Welcome to PlumKPI! 👋🏻</h4>
+                    <p className="text-medium-emphasis">Đăng nhập với tài khoản của bạn</p>
                     <CForm className="mb-3">
                       <CFormLabel className="form-label">Email</CFormLabel>
                       <CFormInput

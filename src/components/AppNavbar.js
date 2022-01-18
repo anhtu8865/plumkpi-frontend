@@ -69,7 +69,7 @@ const AppNavbar = () => {
                 </CNavLink>
               </CNavItem>
               <CNavItem className="me-3">
-                <CNavLink href="#">
+                <CNavLink href="/user">
                   <CIcon icon={cilPeople} size="sm" className="me-2"></CIcon>
                   Người dùng
                 </CNavLink>
