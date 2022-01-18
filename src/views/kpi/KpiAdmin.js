@@ -9,268 +9,250 @@ import {
   CFormInput,
   CFormSelect,
   CRow,
-  CNav,
-  CNavItem,
-  CNavLink,
-  CTabContent,
-  CTabPane,
-  CTable,
-  CTableBody,
-  CTableRow,
-  CTableDataCell,
-  CTableHeaderCell,
-  CTableHead,
   CModal,
   CModalBody,
   CModalFooter,
   CModalTitle,
   CModalHeader,
+  CFormFloating,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilHighlighter, cilTrash } from '@coreui/icons'
+import { Tabs, Tab, Box, Button, IconButton } from '@mui/material'
+import { TabPanel, a11yProps } from 'src/components/TabPanel'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import AddBoxIcon from '@mui/icons-material/AddBox'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import CheckIcon from '@mui/icons-material/Check'
+import { KpiAdminTable } from './KpiAdminTable'
 
 const KpiAdmin = () => {
-  const [activeKey, setActiveKey] = useState(1)
   const [visible, setVisible] = useState(false)
+
   const [addCatVisible, setAddCatVisible] = useState(false)
+
+  const [value, setValue] = React.useState(0)
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+
+  const AddCategoryButton = () => {
+    return (
+      <>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setAddCatVisible(!addCatVisible)}
+          startIcon={<AddBoxIcon />}
+        >
+          Tạo danh mục KPI
+        </Button>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={addCatVisible}
+          onClose={() => setAddCatVisible(false)}
+        >
+          <CModalHeader>
+            <CModalTitle>Tạo danh mục KPI mới</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol xs>
+                <CFormFloating>
+                  <CFormInput id="catname" placeholder="Tên danh mục" />
+                  <CFormLabel htmlFor="catname">Tên danh mục</CFormLabel>
+                </CFormFloating>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <Button variant="contained" color="success" startIcon={<CheckIcon />}>
+              Xác nhận
+            </Button>
+          </CModalFooter>
+        </CModal>
+      </>
+    )
+  }
+
+  const AddKpiButton = () => {
+    return (
+      <>
+        <Button
+          variant="contained"
+          color="primary"
+          //onClick={() => setVisible(true)}
+          startIcon={<AddCircleIcon />}
+        >
+          Tạo KPI mới
+        </Button>
+        {/*<CModal
+          alignment="center"
+          size="lg"
+          scrollable
+          visible={visible}
+          onClose={() => setVisible(false)}
+        >
+          <CModalHeader>
+            <CModalTitle>Tạo KPI mới</CModalTitle>
+          </CModalHeader>
+          <CModalBody className="mx-4 mb-3">
+            <CRow>
+              <CFormLabel htmlFor="kpiname">Tên KPI</CFormLabel>
+              <CFormInput id="kpiname" placeholder="Nhập tên KPI" />
+            </CRow>
+            <CRow className="mt-2">
+              <CFormLabel htmlFor="kpides">Mô tả KPI</CFormLabel>
+              <CFormInput id="kpides" placeholder="Nhập mô tả KPI" />
+            </CRow>
+            <CRow className="mt-2">
+              <CCol xs={4}>
+                <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
+                <CFormSelect id="freq">
+                  <option>Tuần</option>
+                  <option>Tháng</option>
+                  <option>Quý</option>
+                  <option>Năm</option>
+                </CFormSelect>
+              </CCol>
+              <CCol xs={4}>
+                <CFormLabel htmlFor="direction">Hướng</CFormLabel>
+                <CFormSelect id="direction">
+                  <option>Lên</option>
+                  <option>Xuống</option>
+                </CFormSelect>
+              </CCol>
+              <CCol xs={4}>
+                <CFormLabel htmlFor="category">Danh mục</CFormLabel>
+                <CFormSelect id="category">
+                  <option>Sales</option>
+                  <option>Marketing</option>
+                  <option>Chăm sóc khách hàng</option>
+                </CFormSelect>
+              </CCol>
+            </CRow>
+            <CRow className="mt-2">
+              <CCol xs={4}>
+                <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
+                <CFormInput id="unit" placeholder="Nhập đơn vị tính" />
+              </CCol>
+              <CCol xs={4}>
+                <CFormLabel htmlFor="how">Cách tính</CFormLabel>
+                <CFormSelect id="how">
+                  <option>Tổng</option>
+                  <option>Trung bình</option>
+                </CFormSelect>
+              </CCol>
+            </CRow>
+            <CRow className="mt-2">
+              <CFormLabel htmlFor="formula">Nhập công thức tính</CFormLabel>
+              <CFormInput id="formula" placeholder="Nhập công thức tính" />
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setVisible(false)}>
+              Hủy
+            </CButton>
+            <CButton color="success">Tạo mới</CButton>
+          </CModalFooter>
+        </CModal>*/}
+      </>
+    )
+  }
+
+  const ViewTabs = () => {
+    return (
+      <Box sx={{ width: '100%' }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          sx={{ borderBottom: 1, borderColor: 'divider' }}
+        >
+          <Tab label="Sales" {...a11yProps(0)} />
+          <Tab label="Marketing" {...a11yProps(1)} />
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          <SalesTab />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <MarketingTab />
+        </TabPanel>
+      </Box>
+    )
+  }
+
+  const SalesTab = () => {
+    return (
+      <>
+        <CRow>
+          <div className="d-flex align-items-center flex-row mb-2">
+            <h5 className="me-3">Sales</h5>
+            <div className="mb-2">
+              <IconButton id="cat-name-edit" color="primary">
+                <EditIcon />
+              </IconButton>
+            </div>
+            <div className="mb-2">
+              <IconButton id="cat-delete" color="error">
+                <DeleteForeverIcon />
+              </IconButton>
+            </div>
+          </div>
+        </CRow>
+        <KpiAdminTable />
+      </>
+    )
+  }
+
+  const MarketingTab = () => {
+    return (
+      <>
+        <CRow>
+          <div className="d-flex align-items-center flex-row mb-2">
+            <h5 className="me-3">Marketing</h5>
+            <div className="mb-2">
+              <IconButton id="cat-name-edit" color="primary">
+                <EditIcon />
+              </IconButton>
+            </div>
+            <div className="mb-2">
+              <IconButton id="cat-delete" color="error">
+                <DeleteForeverIcon />
+              </IconButton>
+            </div>
+          </div>
+        </CRow>
+        <KpiAdminTable />
+      </>
+    )
+  }
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol xs={12}>
-            <CCard className="mx-8">
+            <CCard>
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
                     <h5>Quản lý KPI mẫu</h5>
                   </CCol>
                   <CCol xs={6}>
-                    <div className="d-grid gap-1 d-md-flex justify-content-end">
-                      <CButton
-                        component="input"
-                        type="button"
-                        color="success"
-                        value="Tạo KPI"
-                        className="me-md-2"
-                        //onClick={() => setVisible(!visible)}
-                      />
-                      <CModal
-                        alignment="center"
-                        size="lg"
-                        scrollable
-                        visible={visible}
-                        onClose={() => setVisible(false)}
-                      >
-                        <CModalHeader>
-                          <CModalTitle>Tạo KPI mới</CModalTitle>
-                        </CModalHeader>
-                        <CModalBody className="mx-4 mb-3">
-                          <CRow>
-                            <CFormLabel htmlFor="kpiname">Tên KPI</CFormLabel>
-                            <CFormInput id="kpiname" placeholder="Nhập tên KPI" />
-                          </CRow>
-                          <CRow className="mt-2">
-                            <CFormLabel htmlFor="kpides">Mô tả KPI</CFormLabel>
-                            <CFormInput id="kpides" placeholder="Nhập mô tả KPI" />
-                          </CRow>
-                          <CRow className="mt-2">
-                            <CCol xs={4}>
-                              <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
-                              <CFormSelect id="freq">
-                                <option>Tuần</option>
-                                <option>Tháng</option>
-                                <option>Quý</option>
-                                <option>Năm</option>
-                              </CFormSelect>
-                            </CCol>
-                            <CCol xs={4}>
-                              <CFormLabel htmlFor="direction">Hướng</CFormLabel>
-                              <CFormSelect id="direction">
-                                <option>Lên</option>
-                                <option>Xuống</option>
-                              </CFormSelect>
-                            </CCol>
-                            <CCol xs={4}>
-                              <CFormLabel htmlFor="category">Danh mục</CFormLabel>
-                              <CFormSelect id="category">
-                                <option>Sales</option>
-                                <option>Marketing</option>
-                                <option>Chăm sóc khách hàng</option>
-                              </CFormSelect>
-                            </CCol>
-                          </CRow>
-                          <CRow className="mt-2">
-                            <CCol xs={4}>
-                              <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
-                              <CFormInput id="unit" placeholder="Nhập đơn vị tính" />
-                            </CCol>
-                            <CCol xs={4}>
-                              <CFormLabel htmlFor="how">Cách tính</CFormLabel>
-                              <CFormSelect id="how">
-                                <option>Tổng</option>
-                                <option>Trung bình</option>
-                              </CFormSelect>
-                            </CCol>
-                          </CRow>
-                          <CRow className="mt-2">
-                            <CFormLabel htmlFor="formula">Nhập công thức tính</CFormLabel>
-                            <CFormInput id="formula" placeholder="Nhập công thức tính" />
-                          </CRow>
-                        </CModalBody>
-                        <CModalFooter>
-                          <CButton color="secondary" onClick={() => setVisible(false)}>
-                            Hủy
-                          </CButton>
-                          <CButton color="success">Tạo mới</CButton>
-                        </CModalFooter>
-                      </CModal>
-                      <CButton
-                        component="input"
-                        type="button"
-                        color="warning"
-                        value="Tạo danh mục KPI"
-                        className="me-md-2"
-                        onClick={() => setAddCatVisible(!addCatVisible)}
-                      />
-                      <CModal
-                        alignment="center"
-                        size="sm"
-                        scrollable
-                        visible={addCatVisible}
-                        onClose={() => setAddCatVisible(false)}
-                      >
-                        <CModalHeader>
-                          <CModalTitle>Tạo danh mục KPI mới</CModalTitle>
-                        </CModalHeader>
-                        <CModalBody className="mx-4 mb-3">
-                          <CRow>
-                            <CFormLabel htmlFor="catname">Tên danh mục KPI</CFormLabel>
-                            <CFormInput id="catname" placeholder="Nhập tên danh mục KPI" />
-                          </CRow>
-                        </CModalBody>
-                        <CModalFooter>
-                          <CButton color="secondary" onClick={() => setAddCatVisible(false)}>
-                            Hủy
-                          </CButton>
-                          <CButton color="warning">Tạo mới</CButton>
-                        </CModalFooter>
-                      </CModal>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <AddKpiButton />
+                      <AddCategoryButton />
                     </div>
                   </CCol>
                 </CRow>
-                <CNav variant="pills" role="tablist" className="mt-3">
-                  <CNavItem>
-                    <CNavLink
-                      href="javascript:void(0);"
-                      active={activeKey === 1}
-                      onClick={() => setActiveKey(1)}
-                    >
-                      Sales
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="javascript:void(0);"
-                      active={activeKey === 2}
-                      onClick={() => setActiveKey(2)}
-                    >
-                      Marketing
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="javascript:void(0);"
-                      active={activeKey === 3}
-                      onClick={() => setActiveKey(3)}
-                    >
-                      Chăm sóc khách hàng
-                    </CNavLink>
-                  </CNavItem>
-                </CNav>
-                <CTabContent>
-                  <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
-                    <KpiTable />
-                  </CTabPane>
-                  <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey === 2}>
-                    <KpiTable />
-                  </CTabPane>
-                  <CTabPane role="tabpanel" aria-labelledby="contact-tab" visible={activeKey === 3}>
-                    <KpiTable />
-                  </CTabPane>
-                </CTabContent>
+                <ViewTabs />
               </CCardBody>
             </CCard>
           </CCol>
         </CRow>
       </CContainer>
     </div>
-  )
-}
-
-const KpiTable = () => {
-  return (
-    <CTable className="mt-3">
-      <CTableHead color="light" className="dflex">
-        <CTableRow>
-          <CTableHeaderCell scope="col" className="col-10">
-            TÊN KPI
-          </CTableHeaderCell>
-          <CTableHeaderCell scope="col" className="col-1"></CTableHeaderCell>
-          <CTableHeaderCell scope="col" className="col-1"></CTableHeaderCell>
-        </CTableRow>
-      </CTableHead>
-      <CTableBody>
-        <CTableRow>
-          <CTableDataCell>
-            <p className="mb-0">KPI 1</p>
-            <small>Mô tả KPI</small>
-          </CTableDataCell>
-          <CTableDataCell>
-            <CButton color="dark" variant="ghost">
-              <CIcon icon={cilHighlighter} size="lg"></CIcon>
-            </CButton>
-          </CTableDataCell>
-          <CTableDataCell>
-            <CButton color="danger" variant="ghost">
-              <CIcon icon={cilTrash} size="lg"></CIcon>
-            </CButton>
-          </CTableDataCell>
-        </CTableRow>
-        <CTableRow>
-          <CTableDataCell>
-            <p className="mb-0">KPI 1</p>
-            <small>Mô tả KPI</small>
-          </CTableDataCell>
-          <CTableDataCell>
-            <CButton color="dark" variant="ghost">
-              <CIcon icon={cilHighlighter} size="lg"></CIcon>
-            </CButton>
-          </CTableDataCell>
-          <CTableDataCell>
-            <CButton color="danger" variant="ghost">
-              <CIcon icon={cilTrash} size="lg"></CIcon>
-            </CButton>
-          </CTableDataCell>
-        </CTableRow>
-        <CTableRow>
-          <CTableDataCell>
-            <p className="mb-0">KPI 1</p>
-            <small>Mô tả KPI</small>
-          </CTableDataCell>
-          <CTableDataCell>
-            <CButton color="dark" variant="ghost">
-              <CIcon icon={cilHighlighter} size="lg"></CIcon>
-            </CButton>
-          </CTableDataCell>
-          <CTableDataCell>
-            <CButton color="danger" variant="ghost">
-              <CIcon icon={cilTrash} size="lg"></CIcon>
-            </CButton>
-          </CTableDataCell>
-        </CTableRow>
-      </CTableBody>
-    </CTable>
   )
 }
 
