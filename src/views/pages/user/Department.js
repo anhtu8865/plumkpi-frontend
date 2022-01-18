@@ -66,6 +66,21 @@ export default class Department extends Component {
                   </CButton>
                 </CTableDataCell>
               </CTableRow>
+              <CTableRow>
+                <CTableHeaderCell scope="row">
+                  <CFormCheck />
+                </CTableHeaderCell>
+                <CTableDataCell>Nhân sự</CTableDataCell>
+                <CTableDataCell>
+                  <CButton color="dark" variant="ghost">
+                    <CIcon icon={cilHighlighter} size="lg"></CIcon>
+                  </CButton>
+
+                  <CButton color="danger" variant="ghost">
+                    <CIcon icon={cilTrash} size="lg"></CIcon>
+                  </CButton>
+                </CTableDataCell>
+              </CTableRow>
             </CTableBody>
           </CTable>
         </CCard>
