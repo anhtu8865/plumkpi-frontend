@@ -14,7 +14,7 @@ import {
   CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
-import { Tabs, Tab, Box, Button, Alert, Snackbar } from '@mui/material'
+import { Tabs, Tab, Box, Button, Alert, Snackbar, CircularProgress } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
 import LockIcon from '@mui/icons-material/Lock'
 import CheckIcon from '@mui/icons-material/Check'
@@ -33,7 +33,7 @@ const UserInfo = () => {
 
   const [pwSubmitSuccess, setPwSubmitSuccess] = React.useState(false)
 
-  let pwSubmitErrorMessage = ''
+  const [pwSubmitErrorMessage, setPwSubmitErrorMessage] = React.useState('')
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -50,15 +50,18 @@ const UserInfo = () => {
     pwSubmitSuccess ? setPwSubmitSuccess(false) : setPwSubmitError(false)
   }
 
-  const validationSchema = yup.object({
-    oldpw: yup.string().required('Không được để trống'),
+  const pwValidationSchema = yup.object({
+    oldpw: yup
+      .string()
+      .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+      .required('Đây là trường bắt buộc'),
     newpw: yup
       .string()
       .min(6, 'Mật khẩu mới phải có độ dài ít nhất 6 kí tự')
-      .required('Không được để trống'),
+      .required('Đây là trường bắt buộc'),
     retypepw: yup
       .string()
-      .required('Không được để trống')
+      .required('Đây là trường bắt buộc')
       .test('passwords-match', 'Không trùng khớp với mật khẩu mới', function (value) {
         return this.parent.newpw === value
       }),
@@ -148,8 +151,8 @@ const UserInfo = () => {
         newpw: '',
         retypepw: '',
       },
-      validationSchema: validationSchema,
-      /*onSubmit: (values) => {
+      validationSchema: pwValidationSchema,
+      onSubmit: (values) => {
         // assume that we already login
         api
           .put('authentication/password', { oldPassword: values.oldpw, newPassword: values.newpw })
@@ -158,12 +161,12 @@ const UserInfo = () => {
             setPwSubmitError(false)
           })
           .catch((error) => {
+            setPwSubmitErrorMessage(error.response.data.message)
             setPwSubmitError(true)
             setPwSubmitSuccess(false)
-            pwSubmitErrorMessage = error.response.data.message
           })
           .finally(() => formik.setSubmitting(false))
-      },*/
+      },
     })
 
     return (
@@ -246,11 +249,20 @@ const UserInfo = () => {
               Xác nhận
             </Button>
           </div>
+          {formik.isSubmitting && (
+            <CircularProgress
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+              }}
+            />
+          )}
         </form>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={pwSubmitError}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={handleClose}
         >
           <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
@@ -260,7 +272,7 @@ const UserInfo = () => {
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={pwSubmitSuccess}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={handleClose}
         >
           <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
