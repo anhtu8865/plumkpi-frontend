@@ -27,7 +27,7 @@ import {
   CModalFooter,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilHighlighter, cilTrash } from '@coreui/icons'
+import { cilHighlighter, cilTrash, cilBuilding, cilInput } from '@coreui/icons'
 
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -69,7 +69,9 @@ const User = () => {
         <span className="user-icon-list">
           <CNavItem>
             <CNavLink className="nav-link" href="#">
-              <CImage src={ImportKPIIcon}></CImage>
+              <CButton color="dark" variant="ghost">
+                <CIcon icon={cilInput} size="lg"></CIcon>
+              </CButton>
             </CNavLink>
           </CNavItem>
           <CNavItem>
@@ -80,7 +82,9 @@ const User = () => {
                 setshowDepartment(showDepartment ? false : true)
               }}
             >
-              <CImage src={UserIcon}></CImage>
+              <CButton color="dark" variant="ghost">
+                <CIcon icon={cilBuilding} size="lg"></CIcon>
+              </CButton>
             </CNavLink>
           </CNavItem>
         </span>
