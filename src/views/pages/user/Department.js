@@ -1,28 +1,7 @@
-import {
-  CForm,
-  CButton,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CTableHead,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableRow,
-  CTableHeaderCell,
-  CCard,
-  CTableCaption,
-  CFormCheck,
-  CRow,
-  CCol,
-  CFormFloating,
-  CFormLabel,
-} from '@coreui/react'
+import { CFormInput, CRow, CCol, CFormFloating, CFormLabel } from '@coreui/react'
 import React, { Component } from 'react'
-import { Tabs, Tab, Box, Button, IconButton } from '@mui/material'
+import { Button } from '@mui/material'
 
-import CIcon from '@coreui/icons-react'
-import { cilHighlighter, cilTrash, cilBuilding, cilInput } from '@coreui/icons'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 
 import './Department.css'
