@@ -3,6 +3,7 @@ import { IconButton } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import {
+  CAvatar,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -11,22 +12,24 @@ import {
   CTableRow,
   CTableFoot,
 } from '@coreui/react'
+import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
 import CustomTablePagination from 'src/components/TablePagination'
 
-function createData(name, description, unit) {
-  return { name, description, unit }
+function createData(name, avatar, email, dept, role, status) {
+  return { name, avatar, email, dept, role, status }
 }
 
 const rows = [
-  createData('Tên KPI', 'Mô tả KPI', 'Đơn vị KPI'),
-  createData('Tên KPI', 'Mô tả KPI', 'Đơn vị KPI'),
-  createData('Tên KPI', 'Mô tả KPI', 'Đơn vị KPI'),
-  createData('Tên KPI', 'Mô tả KPI', 'Đơn vị KPI'),
-  createData('Tên KPI', 'Mô tả KPI', 'Đơn vị KPI'),
-  createData('Tên KPI', 'Mô tả KPI', 'Đơn vị KPI'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
+  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
 ]
 
-export const KpiAdminTable = () => {
+const UserTable = () => {
   /*const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
@@ -47,9 +50,11 @@ export const KpiAdminTable = () => {
       <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
         <CTableHead color="light">
           <CTableRow>
-            <CTableHeaderCell>KPI</CTableHeaderCell>
-            <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
-            <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+            <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
+            <CTableHeaderCell>EMAIL</CTableHeaderCell>
+            <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
+            <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
+            <CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>
             <CTableHeaderCell />
           </CTableRow>
         </CTableHead>
@@ -60,9 +65,14 @@ export const KpiAdminTable = () => {
             : rows
           )*/ rows.map((row) => (
               <CTableRow v-for="item in tableItems" key={row.name}>
-                <CTableDataCell>{row.name}</CTableDataCell>
-                <CTableDataCell>{row.description}</CTableDataCell>
-                <CTableDataCell>{row.unit}</CTableDataCell>
+                <CTableDataCell>
+                  <CAvatar src={row.avatar} className="me-3" />
+                  {row.name}
+                </CTableDataCell>
+                <CTableDataCell>{row.email}</CTableDataCell>
+                <CTableDataCell>{row.dept}</CTableDataCell>
+                <CTableDataCell>{row.role}</CTableDataCell>
+                <CTableDataCell className="text-success">{row.status}</CTableDataCell>
                 <CTableDataCell className="text-center">
                   <IconButton id="edit" color="primary">
                     <EditIcon />
@@ -105,3 +115,5 @@ export const KpiAdminTable = () => {
     </>
   )
 }
+
+export default UserTable

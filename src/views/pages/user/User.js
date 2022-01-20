@@ -25,9 +25,15 @@ import {
   CModalHeader,
   CModalTitle,
   CModalFooter,
+  CCol,
+  CRow,
+  CCardBody,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilHighlighter, cilTrash, cilBuilding, cilInput } from '@coreui/icons'
+import { Tabs, Tab, Box, Button, IconButton } from '@mui/material'
+import AddBoxIcon from '@mui/icons-material/AddBox'
+import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -41,17 +47,48 @@ import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
 import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
 import AddUser from './AddUser'
 import Department from './Department'
+import UserTable from './UserTable'
 
 const User = () => {
   const [showAddUserForm, setshowAddUserForm] = React.useState(false)
   const [showDepartment, setshowDepartment] = React.useState(false)
 
   return (
-    <>
-      <CNav className="user-nav bg-secondary">
+    <div className="bg-light min-vh-100 d-flex flex-col">
+      <CContainer>
+        <CRow className="justify-content-center">
+          <CCol xs={12}>
+            <CCard>
+              <CCardBody className="p-4">
+                <CRow>
+                  <CCol xs={6}>
+                    <h4>Người dùng</h4>
+                  </CCol>
+                  <CCol xs={6}>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddBoxIcon />}
+                        onClick={() => setshowAddUserForm(true)}
+                      >
+                        Thêm người dùng
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CorporateFareIcon />}
+                        onClick={() => setshowDepartment(true)}
+                      >
+                        Phòng ban
+                      </Button>
+                    </div>
+                  </CCol>
+                </CRow>
+                {/*<CNav className="user-nav bg-white">
         <CNavItem>
           <CNavLink aria-current="page" href="#">
-            <CForm>
+            {/*<CForm>
               <CInputGroup>
                 <CFormInput placeholder="Tìm kiếm" />
                 <CButton>
@@ -63,7 +100,14 @@ const User = () => {
         </CNavItem>
         <CNavItem>
           <CNavLink className="nav-link" href="#">
-            <CButton onClick={() => setshowAddUserForm(!showAddUserForm)}>+ Thêm nhân viên</CButton>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddBoxIcon />}
+              onClick={() => setshowAddUserForm(!showAddUserForm)}
+            >
+              Thêm người dùng
+            </Button>
           </CNavLink>
         </CNavItem>
         <span className="user-icon-list">
@@ -88,25 +132,41 @@ const User = () => {
             </CNavLink>
           </CNavItem>
         </span>
-      </CNav>
-      {showDepartment ? <Department /> : null}
-      <CModal visible={showAddUserForm} onClose={() => setshowAddUserForm(false)}>
-        <CModalHeader>
-          <CModalTitle>Thêm người dùng</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <AddUser />
-        </CModalBody>
-        <CModalFooter>
-          <CButton className="btn-secondary" onClick={() => setshowAddUserForm(false)}>
-            Hủy
-          </CButton>
-          <CButton>Thêm</CButton>
-        </CModalFooter>
-      </CModal>
-      <CCard>
-        <CContainer className="user-table-container">
-          <span className="table-show-container">
+      </CNav>*/}
+                <CModal
+                  scrollable
+                  alignment="center"
+                  size="lg"
+                  visible={showDepartment}
+                  onClose={() => setshowDepartment(false)}
+                >
+                  <CModalHeader>
+                    <CModalTitle>Quản lý phòng ban</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    <Department />
+                  </CModalBody>
+                </CModal>
+                <CModal
+                  scrollable
+                  alignment="center"
+                  size="lg"
+                  visible={showAddUserForm}
+                  onClose={() => setshowAddUserForm(false)}
+                >
+                  <CModalHeader>
+                    <CModalTitle>Thêm người dùng</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    <AddUser />
+                  </CModalBody>
+                  <CModalFooter>
+                    <Button variant="contained" color="success" startIcon={<AddBoxIcon />}>
+                      Thêm
+                    </Button>
+                  </CModalFooter>
+                </CModal>
+                {/*<span className="table-show-container">
             <h6>Hiển thị</h6>
             <CFormSelect aria-label="Show" style={{ width: '100px', marginLeft: '10px' }}>
               <option>10</option>
@@ -114,93 +174,17 @@ const User = () => {
               <option value="2">50</option>
               <option value="3">100</option>
             </CFormSelect>
-          </span>
-          {/*Table*/}
-
-          <CTable striped>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">
-                  <CFormCheck />
-                </CTableHeaderCell>
-                <CTableHeaderCell scope="col">HỌ VÀ TÊN</CTableHeaderCell>
-                <CTableHeaderCell scope="col">EMAIL</CTableHeaderCell>
-                <CTableHeaderCell scope="col">PHÒNG BAN</CTableHeaderCell>
-                <CTableHeaderCell scope="col">CHỨC VỤ</CTableHeaderCell>
-                <CTableHeaderCell scope="col">TRẠNG THÁI</CTableHeaderCell>
-                <CTableHeaderCell scope="col">TÙY CHỌN</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <CTableBody>
-              <CTableRow>
-                <CTableHeaderCell scope="row">
-                  <CFormCheck />
-                </CTableHeaderCell>
-                <CTableDataCell className="user-table-name">
-                  <CAvatar src={avatar1} color="primary" className="table-avatar" />
-                  <span>
-                    <h6>Edgar Jones</h6>
-                    <p>Systems Administrator</p>
-                  </span>
-                </CTableDataCell>
-                <CTableDataCell>wsomerlie1l@accuweather.com</CTableDataCell>
-                <CTableDataCell>Marketing</CTableDataCell>
-                <CTableDataCell>Admin</CTableDataCell>
-                <CTableDataCell className="text-success">Active</CTableDataCell>
-                <CTableDataCell>
-                  <CButton color="dark" variant="ghost">
-                    <CIcon icon={cilHighlighter} size="lg"></CIcon>
-                  </CButton>
-                  <CButton color="danger" variant="ghost">
-                    <CIcon icon={cilTrash} size="lg"></CIcon>
-                  </CButton>
-                </CTableDataCell>
-              </CTableRow>
-
-              <CTableRow>
-                <CTableHeaderCell scope="row">
-                  <CFormCheck />
-                </CTableHeaderCell>
-                <CTableDataCell className="user-table-name">
-                  <CAvatar src={avatar2} color="warning" className="table-avatar" />
-                  <span>
-                    <h6>Edgar Jones</h6>
-                    <p>Systems Administrator</p>
-                  </span>
-                </CTableDataCell>
-                <CTableDataCell>wsomerlie1l@accuweather.com</CTableDataCell>
-                <CTableDataCell>Marketing</CTableDataCell>
-                <CTableDataCell>Admin</CTableDataCell>
-                <CTableDataCell className="text-warning">Block</CTableDataCell>
-                <CTableDataCell>
-                  <CButton color="dark" variant="ghost">
-                    <CIcon icon={cilHighlighter} size="lg"></CIcon>
-                  </CButton>
-                  <CButton color="danger" variant="ghost">
-                    <CIcon icon={cilTrash} size="lg"></CIcon>
-                  </CButton>
-                </CTableDataCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-
-          <div className="table-page-container">
-            <CPagination aria-label="Page navigation example">
-              <CPaginationItem aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </CPaginationItem>
-              <CPaginationItem active>1</CPaginationItem>
-              <CPaginationItem>2</CPaginationItem>
-              <CPaginationItem>3</CPaginationItem>
-              <CPaginationItem aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </CPaginationItem>
-            </CPagination>
-          </div>
-        </CContainer>
-      </CCard>
-    </>
+            </span>*/}
+                {/*Table*/}
+                <div className="mt-2 p-4">
+                  <UserTable />
+                </div>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </CContainer>
+    </div>
   )
 }
 

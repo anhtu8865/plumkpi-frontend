@@ -316,7 +316,7 @@ const UserInfo = () => {
           <CCol xs={10}>
             <CCard>
               <CCardBody className="p-4">
-                <h3>Tài khoản</h3>
+                <h4>Tài khoản</h4>
                 <ViewTabs />
               </CCardBody>
             </CCard>

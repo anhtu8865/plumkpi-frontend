@@ -237,7 +237,7 @@ const KpiAdmin = () => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h5>Quản lý KPI mẫu</h5>
+                    <h4>Quản lý KPI mẫu</h4>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
