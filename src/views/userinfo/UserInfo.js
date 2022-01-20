@@ -12,17 +12,28 @@ import {
   CFormSelect,
   CRow,
   CFormFloating,
+  CFormFeedback,
 } from '@coreui/react'
-import { Tabs, Tab, Box, Button } from '@mui/material'
+import { Tabs, Tab, Box, Button, Alert, Snackbar, CircularProgress } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
 import LockIcon from '@mui/icons-material/Lock'
 import CheckIcon from '@mui/icons-material/Check'
 import { TabPanel, a11yProps } from 'src/components/TabPanel'
 import avatar8 from 'src/assets/images/avatars/8.jpg'
 import { styled } from '@mui/material/styles'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import api from 'src/views/axiosConfig'
+import axios from 'axios'
 
 const UserInfo = () => {
   const [value, setValue] = React.useState(0)
+
+  const [pwSubmitError, setPwSubmitError] = React.useState(false)
+
+  const [pwSubmitSuccess, setPwSubmitSuccess] = React.useState(false)
+
+  const [pwSubmitErrorMessage, setPwSubmitErrorMessage] = React.useState('')
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -30,6 +41,30 @@ const UserInfo = () => {
 
   const Input = styled('input')({
     display: 'none',
+  })
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    pwSubmitSuccess ? setPwSubmitSuccess(false) : setPwSubmitError(false)
+  }
+
+  const pwValidationSchema = yup.object({
+    oldpw: yup
+      .string()
+      .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+      .required('Đây là trường bắt buộc'),
+    newpw: yup
+      .string()
+      .min(6, 'Mật khẩu mới phải có độ dài ít nhất 6 kí tự')
+      .required('Đây là trường bắt buộc'),
+    retypepw: yup
+      .string()
+      .required('Đây là trường bắt buộc')
+      .test('passwords-match', 'Không trùng khớp với mật khẩu mới', function (value) {
+        return this.parent.newpw === value
+      }),
   })
 
   const AvatarUpload = () => {
@@ -109,46 +144,141 @@ const UserInfo = () => {
     )
   }
 
-  const PasswordForm = () => {
-    return (
-      <>
-        <CRow>
-          <CCol xs={12}>
-            <CFormFloating>
-              <CFormInput type="password" id="oldpw" placeholder="Password" />
-              <CFormLabel htmlFor="oldpw">Mật khẩu hiện tại</CFormLabel>
-            </CFormFloating>
-          </CCol>
-        </CRow>
-        <CRow className="mt-4">
-          <CCol xs={12}>
-            <CFormFloating>
-              <CFormInput type="password" id="newpw" placeholder="Password" />
-              <CFormLabel htmlFor="newpw">Mật khẩu mới</CFormLabel>
-            </CFormFloating>
-          </CCol>
-        </CRow>
-        <CRow className="mt-4">
-          <CCol xs={12}>
-            <CFormFloating>
-              <CFormInput type="password" id="retypepw" placeholder="Password" />
-              <CFormLabel htmlFor="retypepw">Nhập lại mật khẩu mới</CFormLabel>
-            </CFormFloating>
-          </CCol>
-        </CRow>
-      </>
-    )
-  }
-
   const PasswordTab = () => {
+    const formik = useFormik({
+      initialValues: {
+        oldpw: '',
+        newpw: '',
+        retypepw: '',
+      },
+      validationSchema: pwValidationSchema,
+      onSubmit: (values) => {
+        // assume that we already login
+        api
+          .put('authentication/password', { oldPassword: values.oldpw, newPassword: values.newpw })
+          .then(() => {
+            setPwSubmitSuccess(true)
+            setPwSubmitError(false)
+          })
+          .catch((error) => {
+            setPwSubmitErrorMessage(error.response.data.message)
+            setPwSubmitError(true)
+            setPwSubmitSuccess(false)
+          })
+          .finally(() => formik.setSubmitting(false))
+      },
+    })
+
     return (
       <>
-        <PasswordForm />
-        <div className="d-grid d-md-flex mt-4">
-          <Button variant="contained" color="success" startIcon={<CheckIcon />}>
-            Xác nhận
-          </Button>
-        </div>
+        <form onSubmit={formik.handleSubmit}>
+          <CRow>
+            <CCol xs={12}>
+              <CFormFloating>
+                <CFormInput
+                  type="password"
+                  id="oldpw"
+                  placeholder="Password"
+                  value={formik.values.oldpw}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.oldpw && formik.errors.oldpw ? true : false}
+                  valid={
+                    !formik.touched.oldpw || (formik.touched.oldpw && formik.errors.oldpw)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.oldpw}</CFormFeedback>
+                <CFormLabel htmlFor="oldpw">Mật khẩu hiện tại</CFormLabel>
+              </CFormFloating>
+            </CCol>
+          </CRow>
+          <CRow className="mt-4">
+            <CCol xs={12}>
+              <CFormFloating>
+                <CFormInput
+                  type="password"
+                  id="newpw"
+                  placeholder="Password"
+                  value={formik.values.newpw}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.newpw && formik.errors.newpw ? true : false}
+                  valid={
+                    !formik.touched.newpw || (formik.touched.newpw && formik.errors.newpw)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.newpw}</CFormFeedback>
+                <CFormLabel htmlFor="newpw">Mật khẩu mới</CFormLabel>
+              </CFormFloating>
+            </CCol>
+          </CRow>
+          <CRow className="mt-4">
+            <CCol xs={12}>
+              <CFormFloating>
+                <CFormInput
+                  type="password"
+                  id="retypepw"
+                  placeholder="Password"
+                  value={formik.values.retypepw}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.retypepw && formik.errors.retypepw ? true : false}
+                  valid={
+                    !formik.touched.retypepw || (formik.touched.retypepw && formik.errors.retypepw)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.retypepw}</CFormFeedback>
+                <CFormLabel htmlFor="retypepw">Nhập lại mật khẩu mới</CFormLabel>
+              </CFormFloating>
+            </CCol>
+          </CRow>
+          <div className="d-grid d-md-flex mt-4">
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              disabled={formik.isSubmitting}
+            >
+              Xác nhận
+            </Button>
+          </div>
+          {formik.isSubmitting && (
+            <CircularProgress
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+              }}
+            />
+          )}
+        </form>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={pwSubmitError}
+          autoHideDuration={3000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
+            {pwSubmitErrorMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={pwSubmitSuccess}
+          autoHideDuration={3000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
+            Thay đổi mật khẩu thành công.
+          </Alert>
+        </Snackbar>
       </>
     )
   }
