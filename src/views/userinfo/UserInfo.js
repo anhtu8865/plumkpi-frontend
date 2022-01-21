@@ -24,7 +24,6 @@ import { styled } from '@mui/material/styles'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
-import axios from 'axios'
 
 const UserInfo = () => {
   const [value, setValue] = React.useState(0)
