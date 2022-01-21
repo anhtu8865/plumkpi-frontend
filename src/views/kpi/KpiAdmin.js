@@ -57,6 +57,8 @@ const KpiAdmin = () => {
 
   const [errorMessage, setErrorMessage] = React.useState('')
 
+  const [reload, setReload] = React.useState(false)
+
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
@@ -74,7 +76,8 @@ const KpiAdmin = () => {
         setError(true)
         setSuccess(false)
       })
-  }, [])
+    setReload(false)
+  }, [reload])
 
   const SuccessErrorToast = () => {
     const handleClose = (event, reason) => {
@@ -127,9 +130,11 @@ const KpiAdmin = () => {
             kpi_category_name: values.editcat,
           })
           .then(() => {
-            setSuccessMessage('Cập nhật danh mục thành công')
-            setSuccess(true)
-            setError(false)
+            //bug toast hiện nhiều lần khi vừa toast vừa reload
+            //setSuccessMessage('Cập nhật danh mục thành công')
+            //setSuccess(true)
+            //setError(false)
+            setReload(true)
           })
           .catch((error) => {
             setErrorMessage(error.response.data.message)
@@ -141,7 +146,6 @@ const KpiAdmin = () => {
             setEditCatModal(false)
             setCatId(0)
             setCatName('')
-            window.location.reload()
           })
       },
     })
@@ -206,17 +210,43 @@ const KpiAdmin = () => {
     )
   }
 
-  const AddCategoryButton = () => {
+  const AddCategoryModal = () => {
+    const ValidationSchema = yup.object({
+      addcat: yup.string().required('Đây là trường bắt buộc'),
+    })
+
+    const formik = useFormik({
+      initialValues: {
+        addcat: '',
+      },
+      validationSchema: ValidationSchema,
+      onSubmit: (values) => {
+        // assume that we already login
+        api
+          .post(`/kpi-categories/`, {
+            kpi_category_name: values.addcat,
+          })
+          .then(() => {
+            //bug toast hiện nhiều lần khi vừa toast vừa reload
+            //setSuccessMessage('Tạo danh mục mới thành công.')
+            //setSuccess(true)
+            //setError(false)
+            setReload(true)
+          })
+          .catch((error) => {
+            setErrorMessage(error.response.data.message)
+            setError(true)
+            setSuccess(false)
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+            setAddCatVisible(false)
+          })
+      },
+    })
+
     return (
-      <>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setAddCatVisible(!addCatVisible)}
-          startIcon={<AddBoxIcon />}
-        >
-          Tạo danh mục KPI
-        </Button>
+      <form onSubmit={formik.handleSubmit}>
         <CModal
           alignment="center"
           scrollable
@@ -230,18 +260,63 @@ const KpiAdmin = () => {
             <CRow className="mt-2 mb-2 mx-2">
               <CCol xs>
                 <CFormFloating>
-                  <CFormInput id="catname" placeholder="Tên danh mục" />
-                  <CFormLabel htmlFor="catname">Tên danh mục</CFormLabel>
+                  <CFormInput
+                    id="addcat"
+                    placeholder="Tên danh mục"
+                    value={formik.values.addcat}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    invalid={formik.touched.addcat && formik.errors.addcat ? true : false}
+                    valid={
+                      !formik.touched.addcat || (formik.touched.addcat && formik.errors.addcat)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CFormLabel htmlFor="editcat">Nhập tên danh mục mới</CFormLabel>
+                  <CFormFeedback invalid>{formik.errors.addcat}</CFormFeedback>
                 </CFormFloating>
               </CCol>
             </CRow>
           </CModalBody>
           <CModalFooter>
-            <Button variant="contained" color="success" startIcon={<CheckIcon />}>
-              Xác nhận
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              onClick={formik.submitForm}
+              disabled={formik.isSubmitting}
+            >
+              Tạo mới
             </Button>
+            {formik.isSubmitting && (
+              <CircularProgress
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                }}
+              />
+            )}
           </CModalFooter>
         </CModal>
+      </form>
+    )
+  }
+
+  const AddCategoryButton = () => {
+    return (
+      <>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setAddCatVisible(true)}
+          startIcon={<AddBoxIcon />}
+        >
+          Tạo danh mục KPI
+        </Button>
+        <AddCategoryModal />
       </>
     )
   }
@@ -403,12 +478,12 @@ const KpiAdmin = () => {
                   </CCol>
                 </CRow>
                 <ViewTabs />
-                <SuccessErrorToast />
               </CCardBody>
             </CCard>
           </CCol>
         </CRow>
       </CContainer>
+      <SuccessErrorToast />
     </div>
   )
 }
