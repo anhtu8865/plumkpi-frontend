@@ -144,13 +144,11 @@ const KpiAdmin = () => {
           .then(() => {
             setSuccessMessage('Cập nhật danh mục thành công')
             setSuccess(true)
-            setError(false)
             setLoading(true)
           })
           .catch((error) => {
             setErrorMessage(error.response.data.message)
             setError(true)
-            setSuccess(false)
           })
           .finally(() => {
             formik.setSubmitting(false)
@@ -240,13 +238,11 @@ const KpiAdmin = () => {
           .then(() => {
             setSuccessMessage('Tạo danh mục mới thành công.')
             setSuccess(true)
-            setError(false)
             setLoading(true)
           })
           .catch((error) => {
             setErrorMessage(error.response.data.message)
             setError(true)
-            setSuccess(false)
           })
           .finally(() => {
             formik.setSubmitting(false)
@@ -325,13 +321,11 @@ const KpiAdmin = () => {
           .then(() => {
             setSuccessMessage('Xóa danh mục thành công.')
             setSuccess(true)
-            setError(false)
             setLoading(true)
           })
           .catch((error) => {
             setErrorMessage(error.response.data.message)
             setError(true)
-            setSuccess(false)
           })
           .finally(() => {
             formik.setSubmitting(false)
@@ -343,42 +337,27 @@ const KpiAdmin = () => {
 
     return (
       <form onSubmit={formik.handleSubmit}>
-        <CModal
-          alignment="center"
-          scrollable
-          visible={deleteCatModal}
-          onClose={() => setDeleteCatModal(false)}
-        >
-          <CModalHeader>
-            <CModalTitle>Xóa danh mục</CModalTitle>
-          </CModalHeader>
-          <CModalBody>
-            <CRow className="mt-2 mb-2 mx-2">
-              <CCol xs>Bạn có chắc muốn xóa danh mục này?</CCol>
-            </CRow>
-          </CModalBody>
-          <CModalFooter>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteForeverIcon />}
-              type="submit"
-              onClick={formik.submitForm}
-              disabled={formik.isSubmitting}
-            >
-              Xóa bỏ
-            </Button>
-            {formik.isSubmitting && (
-              <CircularProgress
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                }}
-              />
-            )}
-          </CModalFooter>
-        </CModal>
+        <CModalFooter>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<DeleteForeverIcon />}
+            type="submit"
+            onClick={formik.submitForm}
+            disabled={formik.isSubmitting}
+          >
+            Xóa bỏ
+          </Button>
+          {formik.isSubmitting && (
+            <CircularProgress
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+              }}
+            />
+          )}
+        </CModalFooter>
       </form>
     )
   }
@@ -532,8 +511,25 @@ const KpiAdmin = () => {
                       }}
                     >
                       <DeleteForeverIcon />
+                      <CModal
+                        alignment="center"
+                        scrollable
+                        visible={deleteCatModal}
+                        onClose={() => setDeleteCatModal(false)}
+                      >
+                        <CModalHeader>
+                          <CModalTitle>Xóa danh mục</CModalTitle>
+                        </CModalHeader>
+                        <CModalBody>
+                          <CRow className="mt-2 mb-2 mx-2">
+                            <CCol xs>
+                              Bạn có chắc muốn xóa danh mục {catItem.kpi_category_name}?
+                            </CCol>
+                          </CRow>
+                        </CModalBody>
+                        <DeleteCategoryModal />
+                      </CModal>
                     </IconButton>
-                    <DeleteCategoryModal />
                   </div>
                 </div>
               </CRow>

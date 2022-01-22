@@ -26,6 +26,14 @@ import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 
 const UserInfo = () => {
+  /*React.useEffect(() => {
+    api
+      .get('authentication')
+      .then((response) => alert(JSON.stringify(response.data)))
+      .catch((error) => {
+        alert(JSON.stringify(error))
+      })
+  }, [])*/
   const [value, setValue] = React.useState(0)
 
   const [pwSubmitError, setPwSubmitError] = React.useState(false)
@@ -33,6 +41,8 @@ const UserInfo = () => {
   const [pwSubmitSuccess, setPwSubmitSuccess] = React.useState(false)
 
   const [pwSubmitErrorMessage, setPwSubmitErrorMessage] = React.useState('')
+
+  const [pwSubmitSuccessMessage, setPwSubmitSuccessMessage] = React.useState('')
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -67,6 +77,38 @@ const UserInfo = () => {
   })
 
   const AvatarUpload = () => {
+    const [selectedFile, setSelectedFile] = React.useState(null)
+
+    const changeHandle = (event) => {
+      setSelectedFile(event.target.files[0])
+      //alert(JSON.stringify(event.target.files[0]))
+    }
+
+    /*const submitHandle = () => {
+      const formData = new FormData()
+
+      formData.append('myFile', selectedFile, selectedFile.name)
+      api
+        .post('authentication/avatar', { file: formData })
+        .then(() => alert('k'))
+        .catch((error) => {
+          alert(JSON.stringify(error))
+        })
+    }*/
+
+    const deleteHandle = () => {
+      api
+        .delete('authentication/avatar')
+        .then(() => {
+          setPwSubmitSuccessMessage('Xóa avatar thành công.')
+          setPwSubmitSuccess(true)
+        })
+        .catch((error) => {
+          setPwSubmitErrorMessage(error.response.data.message)
+          setPwSubmitError(true)
+        })
+    }
+
     return (
       <CRow>
         <CCol xs={1}>
@@ -75,13 +117,17 @@ const UserInfo = () => {
         <CCol xs={11}>
           <CCol xs={12}>
             <div className="d-grid gap-2 d-md-flex ms-4">
-              <label htmlFor="contained-button-file">
-                <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                <Button variant="contained" component="span">
-                  Tải lên
-                </Button>
-              </label>
-              <Button variant="outlined">Xóa bỏ</Button>
+              <input
+                accept="image/*"
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={(event) => changeHandle(event)}
+              />
+              <Button /*onClick={() => submitHandle()}*/ variant="contained">Tải lên</Button>
+              <Button variant="outlined" onClick={() => deleteHandle()}>
+                Xóa bỏ
+              </Button>
             </div>
           </CCol>
           <CCol xs={12}>
@@ -156,13 +202,12 @@ const UserInfo = () => {
         api
           .put('authentication/password', { oldPassword: values.oldpw, newPassword: values.newpw })
           .then(() => {
+            setPwSubmitSuccessMessage('Thay đổi mật khẩu thành công.')
             setPwSubmitSuccess(true)
-            setPwSubmitError(false)
           })
           .catch((error) => {
             setPwSubmitErrorMessage(error.response.data.message)
             setPwSubmitError(true)
-            setPwSubmitSuccess(false)
           })
           .finally(() => formik.setSubmitting(false))
       },
@@ -258,26 +303,6 @@ const UserInfo = () => {
             />
           )}
         </form>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={pwSubmitError}
-          autoHideDuration={3000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
-            {pwSubmitErrorMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={pwSubmitSuccess}
-          autoHideDuration={3000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
-            Thay đổi mật khẩu thành công.
-          </Alert>
-        </Snackbar>
       </>
     )
   }
@@ -322,6 +347,26 @@ const UserInfo = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={pwSubmitError}
+        autoHideDuration={3000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
+          {pwSubmitErrorMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={pwSubmitSuccess}
+        autoHideDuration={3000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
+          {pwSubmitSuccessMessage}
+        </Alert>
+      </Snackbar>
     </div>
   )
 }
