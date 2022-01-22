@@ -57,7 +57,13 @@ const KpiAdmin = () => {
 
   const [errorMessage, setErrorMessage] = React.useState('')
 
-  const [reload, setReload] = React.useState(false)
+  const [reload, setReload] = React.useState(true)
+
+  const [deleteCatId, setDeleteCatId] = React.useState(0)
+
+  const [deleteCatModal, setDeleteCatModal] = React.useState(false)
+
+  const [loading, setLoading] = React.useState(true)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -77,6 +83,7 @@ const KpiAdmin = () => {
         setSuccess(false)
       })
     setReload(false)
+    setLoading(false)
   }, [reload])
 
   const SuccessErrorToast = () => {
@@ -84,7 +91,12 @@ const KpiAdmin = () => {
       if (reason === 'clickaway') {
         return
       }
-      success ? setSuccess(false) : setError(false)
+      if (success == true) {
+        setSuccess(false)
+        setReload(true)
+      } else {
+        setError(false)
+      }
     }
 
     return (
@@ -102,7 +114,7 @@ const KpiAdmin = () => {
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={success}
-          autoHideDuration={3000}
+          autoHideDuration={1000}
           onClose={handleClose}
         >
           <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
@@ -130,11 +142,10 @@ const KpiAdmin = () => {
             kpi_category_name: values.editcat,
           })
           .then(() => {
-            //bug toast hiện nhiều lần khi vừa toast vừa reload
-            //setSuccessMessage('Cập nhật danh mục thành công')
-            //setSuccess(true)
-            //setError(false)
-            setReload(true)
+            setSuccessMessage('Cập nhật danh mục thành công')
+            setSuccess(true)
+            setError(false)
+            setLoading(true)
           })
           .catch((error) => {
             setErrorMessage(error.response.data.message)
@@ -227,11 +238,10 @@ const KpiAdmin = () => {
             kpi_category_name: values.addcat,
           })
           .then(() => {
-            //bug toast hiện nhiều lần khi vừa toast vừa reload
-            //setSuccessMessage('Tạo danh mục mới thành công.')
-            //setSuccess(true)
-            //setError(false)
-            setReload(true)
+            setSuccessMessage('Tạo danh mục mới thành công.')
+            setSuccess(true)
+            setError(false)
+            setLoading(true)
           })
           .catch((error) => {
             setErrorMessage(error.response.data.message)
@@ -289,6 +299,74 @@ const KpiAdmin = () => {
               disabled={formik.isSubmitting}
             >
               Tạo mới
+            </Button>
+            {formik.isSubmitting && (
+              <CircularProgress
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                }}
+              />
+            )}
+          </CModalFooter>
+        </CModal>
+      </form>
+    )
+  }
+
+  const DeleteCategoryModal = () => {
+    const formik = useFormik({
+      initialValues: { deletedelete: '' },
+      onSubmit: (values) => {
+        // assume that we already login
+        api
+          .delete(`/kpi-categories/${deleteCatId}`)
+          .then(() => {
+            setSuccessMessage('Xóa danh mục thành công.')
+            setSuccess(true)
+            setError(false)
+            setLoading(true)
+          })
+          .catch((error) => {
+            setErrorMessage(error.response.data.message)
+            setError(true)
+            setSuccess(false)
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+            setDeleteCatModal(false)
+            setDeleteCatId(0)
+          })
+      },
+    })
+
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={deleteCatModal}
+          onClose={() => setDeleteCatModal(false)}
+        >
+          <CModalHeader>
+            <CModalTitle>Xóa danh mục</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol xs>Bạn có chắc muốn xóa danh mục này?</CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<DeleteForeverIcon />}
+              type="submit"
+              onClick={formik.submitForm}
+              disabled={formik.isSubmitting}
+            >
+              Xóa bỏ
             </Button>
             {formik.isSubmitting && (
               <CircularProgress
@@ -445,9 +523,17 @@ const KpiAdmin = () => {
                     <EditCategoryModal />
                   </div>
                   <div className="mb-2">
-                    <IconButton id="cat-delete" color="error">
+                    <IconButton
+                      id="cat-delete"
+                      color="error"
+                      onClick={() => {
+                        setDeleteCatModal(true)
+                        setDeleteCatId(catItem.kpi_category_id)
+                      }}
+                    >
                       <DeleteForeverIcon />
                     </IconButton>
+                    <DeleteCategoryModal />
                   </div>
                 </div>
               </CRow>
@@ -478,6 +564,15 @@ const KpiAdmin = () => {
                   </CCol>
                 </CRow>
                 <ViewTabs />
+                {loading && (
+                  <CircularProgress
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                    }}
+                  />
+                )}
               </CCardBody>
             </CCard>
           </CCol>
