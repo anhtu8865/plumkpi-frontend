@@ -15,17 +15,9 @@ import {
   CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
-import {
-  Tabs,
-  Tab,
-  Box,
-  Button,
-  IconButton,
-  CircularProgress,
-  Snackbar,
-  Alert,
-} from '@mui/material'
+import { Tabs, Tab, Box, Button, IconButton, Snackbar, Alert } from '@mui/material'
 import { TabPanel, a11yProps } from 'src/components/TabPanel'
+import { LoadingCircle } from 'src/components/LoadingCircle'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import AddBoxIcon from '@mui/icons-material/AddBox'
@@ -91,7 +83,7 @@ const KpiAdmin = () => {
       if (reason === 'clickaway') {
         return
       }
-      if (success == true) {
+      if (success === true) {
         setSuccess(false)
         setReload(true)
       } else {
@@ -204,15 +196,7 @@ const KpiAdmin = () => {
             >
               Xác nhận
             </Button>
-            {formik.isSubmitting && (
-              <CircularProgress
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                }}
-              />
-            )}
+            {formik.isSubmitting && <LoadingCircle />}
           </CModalFooter>
         </CModal>
       </form>
@@ -296,15 +280,7 @@ const KpiAdmin = () => {
             >
               Tạo mới
             </Button>
-            {formik.isSubmitting && (
-              <CircularProgress
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                }}
-              />
-            )}
+            {formik.isSubmitting && <LoadingCircle />}
           </CModalFooter>
         </CModal>
       </form>
@@ -348,15 +324,7 @@ const KpiAdmin = () => {
           >
             Xóa bỏ
           </Button>
-          {formik.isSubmitting && (
-            <CircularProgress
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-              }}
-            />
-          )}
+          {formik.isSubmitting && <LoadingCircle />}
         </CModalFooter>
       </form>
     )
@@ -560,15 +528,7 @@ const KpiAdmin = () => {
                   </CCol>
                 </CRow>
                 <ViewTabs />
-                {loading && (
-                  <CircularProgress
-                    sx={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                    }}
-                  />
-                )}
+                {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>
           </CCol>
