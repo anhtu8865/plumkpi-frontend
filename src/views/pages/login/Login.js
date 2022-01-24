@@ -47,9 +47,11 @@ const Login = () => {
       .post('authentication/log-in', { email: values.email, password: values.password })
       .then((res) => {
         alert('OK')
-        console.log(res)
+        console.log(res.data)
       })
-      .catch((error) => {})
+      .catch((error) => {
+        alert(error)
+      })
       .finally(() => formik.setSubmitting(false))
   }
 
