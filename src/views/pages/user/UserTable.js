@@ -15,19 +15,40 @@ import {
 import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
 import CustomTablePagination from 'src/components/TablePagination'
 
-function createData(name, avatar, email, dept, role, status) {
-  return { name, avatar, email, dept, role, status }
+import api from 'src/views/axiosConfig'
+import axios from 'axios'
+
+function createData(id, name, avatar, email, dept, role, status) {
+  return { id, name, avatar, email, dept, role, status }
 }
 
-const rows = [
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-  createData('Edgar Jones', avatar1, 'wsomerlie1l@accuweather.com', 'Marketing', 'Admin', 'Active'),
-]
+/*const rows = [
+  createData(
+    '1',
+    'Edgar Jones',
+    avatar1,
+    'wsomerlie1l@accuweather.com',
+    'Marketing',
+    'Admin',
+    'Active',
+  ),
+]*/
+
+let rows = []
+function getAllUser() {
+  api
+    .get('users')
+    .then(function (res) {
+      rows = [...rows, ...res.data.items]
+      console.log(rows)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+    .then(function () {})
+}
+
+getAllUser()
 
 const UserTable = () => {
   /*const [page, setPage] = React.useState(0)
@@ -50,6 +71,7 @@ const UserTable = () => {
       <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
         <CTableHead color="light">
           <CTableRow>
+            <CTableHeaderCell>ID</CTableHeaderCell>
             <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
             <CTableHeaderCell>EMAIL</CTableHeaderCell>
             <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
@@ -65,12 +87,13 @@ const UserTable = () => {
             : rows
           )*/ rows.map((row) => (
               <CTableRow v-for="item in tableItems" key={row.name}>
+                <CTableDataCell>{row.user_id}</CTableDataCell>
                 <CTableDataCell>
-                  <CAvatar src={row.avatar} className="me-3" />
-                  {row.name}
+                  <CAvatar src={avatar1} className="me-3" />
+                  {row.user_name}
                 </CTableDataCell>
                 <CTableDataCell>{row.email}</CTableDataCell>
-                <CTableDataCell>{row.dept}</CTableDataCell>
+                <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
                 <CTableDataCell>{row.role}</CTableDataCell>
                 <CTableDataCell className="text-success">{row.status}</CTableDataCell>
                 <CTableDataCell className="text-center">

@@ -29,7 +29,7 @@ import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
 const validationSchema = yup.object({
-  email: yup.string().required('Đây là trường bắt buộc'),
+  email: yup.string().email().required('Đây là trường bắt buộc'),
   password: yup
     .string()
     .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
