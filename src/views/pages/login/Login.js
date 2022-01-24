@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+
 import {
   CButton,
   CCard,
@@ -11,18 +11,55 @@ import {
   CFormInput,
   CFormLabel,
   CImage,
-  CInputGroup,
-  CInputGroupText,
   CRow,
+  CFormFeedback,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+
+import { CircularProgress } from '@mui/material'
 
 import KPIlogo from 'src/assets/plum-kpi-img/logo.png'
 
 import './Login.css'
 
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import api from 'src/views/axiosConfig'
+import axios from 'axios'
+
+const validationSchema = yup.object({
+  email: yup.string().required('Đây là trường bắt buộc'),
+  password: yup
+    .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+    .string()
+    .required('Đây là trường bắt buộc'),
+})
+
 const Login = () => {
+  const [loginSubmitError, setLoginSubmitError] = React.useState(false)
+
+  const [loginSubmitSuccess, setLoginSubmitSuccess] = React.useState(false)
+
+  const [loginSubmitErrorMessage, setLoginSubmitErrorMessage] = React.useState('')
+
+  const onSubmit = (values) => {
+    console.log(values)
+    api
+      .post('authentication/log-in', { email: values.email, password: values.password })
+      .then((res) => {
+        alert('OK')
+        console.log(res)
+      })
+      .catch((error) => {})
+      .finally(() => formik.setSubmitting(false))
+  }
+
+  const formik = useFormik({
+    initialValues: { email: '', password: '' },
+    validateOnBlur: true,
+    onSubmit,
+    validationSchema: validationSchema,
+  })
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -31,38 +68,60 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <form onSubmit={formik.handleSubmit}>
                     <CImage src={KPIlogo} className="login-logo" alt="logo" />
                     <h4 className="login-title">Welcome to PlumKPI! 👋🏻</h4>
                     <p className="text-medium-emphasis">Đăng nhập với tài khoản của bạn</p>
-                    <CForm className="mb-3">
+                    <div className="mb-3">
                       <CFormLabel className="form-label">Email</CFormLabel>
                       <CFormInput
+                        name="email"
                         className="form-control"
-                        id="exampleFormControlInput1"
-                        type="email"
                         placeholder="test@example.com"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        invalid={formik.touched.email && formik.errors.email ? true : false}
+                        valid={
+                          !formik.touched.email || (formik.touched.email && formik.errors.email)
+                            ? false
+                            : true
+                        }
                       />
-                    </CForm>
-                    <CForm className="mb-3">
+                      <CFormFeedback invalid>{formik.errors.email}</CFormFeedback>
+                    </div>
+                    <div className="mb-3">
                       <CFormLabel className="form-label">Password</CFormLabel>
                       <CFormInput
+                        name="password"
                         className="form-control"
-                        id="exampleFormControlInput1"
                         type="password"
                         placeholder="⚉ ⚉ ⚉ ⚉ ⚉ ⚉ ⚉ ⚉"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        invalid={formik.touched.password && formik.errors.password ? true : false}
+                        valid={
+                          !formik.touched.password ||
+                          (formik.touched.password && formik.errors.password)
+                            ? false
+                            : true
+                        }
                       />
-                    </CForm>
+                      <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
+                    </div>
                     <CRow>
                       <CCol>
                         <div className="d-grid gap-2 mx-auto">
-                          <CButton className="btn btn-primary" type="button">
-                            Login
+                          <CButton
+                            className="btn btn-primary"
+                            type="submit"
+                            disabled={!formik.isValid}
+                          >
+                            Đăng nhập
                           </CButton>
                         </div>
                       </CCol>
                     </CRow>
-                  </CForm>
+                  </form>
                 </CCardBody>
               </CCard>
             </CCardGroup>
