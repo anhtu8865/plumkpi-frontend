@@ -17,6 +17,8 @@ import {
 
 import { CircularProgress } from '@mui/material'
 
+import { useHistory } from 'react-router-dom'
+
 import KPIlogo from 'src/assets/plum-kpi-img/logo.png'
 
 import './Login.css'
@@ -29,12 +31,14 @@ import axios from 'axios'
 const validationSchema = yup.object({
   email: yup.string().required('Đây là trường bắt buộc'),
   password: yup
-    .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
     .string()
+    .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
     .required('Đây là trường bắt buộc'),
 })
 
 const Login = () => {
+  const history = useHistory()
+
   const [loginSubmitError, setLoginSubmitError] = React.useState(false)
 
   const [loginSubmitSuccess, setLoginSubmitSuccess] = React.useState(false)
@@ -46,11 +50,11 @@ const Login = () => {
     api
       .post('authentication/log-in', { email: values.email, password: values.password })
       .then((res) => {
-        alert('OK')
+        history.push('/kpi-admin')
         console.log(res.data)
       })
       .catch((error) => {
-        alert(error)
+        alert('Đăng nhập thất bại')
       })
       .finally(() => formik.setSubmitting(false))
   }
