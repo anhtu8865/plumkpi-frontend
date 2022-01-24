@@ -14,7 +14,7 @@ import {
   CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
-import { Tabs, Tab, Box, Button, Alert, Snackbar } from '@mui/material'
+import { Tabs, Tab, Box, Button, Alert, Snackbar, Avatar } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
 import LockIcon from '@mui/icons-material/Lock'
 import CheckIcon from '@mui/icons-material/Check'
@@ -51,6 +51,8 @@ const UserInfo = () => {
         }
         if (response.data.avatar != null) {
           setAva(response.data.avatar.url)
+        } else {
+          setAva(defaultava)
         }
       })
       .catch((error) => {
@@ -80,52 +82,59 @@ const UserInfo = () => {
 
     const changeHandle = (event) => {
       setSelectedFile(event.target.files[0])
-      //alert(JSON.stringify(event.target.files[0]))
     }
 
-    /*const submitHandle = () => {
+    const submitHandle = () => {
+      setLoading(true)
       const formData = new FormData()
 
-      formData.append('myFile', selectedFile, selectedFile.name)
+      formData.append('file', selectedFile)
       api
-        .post('authentication/avatar', { file: formData })
-        .then(() => alert('k'))
-        .catch((error) => {
-          alert(JSON.stringify(error))
+        .post('authentication/avatar', formData)
+        .then(() => {
+          setPwSubmitSuccessMessage('Thay đổi avatar thành công.')
+          setPwSubmitSuccess(true)
+          setLoading(true)
         })
-    }*/
+        .catch((error) => {
+          setPwSubmitErrorMessage(error.response.data.message)
+          setPwSubmitError(true)
+          setLoading(false)
+        })
+    }
 
     const deleteHandle = () => {
+      setLoading(true)
       api
         .delete('authentication/avatar')
         .then(() => {
           setPwSubmitSuccessMessage('Xóa avatar thành công.')
           setPwSubmitSuccess(true)
+          setLoading(true)
         })
         .catch((error) => {
           setPwSubmitErrorMessage(error.response.data.message)
           setPwSubmitError(true)
+          setLoading(false)
         })
     }
 
     return (
       <CRow>
         <CCol xs={1}>
-          <CAvatar src={ava} size="xl"></CAvatar>
+          <Avatar src={ava} sx={{ width: 68, height: 68 }} />
         </CCol>
         <CCol xs={11}>
           <CCol xs={12}>
             <div className="d-grid gap-2 d-md-flex ms-4">
               <input
-                accept="image/*"
-                id="contained-button-file"
+                //accept="image/*"
                 type="file"
-                onChange={(event) => {
-                  //alert(JSON.stringify(event.target.files[0]))
-                  changeHandle(event)
-                }}
+                onChange={changeHandle}
               />
-              <Button /*onClick={() => submitHandle()}*/ variant="contained">Tải lên</Button>
+              <Button onClick={submitHandle} variant="contained">
+                Tải lên
+              </Button>
               <Button variant="outlined" onClick={() => deleteHandle()}>
                 Xóa Avatar
               </Button>
