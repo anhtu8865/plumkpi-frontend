@@ -50,8 +50,9 @@ const Login = () => {
     api
       .post('authentication/log-in', { email: values.email, password: values.password })
       .then((res) => {
-        history.push('/kpi-admin')
-        console.log(res.data)
+        alert('Đăng nhập thành công')
+        history.push('/user')
+        //console.log(res.data)
       })
       .catch((error) => {
         alert('Đăng nhập thất bại')
