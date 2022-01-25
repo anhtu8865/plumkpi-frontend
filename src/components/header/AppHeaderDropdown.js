@@ -24,7 +24,28 @@ import CIcon from '@coreui/icons-react'
 
 import defaultava from './../../assets/images/avatars/defaultava.png'
 
+import api from 'src/views/axiosConfig'
+import axios from 'axios'
+
+import { useHistory } from 'react-router-dom'
+
 const AppHeaderDropdown = () => {
+  const history = useHistory()
+
+  async function logOut() {
+    api
+      .post('authentication/log-out', {})
+      .then((res) => {
+        alert('Đăng xuất thành công')
+        history.push('/login')
+        //console.log(res.data)
+      })
+      .catch((error) => {
+        alert('Đăng xuất thất bại')
+      })
+      .finally()
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -84,7 +105,7 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>*/}
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem href="#" onClick={logOut}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Đăng xuất
         </CDropdownItem>

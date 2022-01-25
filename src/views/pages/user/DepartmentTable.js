@@ -42,35 +42,6 @@ function getAllDept() {
 }
 getAllDept()
 const DeptTable = () => {
-  /*componentDidMount() {
-    console.log('Component did mount!')
-    const reponse = api
-      .get('depts')
-      .then(function (res) {
-        console.log(res.data.items)
-        this.setState({ rows: [...this.state.rows, ...res.data.items] })
-        console.log(this.state.rows)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-      .then(function () {})
-  }*/
-
-  /*getAllDept = () => {
-    api
-      .get('depts')
-      .then(function (res) {
-        this.setState({
-          rows: res.data.items,
-        })
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-      .then(function () {})
-  }*/
-
   return (
     <>
       <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>

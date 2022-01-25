@@ -14,6 +14,20 @@ import React, { Component } from 'react'
 
 import './AddUser.css'
 
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import api from 'src/views/axiosConfig'
+import axios from 'axios'
+
+const validationSchema = yup.object({
+  user_name: yup.string().required('Đây là trường bắt buộc'),
+  email: yup.string().email().required('Đây là trường bắt buộc'),
+  password: yup
+    .string()
+    .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+    .required('Đây là trường bắt buộc'),
+})
+
 const AddUser = (props) => {
   return (
     <div>
