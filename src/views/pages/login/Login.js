@@ -16,6 +16,7 @@ import {
 } from '@coreui/react'
 
 import { CircularProgress } from '@mui/material'
+import { LoadingCircle } from 'src/components/LoadingCircle'
 
 import { useHistory } from 'react-router-dom'
 
@@ -121,10 +122,11 @@ const Login = () => {
                           <CButton
                             className="btn btn-primary"
                             type="submit"
-                            disabled={!formik.isValid}
+                            disabled={formik.isSubmitting}
                           >
                             Đăng nhập
                           </CButton>
+                          {formik.isSubmitting && <LoadingCircle />}
                         </div>
                       </CCol>
                     </CRow>
