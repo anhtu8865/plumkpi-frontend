@@ -20,17 +20,16 @@ import LockIcon from '@mui/icons-material/Lock'
 import CheckIcon from '@mui/icons-material/Check'
 import { TabPanel, a11yProps } from 'src/components/TabPanel'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import defaultava from 'src/assets/images/avatars/defaultava.png'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 
 const UserInfo = () => {
-  const [ava, setAva] = React.useState(defaultava)
-  const [uusername, setUUsername] = React.useState(null)
-  const [uemail, setUEmail] = React.useState(null)
-  const [udept, setUDept] = React.useState({ dept_id: null, dept_name: null })
-  const [urole, setURole] = React.useState(null)
+  const [user, setUser] = React.useState({
+    user_name: null,
+    email: null,
+    role: null,
+  })
   const [reload, setReload] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
   const [value, setValue] = React.useState(0)
@@ -43,17 +42,7 @@ const UserInfo = () => {
     api
       .get('authentication')
       .then((response) => {
-        setUUsername(response.data.user_name)
-        setUEmail(response.data.email)
-        setURole(response.data.role)
-        if (response.data.dept != null) {
-          setUDept(response.data.dept)
-        }
-        if (response.data.avatar != null) {
-          setAva(response.data.avatar.url)
-        } else {
-          setAva(defaultava)
-        }
+        setUser(response.data)
       })
       .catch((error) => {
         setPwSubmitErrorMessage(error.response.data.message)
@@ -94,7 +83,7 @@ const UserInfo = () => {
         .then(() => {
           setPwSubmitSuccessMessage('Thay đổi avatar thành công.')
           setPwSubmitSuccess(true)
-          setLoading(true)
+          window.location.reload()
         })
         .catch((error) => {
           setPwSubmitErrorMessage(error.response.data.message)
@@ -110,7 +99,7 @@ const UserInfo = () => {
         .then(() => {
           setPwSubmitSuccessMessage('Xóa avatar thành công.')
           setPwSubmitSuccess(true)
-          setLoading(true)
+          window.location.reload()
         })
         .catch((error) => {
           setPwSubmitErrorMessage(error.response.data.message)
@@ -122,7 +111,7 @@ const UserInfo = () => {
     return (
       <CRow>
         <CCol xs={1}>
-          <Avatar src={ava} sx={{ width: 68, height: 68 }} />
+          <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 68, height: 68 }} />
         </CCol>
         <CCol xs={11}>
           <CCol xs={12}>
@@ -156,8 +145,8 @@ const UserInfo = () => {
 
     const formik = useFormik({
       initialValues: {
-        username: uusername,
-        email: uemail,
+        username: user.user_name,
+        email: user.email,
       },
       validationSchema: ValidationSchema,
       onSubmit: (values) => {
@@ -225,7 +214,7 @@ const UserInfo = () => {
             <CCol xs>
               <CFormFloating>
                 <CFormSelect id="userrole" disabled>
-                  <option value={urole}>{urole}</option>
+                  <option value={user.role}>{user.role}</option>
                 </CFormSelect>
                 <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
               </CFormFloating>
@@ -233,7 +222,9 @@ const UserInfo = () => {
             <CCol xs>
               <CFormFloating>
                 <CFormSelect id="userdept" disabled>
-                  <option value={udept}>{udept.dept_name}</option>
+                  <option value={user.dept ? user.dept : null}>
+                    {user.dept ? user.dept.dept_name : null}
+                  </option>
                 </CFormSelect>
                 <CFormLabel htmlFor="userdept">Phòng ban</CFormLabel>
               </CFormFloating>

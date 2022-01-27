@@ -22,14 +22,25 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
-import defaultava from './../../assets/images/avatars/defaultava.png'
-
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
 import { useHistory } from 'react-router-dom'
+import { Avatar } from '@mui/material'
 
 const AppHeaderDropdown = () => {
+  const [user, setUser] = React.useState({})
+  React.useEffect(() => {
+    api
+      .get('authentication')
+      .then((response) => {
+        setUser(response.data)
+      })
+      .catch((error) => {
+        alert(error.response.data.message)
+      })
+  }, [])
+
   const history = useHistory()
 
   async function logOut() {
@@ -49,7 +60,7 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={defaultava} size="md" />
+        <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 40, height: 40 }} />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Tài khoản</CDropdownHeader>
