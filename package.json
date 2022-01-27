@@ -39,6 +39,7 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.8",
+    "@reduxjs/toolkit": "^1.7.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
     "axios": "^0.25.0",
     "chart.js": "^3.6.0",

@@ -1,7 +1,5 @@
 import React from 'react'
 import {
-  CAvatar,
-  CButton,
   CCard,
   CCardBody,
   CCol,
@@ -14,7 +12,7 @@ import {
   CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
-import { Tabs, Tab, Box, Button, Alert, Snackbar, Avatar } from '@mui/material'
+import { Tabs, Tab, Box, Button, Avatar } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
 import LockIcon from '@mui/icons-material/Lock'
 import CheckIcon from '@mui/icons-material/Check'
@@ -23,6 +21,9 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
+import { useDispatch } from 'react-redux'
+import SystemAlert from 'src/components/SystemAlert'
+import { createAlert } from 'src/store'
 
 const UserInfo = () => {
   const [user, setUser] = React.useState({
@@ -33,10 +34,8 @@ const UserInfo = () => {
   const [reload, setReload] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
   const [value, setValue] = React.useState(0)
-  const [pwSubmitError, setPwSubmitError] = React.useState(false)
-  const [pwSubmitSuccess, setPwSubmitSuccess] = React.useState(false)
-  const [pwSubmitErrorMessage, setPwSubmitErrorMessage] = React.useState('')
-  const [pwSubmitSuccessMessage, setPwSubmitSuccessMessage] = React.useState('')
+
+  const dispatch = useDispatch()
 
   React.useEffect(() => {
     api
@@ -45,25 +44,19 @@ const UserInfo = () => {
         setUser(response.data)
       })
       .catch((error) => {
-        setPwSubmitErrorMessage(error.response.data.message)
-        setPwSubmitError(true)
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
       })
-    setReload(false)
     setLoading(false)
-  }, [reload])
+    setReload(false)
+  }, [reload, dispatch])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  }
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    if (pwSubmitSuccess === true) {
-      setReload(true)
-    }
-    pwSubmitSuccess ? setPwSubmitSuccess(false) : setPwSubmitError(false)
   }
 
   const AvatarUpload = () => {
@@ -81,13 +74,21 @@ const UserInfo = () => {
       api
         .post('authentication/avatar', formData)
         .then(() => {
-          setPwSubmitSuccessMessage('Thay đổi avatar thành công.')
-          setPwSubmitSuccess(true)
+          dispatch(
+            createAlert({
+              message: 'Thay đổi avatar thành công.',
+              type: 'success',
+            }),
+          )
           window.location.reload()
         })
         .catch((error) => {
-          setPwSubmitErrorMessage(error.response.data.message)
-          setPwSubmitError(true)
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
           setLoading(false)
         })
     }
@@ -97,13 +98,21 @@ const UserInfo = () => {
       api
         .delete('authentication/avatar')
         .then(() => {
-          setPwSubmitSuccessMessage('Xóa avatar thành công.')
-          setPwSubmitSuccess(true)
+          dispatch(
+            createAlert({
+              message: 'Xóa avatar thành công.',
+              type: 'success',
+            }),
+          )
           window.location.reload()
         })
         .catch((error) => {
-          setPwSubmitErrorMessage(error.response.data.message)
-          setPwSubmitError(true)
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
           setLoading(false)
         })
     }
@@ -154,13 +163,22 @@ const UserInfo = () => {
         api
           .put('authentication/update', { user_name: values.username, email: values.email })
           .then(() => {
-            setPwSubmitSuccessMessage('Cập nhật thông tin thành công.')
-            setPwSubmitSuccess(true)
-            setLoading(true)
+            dispatch(
+              createAlert({
+                message: 'Chỉnh sửa thông tin thành công.',
+                type: 'success',
+              }),
+            )
+            setReload(true)
+            //setLoading(true)
           })
           .catch((error) => {
-            setPwSubmitErrorMessage(error.response.data.message)
-            setPwSubmitError(true)
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
           })
           .finally(() => formik.setSubmitting(false))
       },
@@ -287,12 +305,21 @@ const UserInfo = () => {
         api
           .put('authentication/password', { oldPassword: values.oldpw, newPassword: values.newpw })
           .then(() => {
-            setPwSubmitSuccessMessage('Thay đổi mật khẩu thành công.')
-            setPwSubmitSuccess(true)
+            dispatch(
+              createAlert({
+                message: 'Thay đổi mật khẩu thành công.',
+                type: 'success',
+              }),
+            )
+            setReload(true)
           })
           .catch((error) => {
-            setPwSubmitErrorMessage(error.response.data.message)
-            setPwSubmitError(true)
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
           })
           .finally(() => formik.setSubmitting(false))
       },
@@ -425,26 +452,7 @@ const UserInfo = () => {
           </CCol>
         </CRow>
       </CContainer>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={pwSubmitError}
-        autoHideDuration={1000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
-          {pwSubmitErrorMessage}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={pwSubmitSuccess}
-        autoHideDuration={3000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
-          {pwSubmitSuccessMessage}
-        </Alert>
-      </Snackbar>
+      <SystemAlert />
     </div>
   )
 }
