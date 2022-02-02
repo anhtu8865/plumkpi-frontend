@@ -18,6 +18,8 @@ import {
 import { CircularProgress } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 
+import { Button, Snackbar, Alert } from '@mui/material'
+
 import { useHistory } from 'react-router-dom'
 
 import KPIlogo from 'src/assets/plum-kpi-img/logo.png'
@@ -29,43 +31,98 @@ import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
-const validationSchema = yup.object({
-  email: yup.string().email().required('Đây là trường bắt buộc'),
-  password: yup
-    .string()
-    .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
-    .required('Đây là trường bắt buộc'),
-})
-
 const Login = () => {
   const history = useHistory()
 
-  const [loginSubmitError, setLoginSubmitError] = React.useState(false)
+  const [value, setValue] = React.useState(0)
 
-  const [loginSubmitSuccess, setLoginSubmitSuccess] = React.useState(false)
+  const [error, setError] = React.useState(false)
 
-  const [loginSubmitErrorMessage, setLoginSubmitErrorMessage] = React.useState('')
+  const [success, setSuccess] = React.useState(false)
 
-  const onSubmit = (values) => {
-    console.log(values)
-    api
-      .post('authentication/log-in', { email: values.email, password: values.password })
-      .then((res) => {
-        alert('Đăng nhập thành công')
-        history.push('/user')
-        //console.log(res.data)
-      })
-      .catch((error) => {
-        alert('Đăng nhập thất bại')
-      })
-      .finally(() => formik.setSubmitting(false))
+  const [successMessage, setSuccessMessage] = React.useState('')
+
+  const [errorMessage, setErrorMessage] = React.useState('')
+
+  const [reload, setReload] = React.useState(true)
+
+  const [loading, setLoading] = React.useState(true)
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
   }
+
+  const SuccessErrorToast = () => {
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return
+      }
+      if (success === true) {
+        setSuccess(false)
+        setReload(true)
+      } else {
+        setError(false)
+      }
+    }
+
+    return (
+      <>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={error}
+          autoHideDuration={3000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={success}
+          autoHideDuration={1000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
+            {successMessage}
+          </Alert>
+        </Snackbar>
+      </>
+    )
+  }
+
+  const validationSchema = yup.object({
+    email: yup.string().email().required('Đây là trường bắt buộc'),
+    password: yup
+      .string()
+      .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+      .required('Đây là trường bắt buộc'),
+  })
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
     validateOnBlur: true,
-    onSubmit,
     validationSchema: validationSchema,
+    onSubmit: (values) => {
+      //console.log(values)
+      api
+        .post('authentication/log-in', { email: values.email, password: values.password })
+        .then((res) => {
+          //alert('Đăng nhập thành công')
+          setSuccessMessage('Đăng nhập thành công')
+          setSuccess(true)
+          setLoading(true)
+          history.push('/dashboard')
+          //console.log(res.data)
+        })
+        .catch((error) => {
+          //alert('Đăng nhập thất bại')
+          //console.log(error.response.data.message)
+          setErrorMessage(error.response.data.message)
+          setError(true)
+        })
+        .finally(() => formik.setSubmitting(false))
+    },
   })
 
   return (
@@ -137,6 +194,7 @@ const Login = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <SuccessErrorToast />
     </div>
   )
 }

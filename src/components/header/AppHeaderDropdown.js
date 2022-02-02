@@ -36,12 +36,12 @@ const AppHeaderDropdown = () => {
     api
       .post('authentication/log-out', {})
       .then((res) => {
-        alert('Đăng xuất thành công')
+        //alert('Đăng xuất thành công')
         history.push('/login')
         //console.log(res.data)
       })
       .catch((error) => {
-        alert('Đăng xuất thất bại')
+        //alert('Đăng xuất thất bại')
       })
       .finally()
   }
