@@ -333,7 +333,7 @@ const Department = () => {
                       </CModalHeader>
                       <CModalBody>
                         <CRow className="mt-2 mb-2 mx-2">
-                          <CCol xs>Bạn có chắc muốn xóa danh mục {row.dept_name}?</CCol>
+                          <CCol xs>Bạn có chắc muốn xóa danh mục ?</CCol>
                         </CRow>
                       </CModalBody>
                       <DeleteDeptModal />

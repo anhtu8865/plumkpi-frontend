@@ -13,13 +13,24 @@ import {
 } from '@coreui/react'
 import React, { Component } from 'react'
 
-import { Tabs, Tab, Box, Button, IconButton, Snackbar, Alert } from '@mui/material'
+import {
+  Tabs,
+  Tab,
+  Box,
+  Button,
+  IconButton,
+  Snackbar,
+  Alert,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 
 import './AddUser.css'
 
-import { useFormik, Field } from 'formik'
+import { useFormik, Field, FormikProvider } from 'formik'
 
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
@@ -101,6 +112,7 @@ const AddUser = (props) => {
       .string()
       .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
       .required('Đây là trường bắt buộc'),
+    role: yup.string().required('Đây là trường bắt buộc'),
     //dept: yup.required('Đây là trường bắt buộc'),
   })
 
@@ -119,7 +131,7 @@ const AddUser = (props) => {
           dept: values.dept,
         })
         .then((res) => {
-          alert('Thành công')
+          //alert('Thành công')
           setSuccessMessage('Thêm người dùng thành công')
           setSuccess(true)
           setLoading(true)
@@ -127,7 +139,7 @@ const AddUser = (props) => {
           //console.log(res.data)
         })
         .catch((error) => {
-          alert('Thất bại')
+          //alert('Thất bại')
           setErrorMessage(error.response.data.message)
           setError(true)
         })
@@ -212,14 +224,16 @@ const AddUser = (props) => {
           <CRow>
             <CCol>
               <CFormFloating>
-                <CFormSelect id="inputDept">
-                  <option value="" label="Chọn phòng ban" />
-                  {deptList.map((row) => (
-                    <option value={row.dept_id} key={row.dept_id}>
-                      {row.dept_name}
-                    </option>
-                  ))}
-                </CFormSelect>
+                <FormikProvider value={formik}>
+                  <Field as="select" name="dept.dept_id" className="form-select">
+                    <option value="" label="Chọn phòng ban" />
+                    {deptList.map((row) => (
+                      <option value={row.dept_id} key={row.dept_id}>
+                        {row.dept_name}
+                      </option>
+                    ))}
+                  </Field>
+                </FormikProvider>
                 <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
                 <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
               </CFormFloating>
@@ -231,23 +245,24 @@ const AddUser = (props) => {
           <fieldset className="row mb-3">
             <legend className="col-form-label col-sm-5 pt-0">Chọn vai trò</legend>
             <CCol sm={7}>
-              <CFormCheck
-                type="radio"
-                name="role"
-                id="Employee"
-                value="Employee"
-                label="Nhân viên"
-                defaultChecked
-              />
-              <CFormCheck type="radio" name="role" id="Manager" value="Manager" label="Quản lý" />
-              <CFormCheck
-                type="radio"
-                name="role"
-                id="Director"
-                value="Director"
-                label="Giám đốc"
-              />
-              <CFormCheck type="radio" name="role" id="Admin" value="Admin" label="Quản trị viên" />
+              <FormikProvider value={formik}>
+                <div className="form-check">
+                  <Field className="form-check-input" type="radio" name="role" value="Employee" />
+                  <label className="form-check-label">Nhân viên</label>
+                </div>
+                <div className="form-check">
+                  <Field className="form-check-input" type="radio" name="role" value="Manager" />
+                  <label className="form-check-label">Quản lý</label>
+                </div>
+                <div className="form-check">
+                  <Field className="form-check-input" type="radio" name="role" value="Director" />
+                  <label className="form-check-label">Giám đốc</label>
+                </div>
+                <div className="form-check">
+                  <Field className="form-check-input" type="radio" name="role" value="Admin" />
+                  <label className="form-check-label">Quản trị viên</label>
+                </div>
+              </FormikProvider>
             </CCol>
           </fieldset>
         </div>
@@ -257,7 +272,7 @@ const AddUser = (props) => {
             color="success"
             startIcon={<AddBoxIcon />}
             type="submit"
-            onClick={formik.submitForm}
+            //onClick={formik.submitForm}
             disabled={formik.isSubmitting}
           >
             Thêm

@@ -23,11 +23,13 @@ import {
   CFormCheck,
   CFormFloating,
   CForm,
+  CFormFeedback,
 } from '@coreui/react'
 
 import { Tabs, Tab, Box, Button, IconButton, Snackbar, Alert } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
+import CheckIcon from '@mui/icons-material/Check'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import CustomTablePagination from 'src/components/TablePagination'
@@ -40,10 +42,10 @@ import './User.css'
 
 import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
 import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
-import AddUserForm from './AddUser'
+//import AddUserForm from './AddUser'
 import Department from './Department'
 
-import { useFormik } from 'formik'
+import { useFormik, FormikProvider, Field } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
@@ -71,6 +73,14 @@ const User = () => {
   const [deleteUserId, setDeleteUserId] = React.useState(0)
 
   const [deleteUserModal, setDeleteUserModal] = React.useState(false)
+
+  const [editUserModal, setEditUserModal] = React.useState(false)
+
+  const [editUserId, setEditUserId] = React.useState(0)
+
+  const [userName, setUserName] = React.useState('')
+
+  const [email, setEmail] = React.useState('')
 
   React.useEffect(() => {
     //assume that we already login
@@ -170,6 +180,408 @@ const User = () => {
     )
   }
 
+  const EditUserModal = () => {
+    const [deptList, setDeptList] = React.useState([])
+
+    api
+      .get('/depts')
+      .then((response) => {
+        setDeptList(response.data.items)
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.message)
+        setError(true)
+        setSuccess(false)
+      })
+
+    const ValidationSchema = yup.object({
+      editusername: yup.string().required('Đây là trường bắt buộc'),
+      editemail: yup.string().email().required('Đây là trường bắt buộc'),
+    })
+
+    const formik = useFormik({
+      initialValues: {
+        editusername: `${userName}`,
+        editemail: `${email}`,
+        editrole: '',
+        editdept: { dept_id: '' },
+      },
+      validationSchema: ValidationSchema,
+      onSubmit: (values) => {
+        // assume that we already login
+        api
+          .put(`/users/${editUserId}`, {
+            user_name: values.editusername,
+            email: values.editemail,
+            role: values.editrole,
+            dept: values.editdept,
+          })
+          .then(() => {
+            setSuccessMessage('Cập nhật người dùng thành công')
+            setSuccess(true)
+            setLoading(true)
+          })
+          .catch((error) => {
+            setErrorMessage(error.response.data.message)
+            setError(true)
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+            setEditUserModal(false)
+            setEditUserId(0)
+            setUserName('')
+            setEmail('')
+          })
+      },
+    })
+
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={editUserModal}
+          onClose={() => setEditUserModal(false)}
+        >
+          <CModalHeader>
+            <CModalTitle>Chỉnh sửa người dùng</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <h6>Nhập thông tin cá nhân</h6>
+            <div>
+              <CRow className="mt-2">
+                <CCol>
+                  <CFormFloating>
+                    <CFormInput
+                      id="editusername"
+                      placeholder="Họ tên"
+                      value={formik.values.editusername}
+                      onChange={formik.handleChange}
+                      invalid={
+                        formik.touched.editusername && formik.errors.editusername ? true : false
+                      }
+                      valid={
+                        !formik.touched.editusername ||
+                        (formik.touched.editusername && formik.errors.editusername)
+                          ? false
+                          : true
+                      }
+                    />
+                    <CFormLabel htmlFor="editusername">Họ và tên</CFormLabel>
+                    <CFormFeedback invalid>{formik.errors.editusername}</CFormFeedback>
+                  </CFormFloating>
+                </CCol>
+              </CRow>
+              <CRow className="mt-4">
+                <CCol>
+                  <CFormFloating>
+                    <CFormInput
+                      id="editemail"
+                      placeholder="email"
+                      type="email"
+                      value={formik.values.editemail}
+                      onChange={formik.handleChange}
+                      invalid={formik.touched.editemail && formik.errors.editemail ? true : false}
+                      valid={
+                        !formik.touched.editemail ||
+                        (formik.touched.editemail && formik.errors.editemail)
+                          ? false
+                          : true
+                      }
+                    />
+                    <CFormLabel htmlFor="editemail">Email</CFormLabel>
+                    <CFormFeedback invalid>{formik.errors.editemail}</CFormFeedback>
+                  </CFormFloating>
+                </CCol>
+              </CRow>
+            </div>
+            <div className="userform-item mt-4">
+              <h6>Gán người dùng vào phòng ban</h6>
+              <CRow>
+                <CCol>
+                  <CFormFloating>
+                    <FormikProvider value={formik}>
+                      <Field as="select" name="editdept.dept_id" className="form-select">
+                        <option value="" label="Chọn phòng ban" />
+                        {deptList.map((row) => (
+                          <option value={row.dept_id} key={row.dept_id}>
+                            {row.dept_name}
+                          </option>
+                        ))}
+                      </Field>
+                    </FormikProvider>
+                    <CFormLabel>Phòng ban</CFormLabel>
+                    <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
+                  </CFormFloating>
+                </CCol>
+              </CRow>
+            </div>
+            <div>
+              <h6>Vai trò và quyền hạn</h6>
+              <fieldset className="row mb-3">
+                <legend className="col-form-label col-sm-5 pt-0">Chọn vai trò</legend>
+                <CCol sm={7}>
+                  <FormikProvider value={formik}>
+                    <div className="form-check">
+                      <Field
+                        className="form-check-input"
+                        type="radio"
+                        name="editrole"
+                        value="Employee"
+                      />
+                      <label className="form-check-label">Nhân viên</label>
+                    </div>
+                    <div className="form-check">
+                      <Field
+                        className="form-check-input"
+                        type="radio"
+                        name="editrole"
+                        value="Manager"
+                      />
+                      <label className="form-check-label">Quản lý</label>
+                    </div>
+                    <div className="form-check">
+                      <Field
+                        className="form-check-input"
+                        type="radio"
+                        name="editrole"
+                        value="Director"
+                      />
+                      <label className="form-check-label">Giám đốc</label>
+                    </div>
+                    <div className="form-check">
+                      <Field
+                        className="form-check-input"
+                        type="radio"
+                        name="editrole"
+                        value="Admin"
+                      />
+                      <label className="form-check-label">Quản trị viên</label>
+                    </div>
+                  </FormikProvider>
+                </CCol>
+              </fieldset>
+            </div>
+          </CModalBody>
+          <CModalFooter>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              onClick={formik.submitForm}
+              disabled={formik.isSubmitting}
+            >
+              Xác nhận
+            </Button>
+            {formik.isSubmitting && <LoadingCircle />}
+          </CModalFooter>
+        </CModal>
+      </form>
+    )
+  }
+
+  const AddUser = (props) => {
+    const [deptList, setDeptList] = React.useState([])
+
+    const [error, setError] = React.useState(false)
+
+    api
+      .get('/depts')
+      .then((response) => {
+        setDeptList(response.data.items)
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.message)
+        setError(true)
+        setSuccess(false)
+      })
+
+    //console.log(deptList)
+
+    //console.log(deptList)
+
+    const validationSchema = yup.object({
+      user_name: yup.string().required('Đây là trường bắt buộc'),
+      email: yup.string().email().required('Đây là trường bắt buộc'),
+      password: yup
+        .string()
+        .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+        .required('Đây là trường bắt buộc'),
+      role: yup.string().required('Đây là trường bắt buộc'),
+      //dept: yup.required('Đây là trường bắt buộc'),
+    })
+
+    const formik = useFormik({
+      initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: '' } },
+      validateOnBlur: true,
+      onSubmit: (values) => {
+        console.log('Đây là form')
+        console.log(values)
+        api
+          .post('users', {
+            user_name: values.user_name,
+            email: values.email,
+            password: values.password,
+            role: values.role,
+            dept: values.dept,
+          })
+          .then((res) => {
+            //alert('Thành công')
+            setSuccessMessage('Thêm người dùng thành công')
+            setSuccess(true)
+            setLoading(true)
+            //history.push('/user')
+            //console.log(res.data)
+          })
+          .catch((error) => {
+            //alert('Thất bại')
+            setErrorMessage(error.response.data.message)
+            setError(true)
+          })
+          .finally(() => formik.setSubmitting(false))
+      },
+      validationSchema: validationSchema,
+    })
+    return (
+      <div>
+        <form className="px-5" onSubmit={formik.handleSubmit}>
+          <h6>Nhập thông tin cá nhân</h6>
+          <div>
+            <CRow className="mt-2">
+              <CCol>
+                <CFormFloating>
+                  <CFormInput
+                    id="inputFirstName"
+                    name="user_name"
+                    placeholder="Họ tên"
+                    value={formik.values.user_name}
+                    onChange={formik.handleChange}
+                    invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
+                    valid={
+                      !formik.touched.user_name ||
+                      (formik.touched.user_name && formik.errors.user_name)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
+                  <CFormFeedback invalid>{formik.errors.user_name}</CFormFeedback>
+                </CFormFloating>
+              </CCol>
+            </CRow>
+            <CRow className="mt-4">
+              <CCol>
+                <CFormFloating>
+                  <CFormInput
+                    id="inputEmail"
+                    name="email"
+                    placeholder="email"
+                    type="email"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    invalid={formik.touched.email && formik.errors.email ? true : false}
+                    valid={
+                      !formik.touched.email || (formik.touched.email && formik.errors.email)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
+                  <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
+                </CFormFloating>
+              </CCol>
+            </CRow>
+            <CRow className="mt-4">
+              <CCol>
+                <CFormFloating>
+                  <CFormInput
+                    id="inputPassword"
+                    placeholder="password"
+                    type="password"
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    invalid={formik.touched.password && formik.errors.password ? true : false}
+                    valid={
+                      !formik.touched.password ||
+                      (formik.touched.password && formik.errors.password)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
+                  <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
+                </CFormFloating>
+              </CCol>
+            </CRow>
+          </div>
+          <div className="userform-item mt-4">
+            <h6>Gán người dùng vào phòng ban</h6>
+            <CRow>
+              <CCol>
+                <CFormFloating>
+                  <FormikProvider value={formik}>
+                    <Field as="select" name="dept.dept_id" className="form-select">
+                      <option value="" label="Chọn phòng ban" />
+                      {deptList.map((row) => (
+                        <option value={row.dept_id} key={row.dept_id}>
+                          {row.dept_name}
+                        </option>
+                      ))}
+                    </Field>
+                  </FormikProvider>
+                  <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
+                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
+                </CFormFloating>
+              </CCol>
+            </CRow>
+          </div>
+          <div>
+            <h6>Vai trò và quyền hạn</h6>
+            <fieldset className="row mb-3">
+              <legend className="col-form-label col-sm-5 pt-0">Chọn vai trò</legend>
+              <CCol sm={7}>
+                <FormikProvider value={formik}>
+                  <div className="form-check">
+                    <Field className="form-check-input" type="radio" name="role" value="Employee" />
+                    <label className="form-check-label">Nhân viên</label>
+                  </div>
+                  <div className="form-check">
+                    <Field className="form-check-input" type="radio" name="role" value="Manager" />
+                    <label className="form-check-label">Quản lý</label>
+                  </div>
+                  <div className="form-check">
+                    <Field className="form-check-input" type="radio" name="role" value="Director" />
+                    <label className="form-check-label">Giám đốc</label>
+                  </div>
+                  <div className="form-check">
+                    <Field className="form-check-input" type="radio" name="role" value="Admin" />
+                    <label className="form-check-label">Quản trị viên</label>
+                  </div>
+                </FormikProvider>
+              </CCol>
+            </fieldset>
+          </div>
+          <div className="text-end">
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<AddBoxIcon />}
+              type="submit"
+              //onClick={formik.submitForm}
+              disabled={formik.isSubmitting}
+            >
+              Thêm
+            </Button>
+            {formik.isSubmitting && <LoadingCircle />}
+          </div>
+          <SuccessErrorToast />
+        </form>
+      </div>
+    )
+  }
+
   const UserTable = () => {
     return (
       <>
@@ -204,8 +616,18 @@ const User = () => {
                     {row.is_active ? 'Active' : 'Block'}
                   </CTableDataCell>
                   <CTableDataCell className="text-center">
-                    <IconButton id="edit" color="primary">
+                    <IconButton
+                      id="edit"
+                      color="primary"
+                      onClick={() => {
+                        setEditUserModal(true)
+                        setEditUserId(row.user_id)
+                        setUserName(row.user_name)
+                        setEmail(row.email)
+                      }}
+                    >
                       <EditIcon />
+                      <EditUserModal />
                     </IconButton>
                     <IconButton
                       id="delete"
@@ -227,7 +649,7 @@ const User = () => {
                         </CModalHeader>
                         <CModalBody>
                           <CRow className="mt-2 mb-2 mx-2">
-                            <CCol xs>Bạn có chắc muốn xóa nhân viên {row.user_name}?</CCol>
+                            <CCol xs>Bạn có chắc muốn xóa nhân viên ?</CCol>
                           </CRow>
                         </CModalBody>
                         <DeleteUserModal />
@@ -327,7 +749,7 @@ const User = () => {
                     <CModalTitle>Thêm người dùng</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <AddUserForm />
+                    <AddUser />
                   </CModalBody>
                   <CModalFooter></CModalFooter>
                 </CModal>
