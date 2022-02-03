@@ -15,7 +15,7 @@ import {
   CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
-import { Tabs, Tab, Box, Button, IconButton, Snackbar, Alert } from '@mui/material'
+import { Tabs, Tab, Box, Button, IconButton } from '@mui/material'
 import { TabPanel, a11yProps } from 'src/components/TabPanel'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import EditIcon from '@mui/icons-material/Edit'
@@ -27,95 +27,45 @@ import { KpiAdminTable } from './KpiAdminTable'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import { useDispatch } from 'react-redux'
+import SystemAlert from 'src/components/SystemAlert'
+import { createAlert } from 'src/store'
 
 const KpiAdmin = () => {
   const [addCatVisible, setAddCatVisible] = useState(false)
-
   const [value, setValue] = React.useState(0)
-
   const [kpiCatList, setKpiCatList] = React.useState([])
-
   const [editCatModal, setEditCatModal] = React.useState(false)
-
   const [catId, setCatId] = React.useState(0)
-
   const [catName, setCatName] = React.useState('')
-
-  const [error, setError] = React.useState(false)
-
-  const [success, setSuccess] = React.useState(false)
-
-  const [successMessage, setSuccessMessage] = React.useState('')
-
-  const [errorMessage, setErrorMessage] = React.useState('')
-
   const [reload, setReload] = React.useState(true)
-
   const [deleteCatId, setDeleteCatId] = React.useState(0)
-
   const [deleteCatModal, setDeleteCatModal] = React.useState(false)
-
   const [loading, setLoading] = React.useState(true)
+
+  const dispatch = useDispatch()
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
   React.useEffect(() => {
-    //get kpi categories to create tabs
-    //assume that we already login
     api
       .get('/kpi-categories')
       .then((response) => {
         setKpiCatList(response.data.items)
       })
       .catch((error) => {
-        setErrorMessage(error.response.data.message)
-        setError(true)
-        setSuccess(false)
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
       })
     setReload(false)
     setLoading(false)
-  }, [reload])
-
-  const SuccessErrorToast = () => {
-    const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return
-      }
-      if (success === true) {
-        setSuccess(false)
-        setReload(true)
-      } else {
-        setError(false)
-      }
-    }
-
-    return (
-      <>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={error}
-          autoHideDuration={3000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={success}
-          autoHideDuration={1000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
-            {successMessage}
-          </Alert>
-        </Snackbar>
-      </>
-    )
-  }
+  }, [reload, dispatch])
 
   const EditCategoryModal = () => {
     const ValidationSchema = yup.object({
@@ -134,13 +84,22 @@ const KpiAdmin = () => {
             kpi_category_name: values.editcat,
           })
           .then(() => {
-            setSuccessMessage('Cập nhật danh mục thành công')
-            setSuccess(true)
+            dispatch(
+              createAlert({
+                message: 'Cập nhật danh mục thành công.',
+                type: 'success',
+              }),
+            )
             setLoading(true)
+            setReload(true)
           })
           .catch((error) => {
-            setErrorMessage(error.response.data.message)
-            setError(true)
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
           })
           .finally(() => {
             formik.setSubmitting(false)
@@ -220,13 +179,22 @@ const KpiAdmin = () => {
             kpi_category_name: values.addcat,
           })
           .then(() => {
-            setSuccessMessage('Tạo danh mục mới thành công.')
-            setSuccess(true)
+            dispatch(
+              createAlert({
+                message: 'Tạo danh mục mới thành công.',
+                type: 'success',
+              }),
+            )
             setLoading(true)
+            setReload(true)
           })
           .catch((error) => {
-            setErrorMessage(error.response.data.message)
-            setError(true)
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
           })
           .finally(() => {
             formik.setSubmitting(false)
@@ -295,13 +263,22 @@ const KpiAdmin = () => {
         api
           .delete(`/kpi-categories/${deleteCatId}`)
           .then(() => {
-            setSuccessMessage('Xóa danh mục thành công.')
-            setSuccess(true)
+            dispatch(
+              createAlert({
+                message: 'Xóa danh mục thành công.',
+                type: 'success',
+              }),
+            )
             setLoading(true)
+            setReload(true)
           })
           .catch((error) => {
-            setErrorMessage(error.response.data.message)
-            setError(true)
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
           })
           .finally(() => {
             formik.setSubmitting(false)
@@ -527,14 +504,16 @@ const KpiAdmin = () => {
                     </div>
                   </CCol>
                 </CRow>
-                <ViewTabs />
+                <div className="mt-3">
+                  <ViewTabs />
+                </div>
                 {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>
           </CCol>
         </CRow>
       </CContainer>
-      <SuccessErrorToast />
+      <SystemAlert />
     </div>
   )
 }
