@@ -124,23 +124,21 @@ const KpiAdmin = () => {
           <CModalBody>
             <CRow className="mt-2 mb-2 mx-2">
               <CCol xs>
-                <CFormFloating>
-                  <CFormInput
-                    id="editcat"
-                    placeholder="Tên danh mục"
-                    value={formik.values.editcat}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    invalid={formik.touched.editcat && formik.errors.editcat ? true : false}
-                    valid={
-                      !formik.touched.editcat || (formik.touched.editcat && formik.errors.editcat)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormLabel htmlFor="editcat">Nhập tên mới cho danh mục</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.editcat}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="editcat">Nhập tên mới cho danh mục</CFormLabel>
+                <CFormInput
+                  id="editcat"
+                  placeholder="Tên danh mục"
+                  value={formik.values.editcat}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.editcat && formik.errors.editcat ? true : false}
+                  valid={
+                    !formik.touched.editcat || (formik.touched.editcat && formik.errors.editcat)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.editcat}</CFormFeedback>
               </CCol>
             </CRow>
           </CModalBody>
@@ -217,23 +215,21 @@ const KpiAdmin = () => {
           <CModalBody>
             <CRow className="mt-2 mb-2 mx-2">
               <CCol xs>
-                <CFormFloating>
-                  <CFormInput
-                    id="addcat"
-                    placeholder="Tên danh mục"
-                    value={formik.values.addcat}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    invalid={formik.touched.addcat && formik.errors.addcat ? true : false}
-                    valid={
-                      !formik.touched.addcat || (formik.touched.addcat && formik.errors.addcat)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormLabel htmlFor="editcat">Nhập tên danh mục mới</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.addcat}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="editcat">Nhập tên danh mục mới</CFormLabel>
+                <CFormInput
+                  id="addcat"
+                  placeholder="Tên danh mục mới"
+                  value={formik.values.addcat}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.addcat && formik.errors.addcat ? true : false}
+                  valid={
+                    !formik.touched.addcat || (formik.touched.addcat && formik.errors.addcat)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.addcat}</CFormFeedback>
               </CCol>
             </CRow>
           </CModalBody>

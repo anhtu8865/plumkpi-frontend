@@ -32,7 +32,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
-import CustomTablePagination from 'src/components/TablePagination'
+//import CustomTablePagination from 'src/components/TablePagination'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 
 import React, { Component } from 'react'
@@ -251,47 +251,43 @@ const User = () => {
             <div>
               <CRow className="mt-2">
                 <CCol>
-                  <CFormFloating>
-                    <CFormInput
-                      id="editusername"
-                      placeholder="Họ tên"
-                      value={formik.values.editusername}
-                      onChange={formik.handleChange}
-                      invalid={
-                        formik.touched.editusername && formik.errors.editusername ? true : false
-                      }
-                      valid={
-                        !formik.touched.editusername ||
-                        (formik.touched.editusername && formik.errors.editusername)
-                          ? false
-                          : true
-                      }
-                    />
-                    <CFormLabel htmlFor="editusername">Họ và tên</CFormLabel>
-                    <CFormFeedback invalid>{formik.errors.editusername}</CFormFeedback>
-                  </CFormFloating>
+                  <CFormLabel htmlFor="editusername">Họ và tên</CFormLabel>
+                  <CFormInput
+                    id="editusername"
+                    value={formik.values.editusername}
+                    onChange={formik.handleChange}
+                    invalid={
+                      formik.touched.editusername && formik.errors.editusername ? true : false
+                    }
+                    valid={
+                      !formik.touched.editusername ||
+                      (formik.touched.editusername && formik.errors.editusername)
+                        ? false
+                        : true
+                    }
+                  />
+
+                  <CFormFeedback invalid>{formik.errors.editusername}</CFormFeedback>
                 </CCol>
               </CRow>
               <CRow className="mt-4">
                 <CCol>
-                  <CFormFloating>
-                    <CFormInput
-                      id="editemail"
-                      placeholder="email"
-                      type="email"
-                      value={formik.values.editemail}
-                      onChange={formik.handleChange}
-                      invalid={formik.touched.editemail && formik.errors.editemail ? true : false}
-                      valid={
-                        !formik.touched.editemail ||
-                        (formik.touched.editemail && formik.errors.editemail)
-                          ? false
-                          : true
-                      }
-                    />
-                    <CFormLabel htmlFor="editemail">Email</CFormLabel>
-                    <CFormFeedback invalid>{formik.errors.editemail}</CFormFeedback>
-                  </CFormFloating>
+                  <CFormLabel htmlFor="editemail">Email</CFormLabel>
+                  <CFormInput
+                    id="editemail"
+                    type="email"
+                    value={formik.values.editemail}
+                    onChange={formik.handleChange}
+                    invalid={formik.touched.editemail && formik.errors.editemail ? true : false}
+                    valid={
+                      !formik.touched.editemail ||
+                      (formik.touched.editemail && formik.errors.editemail)
+                        ? false
+                        : true
+                    }
+                  />
+
+                  <CFormFeedback invalid>{formik.errors.editemail}</CFormFeedback>
                 </CCol>
               </CRow>
             </div>
@@ -299,20 +295,19 @@ const User = () => {
               <h6>Gán người dùng vào phòng ban</h6>
               <CRow>
                 <CCol>
-                  <CFormFloating>
-                    <FormikProvider value={formik}>
-                      <Field as="select" name="editdept.dept_id" className="form-select">
-                        <option value="" label="Chọn phòng ban" />
-                        {deptList.map((row) => (
-                          <option value={row.dept_id} key={row.dept_id}>
-                            {row.dept_name}
-                          </option>
-                        ))}
-                      </Field>
-                    </FormikProvider>
-                    <CFormLabel>Phòng ban</CFormLabel>
-                    <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
-                  </CFormFloating>
+                  <CFormLabel>Phòng ban</CFormLabel>
+                  <FormikProvider value={formik}>
+                    <Field as="select" name="editdept.dept_id" className="form-select">
+                      <option value="" label="Chọn phòng ban" />
+                      {deptList.map((row) => (
+                        <option value={row.dept_id} key={row.dept_id}>
+                          {row.dept_name}
+                        </option>
+                      ))}
+                    </Field>
+                  </FormikProvider>
+
+                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
                 </CCol>
               </CRow>
             </div>
@@ -450,69 +445,61 @@ const User = () => {
           <div>
             <CRow className="mt-2">
               <CCol>
-                <CFormFloating>
-                  <CFormInput
-                    id="inputFirstName"
-                    name="user_name"
-                    placeholder="Họ tên"
-                    value={formik.values.user_name}
-                    onChange={formik.handleChange}
-                    invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
-                    valid={
-                      !formik.touched.user_name ||
-                      (formik.touched.user_name && formik.errors.user_name)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.user_name}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
+                <CFormInput
+                  id="inputFirstName"
+                  name="user_name"
+                  value={formik.values.user_name}
+                  onChange={formik.handleChange}
+                  invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
+                  valid={
+                    !formik.touched.user_name ||
+                    (formik.touched.user_name && formik.errors.user_name)
+                      ? false
+                      : true
+                  }
+                />
+
+                <CFormFeedback invalid>{formik.errors.user_name}</CFormFeedback>
               </CCol>
             </CRow>
             <CRow className="mt-4">
               <CCol>
-                <CFormFloating>
-                  <CFormInput
-                    id="inputEmail"
-                    name="email"
-                    placeholder="email"
-                    type="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    invalid={formik.touched.email && formik.errors.email ? true : false}
-                    valid={
-                      !formik.touched.email || (formik.touched.email && formik.errors.email)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
+                <CFormInput
+                  id="inputEmail"
+                  name="email"
+                  type="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  invalid={formik.touched.email && formik.errors.email ? true : false}
+                  valid={
+                    !formik.touched.email || (formik.touched.email && formik.errors.email)
+                      ? false
+                      : true
+                  }
+                />
+
+                <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
               </CCol>
             </CRow>
             <CRow className="mt-4">
               <CCol>
-                <CFormFloating>
-                  <CFormInput
-                    id="inputPassword"
-                    placeholder="password"
-                    type="password"
-                    name="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    invalid={formik.touched.password && formik.errors.password ? true : false}
-                    valid={
-                      !formik.touched.password ||
-                      (formik.touched.password && formik.errors.password)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
+                <CFormInput
+                  id="inputPassword"
+                  type="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  invalid={formik.touched.password && formik.errors.password ? true : false}
+                  valid={
+                    !formik.touched.password || (formik.touched.password && formik.errors.password)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
               </CCol>
             </CRow>
           </div>
@@ -520,20 +507,18 @@ const User = () => {
             <h6>Gán người dùng vào phòng ban</h6>
             <CRow>
               <CCol>
-                <CFormFloating>
-                  <FormikProvider value={formik}>
-                    <Field as="select" name="dept.dept_id" className="form-select">
-                      <option value="" label="Chọn phòng ban" />
-                      {deptList.map((row) => (
-                        <option value={row.dept_id} key={row.dept_id}>
-                          {row.dept_name}
-                        </option>
-                      ))}
-                    </Field>
-                  </FormikProvider>
-                  <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
+                <FormikProvider value={formik}>
+                  <Field as="select" name="dept.dept_id" className="form-select">
+                    <option value="" label="Chọn phòng ban" />
+                    {deptList.map((row) => (
+                      <option value={row.dept_id} key={row.dept_id}>
+                        {row.dept_name}
+                      </option>
+                    ))}
+                  </Field>
+                </FormikProvider>
+                <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
               </CCol>
             </CRow>
           </div>
@@ -662,7 +647,7 @@ const User = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CustomTablePagination
+              {/*<CustomTablePagination
                 //rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 rowsPerPageOptions={[]}
                 colSpan={6}
@@ -683,7 +668,7 @@ const User = () => {
                 //onPageChange={handleChangePage}
                 //onRowsPerPageChange={handleChangeRowsPerPage}
                 //ActionsComponent={TablePaginationActions}
-              />
+              />*/}
             </CTableRow>
           </CTableFoot>
         </CTable>

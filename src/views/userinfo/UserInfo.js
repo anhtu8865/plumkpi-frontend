@@ -189,63 +189,53 @@ const UserInfo = () => {
         <form onSubmit={formik.handleSubmit}>
           <CRow className="mt-2">
             <CCol xs>
-              <CFormFloating>
-                <CFormInput
-                  id="username"
-                  placeholder="username"
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  invalid={formik.touched.username && formik.errors.username ? true : false}
-                  valid={
-                    !formik.touched.username || (formik.touched.username && formik.errors.username)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormFeedback invalid>{formik.errors.username}</CFormFeedback>
-                <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
+              <CFormInput
+                id="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={formik.touched.username && formik.errors.username ? true : false}
+                valid={
+                  !formik.touched.username || (formik.touched.username && formik.errors.username)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.username}</CFormFeedback>
             </CCol>
             <CCol xs>
-              <CFormFloating>
-                <CFormInput
-                  type="email"
-                  id="email"
-                  placeholder="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  invalid={formik.touched.email && formik.errors.email ? true : false}
-                  valid={
-                    !formik.touched.email || (formik.touched.email && formik.errors.email)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormFeedback invalid>{formik.errors.email}</CFormFeedback>
-                <CFormLabel htmlFor="email">Email</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="email">Email</CFormLabel>
+              <CFormInput
+                type="email"
+                id="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={formik.touched.email && formik.errors.email ? true : false}
+                valid={
+                  !formik.touched.email || (formik.touched.email && formik.errors.email)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.email}</CFormFeedback>
             </CCol>
           </CRow>
           <CRow className="mt-4">
             <CCol xs>
-              <CFormFloating>
-                <CFormSelect id="userrole" disabled>
-                  <option value={user.role}>{user.role}</option>
-                </CFormSelect>
-                <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
+              <CFormSelect id="userrole" disabled>
+                <option value={user.role}>{user.role}</option>
+              </CFormSelect>
             </CCol>
             <CCol xs>
-              <CFormFloating>
-                <CFormSelect id="userdept" disabled>
-                  <option value={user.dept ? user.dept : null}>
-                    {user.dept ? user.dept.dept_name : null}
-                  </option>
-                </CFormSelect>
-                <CFormLabel htmlFor="userdept">Phòng ban</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="userdept">Phòng ban</CFormLabel>
+              <CFormSelect id="userdept" disabled>
+                <option value={user.dept ? user.dept : null}>
+                  {user.dept ? user.dept.dept_name : null}
+                </option>
+              </CFormSelect>
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">
@@ -330,68 +320,59 @@ const UserInfo = () => {
         <form onSubmit={formik.handleSubmit}>
           <CRow>
             <CCol xs={12}>
-              <CFormFloating>
-                <CFormInput
-                  type="password"
-                  id="oldpw"
-                  placeholder="Password"
-                  value={formik.values.oldpw}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  invalid={formik.touched.oldpw && formik.errors.oldpw ? true : false}
-                  valid={
-                    !formik.touched.oldpw || (formik.touched.oldpw && formik.errors.oldpw)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormFeedback invalid>{formik.errors.oldpw}</CFormFeedback>
-                <CFormLabel htmlFor="oldpw">Mật khẩu hiện tại</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="oldpw">Mật khẩu hiện tại</CFormLabel>
+              <CFormInput
+                type="password"
+                id="oldpw"
+                value={formik.values.oldpw}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={formik.touched.oldpw && formik.errors.oldpw ? true : false}
+                valid={
+                  !formik.touched.oldpw || (formik.touched.oldpw && formik.errors.oldpw)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.oldpw}</CFormFeedback>
             </CCol>
           </CRow>
           <CRow className="mt-4">
             <CCol xs={12}>
-              <CFormFloating>
-                <CFormInput
-                  type="password"
-                  id="newpw"
-                  placeholder="Password"
-                  value={formik.values.newpw}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  invalid={formik.touched.newpw && formik.errors.newpw ? true : false}
-                  valid={
-                    !formik.touched.newpw || (formik.touched.newpw && formik.errors.newpw)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormFeedback invalid>{formik.errors.newpw}</CFormFeedback>
-                <CFormLabel htmlFor="newpw">Mật khẩu mới</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="newpw">Mật khẩu mới</CFormLabel>
+              <CFormInput
+                type="password"
+                id="newpw"
+                value={formik.values.newpw}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={formik.touched.newpw && formik.errors.newpw ? true : false}
+                valid={
+                  !formik.touched.newpw || (formik.touched.newpw && formik.errors.newpw)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.newpw}</CFormFeedback>
             </CCol>
           </CRow>
           <CRow className="mt-4">
             <CCol xs={12}>
-              <CFormFloating>
-                <CFormInput
-                  type="password"
-                  id="retypepw"
-                  placeholder="Password"
-                  value={formik.values.retypepw}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  invalid={formik.touched.retypepw && formik.errors.retypepw ? true : false}
-                  valid={
-                    !formik.touched.retypepw || (formik.touched.retypepw && formik.errors.retypepw)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormFeedback invalid>{formik.errors.retypepw}</CFormFeedback>
-                <CFormLabel htmlFor="retypepw">Nhập lại mật khẩu mới</CFormLabel>
-              </CFormFloating>
+              <CFormLabel htmlFor="retypepw">Nhập lại mật khẩu mới</CFormLabel>
+              <CFormInput
+                type="password"
+                id="retypepw"
+                value={formik.values.retypepw}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                invalid={formik.touched.retypepw && formik.errors.retypepw ? true : false}
+                valid={
+                  !formik.touched.retypepw || (formik.touched.retypepw && formik.errors.retypepw)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.retypepw}</CFormFeedback>
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">
