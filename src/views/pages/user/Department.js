@@ -246,24 +246,21 @@ const Department = () => {
           <CModalBody>
             <CRow className="mt-2 mb-2 mx-2">
               <CCol xs>
-                <CFormFloating>
-                  <CFormInput
-                    id="editdept"
-                    placeholder="Tên phòng ban"
-                    value={formik.values.editdept}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    invalid={formik.touched.editdept && formik.errors.editdept ? true : false}
-                    valid={
-                      !formik.touched.editdept ||
-                      (formik.touched.editdept && formik.errors.editdept)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormLabel htmlFor="editdept">Nhập tên mới cho phòng ban</CFormLabel>
-                  <CFormFeedback invalid>{formik.errors.editdept}</CFormFeedback>
-                </CFormFloating>
+                <CFormLabel htmlFor="editdept">Nhập tên mới cho phòng ban</CFormLabel>
+                <CFormInput
+                  id="editdept"
+                  placeholder="Tên phòng ban"
+                  value={formik.values.editdept}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.editdept && formik.errors.editdept ? true : false}
+                  valid={
+                    !formik.touched.editdept || (formik.touched.editdept && formik.errors.editdept)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.editdept}</CFormFeedback>
               </CCol>
             </CRow>
           </CModalBody>
@@ -354,22 +351,19 @@ const Department = () => {
         <h6>Thêm phòng ban mới</h6>
         <CRow className="mt-2 mb-2">
           <CCol>
-            <CFormFloating>
-              <CFormInput
-                name="dept_name"
-                id="inputDeptName"
-                placeholder="deptName"
-                value={formik.values.dept_name}
-                onChange={formik.handleChange}
-                invalid={formik.touched.dept_name && formik.errors.dept_name ? true : false}
-                valid={
-                  !formik.touched.dept_name || (formik.touched.dept_name && formik.errors.dept_name)
-                    ? false
-                    : true
-                }
-              />
-              <CFormLabel htmlFor="inputDeptName">Tên phòng ban</CFormLabel>
-            </CFormFloating>
+            <CFormLabel htmlFor="inputDeptName">Tên phòng ban</CFormLabel>
+            <CFormInput
+              name="dept_name"
+              id="inputDeptName"
+              value={formik.values.dept_name}
+              onChange={formik.handleChange}
+              invalid={formik.touched.dept_name && formik.errors.dept_name ? true : false}
+              valid={
+                !formik.touched.dept_name || (formik.touched.dept_name && formik.errors.dept_name)
+                  ? false
+                  : true
+              }
+            />
             <CFormFeedback invalid>{formik.errors.email}</CFormFeedback>
           </CCol>
         </CRow>
