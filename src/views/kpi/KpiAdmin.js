@@ -12,7 +12,6 @@ import {
   CModalFooter,
   CModalTitle,
   CModalHeader,
-  CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
 import { Tabs, Tab, Box, Button, IconButton } from '@mui/material'
@@ -20,10 +19,9 @@ import { TabPanel, a11yProps } from 'src/components/TabPanel'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import AddBoxIcon from '@mui/icons-material/AddBox'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
-import { KpiAdminTable } from './KpiAdminTable'
+import { KpiAdminTable, AddKpiButton } from './KpiAdminTable'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -42,6 +40,7 @@ const KpiAdmin = () => {
   const [deleteCatId, setDeleteCatId] = React.useState(0)
   const [deleteCatModal, setDeleteCatModal] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
+  const [kpiTemList, setKpiTemList] = React.useState([])
 
   const dispatch = useDispatch()
 
@@ -54,6 +53,19 @@ const KpiAdmin = () => {
       .get('/kpi-categories')
       .then((response) => {
         setKpiCatList(response.data.items)
+      })
+      .catch((error) => {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      })
+    api
+      .get('/kpi-templates')
+      .then((response) => {
+        setKpiTemList(response.data.items)
       })
       .catch((error) => {
         dispatch(
@@ -310,96 +322,11 @@ const KpiAdmin = () => {
           variant="contained"
           color="primary"
           onClick={() => setAddCatVisible(true)}
-          startIcon={<AddBoxIcon />}
+          startIcon={<AddCircleIcon />}
         >
           Tạo danh mục KPI
         </Button>
         <AddCategoryModal />
-      </>
-    )
-  }
-
-  const AddKpiButton = () => {
-    return (
-      <>
-        <Button
-          variant="contained"
-          color="primary"
-          //onClick={() => setVisible(true)}
-          startIcon={<AddCircleIcon />}
-        >
-          Tạo KPI mới
-        </Button>
-        {/*<CModal
-          alignment="center"
-          size="lg"
-          scrollable
-          visible={visible}
-          onClose={() => setVisible(false)}
-        >
-          <CModalHeader>
-            <CModalTitle>Tạo KPI mới</CModalTitle>
-          </CModalHeader>
-          <CModalBody className="mx-4 mb-3">
-            <CRow>
-              <CFormLabel htmlFor="kpiname">Tên KPI</CFormLabel>
-              <CFormInput id="kpiname" placeholder="Nhập tên KPI" />
-            </CRow>
-            <CRow className="mt-2">
-              <CFormLabel htmlFor="kpides">Mô tả KPI</CFormLabel>
-              <CFormInput id="kpides" placeholder="Nhập mô tả KPI" />
-            </CRow>
-            <CRow className="mt-2">
-              <CCol xs={4}>
-                <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
-                <CFormSelect id="freq">
-                  <option>Tuần</option>
-                  <option>Tháng</option>
-                  <option>Quý</option>
-                  <option>Năm</option>
-                </CFormSelect>
-              </CCol>
-              <CCol xs={4}>
-                <CFormLabel htmlFor="direction">Hướng</CFormLabel>
-                <CFormSelect id="direction">
-                  <option>Lên</option>
-                  <option>Xuống</option>
-                </CFormSelect>
-              </CCol>
-              <CCol xs={4}>
-                <CFormLabel htmlFor="category">Danh mục</CFormLabel>
-                <CFormSelect id="category">
-                  <option>Sales</option>
-                  <option>Marketing</option>
-                  <option>Chăm sóc khách hàng</option>
-                </CFormSelect>
-              </CCol>
-            </CRow>
-            <CRow className="mt-2">
-              <CCol xs={4}>
-                <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
-                <CFormInput id="unit" placeholder="Nhập đơn vị tính" />
-              </CCol>
-              <CCol xs={4}>
-                <CFormLabel htmlFor="how">Cách tính</CFormLabel>
-                <CFormSelect id="how">
-                  <option>Tổng</option>
-                  <option>Trung bình</option>
-                </CFormSelect>
-              </CCol>
-            </CRow>
-            <CRow className="mt-2">
-              <CFormLabel htmlFor="formula">Nhập công thức tính</CFormLabel>
-              <CFormInput id="formula" placeholder="Nhập công thức tính" />
-            </CRow>
-          </CModalBody>
-          <CModalFooter>
-            <CButton color="secondary" onClick={() => setVisible(false)}>
-              Hủy
-            </CButton>
-            <CButton color="success">Tạo mới</CButton>
-          </CModalFooter>
-        </CModal>*/}
       </>
     )
   }
@@ -426,55 +353,67 @@ const KpiAdmin = () => {
           return (
             <TabPanel key={catItem.kpi_category_id} value={value} index={index}>
               <CRow>
-                <div className="d-flex align-items-center flex-row mb-2">
-                  <h5 className="me-3">{catItem.kpi_category_name}</h5>
-                  <div className="mb-2">
-                    <IconButton
-                      id="cat-name-edit"
-                      color="primary"
-                      onClick={() => {
-                        setEditCatModal(true)
-                        setCatId(catItem.kpi_category_id)
-                        setCatName(catItem.kpi_category_name)
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <EditCategoryModal />
-                  </div>
-                  <div className="mb-2">
-                    <IconButton
-                      id="cat-delete"
-                      color="error"
-                      onClick={() => {
-                        setDeleteCatModal(true)
-                        setDeleteCatId(catItem.kpi_category_id)
-                      }}
-                    >
-                      <DeleteForeverIcon />
-                      <CModal
-                        alignment="center"
-                        scrollable
-                        visible={deleteCatModal}
-                        onClose={() => setDeleteCatModal(false)}
+                <CCol xs>
+                  <div className="d-flex align-items-center flex-row mb-2">
+                    <h5 className="me-3">{catItem.kpi_category_name}</h5>
+                    <div className="mb-2">
+                      <IconButton
+                        id="cat-name-edit"
+                        color="primary"
+                        onClick={() => {
+                          setEditCatModal(true)
+                          setCatId(catItem.kpi_category_id)
+                          setCatName(catItem.kpi_category_name)
+                        }}
                       >
-                        <CModalHeader>
-                          <CModalTitle>Xóa danh mục</CModalTitle>
-                        </CModalHeader>
-                        <CModalBody>
-                          <CRow className="mt-2 mb-2 mx-2">
-                            <CCol xs>
-                              Bạn có chắc muốn xóa danh mục {catItem.kpi_category_name}?
-                            </CCol>
-                          </CRow>
-                        </CModalBody>
-                        <DeleteCategoryModal />
-                      </CModal>
-                    </IconButton>
+                        <EditIcon />
+                      </IconButton>
+                      <EditCategoryModal />
+                    </div>
+                    <div className="mb-2">
+                      <IconButton
+                        id="cat-delete"
+                        color="error"
+                        onClick={() => {
+                          setDeleteCatModal(true)
+                          setDeleteCatId(catItem.kpi_category_id)
+                        }}
+                      >
+                        <DeleteForeverIcon />
+                        <CModal
+                          alignment="center"
+                          scrollable
+                          visible={deleteCatModal}
+                          onClose={() => setDeleteCatModal(false)}
+                        >
+                          <CModalHeader>
+                            <CModalTitle>Xóa danh mục</CModalTitle>
+                          </CModalHeader>
+                          <CModalBody>
+                            <CRow className="mt-2 mb-2 mx-2">
+                              <CCol xs>
+                                Bạn có chắc muốn xóa danh mục {catItem.kpi_category_name}?
+                              </CCol>
+                            </CRow>
+                          </CModalBody>
+                          <DeleteCategoryModal />
+                        </CModal>
+                      </IconButton>
+                    </div>
                   </div>
-                </div>
+                </CCol>
+                <CCol xs>
+                  <div className="text-end">
+                    <AddKpiButton
+                      inCat={catItem}
+                      catList={kpiCatList}
+                      setParentReload={setReload}
+                      setParentLoading={setLoading}
+                    />
+                  </div>
+                </CCol>
               </CRow>
-              <KpiAdminTable />
+              <KpiAdminTable inCat={catItem} temList={kpiTemList} />
             </TabPanel>
           )
         })}
@@ -495,7 +434,6 @@ const KpiAdmin = () => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddKpiButton />
                       <AddCategoryButton />
                     </div>
                   </CCol>
