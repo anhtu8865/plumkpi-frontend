@@ -14,7 +14,8 @@ import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
 // sidebar nav config
-import navigation from '../_nav'
+import navigationAdmin from '../_nav'
+import navigation from '../_nav2'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -36,7 +37,7 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav items={false ? navigationAdmin : navigation} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler className="d-none d-lg-flex" onClick={() => dispatch(setUnfoldable())} />
