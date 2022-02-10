@@ -26,7 +26,7 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 
-import { Tabs, Tab, Box, Button, IconButton, Snackbar, Alert } from '@mui/material'
+import { Button, IconButton, Snackbar, Alert, Pagination } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
@@ -38,7 +38,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
-import './User.css'
+//import './User.css'
 
 import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
 import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
@@ -568,6 +568,8 @@ const User = () => {
   }
 
   const UserTable = () => {
+    const [numEachPage, setNumEachPage] = React.useState(10)
+    const [page, setPage] = React.useState(1)
     return (
       <>
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
@@ -587,7 +589,7 @@ const User = () => {
               /*(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
-            )*/ userList.map((row) => (
+            )*/ userList.slice((page - 1) * numEachPage, page * numEachPage).map((row) => (
                 <CTableRow v-for="item in tableItems" key={row.name}>
                   <CTableDataCell>{row.user_id}</CTableDataCell>
                   <CTableDataCell>
@@ -647,28 +649,17 @@ const User = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              {/*<CustomTablePagination
-                //rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                rowsPerPageOptions={[]}
-                colSpan={6}
-                count={userList.length}
-                //rowsPerPage={rowsPerPage}
-                rowsPerPage={userList.length}
-                //page={page}
-                page={0}
-                componentsProps={{
-                  select: {
-                    'aria-label': 'rows per page',
-                  },
-                  actions: {
-                    showFirstButton: true,
-                    showLastButton: true,
-                  },
-                }}
-                //onPageChange={handleChangePage}
-                //onRowsPerPageChange={handleChangeRowsPerPage}
-                //ActionsComponent={TablePaginationActions}
-              />*/}
+              <CTableDataCell colSpan="4">
+                <Pagination
+                  count={Math.ceil(userList.length / 10)}
+                  showFirstButton
+                  showLastButton
+                  size="small"
+                  onChange={(event, page) => {
+                    setPage(page)
+                  }}
+                />
+              </CTableDataCell>
             </CTableRow>
           </CTableFoot>
         </CTable>

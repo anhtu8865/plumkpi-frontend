@@ -11,31 +11,50 @@ import { IconButton } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
-import PropTypes from 'prop-types'
-
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
-const rows = []
+function createData(name) {
+  return { name }
+}
 
-const DeptTable = (props) => {
+/*const rows = [
+  createData('Tài chính 1'),
+  createData('Tài chính 2'),
+  createData('Tài chính 3'),
+  createData('Tài chính 4'),
+  createData('Tài chính 5'),
+]*/
+
+//console.log(rows)
+let rows = []
+function getAllDept() {
+  api
+    .get('depts')
+    .then(function (res) {
+      rows = [...rows, ...res.data.items]
+      console.log(rows)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+    .then(function () {})
+}
+getAllDept()
+const DeptTable = () => {
   return (
     <>
       <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
         <CTableHead color="light">
           <CTableRow>
-            <CTableHeaderCell>ID</CTableHeaderCell>
             <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-            <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
             <CTableHeaderCell />
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {props.temList.map((row) => (
+          {rows.map((row) => (
             <CTableRow v-for="item in tableItems" key={row.dept_name}>
-              <CTableDataCell>{row.dept_id}</CTableDataCell>
               <CTableDataCell>{row.dept_name}</CTableDataCell>
-              <CTableDataCell>{row.description}</CTableDataCell>
               <CTableDataCell className="text-center">
                 <IconButton id="edit" color="primary">
                   <EditIcon />
@@ -50,10 +69,6 @@ const DeptTable = (props) => {
       </CTable>
     </>
   )
-}
-
-DeptTable.propTypes = {
-  temList: PropTypes.array,
 }
 
 export default DeptTable
