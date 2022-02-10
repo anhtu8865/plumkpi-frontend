@@ -43,7 +43,7 @@ import './User.css'
 import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
 import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
 //import AddUserForm from './AddUser'
-import Department from './Department'
+//import Department from './Department'
 
 import { useFormik, FormikProvider, Field } from 'formik'
 import * as yup from 'yup'
@@ -697,6 +697,7 @@ const User = () => {
                       >
                         Thêm người dùng
                       </Button>
+                      {/*
                       <Button
                         variant="contained"
                         color="primary"
@@ -704,7 +705,7 @@ const User = () => {
                         onClick={() => setshowDepartment(true)}
                       >
                         Phòng ban
-                      </Button>
+                      </Button>*/}
                     </div>
                   </CCol>
                 </CRow>
@@ -719,9 +720,7 @@ const User = () => {
                   <CModalHeader>
                     <CModalTitle>Quản lý phòng ban</CModalTitle>
                   </CModalHeader>
-                  <CModalBody>
-                    <Department />
-                  </CModalBody>
+                  <CModalBody></CModalBody>
                 </CModal>
                 <CModal
                   scrollable
