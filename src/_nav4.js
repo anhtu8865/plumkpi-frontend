@@ -16,7 +16,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Đăng ký KPI cá nhân',
+        name: 'Duyệt đăng kí KPI',
         to: '/',
       },
     ],

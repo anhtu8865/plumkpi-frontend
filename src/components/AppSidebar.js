@@ -15,12 +15,34 @@ import 'simplebar/dist/simplebar.min.css'
 
 // sidebar nav config
 import navigationAdmin from '../_nav'
-import navigation from '../_nav2'
+import navigationEmployee from '../_nav2'
+import navigationManager from '../_nav3'
+import navigationDirector from '../_nav4'
+
+import api from 'src/views/axiosConfig'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebar.unfoldable)
   const sidebarShow = useSelector((state) => state.sidebar.sidebarShow)
+
+  const [reload, setReload] = React.useState(true)
+
+  const [loading, setLoading] = React.useState(true)
+
+  const [role, setRole] = React.useState('')
+
+  React.useEffect(() => {
+    //assume that we already login
+    api
+      .get('/authentication')
+      .then((response) => {
+        setRole(response.data.role)
+      })
+      .catch((error) => {})
+    setReload(false)
+    setLoading(false)
+  }, [reload])
 
   return (
     <CSidebar
@@ -37,12 +59,24 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={false ? navigationAdmin : navigation} />
+          <AppSidebarNav items={chooseNav(role)} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler className="d-none d-lg-flex" onClick={() => dispatch(setUnfoldable())} />
     </CSidebar>
   )
+}
+
+function chooseNav(role) {
+  if (role === 'Admin') {
+    return navigationAdmin
+  } else if (role === 'Employee') {
+    return navigationEmployee
+  } else if (role === 'Manager') {
+    return navigationManager
+  } else if (role === 'Director') {
+    return navigationDirector
+  }
 }
 
 export default React.memo(AppSidebar)
