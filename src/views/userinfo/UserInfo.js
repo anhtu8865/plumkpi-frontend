@@ -27,6 +27,7 @@ import { createAlert } from 'src/store'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
+import { roleList } from 'src/utils/engToViet'
 
 const UserInfo = () => {
   const [user, setUser] = React.useState({
@@ -325,7 +326,15 @@ const UserInfo = () => {
             </CCol>
             <CCol xs>
               <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
-              <CFormInput id="userrole" disabled value={user.role ? user.role : 'Không'} />
+              <CFormInput
+                id="userrole"
+                disabled
+                value={
+                  user.role
+                    ? roleList.filter((roleItem) => roleItem.eng == user.role)[0].viet
+                    : 'Không'
+                }
+              />
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">
