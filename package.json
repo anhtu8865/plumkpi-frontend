@@ -38,6 +38,7 @@
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
+    "@mui/lab": "^5.0.0-alpha.68",
     "@mui/material": "^5.2.8",
     "@reduxjs/toolkit": "^1.7.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
