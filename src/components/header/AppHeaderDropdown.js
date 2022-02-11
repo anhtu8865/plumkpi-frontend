@@ -8,6 +8,8 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CRow,
+  CCol,
 } from '@coreui/react'
 import {
   cilBell,
@@ -23,10 +25,10 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import api from 'src/views/axiosConfig'
-import axios from 'axios'
 
 import { useHistory } from 'react-router-dom'
 import { Avatar } from '@mui/material'
+import { roleList } from 'src/utils/engToViet'
 
 const AppHeaderDropdown = () => {
   const [user, setUser] = React.useState({})
@@ -60,7 +62,16 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 40, height: 40 }} />
+        <CRow>
+          <CCol className="mt-2">
+            <CBadge color="secondary">
+              {user.role ? roleList.filter((roleItem) => roleItem.eng == user.role)[0].viet : null}
+            </CBadge>
+          </CCol>
+          <CCol>
+            <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 40, height: 40 }} />
+          </CCol>
+        </CRow>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Tài khoản</CDropdownHeader>

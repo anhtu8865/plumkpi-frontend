@@ -12,7 +12,7 @@ import {
   CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
-import { Tabs, Tab, Box, Button, Avatar } from '@mui/material'
+import { Tabs, Tab, Box, Button, Avatar, TextField } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
 import LockIcon from '@mui/icons-material/Lock'
 import CheckIcon from '@mui/icons-material/Check'
@@ -24,12 +24,20 @@ import api from 'src/views/axiosConfig'
 import { useDispatch } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/store'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker'
+import { roleList } from 'src/utils/engToViet'
 
 const UserInfo = () => {
   const [user, setUser] = React.useState({
     user_name: null,
     email: null,
     role: null,
+    phone: null,
+    gender: 'None',
+    address: null,
+    dob: null,
   })
   const [reload, setReload] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
@@ -150,18 +158,29 @@ const UserInfo = () => {
     const ValidationSchema = yup.object({
       username: yup.string().required('Đây là trường bắt buộc'),
       email: yup.string().email('Không đúng định dạng email').required('Đây là trường bắt buộc'),
+      phone: yup.number().typeError('Trường này bắt buộc nhập số'),
     })
 
     const formik = useFormik({
       initialValues: {
         username: user.user_name,
         email: user.email,
+        dob: user.dob,
+        gender: user.gender,
+        address: user.address,
+        phone: user.phone,
       },
       validationSchema: ValidationSchema,
       onSubmit: (values) => {
-        // assume that we already login
         api
-          .put('authentication/update', { user_name: values.username, email: values.email })
+          .put('authentication/update', {
+            user_name: values.username,
+            email: values.email,
+            phone: values.phone,
+            gender: values.gender,
+            address: values.address,
+            dob: values.dob,
+          })
           .then(() => {
             dispatch(
               createAlert({
@@ -192,6 +211,7 @@ const UserInfo = () => {
               <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
               <CFormInput
                 id="username"
+                placeholder="Nhập họ và tên"
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -209,6 +229,7 @@ const UserInfo = () => {
               <CFormInput
                 type="email"
                 id="email"
+                placeholder="Nhập email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -224,18 +245,96 @@ const UserInfo = () => {
           </CRow>
           <CRow className="mt-4">
             <CCol xs>
-              <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
-              <CFormSelect id="userrole" disabled>
-                <option value={user.role}>{user.role}</option>
+              <CRow>
+                <CFormLabel htmlFor="dob">Ngày sinh</CFormLabel>
+              </CRow>
+              <CRow className="px-2 pt-2">
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    id="dob"
+                    inputFormat="dd/MM/yyyy"
+                    value={formik.values.dob}
+                    onChange={(date) => {
+                      formik.setFieldValue('dob', date.toLocaleDateString())
+                    }}
+                    renderInput={(params) => <TextField size="small" {...params} />}
+                  />
+                </LocalizationProvider>
+              </CRow>
+            </CCol>
+          </CRow>
+          <CRow className="mt-4">
+            <CCol xs>
+              <CFormLabel htmlFor="gender">Giới tính</CFormLabel>
+              <CFormSelect
+                id="gender"
+                placeholder="Chọn giới tính"
+                {...formik.getFieldProps('gender')}
+                invalid={formik.touched.gender && formik.errors.gender ? true : false}
+                valid={
+                  !formik.touched.gender || (formik.touched.gender && formik.errors.gender)
+                    ? false
+                    : true
+                }
+              >
+                <option value="None">Khác</option>
+                <option value="Male">Nam</option>
+                <option value="Female">Nữ</option>
               </CFormSelect>
             </CCol>
             <CCol xs>
+              <CFormLabel htmlFor="phone">Số điện thoại</CFormLabel>
+              <CFormInput
+                id="phone"
+                placeholder="Nhập số điện thoại"
+                {...formik.getFieldProps('phone')}
+                invalid={formik.touched.phone && formik.errors.phone ? true : false}
+                valid={
+                  !formik.touched.phone || (formik.touched.phone && formik.errors.phone)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.phone}</CFormFeedback>
+            </CCol>
+          </CRow>
+          <CRow className="mt-4">
+            <CCol xs>
+              <CFormLabel htmlFor="address">Địa chỉ</CFormLabel>
+              <CFormInput
+                id="address"
+                placeholder="Nhập địa chỉ"
+                {...formik.getFieldProps('address')}
+                invalid={formik.touched.address && formik.errors.address ? true : false}
+                valid={
+                  !formik.touched.address || (formik.touched.address && formik.errors.address)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.address}</CFormFeedback>
+            </CCol>
+          </CRow>
+          <CRow className="mt-4">
+            <CCol xs>
               <CFormLabel htmlFor="userdept">Phòng ban</CFormLabel>
-              <CFormSelect id="userdept" disabled>
-                <option value={user.dept ? user.dept : null}>
-                  {user.dept ? user.dept.dept_name : null}
-                </option>
-              </CFormSelect>
+              <CFormInput
+                id="userdept"
+                disabled
+                value={user.dept ? user.dept.dept_name : 'Không'}
+              />
+            </CCol>
+            <CCol xs>
+              <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
+              <CFormInput
+                id="userrole"
+                disabled
+                value={
+                  user.role
+                    ? roleList.filter((roleItem) => roleItem.eng == user.role)[0].viet
+                    : 'Không'
+                }
+              />
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">
