@@ -32,21 +32,18 @@ import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
-//import CustomTablePagination from 'src/components/TablePagination'
+
 import { LoadingCircle } from 'src/components/LoadingCircle'
 
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
-
-//import AddDepartmentForm from './AddDepartment'
-//import Department from './Department'
 
 import { useFormik, FormikProvider, Field } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
-import DepartmentTable from './DepartmentTable'
+import PropTypes from 'prop-types'
 
 const Department = () => {
   const [showAddDepartmentForm, setshowAddDepartmentForm] = React.useState(false)
@@ -65,6 +62,18 @@ const Department = () => {
   const [loading, setLoading] = React.useState(true)
 
   const [deptList, setDeptList] = React.useState([])
+
+  const [deleteDeptId, setDeleteDeptId] = React.useState(0)
+
+  const [deleteDeptModal, setDeleteDeptModal] = React.useState(false)
+
+  const [editDeptModal, setEditDeptModal] = React.useState(false)
+
+  const [editDeptId, setEditDeptId] = React.useState(0)
+
+  const [deptName, setDeptName] = React.useState('')
+
+  const [deptDes, setDeptDes] = React.useState('')
 
   React.useEffect(() => {
     //assume that we already login
@@ -208,6 +217,225 @@ const Department = () => {
     )
   }
 
+  const EditDeptModal = () => {
+    const ValidationSchema = yup.object({
+      editdept: yup.string().required('Đây là trường bắt buộc'),
+    })
+
+    const formik = useFormik({
+      initialValues: {
+        editdept: `${deptName}`,
+        editdes: `${deptDes}`,
+      },
+      validationSchema: ValidationSchema,
+      onSubmit: (values) => {
+        // assume that we already login
+        api
+          .put(`/depts/${editDeptId}`, {
+            dept_name: values.editdept,
+            description: values.editdes,
+          })
+          .then(() => {
+            setSuccessMessage('Cập nhật phòng ban thành công')
+            setSuccess(true)
+            setLoading(true)
+          })
+          .catch((error) => {
+            setErrorMessage(error.response.data.message)
+            setError(true)
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+            setEditDeptModal(false)
+            setEditDeptId(0)
+            setDeptName('')
+          })
+      },
+    })
+
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={editDeptModal}
+          onClose={() => setEditDeptModal(false)}
+        >
+          <CModalHeader>
+            <CModalTitle>Chỉnh sửa phòng ban</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol xs>
+                <CFormLabel htmlFor="editdept">Nhập tên mới cho phòng ban</CFormLabel>
+                <CFormInput
+                  id="editdept"
+                  placeholder="Tên phòng ban"
+                  value={formik.values.editdept}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.editdept && formik.errors.editdept ? true : false}
+                  valid={
+                    !formik.touched.editdept || (formik.touched.editdept && formik.errors.editdept)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.editdept}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol xs>
+                <CFormLabel htmlFor="editdept">Mô tả</CFormLabel>
+                <CFormInput
+                  id="editdes"
+                  placeholder="Mô tả"
+                  value={formik.values.editdes}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.editdes && formik.errors.editdes ? true : false}
+                  valid={
+                    !formik.touched.editdes || (formik.touched.editdes && formik.errors.editdes)
+                      ? false
+                      : true
+                  }
+                />
+                <CFormFeedback invalid>{formik.errors.editdes}</CFormFeedback>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              onClick={formik.submitForm}
+              disabled={formik.isSubmitting}
+            >
+              Xác nhận
+            </Button>
+            {formik.isSubmitting && <LoadingCircle />}
+          </CModalFooter>
+        </CModal>
+      </form>
+    )
+  }
+
+  const DeleteDeptModal = () => {
+    const formik = useFormik({
+      initialValues: { deletedelete: '' },
+      onSubmit: (values) => {
+        // assume that we already login
+        api
+          .delete(`/depts/${deleteDeptId}`)
+          .then(() => {
+            setSuccessMessage('Xóa phòng ban thành công.')
+            setSuccess(true)
+            setLoading(true)
+          })
+          .catch((error) => {
+            setErrorMessage(error.response.data.message)
+            setError(true)
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+            setDeleteDeptModal(false)
+            setDeleteDeptId(0)
+          })
+      },
+    })
+
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <CModalFooter>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<DeleteForeverIcon />}
+            type="submit"
+            onClick={formik.submitForm}
+            disabled={formik.isSubmitting}
+          >
+            Xóa bỏ
+          </Button>
+          {formik.isSubmitting && <LoadingCircle />}
+        </CModalFooter>
+      </form>
+    )
+  }
+
+  const DeptTable = (props) => {
+    return (
+      <>
+        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+          <CTableHead color="light">
+            <CTableRow>
+              <CTableHeaderCell>ID</CTableHeaderCell>
+              <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
+              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
+              <CTableHeaderCell />
+            </CTableRow>
+          </CTableHead>
+          <CTableBody>
+            {props.temList.map((row) => (
+              <CTableRow v-for="item in tableItems" key={row.dept_name}>
+                <CTableDataCell>{row.dept_id}</CTableDataCell>
+                <CTableDataCell>{row.dept_name}</CTableDataCell>
+                <CTableDataCell>{row.description}</CTableDataCell>
+                <CTableDataCell className="text-center">
+                  <IconButton
+                    id="edit"
+                    color="primary"
+                    onClick={() => {
+                      setEditDeptModal(true)
+                      setEditDeptId(row.dept_id)
+                      setDeptName(row.dept_name)
+                      setDeptDes(row.description)
+                    }}
+                  >
+                    <EditIcon />
+                    <EditDeptModal />
+                  </IconButton>
+                  <IconButton
+                    id="delete"
+                    color="error"
+                    onClick={() => {
+                      setDeleteDeptModal(true)
+                      setDeleteDeptId(row.dept_id)
+                    }}
+                  >
+                    <DeleteForeverIcon />
+                    <CModal
+                      alignment="center"
+                      scrollable
+                      visible={deleteDeptModal}
+                      onClose={() => setDeleteDeptModal(false)}
+                    >
+                      <CModalHeader>
+                        <CModalTitle>Xóa danh mục</CModalTitle>
+                      </CModalHeader>
+                      <CModalBody>
+                        <CRow className="mt-2 mb-2 mx-2">
+                          <CCol xs>Bạn có chắc muốn xóa danh mục ?</CCol>
+                        </CRow>
+                      </CModalBody>
+                      <DeleteDeptModal />
+                    </CModal>
+                  </IconButton>
+                </CTableDataCell>
+              </CTableRow>
+            ))}
+          </CTableBody>
+        </CTable>
+      </>
+    )
+  }
+
+  DeptTable.propTypes = {
+    temList: PropTypes.array,
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
@@ -263,7 +491,7 @@ const Department = () => {
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <DepartmentTable temList={deptList} />
+                  <DeptTable temList={deptList} />
                 </div>
               </CCardBody>
             </CCard>
