@@ -39,7 +39,8 @@ export const formulaTypingRule = (
     Giữa các phép toán, dấu ngoặc, số và KPI đều phải có ít nhất một khoảng trắng <q> </q>.
     <br />
     <br />
-    Đối với số âm, để chính xác bạn nên nhập như ví dụ sau: <q>( - 978 )</q>.
+    Đối với số âm, bạn phải nhập dấu <q>-</q> sát với số (không có khoảng trắng) như ví dụ sau:{' '}
+    <q>-978</q>.
     <br />
     <br />
     Để tiện cho việc xử lý, trong khung công thức tên KPI nếu có chứa khoảng trắng <q> </q> thì cần
@@ -48,3 +49,7 @@ export const formulaTypingRule = (
     <q>Số_đơn_khiếu_nại_nhận_được</q>.
   </div>
 )
+
+export const checkValidError = (str) => {
+  return `Không tồn tại KPI có tên "${str}". Xin hãy kiểm tra lại dấu cách giữa các phép toán, số và KPI cũng như dấu _ trong tên KPI`
+}

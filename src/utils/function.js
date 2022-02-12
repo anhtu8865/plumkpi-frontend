@@ -1,6 +1,6 @@
 //chứa những hàm để xử lý dữ liệu
 
-import { formulaOperators } from 'src/utils/constant'
+import { formulaOperators, checkValidError } from 'src/utils/constant'
 
 export const isNumeric = (str) => {
   return !isNaN(str)
@@ -26,22 +26,28 @@ export const checkValid = (formulaString, kpiList) => {
         finalFormulaElements.push(formulaElements[i])
       } else {
         return {
-          errorMessage: `Không tồn tại KPI có tên "${formulaElements[i]}". Xin hãy kiểm tra lại dấu cách giữa các phép toán, số và KPI cũng như dấu _ trong tên KPI`,
+          errorMessage: checkValidError(formulaElements[i]),
         }
       }
     } else {
       if (isNumeric(formulaElements[i])) {
         finalFormulaElements.push(formulaElements[i])
+      } else if (formulaElements[i][0] == '-') {
+        const mapKpi = mappedKpi(formulaElements[i].slice(1), kpiList)
+        if (mapKpi.length != 0) {
+          finalFormulaElements.push('KPI' + mapKpi[0].kpi_template_id)
+        } else {
+          return {
+            errorMessage: checkValidError(formulaElements[i].slice(1).replaceAll('_', ' ')),
+          }
+        }
       } else {
         const mapKpi = mappedKpi(formulaElements[i], kpiList)
         if (mapKpi.length != 0) {
           finalFormulaElements.push('KPI' + mapKpi[0].kpi_template_id)
         } else {
           return {
-            errorMessage: `Không tồn tại KPI có tên "${formulaElements[i].replaceAll(
-              '_',
-              ' ',
-            )}". Xin hãy kiểm tra lại dấu cách giữa các phép toán, số và KPI cũng như dấu "_" trong tên KPI`,
+            errorMessage: checkValidError(formulaElements[i].replaceAll('_', ' ')),
           }
         }
       }
@@ -51,21 +57,70 @@ export const checkValid = (formulaString, kpiList) => {
 }
 
 export const checkFormulaLogic = (formulaArray) => {
-  let formula = ''
+  const numberOrKpi = []
+  const operator = []
+  let isTrue = true
+
   for (var i = 0; i < formulaArray.length; i++) {
     if (isNumeric(formulaArray[i]) || formulaArray[i].length > 1) {
-      if (isNumeric(formula[formula.length - 1])) {
-        return false
+      numberOrKpi.push(formulaArray[i])
+      if (isTrue) {
+        isTrue = false
       } else {
-        formula = formula + '1'
+        return {
+          errorMessage: 'Đảm bảo rằng giữa các số và KPI đều có phép toán (nhất là phép "*")',
+        }
       }
+    } else if (formulaOperators.slice(0, 4).includes(formulaArray[i])) {
+      operator.push(formulaArray[i])
+      isTrue = true
     } else {
-      formula = formula + formulaArray[i]
+      if (formulaArray[i] == '(') {
+        operator.push(formulaArray[i])
+      } else {
+        let flag = true
+        while (operator.length != 0) {
+          let c = operator.pop()
+          if (c == '(') {
+            flag = false
+            break
+          } else {
+            if (numberOrKpi.length < 2) {
+              return {
+                errorMessage: 'Đảm bảo rằng có đủ hai toán hạng trong các phép toán +, -, *, /',
+              }
+            } else {
+              numberOrKpi.pop()
+            }
+          }
+        }
+        if (flag) {
+          return {
+            errorMessage: 'Đảm bảo thứ tự cũng như sự thừa hoặc thiếu của các dấu ngoặc',
+          }
+        }
+      }
     }
   }
-  try {
-    return !isNaN(eval(formula))
-  } catch (e) {
-    return false
+  while (operator.length != 0) {
+    let c = operator.pop()
+    if (!formulaOperators.slice(0, 4).includes(c)) {
+      return {
+        errorMessage: 'Đảm bảo thứ tự cũng như sự thừa hoặc thiếu của các dấu ngoặc',
+      }
+    }
+    if (numberOrKpi.length < 2) {
+      return {
+        errorMessage: 'Đảm bảo rằng có đủ hai toán hạng trong các phép toán +, -, *, /',
+      }
+    } else {
+      numberOrKpi.pop()
+    }
   }
+  if (numberOrKpi.length > 1 || operator.length != 0) {
+    return {
+      errorMessage: 'Trong công thức đang dư thừa phép toán, dấu ngoặc, số hoặc KPI',
+    }
+  }
+  return true
 }

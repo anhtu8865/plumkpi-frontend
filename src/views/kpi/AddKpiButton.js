@@ -85,11 +85,9 @@ export const AddKpiButton = (props) => {
           return createError({ message: check.errorMessage })
         } else if (check.formulaArray) {
           const formulaValid = checkFormulaLogic(check.formulaArray)
-          if (!formulaValid) {
+          if (formulaValid.errorMessage) {
             return createError({
-              message:
-                'Xin hãy kiểm tra lại thứ tự các phép toán, các số, các KPI và các dấu ngoặc (thừa hoặc thiếu) để đảm bảo công thức có thể thực hiện được. ' +
-                'Đảm bảo rằng giữa các số và KPI đều có phép toán (nhất là phép nhân). ',
+              message: formulaValid.errorMessage,
             })
           }
         }
