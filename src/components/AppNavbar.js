@@ -12,7 +12,7 @@ import {
   CNavItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLayers, cilBook, cilChartPie, cilFile, cilPeople } from '@coreui/icons'
+import { cilLayers, cilBook, cilChartPie, cilFile, cilPeople, cilHouse } from '@coreui/icons'
 
 import { AppSidebarNav } from './AppSidebarNav'
 
@@ -72,6 +72,12 @@ const AppNavbar = () => {
                 <CNavLink href="/user">
                   <CIcon icon={cilPeople} size="sm" className="me-2"></CIcon>
                   Người dùng
+                </CNavLink>
+              </CNavItem>
+              <CNavItem className="me-3">
+                <CNavLink href="#">
+                  <CIcon icon={cilHouse} size="sm" className="me-2"></CIcon>
+                  Phòng ban
                 </CNavLink>
               </CNavItem>
             </CNavbarNav>

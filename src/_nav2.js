@@ -19,19 +19,9 @@ const _nav = [
         name: 'Đăng ký KPI cá nhân',
         to: '/',
       },
-      {
-        component: CNavItem,
-        name: 'Duyệt đăng kí KPI',
-        to: '/',
-      },
     ],
   },
-  {
-    component: CNavItem,
-    name: 'KPI (Admin)',
-    to: '/kpiadmin',
-    icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
-  },
+
   {
     component: CNavItem,
     name: 'Số liệu',
@@ -50,18 +40,7 @@ const _nav = [
     to: '/',
     icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'Người dùng',
-    to: '/user',
-    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Phòng ban',
-    to: '/department',
-    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
-  },
+
   /*{
     component: CNavItem,
     name: 'Dashboard',
