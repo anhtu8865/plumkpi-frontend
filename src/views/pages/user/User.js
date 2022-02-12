@@ -587,9 +587,7 @@ const User = () => {
           </CTableHead>
           <CTableBody>
             <CTableRow>
-              <CTableDataCell>
-                <Input />
-              </CTableDataCell>
+              <CTableDataCell></CTableDataCell>
               <CTableDataCell>
                 <Input />
               </CTableDataCell>
@@ -618,7 +616,10 @@ const User = () => {
                 <CTableRow v-for="item in tableItems" key={row.name}>
                   <CTableDataCell>{row.user_id}</CTableDataCell>
                   <CTableDataCell>
-                    <CAvatar src={avatar1} className="me-3" />
+                    <CAvatar
+                      src={row.avatar !== null ? row.avatar.url : avatar1}
+                      className="me-3"
+                    />
                     {row.user_name}
                   </CTableDataCell>
                   <CTableDataCell>{row.email}</CTableDataCell>
