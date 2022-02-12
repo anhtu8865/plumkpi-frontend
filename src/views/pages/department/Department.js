@@ -26,10 +26,11 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 
-import { Tabs, Tab, Box, Button, IconButton, Snackbar, Alert } from '@mui/material'
+import { Button, IconButton, Snackbar, Alert, Pagination, Input, TextField } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
+import SearchIcon from '@mui/icons-material/Search'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 
@@ -74,6 +75,8 @@ const Department = () => {
   const [deptName, setDeptName] = React.useState('')
 
   const [deptDes, setDeptDes] = React.useState('')
+
+  const [filter, setFilter] = React.useState('')
 
   React.useEffect(() => {
     //assume that we already login
@@ -366,6 +369,8 @@ const Department = () => {
   }
 
   const DeptTable = (props) => {
+    const [numEachPage, setNumEachPage] = React.useState(10)
+    const [page, setPage] = React.useState(1)
     return (
       <>
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
@@ -378,7 +383,7 @@ const Department = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {props.temList.map((row) => (
+            {props.temList.slice((page - 1) * numEachPage, page * numEachPage).map((row) => (
               <CTableRow v-for="item in tableItems" key={row.dept_name}>
                 <CTableDataCell>{row.dept_id}</CTableDataCell>
                 <CTableDataCell>{row.dept_name}</CTableDataCell>
@@ -427,6 +432,21 @@ const Department = () => {
               </CTableRow>
             ))}
           </CTableBody>
+          <CTableFoot>
+            <CTableRow>
+              <CTableDataCell colSpan="4">
+                <Pagination
+                  count={Math.ceil(props.temList.length / 10)}
+                  showFirstButton
+                  showLastButton
+                  size="small"
+                  onChange={(event, page) => {
+                    setPage(page)
+                  }}
+                />
+              </CTableDataCell>
+            </CTableRow>
+          </CTableFoot>
         </CTable>
       </>
     )
@@ -435,7 +455,27 @@ const Department = () => {
   DeptTable.propTypes = {
     temList: PropTypes.array,
   }
+  //Search filter for department
+  let data = []
 
+  for (let i = 0; i < deptList.length; i++) {
+    let entry = {}
+    entry.dept_id = deptList[i].dept_id.toString()
+    entry.dept_name = deptList[i].dept_name.toString()
+    if (deptList[i].description !== null) {
+      entry.description = deptList[i].description
+    } else {
+      entry.description = ''
+    }
+
+    data.push(entry)
+  }
+
+  const lowercasedFilter = filter.toLowerCase()
+  const filteredData = data.filter((item) => {
+    return Object.keys(item).some((key) => item[key].toLowerCase().includes(lowercasedFilter))
+  })
+  //
   return (
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
@@ -449,6 +489,16 @@ const Department = () => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <TextField
+                        id="search-department"
+                        label="Tìm kiếm"
+                        variant="standard"
+                        value={filter}
+                        size="small"
+                        onChange={(event) => {
+                          setFilter(event.target.value)
+                        }}
+                      />
                       <Button
                         variant="contained"
                         color="primary"
@@ -491,7 +541,7 @@ const Department = () => {
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <DeptTable temList={deptList} />
+                  <DeptTable temList={filteredData} />
                 </div>
               </CCardBody>
             </CCard>

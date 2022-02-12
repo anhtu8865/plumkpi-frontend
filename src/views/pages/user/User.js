@@ -26,10 +26,11 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 
-import { Button, IconButton, Snackbar, Alert, Pagination } from '@mui/material'
+import { Button, IconButton, Snackbar, Alert, Pagination, Input } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
+import SearchIcon from '@mui/icons-material/Search'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 //import CustomTablePagination from 'src/components/TablePagination'
@@ -585,6 +586,30 @@ const User = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
+            <CTableRow>
+              <CTableDataCell>
+                <Input />
+              </CTableDataCell>
+              <CTableDataCell>
+                <Input />
+              </CTableDataCell>
+              <CTableDataCell>
+                <Input />
+              </CTableDataCell>{' '}
+              <CTableDataCell>
+                <Input />
+              </CTableDataCell>{' '}
+              <CTableDataCell>
+                <Input />
+              </CTableDataCell>
+              <CTableDataCell></CTableDataCell>
+              <CTableDataCell>
+                <IconButton id="search" color="primary">
+                  <SearchIcon />
+                  <EditUserModal />
+                </IconButton>
+              </CTableDataCell>
+            </CTableRow>
             {
               /*(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
