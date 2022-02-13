@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, IconButton } from '@mui/material'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import {
   CCol,
@@ -16,7 +15,6 @@ import {
   CFormFeedback,
   CFormSelect,
   CFormTextarea,
-  CFormCheck,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -62,12 +60,14 @@ export const EditKpiButton = (props) => {
           setFinalFormula(convertFormula(props.inTem.formula, kpiList))
         })
         .catch((error) => {
-          /*dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )*/
+          if (error.response) {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          }
         })
     })
   }, [dispatch])
@@ -122,7 +122,7 @@ export const EditKpiButton = (props) => {
         (catItem) => catItem.kpi_category_id == values.category,
       )[0]
       api
-        .post(`/kpi-templates/`, {
+        .put(`/kpi-templates/${props.inTem.kpi_template_id}`, {
           kpi_template_name: values.name,
           description: values.description,
           frequency: values.frequency,
@@ -134,7 +134,7 @@ export const EditKpiButton = (props) => {
         .then(() => {
           dispatch(
             createAlert({
-              message: 'Tạo KPI mới thành công.',
+              message: 'Cập nhật KPI thành công.',
               type: 'success',
             }),
           )
@@ -182,7 +182,7 @@ export const EditKpiButton = (props) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Tạo KPI</CModalTitle>
+          <CModalTitle>Chỉnh sửa KPI</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
           <form onSubmit={formik.handleSubmit}>

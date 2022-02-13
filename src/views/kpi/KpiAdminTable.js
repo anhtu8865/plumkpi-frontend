@@ -36,6 +36,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { frequencyList } from 'src/utils/engToViet'
 import { translate } from 'src/utils/function'
 import { EditKpiButton } from './EditKpiButton'
+import { DeleteKpiButton } from './DeleteKpiButton'
 
 export const KpiAdminTable = (props) => {
   const [numEachPage, setNumEachPage] = React.useState(10)
@@ -69,9 +70,7 @@ export const KpiAdminTable = (props) => {
                   <CTableDataCell className="text-center">
                     <div className="d-flex flex-row justify-content-center">
                       <EditKpiButton inTem={temItem} />
-                      <IconButton id="delete" color="error">
-                        <DeleteForeverIcon />
-                      </IconButton>
+                      <DeleteKpiButton inTem={temItem} />
                     </div>
                   </CTableDataCell>
                 </CTableRow>
