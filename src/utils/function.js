@@ -2,6 +2,10 @@
 
 import { formulaOperators, checkValidError } from 'src/utils/constant'
 
+export const translate = (str, engToVietList) => {
+  return engToVietList.filter((item) => item.eng == str)[0].viet
+}
+
 export const isNumeric = (str) => {
   return !isNaN(str)
 }
@@ -123,4 +127,28 @@ export const checkFormulaLogic = (formulaArray) => {
     }
   }
   return true
+}
+
+export const findKpi = (str, kpiList) => {
+  return kpiList
+    .filter((item) => item.kpi_template_id == str)[0]
+    .kpi_template_name.replaceAll(' ', '_')
+}
+
+export const convertFormula = (str, kpiList) => {
+  if (!str) {
+    return ''
+  }
+  let finalString = ''
+  const formulaArray = str.trim().split(' ')
+  formulaArray.map((element) => {
+    if (isNumeric(element) || formulaOperators.includes(element)) {
+      finalString = finalString + element + ' '
+    } else if (element[0] == '-') {
+      finalString = finalString + findKpi(Number(element.slice(4)), kpiList) + ' '
+    } else {
+      finalString = finalString + findKpi(Number(element.slice(3)), kpiList) + ' '
+    }
+  })
+  return finalString.trim()
 }

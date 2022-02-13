@@ -26,24 +26,28 @@ import { AddKpiButton } from './AddKpiButton'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
-import { createAlert } from 'src/store'
+import { createAlert } from 'src/slices/alertSlice'
+import { setCategoryReload, setCategoryLoading, setCategoryList } from 'src/slices/kpiCategorySlice'
 
 const KpiAdmin = () => {
   const [addCatVisible, setAddCatVisible] = useState(false)
   const [value, setValue] = React.useState(0)
-  const [kpiCatList, setKpiCatList] = React.useState([])
+  //const [kpiCatList, setKpiCatList] = React.useState([])
   const [editCatModal, setEditCatModal] = React.useState(false)
   const [catId, setCatId] = React.useState(0)
   const [catName, setCatName] = React.useState('')
-  const [reload, setReload] = React.useState(true)
+  //const [reload, setReload] = React.useState(true)
   const [deleteCatId, setDeleteCatId] = React.useState(0)
   const [deleteCatModal, setDeleteCatModal] = React.useState(false)
-  const [loading, setLoading] = React.useState(true)
+  //const [loading, setLoading] = React.useState(true)
   const [kpiTemList, setKpiTemList] = React.useState([])
 
   const dispatch = useDispatch()
+  const { categoryReload, categoryLoading, categoryList } = useSelector(
+    (state) => state.kpiCategory,
+  )
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -53,7 +57,7 @@ const KpiAdmin = () => {
     api
       .get('/kpi-categories')
       .then((response) => {
-        setKpiCatList(response.data.items)
+        dispatch(setCategoryList({ value: response.data.items }))
       })
       .catch((error) => {
         dispatch(
@@ -76,9 +80,12 @@ const KpiAdmin = () => {
           }),
         )
       })
-    setReload(false)
-    setLoading(false)
-  }, [reload, dispatch])
+    dispatch(
+      setCategoryLoading({
+        value: false,
+      }),
+    )
+  }, [categoryReload, dispatch])
 
   const EditCategoryModal = () => {
     const ValidationSchema = yup.object({
@@ -103,8 +110,12 @@ const KpiAdmin = () => {
                 type: 'success',
               }),
             )
-            setLoading(true)
-            setReload(true)
+            dispatch(
+              setCategoryLoading({
+                value: true,
+              }),
+            )
+            dispatch(setCategoryReload())
           })
           .catch((error) => {
             dispatch(
@@ -196,8 +207,12 @@ const KpiAdmin = () => {
                 type: 'success',
               }),
             )
-            setLoading(true)
-            setReload(true)
+            dispatch(
+              setCategoryLoading({
+                value: true,
+              }),
+            )
+            dispatch(setCategoryReload())
           })
           .catch((error) => {
             dispatch(
@@ -278,8 +293,12 @@ const KpiAdmin = () => {
                 type: 'success',
               }),
             )
-            setLoading(true)
-            setReload(true)
+            dispatch(
+              setCategoryLoading({
+                value: true,
+              }),
+            )
+            dispatch(setCategoryReload())
           })
           .catch((error) => {
             dispatch(
@@ -333,6 +352,7 @@ const KpiAdmin = () => {
   }
 
   const ViewTabs = () => {
+    let copyCategoryList = [...categoryList]
     return (
       <Box sx={{ width: '100%' }}>
         <Tabs
@@ -340,7 +360,7 @@ const KpiAdmin = () => {
           onChange={handleChange}
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          {kpiCatList
+          {copyCategoryList
             .sort((a, b) => a.kpi_category_id - b.kpi_category_id)
             .map((catItem, index) => (
               <Tab
@@ -350,7 +370,7 @@ const KpiAdmin = () => {
               />
             ))}
         </Tabs>
-        {kpiCatList.map((catItem, index) => {
+        {categoryList.map((catItem, index) => {
           return (
             <TabPanel key={catItem.kpi_category_id} value={value} index={index}>
               <CRow>
@@ -405,12 +425,7 @@ const KpiAdmin = () => {
                 </CCol>
                 <CCol xs>
                   <div className="text-end">
-                    <AddKpiButton
-                      inCat={catItem}
-                      catList={kpiCatList}
-                      setParentReload={setReload}
-                      setParentLoading={setLoading}
-                    />
+                    <AddKpiButton inCat={catItem} />
                   </div>
                 </CCol>
               </CRow>
@@ -442,7 +457,7 @@ const KpiAdmin = () => {
                 <div className="mt-3">
                   <ViewTabs />
                 </div>
-                {loading && <LoadingCircle />}
+                {categoryLoading && <LoadingCircle />}
               </CCardBody>
             </CCard>
           </CCol>

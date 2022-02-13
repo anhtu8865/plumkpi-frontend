@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Snackbar, Alert } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { clearAlert } from 'src/store'
+import { clearAlert } from 'src/slices/alertSlice'
 
 const SystemAlert = () => {
   const { alerts } = useSelector((state) => state.notifications)

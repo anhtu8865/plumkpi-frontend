@@ -28,22 +28,18 @@ import {
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { createAlert } from 'src/store'
+import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
+import { frequencyList } from 'src/utils/engToViet'
+import { translate } from 'src/utils/function'
+import { EditKpiButton } from './EditKpiButton'
 
 export const KpiAdminTable = (props) => {
   const [numEachPage, setNumEachPage] = React.useState(10)
   const [page, setPage] = React.useState(1)
-  const frequencyList = [
-    { eng: 'Daily', viet: 'Ngày' },
-    { eng: 'Weekly', viet: 'Tuần' },
-    { eng: 'Monthly', viet: 'Tháng' },
-    { eng: 'Quarterly', viet: 'Quý' },
-    { eng: 'Yearly', viet: 'Năm' },
-  ]
 
   let newTemList = props.temList.filter(
     (temItem) => temItem.kpi_category.kpi_category_id === props.inCat.kpi_category_id,
@@ -69,20 +65,14 @@ export const KpiAdminTable = (props) => {
                   <CTableDataCell>{temItem.kpi_template_name}</CTableDataCell>
                   <CTableDataCell>{temItem.description}</CTableDataCell>
                   <CTableDataCell>{temItem.unit}</CTableDataCell>
-                  <CTableDataCell>
-                    {
-                      frequencyList.filter(
-                        (frequencyItem) => frequencyItem.eng == temItem.frequency,
-                      )[0].viet
-                    }
-                  </CTableDataCell>
+                  <CTableDataCell>{translate(temItem.frequency, frequencyList)}</CTableDataCell>
                   <CTableDataCell className="text-center">
-                    <IconButton id="edit" color="primary">
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton id="delete" color="error">
-                      <DeleteForeverIcon />
-                    </IconButton>
+                    <div className="d-flex flex-row justify-content-center">
+                      <EditKpiButton inTem={temItem} />
+                      <IconButton id="delete" color="error">
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </div>
                   </CTableDataCell>
                 </CTableRow>
               ))}

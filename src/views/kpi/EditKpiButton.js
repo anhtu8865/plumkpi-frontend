@@ -27,19 +27,20 @@ import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import Select from 'react-select'
 import { allowKeyList, formulaTypingRule } from 'src/utils/constant'
-import { checkValid, checkFormulaLogic } from 'src/utils/function'
+import { checkValid, checkFormulaLogic, convertFormula } from 'src/utils/function'
 import HelpIcon from '@mui/icons-material/Help'
 import { setCategoryReload, setCategoryLoading } from 'src/slices/kpiCategorySlice'
+import EditIcon from '@mui/icons-material/Edit'
 
-export const AddKpiButton = (props) => {
+export const EditKpiButton = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
-  const [formulaVisible, setFormulaVisible] = React.useState(false)
   const [kpiTemList, setKpiTemList] = React.useState([])
   const [cursorStartPosition, setCursorStartPosition] = React.useState(null)
   const [kpiSelectValue, setKpiSelectValue] = React.useState('')
   const [kpiList, setKpiList] = React.useState([])
   const { categoryList } = useSelector((state) => state.kpiCategory)
+  const [finalFormula, setFinalFormula] = React.useState('')
 
   React.useEffect(() => {
     categoryList.map((catItem) => {
@@ -58,14 +59,15 @@ export const AddKpiButton = (props) => {
             label: catItem.kpi_category_name,
             options: kpiTemInCat,
           })
+          setFinalFormula(convertFormula(props.inTem.formula, kpiList))
         })
         .catch((error) => {
-          dispatch(
+          /*dispatch(
             createAlert({
               message: error.response.data.message,
               type: 'error',
             }),
-          )
+          )*/
         })
     })
   }, [dispatch])
@@ -98,24 +100,24 @@ export const AddKpiButton = (props) => {
   })
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: '',
-      description: null,
-      frequency: 'Daily',
-      direction: 'Up',
-      unit: '',
-      formula: '',
-      category: props.inCat.kpi_category_id,
+      name: props.inTem.kpi_template_name,
+      description: props.inTem.description,
+      frequency: props.inTem.frequency,
+      direction: props.inTem.direction,
+      unit: props.inTem.unit,
+      formula: finalFormula,
+      category: props.inTem.kpi_category.kpi_category_id,
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
       let newFormula = ''
-      if (formulaVisible) {
-        const newFormulaArray = checkValid(values.formula, kpiList).formulaArray
-        newFormulaArray.map((element) => {
-          newFormula = newFormula + element + ' '
-        })
-      }
+      const newFormulaArray = checkValid(values.formula, kpiList).formulaArray
+      newFormulaArray.map((element) => {
+        newFormula = newFormula + element + ' '
+      })
+
       let selectedCat = categoryList.filter(
         (catItem) => catItem.kpi_category_id == values.category,
       )[0]
@@ -160,14 +162,15 @@ export const AddKpiButton = (props) => {
 
   return (
     <>
-      <Button
-        variant="contained"
+      <IconButton
+        id="edit"
         color="primary"
-        onClick={() => setModalVisible(true)}
-        startIcon={<AddCircleIcon />}
+        onClick={() => {
+          setModalVisible(true)
+        }}
       >
-        Tạo KPI
-      </Button>
+        <EditIcon />
+      </IconButton>
       <CModal
         alignment="center"
         size="lg"
@@ -175,7 +178,6 @@ export const AddKpiButton = (props) => {
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false)
-          setFormulaVisible(false)
           formik.setFieldValue('formula', '', false)
         }}
       >
@@ -292,79 +294,61 @@ export const AddKpiButton = (props) => {
             </CRow>
             <CRow className="mt-3">
               <CCol xs>
-                <CFormCheck
-                  onClick={() => {
-                    if (formulaVisible) {
-                      formik.setFieldValue('formula', '', false)
-                    }
-                    setFormulaVisible(!formulaVisible)
+                <div className="d-flex align-items-start flex-row">
+                  <CustomWidthTooltip title={formulaTypingRule} placement="right">
+                    <IconButton color="error" size="small">
+                      <HelpIcon fontSize="inherit" />
+                    </IconButton>
+                  </CustomWidthTooltip>
+                  <div className="ms-1">Quy tắc thiết lập công thức</div>
+                </div>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol xs={10}>
+                <CFormLabel htmlFor="kpis">KPI thành phần</CFormLabel>
+                <Select
+                  id="kpis"
+                  isSearchable="true"
+                  value={kpiSelectValue}
+                  placeholder="Chọn KPI thành phần của công thức (có thể tìm kiếm)"
+                  menuPlacement="top"
+                  onChange={(e) => {
+                    setKpiSelectValue(e)
+                    formik.setFieldValue(
+                      'formula',
+                      formik.values.formula.slice(0, cursorStartPosition) +
+                        ' ' +
+                        e.value +
+                        ' ' +
+                        formik.values.formula.slice(cursorStartPosition),
+                      false,
+                    )
                   }}
-                  type="checkbox"
-                  label="KPI này có công thức tính hay không?"
+                  options={kpiTemList}
                 />
               </CCol>
             </CRow>
-            {formulaVisible && (
-              <>
-                <CRow className="mt-3">
-                  <CCol xs>
-                    <div className="d-flex align-items-start flex-row">
-                      <CustomWidthTooltip title={formulaTypingRule} placement="right">
-                        <IconButton color="error" size="small">
-                          <HelpIcon fontSize="inherit" />
-                        </IconButton>
-                      </CustomWidthTooltip>
-                      <div className="ms-1">Quy tắc</div>
-                    </div>
-                  </CCol>
-                </CRow>
-                <CRow className="mt-3">
-                  <CCol xs={10}>
-                    <CFormLabel htmlFor="kpis">KPI thành phần</CFormLabel>
-                    <Select
-                      id="kpis"
-                      isSearchable="true"
-                      value={kpiSelectValue}
-                      placeholder="Chọn KPI thành phần của công thức (có thể tìm kiếm)"
-                      menuPlacement="top"
-                      onChange={(e) => {
-                        setKpiSelectValue(e)
-                        formik.setFieldValue(
-                          'formula',
-                          formik.values.formula.slice(0, cursorStartPosition) +
-                            ' ' +
-                            e.value +
-                            ' ' +
-                            formik.values.formula.slice(cursorStartPosition),
-                          false,
-                        )
-                      }}
-                      options={kpiTemList}
-                    />
-                  </CCol>
-                </CRow>
-                <CRow className="mt-3">
-                  <CCol xs>
-                    <CFormLabel htmlFor="formula">Công thức</CFormLabel>
-                    <CFormTextarea
-                      id="formula"
-                      rows="3"
-                      placeholder="Nhập vào các phép tính và chọn KPI thành phần để thiết lập công thức"
-                      value={formik.values.formula}
-                      onChange={(e) => formik.setFieldValue('formula', e.target.value, false)}
-                      onBlur={(e) => setCursorStartPosition(e.target.selectionStart)}
-                      onKeyDown={(e) => {
-                        if (!allowKeyList.includes(e.key)) {
-                          e.preventDefault()
-                        }
-                      }}
-                      invalid={formik.touched.formula && formik.errors.formula ? true : false}
-                    />
-                    <CFormFeedback invalid>{formik.errors.formula}</CFormFeedback>
-                  </CCol>
-                </CRow>
-              </>
-            )}
+            <CRow className="mt-3">
+              <CCol xs>
+                <CFormLabel htmlFor="formula">Công thức</CFormLabel>
+                <CFormTextarea
+                  id="formula"
+                  rows="3"
+                  placeholder="Nhập vào các phép tính và chọn KPI thành phần để thiết lập công thức"
+                  value={formik.values.formula}
+                  onChange={(e) => formik.setFieldValue('formula', e.target.value, false)}
+                  onBlur={(e) => setCursorStartPosition(e.target.selectionStart)}
+                  onKeyDown={(e) => {
+                    if (!allowKeyList.includes(e.key)) {
+                      e.preventDefault()
+                    }
+                  }}
+                  invalid={formik.touched.formula && formik.errors.formula ? true : false}
+                />
+                <CFormFeedback invalid>{formik.errors.formula}</CFormFeedback>
+              </CCol>
+            </CRow>
           </form>
         </CModalBody>
         <CModalFooter>
@@ -376,7 +360,7 @@ export const AddKpiButton = (props) => {
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
           >
-            Tạo mới
+            Xác nhận
           </Button>
           {formik.isSubmitting && <LoadingCircle />}
         </CModalFooter>
@@ -384,7 +368,6 @@ export const AddKpiButton = (props) => {
     </>
   )
 }
-
-AddKpiButton.propTypes = {
-  inCat: PropTypes.object,
+EditKpiButton.propTypes = {
+  inTem: PropTypes.object,
 }

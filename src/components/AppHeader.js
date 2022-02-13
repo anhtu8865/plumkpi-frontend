@@ -17,7 +17,7 @@ import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 import { AppBreadcrumb, AppNavbar } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
-import { setSidebarShow } from 'src/store'
+import { setSidebarShow } from 'src/slices/sidebarSlice'
 
 const AppHeader = () => {
   const dispatch = useDispatch()

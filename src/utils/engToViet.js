@@ -7,3 +7,11 @@ export const roleList = [
   { eng: 'Manager', viet: 'Quản lý' },
   { eng: 'Employee', viet: 'Nhân viên' },
 ]
+
+export const frequencyList = [
+  { eng: 'Daily', viet: 'Ngày' },
+  { eng: 'Weekly', viet: 'Tuần' },
+  { eng: 'Monthly', viet: 'Tháng' },
+  { eng: 'Quarterly', viet: 'Quý' },
+  { eng: 'Yearly', viet: 'Năm' },
+]
