@@ -455,27 +455,7 @@ const Department = () => {
   DeptTable.propTypes = {
     temList: PropTypes.array,
   }
-  //Search filter for department
-  let data = []
 
-  for (let i = 0; i < deptList.length; i++) {
-    let entry = {}
-    entry.dept_id = deptList[i].dept_id.toString()
-    entry.dept_name = deptList[i].dept_name.toString()
-    if (deptList[i].description !== null) {
-      entry.description = deptList[i].description
-    } else {
-      entry.description = ''
-    }
-
-    data.push(entry)
-  }
-
-  const lowercasedFilter = filter.toLowerCase()
-  const filteredData = data.filter((item) => {
-    return Object.keys(item).some((key) => item[key].toLowerCase().includes(lowercasedFilter))
-  })
-  //
   return (
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
@@ -489,16 +469,6 @@ const Department = () => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <TextField
-                        id="search-department"
-                        label="Tìm kiếm"
-                        variant="standard"
-                        value={filter}
-                        size="small"
-                        onChange={(event) => {
-                          setFilter(event.target.value)
-                        }}
-                      />
                       <Button
                         variant="contained"
                         color="primary"
@@ -541,7 +511,7 @@ const Department = () => {
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <DeptTable temList={filteredData} />
+                  <DeptTable temList={deptList} />
                 </div>
               </CCardBody>
             </CCard>
