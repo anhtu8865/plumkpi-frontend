@@ -408,10 +408,10 @@ const Department = () => {
 
     return (
       <CForm className="row g-3">
-        <CCol md={1}>
+        {/*<CCol md={1}>
           <CFormLabel htmlFor="filterID">ID</CFormLabel>
           <CFormInput type={'number'} id="filterID" />
-        </CCol>
+    </CCol>*/}
         <CCol md={4}>
           <CFormLabel htmlFor="filterDepartment">Phòng ban</CFormLabel>
           <CFormInput
