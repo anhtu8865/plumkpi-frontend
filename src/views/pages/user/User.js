@@ -26,10 +26,12 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 
-import { Button, IconButton, Snackbar, Alert, Pagination } from '@mui/material'
+import { Button, IconButton, Snackbar, Alert, Pagination, Input, Avatar } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
+import SearchIcon from '@mui/icons-material/Search'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 //import CustomTablePagination from 'src/components/TablePagination'
@@ -38,23 +40,18 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
-//import './User.css'
-
-import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
-import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
-//import AddUserForm from './AddUser'
-//import Department from './Department'
-
 import { useFormik, FormikProvider, Field } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
+import PropTypes from 'prop-types'
+
 //import UserTable from './UserTable'
 
 const User = () => {
   const [showAddUserForm, setshowAddUserForm] = React.useState(false)
-  const [showDepartment, setshowDepartment] = React.useState(false)
+  const [showUserFilter, setShowUserFilter] = React.useState(false)
 
   const [error, setError] = React.useState(false)
 
@@ -81,6 +78,8 @@ const User = () => {
   const [userName, setUserName] = React.useState('')
 
   const [email, setEmail] = React.useState('')
+
+  const [filter, setFilter] = React.useState([])
 
   React.useEffect(() => {
     //assume that we already login
@@ -567,9 +566,146 @@ const User = () => {
     )
   }
 
-  const UserTable = () => {
+  const UserFilter = () => {
+    const [deptList, setDeptList] = React.useState([])
+
+    api
+      .get('/depts')
+      .then((response) => {
+        setDeptList(response.data.items)
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.message)
+        setError(true)
+        setSuccess(false)
+      })
+    const formik = useFormik({
+      initialValues: {
+        filter_id: null,
+        filter_name: '',
+        filter_email: '',
+        filter_role: '',
+        filter_dept: '',
+      },
+      validateOnBlur: true,
+      onSubmit: (values) => {
+        console.log('Đây là search')
+        console.log(values)
+        let apiLink = '/users?'
+        if (values.filter_name !== '') {
+          apiLink += 'user_name=' + values.filter_name
+        }
+        if (values.filter_id !== null) {
+          apiLink += '&user_id=' + values.filter_id
+        }
+        if (values.filter_email !== '') {
+          apiLink += '&email=' + values.filter_email
+        }
+        if (values.filter_dept !== '') {
+          apiLink += '&dept=' + values.filter_dept
+        }
+        if (values.filter_role !== '') {
+          apiLink += '&role=' + values.filter_role
+        }
+        //apiLink = 'users?user_name=' + values.filter_name + '&user_id=' + values.filter_id
+        api
+          .get(apiLink)
+          .then((res) => {
+            //alert('Thành công')
+            setFilter(res.data.items)
+            console.log(res.data.items)
+            /*setSuccessMessage('Thêm người dùng thành công')
+            setSuccess(true)
+            setLoading(true)*/
+          })
+          .catch((error) => {
+            alert('Thất bại')
+            setErrorMessage(error.response.data.message)
+            setError(true)
+          })
+          .finally(() => formik.setSubmitting(false))
+      },
+    })
+    return (
+      <CForm className="row g-3">
+        <CCol md={1}>
+          <CFormLabel htmlFor="filterID">ID</CFormLabel>
+          <CFormInput
+            type={'number'}
+            id="filterID"
+            name="filter_id"
+            value={formik.values.filter_id}
+            onChange={formik.handleChange}
+          />
+        </CCol>
+        <CCol md={3}>
+          <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
+          <CFormInput
+            type="text"
+            id="filterName"
+            name="filter_name"
+            value={formik.values.filter_name}
+            onChange={formik.handleChange}
+          />
+        </CCol>
+        <CCol md={3}>
+          <CFormLabel htmlFor="filterEmail">Email</CFormLabel>
+          <CFormInput
+            id="filterEmail"
+            type="email"
+            name="filter_email"
+            value={formik.values.filter_email}
+            onChange={formik.handleChange}
+          />
+        </CCol>
+        <CCol md={3}>
+          <CFormLabel htmlFor="filterDept">Phòng ban</CFormLabel>
+          <FormikProvider value={formik}>
+            <Field as="select" name="filter_dept" className="form-select">
+              <option value="" label="Chọn phòng ban" />
+              {deptList.map((row) => (
+                <option value={row.dept_id} key={row.dept_id}>
+                  {row.dept_name}
+                </option>
+              ))}
+            </Field>
+          </FormikProvider>
+        </CCol>
+        <CCol md={2}>
+          <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
+          <FormikProvider value={formik}>
+            <Field as="select" name="filter_role" className="form-select">
+              <option value="" label="Chọn vai trò" />
+              <option value="Admin">Admin</option>
+              <option value="Manager">Manager</option>
+              <option value="Director">Director</option>
+              <option value="Employee">Employee</option>
+            </Field>
+          </FormikProvider>
+        </CCol>
+
+        <CCol xs={12}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+            onClick={formik.submitForm}
+            disabled={formik.isSubmitting}
+          >
+            Tìm
+          </Button>
+          {formik.isSubmitting && <LoadingCircle />}
+        </CCol>
+        <SuccessErrorToast />
+      </CForm>
+    )
+  }
+
+  const UserTable = (props) => {
     const [numEachPage, setNumEachPage] = React.useState(10)
     const [page, setPage] = React.useState(1)
+
     return (
       <>
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
@@ -580,7 +716,7 @@ const User = () => {
               <CTableHeaderCell>EMAIL</CTableHeaderCell>
               <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
               <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
-              <CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>
+              {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
@@ -589,19 +725,19 @@ const User = () => {
               /*(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
-            )*/ userList.slice((page - 1) * numEachPage, page * numEachPage).map((row) => (
+            )*/ props.temList.slice((page - 1) * numEachPage, page * numEachPage).map((row) => (
                 <CTableRow v-for="item in tableItems" key={row.name}>
                   <CTableDataCell>{row.user_id}</CTableDataCell>
-                  <CTableDataCell>
-                    <CAvatar src={avatar1} className="me-3" />
+                  <CTableDataCell className="d-flex flex-row">
+                    <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
                     {row.user_name}
                   </CTableDataCell>
                   <CTableDataCell>{row.email}</CTableDataCell>
                   <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
                   <CTableDataCell>{row.role}</CTableDataCell>
-                  <CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
+                  {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
-                  </CTableDataCell>
+                  </CTableDataCell>*/}
                   <CTableDataCell className="text-center">
                     <IconButton
                       id="edit"
@@ -667,6 +803,10 @@ const User = () => {
     )
   }
 
+  UserTable.propTypes = {
+    temList: PropTypes.array,
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
@@ -680,6 +820,14 @@ const User = () => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<FilterAltIcon />}
+                        onClick={() => setShowUserFilter(!showUserFilter)}
+                      >
+                        Tạo bộ lọc
+                      </Button>
                       <Button
                         variant="contained"
                         color="primary"
@@ -701,18 +849,20 @@ const User = () => {
                   </CCol>
                 </CRow>
 
-                <CModal
+                {/*<CModal
                   scrollable
                   alignment="center"
                   size="lg"
-                  visible={showDepartment}
-                  onClose={() => setshowDepartment(false)}
+                  visible={showUserFilter}
+                  onClose={() => setShowUserFilter(false)}
                 >
                   <CModalHeader>
-                    <CModalTitle>Quản lý phòng ban</CModalTitle>
+                    <CModalTitle>Tìm kiếm người dùng</CModalTitle>
                   </CModalHeader>
-                  <CModalBody></CModalBody>
-                </CModal>
+                  <CModalBody>
+                    <UserFilter />
+                  </CModalBody>
+                </CModal>*/}
                 <CModal
                   scrollable
                   alignment="center"
@@ -731,7 +881,8 @@ const User = () => {
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <UserTable />
+                  {showUserFilter ? <UserFilter /> : null}
+                  <UserTable temList={filter.length > 0 ? filter : userList} />
                 </div>
               </CCardBody>
             </CCard>
