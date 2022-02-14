@@ -567,26 +567,26 @@ const User = () => {
   const UserFilter = () => {
     return (
       <CForm className="row g-3">
-        <CCol md={2}>
+        <CCol md={1}>
           <CFormLabel htmlFor="inputEmail4">ID</CFormLabel>
           <CFormInput type="email" id="inputEmail4" />
         </CCol>
-        <CCol md={5}>
+        <CCol md={3}>
           <CFormLabel htmlFor="inputPassword4">Họ tên</CFormLabel>
           <CFormInput type="password" id="inputPassword4" />
         </CCol>
-        <CCol md={5}>
+        <CCol md={3}>
           <CFormLabel htmlFor="inputAddress">Email</CFormLabel>
           <CFormInput id="inputAddress" />
         </CCol>
-        <CCol md={4}>
+        <CCol md={3}>
           <CFormLabel htmlFor="inputState">Phòng ban</CFormLabel>
           <CFormSelect id="inputState">
             <option>Chọn...</option>
             <option>...</option>
           </CFormSelect>
         </CCol>
-        <CCol md={4}>
+        <CCol md={2}>
           <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
           <CFormSelect id="inputState">
             <option>Chọn...</option>
