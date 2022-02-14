@@ -31,6 +31,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
 import SearchIcon from '@mui/icons-material/Search'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 //import CustomTablePagination from 'src/components/TablePagination'
@@ -44,11 +45,13 @@ import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 import axios from 'axios'
 
+import PropTypes from 'prop-types'
+
 //import UserTable from './UserTable'
 
 const User = () => {
   const [showAddUserForm, setshowAddUserForm] = React.useState(false)
-  const [showDepartment, setshowDepartment] = React.useState(false)
+  const [showUserFilter, setShowUserFilter] = React.useState(false)
 
   const [error, setError] = React.useState(false)
 
@@ -561,7 +564,46 @@ const User = () => {
     )
   }
 
-  const UserTable = () => {
+  const UserFilter = () => {
+    return (
+      <CForm className="row g-3">
+        <CCol md={2}>
+          <CFormLabel htmlFor="inputEmail4">ID</CFormLabel>
+          <CFormInput type="email" id="inputEmail4" />
+        </CCol>
+        <CCol md={5}>
+          <CFormLabel htmlFor="inputPassword4">Họ tên</CFormLabel>
+          <CFormInput type="password" id="inputPassword4" />
+        </CCol>
+        <CCol md={5}>
+          <CFormLabel htmlFor="inputAddress">Email</CFormLabel>
+          <CFormInput id="inputAddress" />
+        </CCol>
+        <CCol md={4}>
+          <CFormLabel htmlFor="inputState">Phòng ban</CFormLabel>
+          <CFormSelect id="inputState">
+            <option>Chọn...</option>
+            <option>...</option>
+          </CFormSelect>
+        </CCol>
+        <CCol md={4}>
+          <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
+          <CFormSelect id="inputState">
+            <option>Chọn...</option>
+            <option>...</option>
+          </CFormSelect>
+        </CCol>
+
+        <CCol xs={12}>
+          <Button type="submit" variant="contained" color="primary" startIcon={<SearchIcon />}>
+            Tìm
+          </Button>
+        </CCol>
+      </CForm>
+    )
+  }
+
+  const UserTable = (props) => {
     const [numEachPage, setNumEachPage] = React.useState(10)
     const [page, setPage] = React.useState(1)
     const [filterName, setFilterName] = React.useState('')
@@ -573,7 +615,7 @@ const User = () => {
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
-              <CTableHeaderCell style={{ width: '100px' }}>ID</CTableHeaderCell>
+              <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
               <CTableHeaderCell>EMAIL</CTableHeaderCell>
               <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
@@ -583,99 +625,66 @@ const User = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            <CTableRow>
-              <CTableDataCell>
-                {' '}
-                <Input />
-              </CTableDataCell>
-              <CTableDataCell>
-                <Input
-                  value={filterName}
-                  onChange={(event) => {
-                    setFilterName(event.target.value)
-                  }}
-                />
-              </CTableDataCell>
-              <CTableDataCell>
-                <Input />
-              </CTableDataCell>
-              <CTableDataCell>
-                <Input />
-              </CTableDataCell>
-              <CTableDataCell>
-                <Input />
-              </CTableDataCell>
-              <CTableDataCell />
-            </CTableRow>
             {
               /*(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
-            )*/ userList
-                .slice((page - 1) * numEachPage, page * numEachPage)
-                .filter((val) => {
-                  if (filterName === '') {
-                    return val
-                  } else if (val.user_name.toLowerCase().includes(filterName.toLowerCase())) {
-                    return val
-                  }
-                })
-                .map((row) => (
-                  <CTableRow v-for="item in tableItems" key={row.name}>
-                    <CTableDataCell>{row.user_id}</CTableDataCell>
-                    <CTableDataCell>
-                      <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
-                      {row.user_name}
-                    </CTableDataCell>
-                    <CTableDataCell>{row.email}</CTableDataCell>
-                    <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
-                    <CTableDataCell>{row.role}</CTableDataCell>
-                    {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
+            )*/ props.temList.slice((page - 1) * numEachPage, page * numEachPage).map((row) => (
+                <CTableRow v-for="item in tableItems" key={row.name}>
+                  <CTableDataCell>{row.user_id}</CTableDataCell>
+                  <CTableDataCell className="d-flex flex-row">
+                    <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
+                    {row.user_name}
+                  </CTableDataCell>
+                  <CTableDataCell>{row.email}</CTableDataCell>
+                  <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
+                  <CTableDataCell>{row.role}</CTableDataCell>
+                  {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
-            </CTableDataCell>*/}
-                    <CTableDataCell className="text-center">
-                      <IconButton
-                        id="edit"
-                        color="primary"
-                        onClick={() => {
-                          setEditUserModal(true)
-                          setEditUserId(row.user_id)
-                          setUserName(row.user_name)
-                          setEmail(row.email)
-                        }}
+                  </CTableDataCell>*/}
+                  <CTableDataCell className="text-center">
+                    <IconButton
+                      id="edit"
+                      color="primary"
+                      onClick={() => {
+                        setEditUserModal(true)
+                        setEditUserId(row.user_id)
+                        setUserName(row.user_name)
+                        setEmail(row.email)
+                      }}
+                    >
+                      <EditIcon />
+                      <EditUserModal />
+                    </IconButton>
+                    <IconButton
+                      id="delete"
+                      color="error"
+                      onClick={() => {
+                        setDeleteUserModal(true)
+                        setDeleteUserId(row.user_id)
+                      }}
+                    >
+                      <DeleteForeverIcon />
+                      <CModal
+                        alignment="center"
+                        scrollable
+                        visible={deleteUserModal}
+                        onClose={() => setDeleteUserModal(false)}
                       >
-                        <EditIcon />
-                        <EditUserModal />
-                      </IconButton>
-                      <IconButton
-                        id="delete"
-                        color="error"
-                        onClick={() => {
-                          setDeleteUserModal(true)
-                          setDeleteUserId(row.user_id)
-                        }}
-                      >
-                        <DeleteForeverIcon />
-                        <CModal
-                          alignment="center"
-                          scrollable
-                          visible={deleteUserModal}
-                          onClose={() => setDeleteUserModal(false)}
-                        >
-                          <CModalHeader>
-                            <CModalTitle>Xóa nhân viên</CModalTitle>
-                          </CModalHeader>
-                          <CModalBody>
-                            <CRow className="mt-2 mb-2 mx-2">
-                              <CCol xs>Bạn có chắc muốn xóa nhân viên ?</CCol>
-                            </CRow>
-                          </CModalBody>
-                          <DeleteUserModal />
-                        </CModal>
-                      </IconButton>
-                    </CTableDataCell>
-                  </CTableRow>
-                ))
+                        <CModalHeader>
+                          <CModalTitle>Xóa nhân viên</CModalTitle>
+                        </CModalHeader>
+                        <CModalBody>
+                          <CRow className="mt-2 mb-2 mx-2">
+                            <CCol xs>Bạn có chắc muốn xóa nhân viên ?</CCol>
+                          </CRow>
+                        </CModalBody>
+                        <DeleteUserModal />
+                      </CModal>
+                    </IconButton>
+                  </CTableDataCell>
+                </CTableRow>
+              ))
             }
           </CTableBody>
           <CTableFoot>
@@ -698,6 +707,10 @@ const User = () => {
     )
   }
 
+  UserTable.propTypes = {
+    temList: PropTypes.array,
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
@@ -711,6 +724,14 @@ const User = () => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<FilterAltIcon />}
+                        onClick={() => setShowUserFilter(!showUserFilter)}
+                      >
+                        Tạo bộ lọc
+                      </Button>
                       <Button
                         variant="contained"
                         color="primary"
@@ -732,17 +753,19 @@ const User = () => {
                   </CCol>
                 </CRow>
 
-                <CModal
+                {/*<CModal
                   scrollable
                   alignment="center"
                   size="lg"
-                  visible={showDepartment}
-                  onClose={() => setshowDepartment(false)}
+                  visible={showUserFilter}
+                  onClose={() => setShowUserFilter(false)}
                 >
                   <CModalHeader>
-                    <CModalTitle>Quản lý phòng ban</CModalTitle>
+                    <CModalTitle>Tìm kiếm người dùng</CModalTitle>
                   </CModalHeader>
-                  <CModalBody></CModalBody>
+                  <CModalBody>
+                    <UserFilter />
+                  </CModalBody>
                 </CModal>
                 <CModal
                   scrollable
@@ -758,11 +781,12 @@ const User = () => {
                     <AddUser />
                   </CModalBody>
                   <CModalFooter></CModalFooter>
-                </CModal>
+                </CModal>*/}
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <UserTable />
+                  {showUserFilter ? <UserFilter /> : null}
+                  <UserTable temList={userList} />
                 </div>
               </CCardBody>
             </CCard>
