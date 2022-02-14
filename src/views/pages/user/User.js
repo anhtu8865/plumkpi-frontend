@@ -26,7 +26,7 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 
-import { Button, IconButton, Snackbar, Alert, Pagination, Input } from '@mui/material'
+import { Button, IconButton, Snackbar, Alert, Pagination, Input, Avatar } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
@@ -38,13 +38,6 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
-
-//import './User.css'
-
-import avatar1 from 'src/assets/plum-kpi-img/user/avatar1.png'
-import avatar2 from 'src/assets/plum-kpi-img/user/avatar2.png'
-//import AddUserForm from './AddUser'
-//import Department from './Department'
 
 import { useFormik, FormikProvider, Field } from 'formik'
 import * as yup from 'yup'
@@ -616,10 +609,7 @@ const User = () => {
                 <CTableRow v-for="item in tableItems" key={row.name}>
                   <CTableDataCell>{row.user_id}</CTableDataCell>
                   <CTableDataCell>
-                    <CAvatar
-                      src={row.avatar !== null ? row.avatar.url : avatar1}
-                      className="me-3"
-                    />
+                    <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
                     {row.user_name}
                   </CTableDataCell>
                   <CTableDataCell>{row.email}</CTableDataCell>
