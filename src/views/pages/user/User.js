@@ -862,7 +862,7 @@ const User = () => {
                   <CModalBody>
                     <UserFilter />
                   </CModalBody>
-                </CModal>
+                </CModal>*/}
                 <CModal
                   scrollable
                   alignment="center"
@@ -877,7 +877,7 @@ const User = () => {
                     <AddUser />
                   </CModalBody>
                   <CModalFooter></CModalFooter>
-                </CModal>*/}
+                </CModal>
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
