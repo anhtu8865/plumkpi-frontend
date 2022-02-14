@@ -564,103 +564,118 @@ const User = () => {
   const UserTable = () => {
     const [numEachPage, setNumEachPage] = React.useState(10)
     const [page, setPage] = React.useState(1)
+    const [filterName, setFilterName] = React.useState('')
+    const [filterEmail, setFilterEmail] = React.useState('')
+    const [filterDepartment, setFilterDepartment] = React.useState('')
+    const [filterRole, setFilterRole] = React.useState('')
     return (
       <>
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
-              <CTableHeaderCell>ID</CTableHeaderCell>
+              <CTableHeaderCell style={{ width: '100px' }}>ID</CTableHeaderCell>
               <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
               <CTableHeaderCell>EMAIL</CTableHeaderCell>
               <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
               <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
-              <CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>
+              {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
           <CTableBody>
             <CTableRow>
-              <CTableDataCell></CTableDataCell>
+              <CTableDataCell>
+                {' '}
+                <Input />
+              </CTableDataCell>
+              <CTableDataCell>
+                <Input
+                  value={filterName}
+                  onChange={(event) => {
+                    setFilterName(event.target.value)
+                  }}
+                />
+              </CTableDataCell>
               <CTableDataCell>
                 <Input />
               </CTableDataCell>
               <CTableDataCell>
                 <Input />
-              </CTableDataCell>{' '}
-              <CTableDataCell>
-                <Input />
-              </CTableDataCell>{' '}
+              </CTableDataCell>
               <CTableDataCell>
                 <Input />
               </CTableDataCell>
-              <CTableDataCell></CTableDataCell>
-              <CTableDataCell>
-                <IconButton id="search" color="primary">
-                  <SearchIcon />
-                  <EditUserModal />
-                </IconButton>
-              </CTableDataCell>
+              <CTableDataCell />
             </CTableRow>
             {
               /*(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
-            )*/ userList.slice((page - 1) * numEachPage, page * numEachPage).map((row) => (
-                <CTableRow v-for="item in tableItems" key={row.name}>
-                  <CTableDataCell>{row.user_id}</CTableDataCell>
-                  <CTableDataCell>
-                    <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
-                    {row.user_name}
-                  </CTableDataCell>
-                  <CTableDataCell>{row.email}</CTableDataCell>
-                  <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
-                  <CTableDataCell>{row.role}</CTableDataCell>
-                  <CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
+            )*/ userList
+                .slice((page - 1) * numEachPage, page * numEachPage)
+                .filter((val) => {
+                  if (filterName === '') {
+                    return val
+                  } else if (val.user_name.toLowerCase().includes(filterName.toLowerCase())) {
+                    return val
+                  }
+                })
+                .map((row) => (
+                  <CTableRow v-for="item in tableItems" key={row.name}>
+                    <CTableDataCell>{row.user_id}</CTableDataCell>
+                    <CTableDataCell>
+                      <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
+                      {row.user_name}
+                    </CTableDataCell>
+                    <CTableDataCell>{row.email}</CTableDataCell>
+                    <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
+                    <CTableDataCell>{row.role}</CTableDataCell>
+                    {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <IconButton
-                      id="edit"
-                      color="primary"
-                      onClick={() => {
-                        setEditUserModal(true)
-                        setEditUserId(row.user_id)
-                        setUserName(row.user_name)
-                        setEmail(row.email)
-                      }}
-                    >
-                      <EditIcon />
-                      <EditUserModal />
-                    </IconButton>
-                    <IconButton
-                      id="delete"
-                      color="error"
-                      onClick={() => {
-                        setDeleteUserModal(true)
-                        setDeleteUserId(row.user_id)
-                      }}
-                    >
-                      <DeleteForeverIcon />
-                      <CModal
-                        alignment="center"
-                        scrollable
-                        visible={deleteUserModal}
-                        onClose={() => setDeleteUserModal(false)}
+            </CTableDataCell>*/}
+                    <CTableDataCell className="text-center">
+                      <IconButton
+                        id="edit"
+                        color="primary"
+                        onClick={() => {
+                          setEditUserModal(true)
+                          setEditUserId(row.user_id)
+                          setUserName(row.user_name)
+                          setEmail(row.email)
+                        }}
                       >
-                        <CModalHeader>
-                          <CModalTitle>Xóa nhân viên</CModalTitle>
-                        </CModalHeader>
-                        <CModalBody>
-                          <CRow className="mt-2 mb-2 mx-2">
-                            <CCol xs>Bạn có chắc muốn xóa nhân viên ?</CCol>
-                          </CRow>
-                        </CModalBody>
-                        <DeleteUserModal />
-                      </CModal>
-                    </IconButton>
-                  </CTableDataCell>
-                </CTableRow>
-              ))
+                        <EditIcon />
+                        <EditUserModal />
+                      </IconButton>
+                      <IconButton
+                        id="delete"
+                        color="error"
+                        onClick={() => {
+                          setDeleteUserModal(true)
+                          setDeleteUserId(row.user_id)
+                        }}
+                      >
+                        <DeleteForeverIcon />
+                        <CModal
+                          alignment="center"
+                          scrollable
+                          visible={deleteUserModal}
+                          onClose={() => setDeleteUserModal(false)}
+                        >
+                          <CModalHeader>
+                            <CModalTitle>Xóa nhân viên</CModalTitle>
+                          </CModalHeader>
+                          <CModalBody>
+                            <CRow className="mt-2 mb-2 mx-2">
+                              <CCol xs>Bạn có chắc muốn xóa nhân viên ?</CCol>
+                            </CRow>
+                          </CModalBody>
+                          <DeleteUserModal />
+                        </CModal>
+                      </IconButton>
+                    </CTableDataCell>
+                  </CTableRow>
+                ))
             }
           </CTableBody>
           <CTableFoot>
