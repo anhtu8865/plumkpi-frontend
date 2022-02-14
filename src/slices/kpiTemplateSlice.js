@@ -9,7 +9,7 @@ const kpiTemplateSlice = createSlice({
   },
   reducers: {
     setTemplateReload: (state) => {
-      state.templateReload = !state.TemplateReload
+      state.templateReload = !state.templateReload
     },
     setTemplateLoading: (state, action) => {
       state.templateLoading = action.payload.value

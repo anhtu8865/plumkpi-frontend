@@ -29,7 +29,7 @@ import Select from 'react-select'
 import { allowKeyList, formulaTypingRule } from 'src/utils/constant'
 import { checkValid, checkFormulaLogic } from 'src/utils/function'
 import HelpIcon from '@mui/icons-material/Help'
-import { setCategoryReload, setCategoryLoading } from 'src/slices/kpiCategorySlice'
+import { setTemplateReload, setTemplateLoading } from 'src/slices/kpiTemplateSlice'
 
 export const AddKpiButton = (props) => {
   const dispatch = useDispatch()
@@ -68,7 +68,7 @@ export const AddKpiButton = (props) => {
           )
         })
     })
-  }, [dispatch])
+  }, [categoryList, dispatch])
 
   const ValidationSchema = yup.object({
     name: yup
@@ -98,6 +98,7 @@ export const AddKpiButton = (props) => {
   })
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       name: '',
       description: null,
@@ -137,11 +138,11 @@ export const AddKpiButton = (props) => {
             }),
           )
           dispatch(
-            setCategoryLoading({
+            setTemplateLoading({
               value: true,
             }),
           )
-          dispatch(setCategoryReload())
+          dispatch(setTemplateReload())
           setModalVisible(false)
         })
         .catch((error) => {
@@ -281,11 +282,13 @@ export const AddKpiButton = (props) => {
                       : true
                   }
                 >
-                  {categoryList.map((catItem) => (
-                    <option key={catItem.kpi_categpry_id} value={catItem.kpi_category_id}>
-                      {catItem.kpi_category_name}
-                    </option>
-                  ))}
+                  {categoryList.map((catItem) => {
+                    return (
+                      <option key={catItem.kpi_category_id} value={catItem.kpi_category_id}>
+                        {catItem.kpi_category_name}
+                      </option>
+                    )
+                  })}
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.category}</CFormFeedback>
               </CCol>

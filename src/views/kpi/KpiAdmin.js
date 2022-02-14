@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
-import { CCard, CCardBody, CCol, CContainer, CRow } from '@coreui/react'
-import { Tabs, Tab, Box } from '@mui/material'
-import { TabPanel, a11yProps } from 'src/components/TabPanel'
+import { CCard, CCardBody, CCol, CContainer, CRow, CCardTitle, CCardText } from '@coreui/react'
+import { Pagination, IconButton } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { KpiAdminTable } from './KpiAdminTable'
-import { AddKpiButton } from './AddKpiButton'
 import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
@@ -13,38 +10,27 @@ import { setCategoryLoading, setCategoryList } from 'src/slices/kpiCategorySlice
 import { AddCategoryButton } from './AddCategoryButton'
 import { EditCategoryButton } from './EditCategoryButton'
 import { DeleteCategoryButton } from './DeleteCategoryButton'
+import { useHistory } from 'react-router-dom'
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 
 const KpiAdmin = () => {
-  const [value, setValue] = React.useState(0)
-  const [kpiTemList, setKpiTemList] = React.useState([])
+  const entryPerPage = 6
+  const [page, setPage] = React.useState(1)
+  const [totalPage, setTotalPage] = React.useState(1)
+  const [entry, setEntry] = React.useState([])
+  const history = useHistory()
 
   const dispatch = useDispatch()
-  const { categoryReload, categoryLoading, categoryList } = useSelector(
-    (state) => state.kpiCategory,
-  )
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
+  const { categoryReload, categoryLoading } = useSelector((state) => state.kpiCategory)
 
   React.useEffect(() => {
     api
-      .get('/kpi-categories')
-      .then((response) => {
-        dispatch(setCategoryList({ value: response.data.items }))
+      .get('/kpi-categories', {
+        params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
       })
-      .catch((error) => {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      })
-    api
-      .get('/kpi-templates')
       .then((response) => {
-        setKpiTemList(response.data.items)
+        setTotalPage(Math.ceil(response.data.count / entryPerPage))
+        setEntry(response.data.items)
       })
       .catch((error) => {
         dispatch(
@@ -59,53 +45,46 @@ const KpiAdmin = () => {
         value: false,
       }),
     )
-  }, [categoryReload, dispatch])
+  }, [categoryReload, page, dispatch])
 
   const ViewTabs = () => {
-    let copyCategoryList = [...categoryList]
     return (
-      <Box sx={{ width: '100%' }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          sx={{ borderBottom: 1, borderColor: 'divider' }}
-        >
-          {copyCategoryList
-            .sort((a, b) => a.kpi_category_id - b.kpi_category_id)
-            .map((catItem, index) => (
-              <Tab
-                key={catItem.kpi_category_id}
-                label={catItem.kpi_category_name}
-                {...a11yProps(index)}
-              />
-            ))}
-        </Tabs>
-        {categoryList.map((catItem, index) => {
-          return (
-            <TabPanel key={catItem.kpi_category_id} value={value} index={index}>
-              <CRow>
-                <CCol xs>
-                  <div className="d-flex align-items-center flex-row mb-2">
-                    <h5 className="me-3">{catItem.kpi_category_name}</h5>
-                    <div className="mb-2">
+      <>
+        <CRow>
+          {entry.map((catItem, index) => (
+            <CCol xs={4} key={index} className="mb-4">
+              <CCard className="text-center">
+                <CCardBody>
+                  <CCardTitle>{catItem.kpi_category_name}</CCardTitle>
+                  <CRow>
+                    <div className="d-flex flex-row justify-content-center">
+                      <IconButton
+                        onClick={() => {
+                          history.push(`kpiadmin/${catItem.kpi_category_id}`)
+                        }}
+                      >
+                        <ArrowCircleRightIcon />
+                      </IconButton>
                       <EditCategoryButton inCat={catItem} />
-                    </div>
-                    <div className="mb-2">
                       <DeleteCategoryButton inCat={catItem} />
                     </div>
-                  </div>
-                </CCol>
-                <CCol xs>
-                  <div className="text-end">
-                    <AddKpiButton inCat={catItem} />
-                  </div>
-                </CCol>
-              </CRow>
-              <KpiAdminTable inCat={catItem} temList={kpiTemList} />
-            </TabPanel>
-          )
-        })}
-      </Box>
+                  </CRow>
+                </CCardBody>
+              </CCard>
+            </CCol>
+          ))}
+        </CRow>
+        <div className="d-flex flex-row justify-content-center">
+          <Pagination
+            page={page}
+            count={totalPage}
+            showFirstButton
+            showLastButton
+            size="small"
+            onChange={(event, page) => setPage(page)}
+          />
+        </div>
+      </>
     )
   }
 
@@ -118,7 +97,7 @@ const KpiAdmin = () => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h4>Quản lý KPI mẫu</h4>
+                    <h4>Danh mục KPI mẫu</h4>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
@@ -126,7 +105,7 @@ const KpiAdmin = () => {
                     </div>
                   </CCol>
                 </CRow>
-                <div className="mt-3">
+                <div className="mt-5 px-4">
                   <ViewTabs />
                 </div>
                 {categoryLoading && <LoadingCircle />}
