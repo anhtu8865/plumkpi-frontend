@@ -4,12 +4,10 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CForm,
   CFormLabel,
   CFormInput,
   CFormSelect,
   CRow,
-  CFormFloating,
   CFormFeedback,
 } from '@coreui/react'
 import { Tabs, Tab, Box, Button, Avatar, TextField } from '@mui/material'
@@ -23,7 +21,7 @@ import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
 import { useDispatch } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
-import { createAlert } from 'src/store'
+import { createAlert } from 'src/slices/alertSlice'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
