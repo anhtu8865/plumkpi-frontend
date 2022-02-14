@@ -31,6 +31,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
 import SearchIcon from '@mui/icons-material/Search'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 
@@ -75,6 +76,8 @@ const Department = () => {
   const [deptName, setDeptName] = React.useState('')
 
   const [deptDes, setDeptDes] = React.useState('')
+
+  const [showDepartmentFilter, setShowDepartmentFilter] = React.useState(false)
 
   const [filter, setFilter] = React.useState('')
 
@@ -368,6 +371,75 @@ const Department = () => {
     )
   }
 
+  const DepartmentFilter = () => {
+    const formik = useFormik({
+      initialValues: {
+        filter_id: null,
+        filter_name: '',
+      },
+      validateOnBlur: true,
+      onSubmit: (values) => {
+        //console.log('Đây là search')
+        console.log(values)
+        let apiLink = '/depts?'
+        if (values.filter_name !== '') {
+          apiLink += 'name=' + values.filter_name
+        }
+
+        //apiLink = 'users?user_name=' + values.filter_name + '&user_id=' + values.filter_id
+        api
+          .get(apiLink)
+          .then((res) => {
+            //alert('Thành công')
+            setFilter(res.data.items)
+            console.log(res.data.items)
+            /*setSuccessMessage('Thêm người dùng thành công')
+            setSuccess(true)
+            setLoading(true)*/
+          })
+          .catch((error) => {
+            alert('Thất bại')
+            setErrorMessage(error.response.data.message)
+            setError(true)
+          })
+          .finally(() => formik.setSubmitting(false))
+      },
+    })
+
+    return (
+      <CForm className="row g-3">
+        <CCol md={1}>
+          <CFormLabel htmlFor="filterID">ID</CFormLabel>
+          <CFormInput type={'number'} id="filterID" />
+        </CCol>
+        <CCol md={4}>
+          <CFormLabel htmlFor="filterDepartment">Phòng ban</CFormLabel>
+          <CFormInput
+            type="text"
+            id="filterDepartment"
+            name="filter_name"
+            value={formik.values.filter_name}
+            onChange={formik.handleChange}
+          />
+        </CCol>
+        <CCol xs={12}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+            onClick={formik.submitForm}
+            disabled={formik.isSubmitting}
+          >
+            Tìm
+          </Button>
+          {formik.isSubmitting && <LoadingCircle />}
+        </CCol>
+        <SuccessErrorToast />
+      </CForm>
+    )
+  }
+
   const DeptTable = (props) => {
     const [numEachPage, setNumEachPage] = React.useState(10)
     const [page, setPage] = React.useState(1)
@@ -472,6 +544,14 @@ const Department = () => {
                       <Button
                         variant="contained"
                         color="primary"
+                        startIcon={<FilterAltIcon />}
+                        onClick={() => setShowDepartmentFilter(!showDepartmentFilter)}
+                      >
+                        Tạo bộ lọc
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
                         startIcon={<AddBoxIcon />}
                         onClick={() => setshowAddDepartmentForm(true)}
                       >
@@ -511,7 +591,8 @@ const Department = () => {
                 <SuccessErrorToast />
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <DeptTable temList={deptList} />
+                  {showDepartmentFilter ? <DepartmentFilter /> : null}
+                  <DeptTable temList={filter.length > 0 ? filter : deptList} />
                 </div>
               </CCardBody>
             </CCard>
