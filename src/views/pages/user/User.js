@@ -78,7 +78,8 @@ const User = () => {
         setUserList(response.data.items)
       })
       .catch((error) => {
-        setErrorMessage(error.response.data.message)
+        //setErrorMessage(error.response.data.message)
+        alert('Thất bại')
         setError(true)
         setSuccess(false)
       })
@@ -192,11 +193,12 @@ const User = () => {
         editusername: `${userName}`,
         editemail: `${email}`,
         editrole: '',
-        editdept: { dept_id: '' },
+        editdept: { dept_id: null },
       },
       validationSchema: ValidationSchema,
       onSubmit: (values) => {
         // assume that we already login
+        console.log(values)
         api
           .put(`/users/${editUserId}`, {
             user_name: values.editusername,
@@ -396,11 +398,11 @@ const User = () => {
     })
 
     const formik = useFormik({
-      initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: '' } },
+      initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: null } },
       validateOnBlur: true,
       onSubmit: (values) => {
         console.log('Đây là form')
-        console.log(values)
+
         api
           .post('users', {
             user_name: values.user_name,
@@ -722,7 +724,7 @@ const User = () => {
                     {row.user_name}
                   </CTableDataCell>
                   <CTableDataCell>{row.email}</CTableDataCell>
-                  <CTableDataCell>{row.dept.dept_name}</CTableDataCell>
+                  <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
                   <CTableDataCell>{row.role}</CTableDataCell>
                   {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
