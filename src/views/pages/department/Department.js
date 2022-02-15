@@ -1,51 +1,39 @@
 import {
-  CContainer,
   CCard,
+  CCardBody,
+  CCol,
+  CContainer,
+  CForm,
+  CFormFeedback,
+  CFormInput,
+  CFormLabel,
   CModal,
   CModalBody,
+  CModalFooter,
   CModalHeader,
   CModalTitle,
-  CModalFooter,
-  CCol,
   CRow,
-  CCardBody,
-  CAvatar,
   CTable,
   CTableBody,
   CTableDataCell,
+  CTableFoot,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CTableFoot,
-  CFormLabel,
-  CFormInput,
-  CFormSelect,
-  CFormCheck,
-  CFormFloating,
-  CForm,
-  CFormFeedback,
 } from '@coreui/react'
-
-import { Button, IconButton, Snackbar, Alert, Pagination, Input, TextField } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
-import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
-import SearchIcon from '@mui/icons-material/Search'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import CorporateFareIcon from '@mui/icons-material/CorporateFare'
-
-import { LoadingCircle } from 'src/components/LoadingCircle'
-
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
-
-import { useFormik, FormikProvider, Field } from 'formik'
-import * as yup from 'yup'
-import api from 'src/views/axiosConfig'
-import axios from 'axios'
-
+import EditIcon from '@mui/icons-material/Edit'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
+import SearchIcon from '@mui/icons-material/Search'
+import { Alert, Button, IconButton, Pagination, Snackbar } from '@mui/material'
+import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
+import React from 'react'
+import { LoadingCircle } from 'src/components/LoadingCircle'
+import api from 'src/views/axiosConfig'
+import * as yup from 'yup'
 
 const Department = () => {
   const [showAddDepartmentForm, setshowAddDepartmentForm] = React.useState(false)
