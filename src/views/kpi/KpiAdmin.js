@@ -53,7 +53,7 @@ const KpiAdmin = () => {
         <CRow>
           {entry.map((catItem, index) => (
             <CCol xs={4} key={index} className="mb-4">
-              <CCard className="text-center">
+              <CCard className="text-center shadow-sm">
                 <CCardBody>
                   <CCardTitle>{catItem.kpi_category_name}</CCardTitle>
                   <CRow>

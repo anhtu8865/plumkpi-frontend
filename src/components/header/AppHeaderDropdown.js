@@ -23,20 +23,23 @@ import {
   cilUser,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
 import api from 'src/views/axiosConfig'
-
 import { useHistory } from 'react-router-dom'
 import { Avatar } from '@mui/material'
 import { roleList } from 'src/utils/engToViet'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from 'src/slices/userSlice'
+import { translate } from 'src/utils/function'
 
 const AppHeaderDropdown = () => {
-  const [user, setUser] = React.useState({})
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.user)
+  //const [user, setUser] = React.useState({})
   React.useEffect(() => {
     api
       .get('authentication')
       .then((response) => {
-        setUser(response.data)
+        dispatch(setUser({ value: response.data }))
       })
       .catch((error) => {
         alert(error.response.data.message)
@@ -64,9 +67,7 @@ const AppHeaderDropdown = () => {
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         <CRow>
           <CCol className="mt-2">
-            <CBadge color="secondary">
-              {user.role ? roleList.filter((roleItem) => roleItem.eng == user.role)[0].viet : null}
-            </CBadge>
+            <CBadge color="secondary">{user.role ? translate(user.role, roleList) : null}</CBadge>
           </CCol>
           <CCol>
             <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 40, height: 40 }} />
