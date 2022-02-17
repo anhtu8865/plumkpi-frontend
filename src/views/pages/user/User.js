@@ -197,7 +197,10 @@ const User = () => {
       validationSchema: ValidationSchema,
       onSubmit: (values) => {
         // assume that we already login
-        console.log(values)
+        //block director, admin
+        if (values.editrole === 'Admin' || values.editrole === 'Director') {
+          values.editdept.dept_id = null
+        }
         api
           .put(`/users/${editUserId}`, {
             user_name: values.editusername,
@@ -399,7 +402,6 @@ const User = () => {
       initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: null } },
       validateOnBlur: true,
       onSubmit: (values) => {
-        console.log('Đây là form')
         if (values.role === 'Admin' || values.role === 'Director') {
           values.dept.dept_id = null
         }
