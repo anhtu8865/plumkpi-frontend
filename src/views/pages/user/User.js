@@ -78,8 +78,7 @@ const User = () => {
         setUserList(response.data.items)
       })
       .catch((error) => {
-        //setErrorMessage(error.response.data.message)
-        alert('Thất bại')
+        setErrorMessage(error.response.data.message)
         setError(true)
         setSuccess(false)
       })
@@ -296,7 +295,6 @@ const User = () => {
                       ))}
                     </Field>
                   </FormikProvider>
-
                   <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
                 </CCol>
               </CRow>
@@ -402,7 +400,9 @@ const User = () => {
       validateOnBlur: true,
       onSubmit: (values) => {
         console.log('Đây là form')
-
+        if (values.role === 'Admin' || values.role === 'Director') {
+          values.dept.dept_id = null
+        }
         api
           .post('users', {
             user_name: values.user_name,
@@ -512,6 +512,7 @@ const User = () => {
               </CCol>
             </CRow>
           </div>
+
           <div>
             <h6>Vai trò và quyền hạn</h6>
             <fieldset className="row mb-3">
@@ -662,6 +663,7 @@ const User = () => {
             </Field>
           </FormikProvider>
         </CCol>
+        )
         <CCol md={2}>
           <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
           <FormikProvider value={formik}>
@@ -674,7 +676,6 @@ const User = () => {
             </Field>
           </FormikProvider>
         </CCol>
-
         <CCol xs={12}>
           <Button
             type="submit"
