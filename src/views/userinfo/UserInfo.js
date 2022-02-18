@@ -19,7 +19,8 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import api from 'src/views/axiosConfig'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from 'src/slices/userSlice'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -28,15 +29,7 @@ import DatePicker from '@mui/lab/DatePicker'
 import { roleList } from 'src/utils/engToViet'
 
 const UserInfo = () => {
-  const [user, setUser] = React.useState({
-    user_name: null,
-    email: null,
-    role: null,
-    phone: null,
-    gender: 'None',
-    address: null,
-    dob: null,
-  })
+  const { user } = useSelector((state) => state.user)
   const [reload, setReload] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
   const [value, setValue] = React.useState(0)
@@ -47,7 +40,7 @@ const UserInfo = () => {
     api
       .get('authentication')
       .then((response) => {
-        setUser(response.data)
+        dispatch(setUser({ value: response.data }))
       })
       .catch((error) => {
         dispatch(

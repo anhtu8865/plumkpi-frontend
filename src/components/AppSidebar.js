@@ -19,30 +19,11 @@ import navigationEmployee from '../_nav2'
 import navigationManager from '../_nav3'
 import navigationDirector from '../_nav4'
 
-import api from 'src/views/axiosConfig'
-
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebar.unfoldable)
   const sidebarShow = useSelector((state) => state.sidebar.sidebarShow)
-
-  const [reload, setReload] = React.useState(true)
-
-  const [loading, setLoading] = React.useState(true)
-
-  const [role, setRole] = React.useState('')
-
-  React.useEffect(() => {
-    //assume that we already login
-    api
-      .get('/authentication')
-      .then((response) => {
-        setRole(response.data.role)
-      })
-      .catch((error) => {})
-    setReload(false)
-    setLoading(false)
-  }, [reload])
+  const { user } = useSelector((state) => state.user)
 
   return (
     <CSidebar
@@ -59,7 +40,7 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={chooseNav(role)} />
+          <AppSidebarNav items={chooseNav(user.role)} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler className="d-none d-lg-flex" onClick={() => dispatch(setUnfoldable())} />
