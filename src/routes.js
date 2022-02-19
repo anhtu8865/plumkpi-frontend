@@ -7,6 +7,7 @@ const KpiAdmin = React.lazy(() => import('./views/kpi/KpiAdmin'))
 const KpiTemplate = React.lazy(() => import('./views/kpi/KpiTemplate'))
 const UserPage = React.lazy(() => import('./views/pages/user/User'))
 const Department = React.lazy(() => import('./views/pages/department/Department'))
+const Plan = React.lazy(() => import('./views/plan/Plan'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -16,6 +17,7 @@ const routes = [
   { path: '/kpiadmin/:id', name: 'KPI Template', component: KpiTemplate },
   { path: '/user', name: 'User', component: UserPage },
   { path: '/department', name: 'Department', component: Department },
+  { path: '/plan', name: 'Plan', component: Plan },
 ]
 
 export default routes

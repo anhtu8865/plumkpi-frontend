@@ -20,7 +20,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
-import { setCategoryReload, setCategoryLoading } from 'src/slices/kpiCategorySlice'
+import { setReload, setLoading } from 'src/slices/viewSlice'
 
 export const AddCategoryButton = () => {
   const dispatch = useDispatch()
@@ -47,11 +47,11 @@ export const AddCategoryButton = () => {
             }),
           )
           dispatch(
-            setCategoryLoading({
+            setLoading({
               value: true,
             }),
           )
-          dispatch(setCategoryReload())
+          dispatch(setReload())
           setModalVisible(false)
         })
         .catch((error) => {

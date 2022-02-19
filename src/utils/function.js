@@ -152,3 +152,47 @@ export const convertFormula = (str, kpiList) => {
   })
   return finalString.trim()
 }
+
+export const checkOverlap = (start1, end1, start2, end2) => {
+  if (start1 <= end2 && end1 >= start2) {
+    return true
+  }
+  return false
+}
+
+export const checkTimeRange = (start, end, planList) => {
+  const result = sortPlanList(planList)
+  const sortList = result.oldPlan.concat(result.currentPlan.concat(result.futurePlan))
+  for (var i = 0; i < sortList.length; i++) {
+    const check = checkOverlap(start, end, sortList[i].start_date, sortList[i].end_date)
+    if (check) {
+      return sortList[i]
+    }
+  }
+  return {}
+}
+
+export const sortPlanList = (planList) => {
+  if (planList.length === 0) {
+    return { oldPlan: [], currentPlan: [], futurePlan: [] }
+  }
+  const today = new Date().toLocaleDateString('en-CA')
+  const oldPlan = []
+  const currentPlan = []
+  const futurePlan = []
+  planList.map((planItem) => {
+    if (planItem.start_date > today) {
+      futurePlan.push(planItem)
+    } else if (planItem.end_date < today) {
+      oldPlan.push(planItem)
+    } else {
+      currentPlan.push(planItem)
+    }
+  })
+  return { oldPlan: oldPlan, currentPlan: currentPlan, futurePlan: futurePlan }
+}
+
+export const calculateTimeProgress = (start, end) => {
+  const today = new Date().toLocaleDateString('en-CA')
+  return Math.ceil(((new Date(today) - new Date(start)) / (new Date(end) - new Date(start))) * 100)
+}

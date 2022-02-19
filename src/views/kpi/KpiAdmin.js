@@ -6,7 +6,7 @@ import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setCategoryLoading, setCategoryList } from 'src/slices/kpiCategorySlice'
+import { setLoading } from 'src/slices/viewSlice'
 import { AddCategoryButton } from './AddCategoryButton'
 import { EditCategoryButton } from './EditCategoryButton'
 import { DeleteCategoryButton } from './DeleteCategoryButton'
@@ -21,7 +21,7 @@ const KpiAdmin = () => {
   const history = useHistory()
 
   const dispatch = useDispatch()
-  const { categoryReload, categoryLoading } = useSelector((state) => state.kpiCategory)
+  const { reload, loading } = useSelector((state) => state.view)
 
   React.useEffect(() => {
     api
@@ -41,18 +41,18 @@ const KpiAdmin = () => {
         )
       })
     dispatch(
-      setCategoryLoading({
+      setLoading({
         value: false,
       }),
     )
-  }, [categoryReload, page, dispatch])
+  }, [reload, page, dispatch])
 
   const ViewTabs = () => {
     return (
       <>
         <CRow>
           {entry.map((catItem, index) => (
-            <CCol xs={4} key={index} className="mb-4">
+            <CCol xs={12} sm={6} lg={4} key={index} className="mb-4">
               <CCard className="text-center shadow-sm">
                 <CCardBody>
                   <CCardTitle>{catItem.kpi_category_name}</CCardTitle>
@@ -108,7 +108,7 @@ const KpiAdmin = () => {
                 <div className="mt-5 px-4">
                   <ViewTabs />
                 </div>
-                {categoryLoading && <LoadingCircle />}
+                {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>
           </CCol>

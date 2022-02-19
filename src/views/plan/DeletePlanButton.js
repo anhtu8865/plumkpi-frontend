@@ -9,7 +9,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
-export const DeleteCategoryButton = (props) => {
+export const DeletePlanButton = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
   const [isSubmit, setIsSubmit] = React.useState(false)
@@ -17,11 +17,11 @@ export const DeleteCategoryButton = (props) => {
   const onClickDelete = () => {
     setIsSubmit(true)
     api
-      .delete(`/kpi-categories/${props.inCat.kpi_category_id}`)
+      .delete(`/plans/${props.inPlan.plan_id}`)
       .then(() => {
         dispatch(
           createAlert({
-            message: 'Xóa danh mục thành công.',
+            message: 'Xóa kế hoạch thành công.',
             type: 'success',
           }),
         )
@@ -60,10 +60,10 @@ export const DeleteCategoryButton = (props) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Xóa danh mục</CModalTitle>
+          <CModalTitle>Xóa kế hoạch</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
-          Bạn có chắc chắn muốn xóa danh mục: {props.inCat.kpi_category_name} ?
+          Bạn có chắc chắn muốn xóa kế hoạch: {props.inPlan.plan_name} ?
         </CModalBody>
         <CModalFooter>
           <Button
@@ -83,6 +83,6 @@ export const DeleteCategoryButton = (props) => {
   )
 }
 
-DeleteCategoryButton.propTypes = {
-  inCat: PropTypes.object,
+DeletePlanButton.propTypes = {
+  inPlan: PropTypes.object,
 }

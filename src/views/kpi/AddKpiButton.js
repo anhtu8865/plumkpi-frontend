@@ -29,7 +29,7 @@ import Select from 'react-select'
 import { allowKeyList, formulaTypingRule } from 'src/utils/constant'
 import { checkValid, checkFormulaLogic } from 'src/utils/function'
 import HelpIcon from '@mui/icons-material/Help'
-import { setTemplateReload, setTemplateLoading } from 'src/slices/kpiTemplateSlice'
+import { setReload, setLoading } from 'src/slices/viewSlice'
 
 export const AddKpiButton = (props) => {
   const dispatch = useDispatch()
@@ -138,11 +138,11 @@ export const AddKpiButton = (props) => {
             }),
           )
           dispatch(
-            setTemplateLoading({
+            setLoading({
               value: true,
             }),
           )
-          dispatch(setTemplateReload())
+          dispatch(setReload())
           setModalVisible(false)
         })
         .catch((error) => {

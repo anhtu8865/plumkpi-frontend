@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setTemplateReload, setTemplateLoading } from 'src/slices/kpiTemplateSlice'
+import { setReload, setLoading } from 'src/slices/viewSlice'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
 export const DeleteKpiButton = (props) => {
@@ -26,11 +26,11 @@ export const DeleteKpiButton = (props) => {
           }),
         )
         dispatch(
-          setTemplateLoading({
+          setLoading({
             value: true,
           }),
         )
-        dispatch(setTemplateReload())
+        dispatch(setReload())
         setModalVisible(false)
       })
       .catch((error) => {

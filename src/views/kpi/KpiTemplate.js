@@ -20,7 +20,7 @@ import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setTemplateLoading } from 'src/slices/kpiTemplateSlice'
+import { setLoading } from 'src/slices/viewSlice'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { frequencyList } from 'src/utils/engToViet'
@@ -33,7 +33,7 @@ const KpiTemplate = () => {
   const { id } = useParams()
   const [catItem, setCatItem] = React.useState({ kpi_category_id: null, kpi_category_name: null })
   const dispatch = useDispatch()
-  const { templateReload, templateLoading } = useSelector((state) => state.kpiTemplate)
+  const { reload, loading } = useSelector((state) => state.view)
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)
   const [totalPage, setTotalPage] = React.useState(1)
@@ -86,11 +86,11 @@ const KpiTemplate = () => {
         )
       })
     dispatch(
-      setTemplateLoading({
+      setLoading({
         value: false,
       }),
     )
-  }, [templateReload, page, dispatch])
+  }, [reload, page, dispatch])
 
   const ViewTabs = () => {
     return (
@@ -181,7 +181,7 @@ const KpiTemplate = () => {
                 <div className="mt-4 px-4">
                   <ViewTabs />
                 </div>
-                {templateLoading && <LoadingCircle />}
+                {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>
           </CCol>

@@ -27,7 +27,7 @@ import Select from 'react-select'
 import { allowKeyList, formulaTypingRule } from 'src/utils/constant'
 import { checkValid, checkFormulaLogic, convertFormula } from 'src/utils/function'
 import HelpIcon from '@mui/icons-material/Help'
-import { setTemplateReload, setTemplateLoading } from 'src/slices/kpiTemplateSlice'
+import { setReload, setLoading } from 'src/slices/viewSlice'
 import EditIcon from '@mui/icons-material/Edit'
 
 export const EditKpiButton = (props) => {
@@ -139,11 +139,11 @@ export const EditKpiButton = (props) => {
             }),
           )
           dispatch(
-            setTemplateLoading({
+            setLoading({
               value: true,
             }),
           )
-          dispatch(setTemplateReload())
+          dispatch(setReload())
           setModalVisible(false)
         })
         .catch((error) => {
@@ -178,7 +178,6 @@ export const EditKpiButton = (props) => {
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false)
-          formik.setFieldValue('formula', '', false)
         }}
       >
         <CModalHeader>

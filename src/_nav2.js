@@ -12,7 +12,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Kế hoạch KPI',
-        to: '/',
+        to: '/plan',
       },
       {
         component: CNavItem,
