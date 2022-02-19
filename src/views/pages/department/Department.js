@@ -287,7 +287,7 @@ const Department = () => {
                 </CRow>
                 <div className="mt-2 p-4">
                   {showDepartmentFilter ? <DepartmentFilter /> : null}
-                  <DeptTable temList={entry} />
+                  <DeptTable temList={filter.length > 0 ? filter : entry} />
                 </div>
               </CCardBody>
             </CCard>
