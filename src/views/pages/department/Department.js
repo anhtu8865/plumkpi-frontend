@@ -18,7 +18,7 @@ import {
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
-import { Alert, Button, Pagination, Snackbar, Grid } from '@mui/material'
+import { Button, Grid, Pagination } from '@mui/material'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -35,34 +35,6 @@ import EditDepartment from './EditDepartment'
 
 const Department = () => {
   const history = useHistory()
-  const [showAddDepartmentForm, setshowAddDepartmentForm] = React.useState(false)
-  const [showDepartment, setshowDepartment] = React.useState(false)
-
-  const [error, setError] = React.useState(false)
-
-  const [success, setSuccess] = React.useState(false)
-
-  const [successMessage, setSuccessMessage] = React.useState('')
-
-  const [errorMessage, setErrorMessage] = React.useState('')
-
-  const [reload, setReload] = React.useState(true)
-
-  const [loading, setLoading] = React.useState(true)
-
-  const [deptList, setDeptList] = React.useState([])
-
-  const [deleteDeptId, setDeleteDeptId] = React.useState(0)
-
-  const [deleteDeptModal, setDeleteDeptModal] = React.useState(false)
-
-  const [editDeptModal, setEditDeptModal] = React.useState(false)
-
-  const [editDeptId, setEditDeptId] = React.useState(0)
-
-  const [deptName, setDeptName] = React.useState('')
-
-  const [deptDes, setDeptDes] = React.useState('')
 
   const [showDepartmentFilter, setShowDepartmentFilter] = React.useState(false)
 
@@ -78,67 +50,33 @@ const Department = () => {
   const [entry, setEntry] = React.useState([])
 
   React.useEffect(() => {
-    api
-      .get('/depts', {
-        params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
-      })
-      .then((response) => {
-        setTotalPage(Math.ceil(response.data.count / entryPerPage))
-        setEntry(response.data.items)
-      })
-      .catch((error) => {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      })
+    async function fetchDeptList() {
+      api
+        .get('/depts', {
+          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
+        })
+        .then((response) => {
+          setTotalPage(Math.ceil(response.data.count / entryPerPage))
+          setEntry(response.data.items)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
+
+    fetchDeptList()
+
     dispatch(
       setDepartmentLoading({
         value: false,
       }),
     )
   }, [departmentReload, page, dispatch])
-
-  const SuccessErrorToast = () => {
-    const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return
-      }
-      if (success === true) {
-        setSuccess(false)
-        setReload(true)
-      } else {
-        setError(false)
-      }
-    }
-
-    return (
-      <>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={error}
-          autoHideDuration={3000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={success}
-          autoHideDuration={1000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
-            {successMessage}
-          </Alert>
-        </Snackbar>
-      </>
-    )
-  }
 
   const DepartmentFilter = () => {
     const formik = useFormik({
@@ -161,15 +99,9 @@ const Department = () => {
           .then((res) => {
             //alert('Thành công')
             setFilter(res.data.items)
-            console.log(res.data.items)
-            /*setSuccessMessage('Thêm người dùng thành công')
-            setSuccess(true)
-            setLoading(true)*/
           })
           .catch((error) => {
             alert('Thất bại')
-            setErrorMessage(error.response.data.message)
-            setError(true)
           })
           .finally(() => formik.setSubmitting(false))
       },
@@ -177,10 +109,6 @@ const Department = () => {
 
     return (
       <CForm className="row g-3">
-        {/*<CCol md={1}>
-          <CFormLabel htmlFor="filterID">ID</CFormLabel>
-          <CFormInput type={'number'} id="filterID" />
-    </CCol>*/}
         <CCol md={4}>
           <CFormLabel htmlFor="filterDepartment">Phòng ban</CFormLabel>
           <CFormInput
@@ -204,7 +132,6 @@ const Department = () => {
           </Button>
           {formik.isSubmitting && <LoadingCircle />}
         </CCol>
-        <SuccessErrorToast />
       </CForm>
     )
   }
