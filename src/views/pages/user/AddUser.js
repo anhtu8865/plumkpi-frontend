@@ -1,55 +1,22 @@
-import {
-  CContainer,
-  CForm,
-  CRow,
-  CCol,
-  CFormLabel,
-  CFormInput,
-  CFormSelect,
-  CFormCheck,
-  CButton,
-  CFormFloating,
-  CFormFeedback,
-} from '@coreui/react'
-import React, { Component } from 'react'
-
-import {
-  Tabs,
-  Tab,
-  Box,
-  Button,
-  IconButton,
-  Snackbar,
-  Alert,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from '@mui/material'
-import { LoadingCircle } from 'src/components/LoadingCircle'
+import { CCol, CFormFeedback, CFormInput, CFormLabel, CRow } from '@coreui/react'
 import AddBoxIcon from '@mui/icons-material/AddBox'
-
-import './AddUser.css'
-
-import { useFormik, Field, FormikProvider } from 'formik'
-
-import * as yup from 'yup'
+import { Button } from '@mui/material'
+import { Field, FormikProvider, useFormik } from 'formik'
+import React from 'react'
+import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
-import axios from 'axios'
+import * as yup from 'yup'
+import PropTypes from 'prop-types'
+import { createAlert } from 'src/slices/alertSlice'
+import { useDispatch } from 'react-redux'
+import { setUserReload, setUserLoading } from 'src/slices/userSlice'
 
 const AddUser = (props) => {
   const [deptList, setDeptList] = React.useState([])
 
   const [error, setError] = React.useState(false)
 
-  const [success, setSuccess] = React.useState(false)
-
-  const [successMessage, setSuccessMessage] = React.useState('')
-
-  const [errorMessage, setErrorMessage] = React.useState('')
-
-  const [reload, setReload] = React.useState(true)
-
-  const [loading, setLoading] = React.useState(true)
+  const dispatch = useDispatch()
 
   api
     .get('/depts')
@@ -57,53 +24,10 @@ const AddUser = (props) => {
       setDeptList(response.data.items)
     })
     .catch((error) => {
-      setErrorMessage(error.response.data.message)
-      setError(true)
-      setSuccess(false)
+      // setErrorMessage(error.response.data.message)
+      // setError(true)
+      // setSuccess(false)
     })
-
-  //console.log(deptList)
-
-  const SuccessErrorToast = () => {
-    const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return
-      }
-      if (success === true) {
-        setSuccess(false)
-        setReload(true)
-      } else {
-        setError(false)
-      }
-    }
-
-    return (
-      <>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={error}
-          autoHideDuration={3000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={success}
-          autoHideDuration={1000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
-            {successMessage}
-          </Alert>
-        </Snackbar>
-      </>
-    )
-  }
-
-  //console.log(deptList)
 
   const validationSchema = yup.object({
     user_name: yup.string().required('Đây là trường bắt buộc'),
@@ -117,11 +41,12 @@ const AddUser = (props) => {
   })
 
   const formik = useFormik({
-    initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: '' } },
+    initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: null } },
     validateOnBlur: true,
     onSubmit: (values) => {
-      console.log('Đây là form')
-      console.log(values)
+      if (values.role === 'Admin' || values.role === 'Director') {
+        values.dept.dept_id = null
+      }
       api
         .post('users', {
           user_name: values.user_name,
@@ -130,20 +55,31 @@ const AddUser = (props) => {
           role: values.role,
           dept: values.dept,
         })
-        .then((res) => {
-          //alert('Thành công')
-          setSuccessMessage('Thêm người dùng thành công')
-          setSuccess(true)
-          setLoading(true)
-          //history.push('/user')
-          //console.log(res.data)
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Tạo người dùng thành công',
+              type: 'success',
+            }),
+          )
+          dispatch(
+            setUserLoading({
+              value: true,
+            }),
+          )
+          dispatch(setUserReload())
         })
         .catch((error) => {
-          //alert('Thất bại')
-          setErrorMessage(error.response.data.message)
-          setError(true)
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
         })
-        .finally(() => formik.setSubmitting(false))
+        .finally(() => {
+          formik.setSubmitting(false)
+        })
     },
     validationSchema: validationSchema,
   })
@@ -154,68 +90,60 @@ const AddUser = (props) => {
         <div>
           <CRow className="mt-2">
             <CCol>
-              <CFormFloating>
-                <CFormInput
-                  id="inputFirstName"
-                  name="user_name"
-                  placeholder="Họ tên"
-                  value={formik.values.user_name}
-                  onChange={formik.handleChange}
-                  invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
-                  valid={
-                    !formik.touched.user_name ||
-                    (formik.touched.user_name && formik.errors.user_name)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
-                <CFormFeedback invalid>{formik.errors.user_name}</CFormFeedback>
-              </CFormFloating>
+              <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
+              <CFormInput
+                id="inputFirstName"
+                name="user_name"
+                value={formik.values.user_name}
+                onChange={formik.handleChange}
+                invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
+                valid={
+                  !formik.touched.user_name || (formik.touched.user_name && formik.errors.user_name)
+                    ? false
+                    : true
+                }
+              />
+
+              <CFormFeedback invalid>{formik.errors.user_name}</CFormFeedback>
             </CCol>
           </CRow>
           <CRow className="mt-4">
             <CCol>
-              <CFormFloating>
-                <CFormInput
-                  id="inputEmail"
-                  name="email"
-                  placeholder="email"
-                  type="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  invalid={formik.touched.email && formik.errors.email ? true : false}
-                  valid={
-                    !formik.touched.email || (formik.touched.email && formik.errors.email)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
-                <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
-              </CFormFloating>
+              <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
+              <CFormInput
+                id="inputEmail"
+                name="email"
+                type="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                invalid={formik.touched.email && formik.errors.email ? true : false}
+                valid={
+                  !formik.touched.email || (formik.touched.email && formik.errors.email)
+                    ? false
+                    : true
+                }
+              />
+
+              <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
             </CCol>
           </CRow>
           <CRow className="mt-4">
             <CCol>
-              <CFormFloating>
-                <CFormInput
-                  id="inputPassword"
-                  placeholder="password"
-                  type="password"
-                  name="password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  invalid={formik.touched.password && formik.errors.password ? true : false}
-                  valid={
-                    !formik.touched.password || (formik.touched.password && formik.errors.password)
-                      ? false
-                      : true
-                  }
-                />
-                <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
-                <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
-              </CFormFloating>
+              <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
+              <CFormInput
+                id="inputPassword"
+                type="password"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                invalid={formik.touched.password && formik.errors.password ? true : false}
+                valid={
+                  !formik.touched.password || (formik.touched.password && formik.errors.password)
+                    ? false
+                    : true
+                }
+              />
+              <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
             </CCol>
           </CRow>
         </div>
@@ -223,23 +151,22 @@ const AddUser = (props) => {
           <h6>Gán người dùng vào phòng ban</h6>
           <CRow>
             <CCol>
-              <CFormFloating>
-                <FormikProvider value={formik}>
-                  <Field as="select" name="dept.dept_id" className="form-select">
-                    <option value="" label="Chọn phòng ban" />
-                    {deptList.map((row) => (
-                      <option value={row.dept_id} key={row.dept_id}>
-                        {row.dept_name}
-                      </option>
-                    ))}
-                  </Field>
-                </FormikProvider>
-                <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
-                <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
-              </CFormFloating>
+              <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
+              <FormikProvider value={formik}>
+                <Field as="select" name="dept.dept_id" className="form-select">
+                  <option value="" label="Chọn phòng ban" />
+                  {deptList.map((row) => (
+                    <option value={row.dept_id} key={row.dept_id}>
+                      {row.dept_name}
+                    </option>
+                  ))}
+                </Field>
+              </FormikProvider>
+              <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
             </CCol>
           </CRow>
         </div>
+
         <div>
           <h6>Vai trò và quyền hạn</h6>
           <fieldset className="row mb-3">
@@ -279,9 +206,9 @@ const AddUser = (props) => {
           </Button>
           {formik.isSubmitting && <LoadingCircle />}
         </div>
-        <SuccessErrorToast />
       </form>
     </div>
   )
 }
+
 export default AddUser

@@ -14,8 +14,8 @@ const routes = [
   { path: '/info', name: 'Info', component: UserInfo },
   { path: '/kpiadmin', exact: true, name: 'KPI Category', component: KpiAdmin },
   { path: '/kpiadmin/:id', name: 'KPI Template', component: KpiTemplate },
-  { path: '/user', name: 'User', component: UserPage },
-  { path: '/department', name: 'Department', component: Department },
+  { path: '/users', name: 'User', component: UserPage },
+  { path: '/depts', name: 'Department', component: Department },
 ]
 
 export default routes
