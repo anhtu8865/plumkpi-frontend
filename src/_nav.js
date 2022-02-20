@@ -13,13 +13,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Người dùng',
-    to: '/user',
+    to: '/users',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Phòng ban',
-    to: '/department',
+    to: '/depts',
     icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
   /*{

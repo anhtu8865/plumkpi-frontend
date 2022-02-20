@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   CButton,
   CCard,
@@ -7,29 +5,21 @@ import {
   CCardGroup,
   CCol,
   CContainer,
-  CForm,
+  CFormFeedback,
   CFormInput,
   CFormLabel,
   CImage,
   CRow,
-  CFormFeedback,
 } from '@coreui/react'
-
-import { CircularProgress } from '@mui/material'
-import { LoadingCircle } from 'src/components/LoadingCircle'
-
-import { Button, Snackbar, Alert } from '@mui/material'
-
-import { useHistory } from 'react-router-dom'
-
-import KPIlogo from 'src/assets/plum-kpi-img/logo.png'
-
-import './Login.css'
-
+import { Alert, Snackbar } from '@mui/material'
 import { useFormik } from 'formik'
-import * as yup from 'yup'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import KPIlogo from 'src/assets/plum-kpi-img/logo.png'
+import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
-import axios from 'axios'
+import * as yup from 'yup'
+import './Login.css'
 
 const Login = () => {
   const history = useHistory()

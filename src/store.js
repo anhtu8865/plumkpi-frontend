@@ -5,6 +5,7 @@ import kpiCategorySlice from './slices/kpiCategorySlice'
 import userSlice from './slices/userSlice'
 import viewSlice from './slices/viewSlice'
 import planSlice from './slices/planSlice'
+import departmentSlice from './slices/departmentSlice'
 import planDetailSlice from './slices/planDetailSlice'
 
 const store = configureStore({
@@ -16,6 +17,7 @@ const store = configureStore({
     view: viewSlice.reducer,
     plan: planSlice.reducer,
     planDetail: planDetailSlice.reducer,
+    department: departmentSlice.reducer,
   },
 })
 
