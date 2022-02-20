@@ -18,5 +18,5 @@ const routes = [
   { path: '/kpiadmin/:id', name: 'KPI Template', component: KpiTemplate },
   { path: '/users', name: 'User', component: UserPage },
   { path: '/depts', exact: true, name: 'Department', component: Department },
+  { path: '/depts/:id', name: 'User In Department', component: UserDepartment },
 ]
-
