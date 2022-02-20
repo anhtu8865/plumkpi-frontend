@@ -40,6 +40,12 @@ const _nav = [
     to: '/',
     icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Nhân sự',
+    to: '/companytree',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
 
   /*{
     component: CNavItem,
