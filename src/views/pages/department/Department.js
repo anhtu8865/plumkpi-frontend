@@ -18,7 +18,7 @@ import {
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
-import { Button, Grid, Pagination } from '@mui/material'
+import { Button, Grid, Pagination, IconButton } from '@mui/material'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -156,7 +156,13 @@ const Department = () => {
                 <CTableDataCell>{catItem.description}</CTableDataCell>
                 <CTableDataCell className="">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <ArrowCircleRightIcon />
+                    <IconButton
+                      onClick={() => {
+                        history.push(`depts/${catItem.dept_id}`)
+                      }}
+                    >
+                      <ArrowCircleRightIcon />
+                    </IconButton>
                     <EditDepartment inCat={catItem} />
                     <DeleteDepartment inCat={catItem} />
                   </Grid>
