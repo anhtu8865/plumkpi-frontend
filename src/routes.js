@@ -19,3 +19,4 @@ const routes = [
   { path: '/users', name: 'User', component: UserPage },
   { path: '/depts', exact: true, name: 'Department', component: Department },
 ]
+
