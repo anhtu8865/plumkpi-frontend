@@ -101,13 +101,6 @@ const UserDepartment = (props) => {
                   </CTableDataCell>*/}
                 <CTableDataCell className="text-center">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <IconButton
-                      onClick={() => {
-                        history.push('/depts')
-                      }}
-                    >
-                      <ArrowCircleLeftIcon />
-                    </IconButton>
                     <EditUser inCat={row} />
                     <DeleteUser inCat={row} />
                   </Grid>
@@ -147,7 +140,13 @@ const UserDepartment = (props) => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h4>Phòng ban</h4>
+                    <IconButton
+                      onClick={() => {
+                        history.push('/depts')
+                      }}
+                    >
+                      <ArrowCircleLeftIcon />
+                    </IconButton>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
