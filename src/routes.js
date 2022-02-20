@@ -20,3 +20,5 @@ const routes = [
   { path: '/depts', exact: true, name: 'Department', component: Department },
   { path: '/depts/:id', name: 'User In Department', component: UserDepartment },
 ]
+
+export default routes
