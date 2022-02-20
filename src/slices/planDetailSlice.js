@@ -5,6 +5,7 @@ const planDetailSlice = createSlice({
   initialState: {
     catInPlan: [],
     temInPlan: [],
+    currentCat: { kpi_category: {} },
   },
   reducers: {
     setCatInPlan: (state, action) => {
@@ -13,8 +14,11 @@ const planDetailSlice = createSlice({
     setTemInPlan: (state, action) => {
       state.temInPlan = action.payload.value
     },
+    setCurrentCat: (state, action) => {
+      state.currentCat = action.payload.value
+    },
   },
 })
 
-export const { setCatInPlan, setTemInPlan } = planDetailSlice.actions
+export const { setCatInPlan, setTemInPlan, setCurrentCat } = planDetailSlice.actions
 export default planDetailSlice

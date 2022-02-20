@@ -88,13 +88,13 @@ export const AddKpiToPlanButton = (props) => {
           if (index !== selectedTemByCat.length - 1) {
             tem.push({
               kpi_template_id: item.kpi_template_id,
-              weight: Math.floor(100 / selectedTemByCat.length),
+              weight: Math.round(100 / selectedTemByCat.length),
             })
           } else {
             tem.push({
               kpi_template_id: item.kpi_template_id,
               weight:
-                100 - (selectedTemByCat.length - 1) * Math.floor(100 / selectedTemByCat.length),
+                100 - (selectedTemByCat.length - 1) * Math.round(100 / selectedTemByCat.length),
             })
           }
         })
@@ -106,9 +106,9 @@ export const AddKpiToPlanButton = (props) => {
     }
     objectToReturn.map((item, index) => {
       if (index !== objectToReturn.length - 1) {
-        item.weight = Math.floor(100 / objectToReturn.length)
+        item.weight = Math.round(100 / objectToReturn.length)
       } else {
-        item.weight = 100 - (objectToReturn.length - 1) * Math.floor(100 / objectToReturn.length)
+        item.weight = 100 - (objectToReturn.length - 1) * Math.round(100 / objectToReturn.length)
       }
     })
     await addToPlan(objectToReturn)
