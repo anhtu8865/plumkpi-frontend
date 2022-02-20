@@ -1,45 +1,52 @@
+import React from 'react'
 import {
   CCol,
-  CForm,
-  CFormFeedback,
-  CFormInput,
   CFormLabel,
+  CFormInput,
   CRow,
   CModal,
   CModalBody,
   CModalFooter,
   CModalTitle,
   CModalHeader,
+  CFormFeedback,
 } from '@coreui/react'
-import AddBoxIcon from '@mui/icons-material/AddBox'
-import { Button } from '@mui/material'
-import { useFormik } from 'formik'
-import React from 'react'
+import PropTypes from 'prop-types'
+import { Button, IconButton } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
+import EditIcon from '@mui/icons-material/Edit'
+import CheckIcon from '@mui/icons-material/Check'
 import api from 'src/views/axiosConfig'
+import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { setDepartmentLoading, setDepartmentReload } from 'src/slices/departmentSlice'
 
-const AddDepartment = () => {
+const EditDepartment = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
-  const validationSchema = yup.object({
-    dept_name: yup.string().required('Đây là trường bắt buộc'),
+  const ValidationSchema = yup.object({
+    editdept: yup.string().required('Đây là trường bắt buộc'),
   })
 
   const formik = useFormik({
-    initialValues: { dept_name: '', description: '' },
-    validateOnBlur: true,
+    initialValues: {
+      editdept: props.inCat.dept_name,
+      editdes: props.inCat.description,
+    },
+    validationSchema: ValidationSchema,
     onSubmit: (values) => {
-      console.log(values)
+      // assume that we already login
       api
-        .post('depts', { dept_name: values.dept_name, description: values.description })
+        .put(`/depts/${props.inCat.dept_id}`, {
+          dept_name: values.editdept,
+          description: values.editdes,
+        })
         .then(() => {
           dispatch(
             createAlert({
-              message: 'Tạo phòng ban mới thành công.',
+              message: 'Cập nhật phòng ban thành công.',
               type: 'success',
             }),
           )
@@ -63,19 +70,19 @@ const AddDepartment = () => {
           formik.setSubmitting(false)
         })
     },
-    validationSchema: validationSchema,
   })
+
   return (
     <>
-      <Button
-        variant="contained"
+      <IconButton
+        id="edit"
         color="primary"
-        startIcon={<AddBoxIcon />}
-        onClick={() => setModalVisible(true)}
+        onClick={() => {
+          setModalVisible(true)
+        }}
       >
-        Thêm phòng ban
-      </Button>
-
+        <EditIcon />
+      </IconButton>
       <form onSubmit={formik.handleSubmit}>
         <CModal
           alignment="center"
@@ -84,45 +91,45 @@ const AddDepartment = () => {
           onClose={() => setModalVisible(false)}
         >
           <CModalHeader>
-            <CModalTitle>Thêm phòng ban mới</CModalTitle>
+            <CModalTitle>Chỉnh sửa phòng ban</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CRow className="mt-2 mb-2">
-              <CCol>
-                <CFormLabel htmlFor="inputDeptName">Tên phòng ban</CFormLabel>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol xs>
+                <CFormLabel htmlFor="editdept">Nhập tên mới cho phòng ban</CFormLabel>
                 <CFormInput
-                  name="dept_name"
-                  id="inputDeptName"
-                  value={formik.values.dept_name}
+                  id="editdept"
+                  placeholder="Tên phòng ban"
+                  value={formik.values.editdept}
                   onChange={formik.handleChange}
-                  invalid={formik.touched.dept_name && formik.errors.dept_name ? true : false}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.editdept && formik.errors.editdept ? true : false}
                   valid={
-                    !formik.touched.dept_name ||
-                    (formik.touched.dept_name && formik.errors.dept_name)
+                    !formik.touched.editdept || (formik.touched.editdept && formik.errors.editdept)
                       ? false
                       : true
                   }
                 />
-                <CFormFeedback invalid>{formik.errors.dept_name}</CFormFeedback>
+                <CFormFeedback invalid>{formik.errors.editdept}</CFormFeedback>
               </CCol>
             </CRow>
-            <CRow className="mt-2 mb-2">
-              <CCol>
-                <CFormLabel htmlFor="inputDeptName">Mô tả</CFormLabel>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol xs>
+                <CFormLabel htmlFor="editdept">Mô tả</CFormLabel>
                 <CFormInput
-                  name="description"
-                  id="inputDeptName"
-                  value={formik.values.description}
+                  id="editdes"
+                  placeholder="Mô tả"
+                  value={formik.values.editdes}
                   onChange={formik.handleChange}
-                  invalid={formik.touched.description && formik.errors.description ? true : false}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.editdes && formik.errors.editdes ? true : false}
                   valid={
-                    !formik.touched.description ||
-                    (formik.touched.description && formik.errors.description)
+                    !formik.touched.editdes || (formik.touched.editdes && formik.errors.editdes)
                       ? false
                       : true
                   }
                 />
-                <CFormFeedback invalid>{formik.errors.description}</CFormFeedback>
+                <CFormFeedback invalid>{formik.errors.editdes}</CFormFeedback>
               </CCol>
             </CRow>
           </CModalBody>
@@ -130,12 +137,12 @@ const AddDepartment = () => {
             <Button
               variant="contained"
               color="success"
-              startIcon={<AddBoxIcon />}
+              startIcon={<CheckIcon />}
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
             >
-              Thêm
+              Xác nhận
             </Button>
             {formik.isSubmitting && <LoadingCircle />}
           </CModalFooter>
@@ -145,4 +152,8 @@ const AddDepartment = () => {
   )
 }
 
-export default AddDepartment
+EditDepartment.propTypes = {
+  inCat: PropTypes.object,
+}
+
+export default EditDepartment

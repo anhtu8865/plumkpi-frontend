@@ -1,31 +1,34 @@
+import React from 'react'
 import {
   CCol,
-  CFormFeedback,
-  CFormInput,
   CFormLabel,
+  CFormInput,
+  CRow,
   CModal,
   CModalBody,
   CModalFooter,
-  CModalHeader,
   CModalTitle,
-  CRow,
+  CModalHeader,
+  CFormFeedback,
 } from '@coreui/react'
-import AddBoxIcon from '@mui/icons-material/AddBox'
-import { Button } from '@mui/material'
-import { Field, FormikProvider, useFormik } from 'formik'
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Button, IconButton } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
+import EditIcon from '@mui/icons-material/Edit'
+import CheckIcon from '@mui/icons-material/Check'
+import api from 'src/views/axiosConfig'
+import { useFormik, Field, FormikProvider } from 'formik'
+import * as yup from 'yup'
+import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { setUserLoading, setUserReload } from 'src/slices/userSlice'
-import api from 'src/views/axiosConfig'
-import * as yup from 'yup'
 
-const AddUser = () => {
+const EditUser = (props) => {
   const [deptList, setDeptList] = React.useState([])
 
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
+
   async function fetchDeptList() {
     api
       .get('/depts')
@@ -37,36 +40,36 @@ const AddUser = () => {
 
   fetchDeptList()
 
-  const validationSchema = yup.object({
-    user_name: yup.string().required('Đây là trường bắt buộc'),
-    email: yup.string().email().required('Đây là trường bắt buộc'),
-    password: yup
-      .string()
-      .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
-      .required('Đây là trường bắt buộc'),
-    role: yup.string().required('Đây là trường bắt buộc'),
-    //dept: yup.required('Đây là trường bắt buộc'),
+  const ValidationSchema = yup.object({
+    editusername: yup.string().required('Đây là trường bắt buộc'),
+    editemail: yup.string().email().required('Đây là trường bắt buộc'),
   })
 
   const formik = useFormik({
-    initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: null } },
-    validateOnBlur: true,
+    initialValues: {
+      editusername: props.inCat.user_name,
+      editemail: props.inCat.email,
+      editrole: '',
+      editdept: { dept_id: null },
+    },
+    validationSchema: ValidationSchema,
     onSubmit: (values) => {
-      if (values.role === 'Admin' || values.role === 'Director') {
-        values.dept.dept_id = null
+      // assume that we already login
+      //block director, admin
+      if (values.editrole === 'Admin' || values.editrole === 'Director') {
+        values.editdept.dept_id = null
       }
       api
-        .post('users', {
-          user_name: values.user_name,
-          email: values.email,
-          password: values.password,
-          role: values.role,
-          dept: values.dept,
+        .put(`/users/${props.inCat.user_id}`, {
+          user_name: values.editusername,
+          email: values.editemail,
+          role: values.editrole,
+          dept: values.editdept,
         })
         .then(() => {
           dispatch(
             createAlert({
-              message: 'Tạo người dùng mới thành công.',
+              message: 'Cập nhật người dùng thành công.',
               type: 'success',
             }),
           )
@@ -90,18 +93,19 @@ const AddUser = () => {
           formik.setSubmitting(false)
         })
     },
-    validationSchema: validationSchema,
   })
+
   return (
     <>
-      <Button
-        variant="contained"
+      <IconButton
+        id="edit"
         color="primary"
-        startIcon={<AddBoxIcon />}
-        onClick={() => setModalVisible(true)}
+        onClick={() => {
+          setModalVisible(true)
+        }}
       >
-        Thêm người dùng
-      </Button>
+        <EditIcon />
+      </IconButton>
 
       <form onSubmit={formik.handleSubmit}>
         <CModal
@@ -111,69 +115,50 @@ const AddUser = () => {
           onClose={() => setModalVisible(false)}
         >
           <CModalHeader>
-            <CModalTitle>Thêm người dúng mới</CModalTitle>
+            <CModalTitle>Chỉnh sửa người dùng</CModalTitle>
           </CModalHeader>
           <CModalBody>
             <h6>Nhập thông tin cá nhân</h6>
             <div>
               <CRow className="mt-2">
                 <CCol>
-                  <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
+                  <CFormLabel htmlFor="editusername">Họ và tên</CFormLabel>
                   <CFormInput
-                    id="inputFirstName"
-                    name="user_name"
-                    value={formik.values.user_name}
+                    id="editusername"
+                    value={formik.values.editusername}
                     onChange={formik.handleChange}
-                    invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
+                    invalid={
+                      formik.touched.editusername && formik.errors.editusername ? true : false
+                    }
                     valid={
-                      !formik.touched.user_name ||
-                      (formik.touched.user_name && formik.errors.user_name)
+                      !formik.touched.editusername ||
+                      (formik.touched.editusername && formik.errors.editusername)
                         ? false
                         : true
                     }
                   />
 
-                  <CFormFeedback invalid>{formik.errors.user_name}</CFormFeedback>
+                  <CFormFeedback invalid>{formik.errors.editusername}</CFormFeedback>
                 </CCol>
               </CRow>
               <CRow className="mt-4">
                 <CCol>
-                  <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
+                  <CFormLabel htmlFor="editemail">Email</CFormLabel>
                   <CFormInput
-                    id="inputEmail"
-                    name="email"
+                    id="editemail"
                     type="email"
-                    value={formik.values.email}
+                    value={formik.values.editemail}
                     onChange={formik.handleChange}
-                    invalid={formik.touched.email && formik.errors.email ? true : false}
+                    invalid={formik.touched.editemail && formik.errors.editemail ? true : false}
                     valid={
-                      !formik.touched.email || (formik.touched.email && formik.errors.email)
+                      !formik.touched.editemail ||
+                      (formik.touched.editemail && formik.errors.editemail)
                         ? false
                         : true
                     }
                   />
 
-                  <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
-                </CCol>
-              </CRow>
-              <CRow className="mt-4">
-                <CCol>
-                  <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
-                  <CFormInput
-                    id="inputPassword"
-                    type="password"
-                    name="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    invalid={formik.touched.password && formik.errors.password ? true : false}
-                    valid={
-                      !formik.touched.password ||
-                      (formik.touched.password && formik.errors.password)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
+                  <CFormFeedback invalid>{formik.errors.editemail}</CFormFeedback>
                 </CCol>
               </CRow>
             </div>
@@ -181,9 +166,9 @@ const AddUser = () => {
               <h6>Gán người dùng vào phòng ban</h6>
               <CRow>
                 <CCol>
-                  <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
+                  <CFormLabel>Phòng ban</CFormLabel>
                   <FormikProvider value={formik}>
-                    <Field as="select" name="dept.dept_id" className="form-select">
+                    <Field as="select" name="editdept.dept_id" className="form-select">
                       <option value="" label="Chọn phòng ban" />
                       {deptList.map((row) => (
                         <option value={row.dept_id} key={row.dept_id}>
@@ -196,7 +181,6 @@ const AddUser = () => {
                 </CCol>
               </CRow>
             </div>
-
             <div>
               <h6>Vai trò và quyền hạn</h6>
               <fieldset className="row mb-3">
@@ -207,7 +191,7 @@ const AddUser = () => {
                       <Field
                         className="form-check-input"
                         type="radio"
-                        name="role"
+                        name="editrole"
                         value="Employee"
                       />
                       <label className="form-check-label">Nhân viên</label>
@@ -216,7 +200,7 @@ const AddUser = () => {
                       <Field
                         className="form-check-input"
                         type="radio"
-                        name="role"
+                        name="editrole"
                         value="Manager"
                       />
                       <label className="form-check-label">Quản lý</label>
@@ -225,13 +209,18 @@ const AddUser = () => {
                       <Field
                         className="form-check-input"
                         type="radio"
-                        name="role"
+                        name="editrole"
                         value="Director"
                       />
                       <label className="form-check-label">Giám đốc</label>
                     </div>
                     <div className="form-check">
-                      <Field className="form-check-input" type="radio" name="role" value="Admin" />
+                      <Field
+                        className="form-check-input"
+                        type="radio"
+                        name="editrole"
+                        value="Admin"
+                      />
                       <label className="form-check-label">Quản trị viên</label>
                     </div>
                   </FormikProvider>
@@ -243,12 +232,12 @@ const AddUser = () => {
             <Button
               variant="contained"
               color="success"
-              startIcon={<AddBoxIcon />}
+              startIcon={<CheckIcon />}
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
             >
-              Thêm
+              Xác nhận
             </Button>
             {formik.isSubmitting && <LoadingCircle />}
           </CModalFooter>
@@ -258,4 +247,8 @@ const AddUser = () => {
   )
 }
 
-export default AddUser
+EditUser.propTypes = {
+  inCat: PropTypes.object,
+}
+
+export default EditUser
