@@ -5,10 +5,6 @@ import {
   CCol,
   CContainer,
   CRow,
-  CCardTitle,
-  CCardText,
-  CProgress,
-  CProgressBar,
   CFormInput,
   CTable,
   CTableBody,
@@ -18,40 +14,36 @@ import {
   CTableRow,
   CTableFoot,
 } from '@coreui/react'
-import { Pagination, IconButton, Button } from '@mui/material'
+import { IconButton, Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import { setLoading, setReload } from 'src/slices/viewSlice'
 import {
-  setCatInPlan,
-  setTemInPlan,
-  setCurrentCat,
   setCurrentInPlan,
   changeWeightInCat,
   changeWeightInTem,
+  setNewInPlan,
 } from 'src/slices/planDetailSlice'
-import { AddKpiToPlanButton } from './AddKpiToPlanButton'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
-import { PlanOverview } from './PlanOverview'
-import { PlanKpiTable } from './PlanKpiTable'
 import CheckIcon from '@mui/icons-material/Check'
+import { EditKpiInPlanButton } from './EditKpiInPlanButton'
+import cloneDeep from 'lodash/cloneDeep'
 
 const EditKpiAndWeightView = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
-  const { catInPlan, temInPlan, currentCat, currentInPlan } = useSelector(
-    (state) => state.planDetail,
-  )
+  const { currentInPlan, newInPlan } = useSelector((state) => state.planDetail)
+  const [selectedTem, setSelectedTem] = useState([])
   const [plan, setPlan] = useState({ plan_name: '' })
-  const [catItem, setCatItem] = useState({ kpi_category: {} })
 
   React.useEffect(() => {
     const catList = []
     const temList = []
+    const selectTem = []
     api
       .get(`plans/user/${id}`)
       .then((response) => {
@@ -60,8 +52,11 @@ const EditKpiAndWeightView = () => {
         })
         response.data.plan_kpi_templates.map((item) => {
           temList.push({ tem: item.kpi_template, weight: item.weight })
+          selectTem.push(item.kpi_template.kpi_template_id)
         })
         dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
+        setSelectedTem(selectTem)
+        setPlan(response.data)
       })
       .catch((error) => {
         if (error.response) {
@@ -74,6 +69,28 @@ const EditKpiAndWeightView = () => {
         }
       })
   }, [dispatch])
+
+  React.useEffect(() => {
+    let copyNewInPlan = cloneDeep(newInPlan)
+    if (newInPlan.temList.length !== 0) {
+      copyNewInPlan.catList.map((newItem) => {
+        currentInPlan.catList.map((currentItem) => {
+          if (newItem.cat.kpi_category_id === currentItem.cat.kpi_category_id) {
+            newItem.weight = currentItem.weight
+          }
+        })
+      })
+      copyNewInPlan.temList.map((newItem) => {
+        currentInPlan.temList.map((currentItem) => {
+          if (newItem.tem.kpi_template_id === currentItem.tem.kpi_template_id) {
+            newItem.weight = currentItem.weight
+          }
+        })
+      })
+      dispatch(setCurrentInPlan({ value: copyNewInPlan }))
+      dispatch(setNewInPlan({ value: { catList: [], temList: [] } }))
+    }
+  }, [newInPlan])
 
   const handleCatValue = (id) => {
     const findCat = currentInPlan.catList.find((item) => item.cat.kpi_category_id === id)
@@ -112,7 +129,7 @@ const EditKpiAndWeightView = () => {
       <>
         {currentInPlan.catList.length !== 0 ? (
           <>
-            <CTable align="middle" className="mb-0 border table-bordered" hover responsive>
+            <CTable align="middle" className="mb-0 border table-bordered overflow-auto" hover>
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI/ DANH MỤC</CTableHeaderCell>
@@ -171,17 +188,16 @@ const EditKpiAndWeightView = () => {
         <CRow>
           <CCol xs={12} sm={6}>
             <h4>Thay đổi trọng số</h4>
+            <h6>Kế hoạch {plan.plan_name}</h6>
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <Button variant="contained" color="primary">
-                Thay đổi KPI
-              </Button>
+              <EditKpiInPlanButton arraySelectedTem={selectedTem} />
             </div>
           </CCol>
         </CRow>
         <CRow className="mt-4">{WeightTable()}</CRow>
-        <CRow className="mt-2">
+        <CRow className="mt-4">
           <div className="d-md-flex justify-content-end">
             <Button variant="contained" color="success" startIcon={<CheckIcon />}>
               Xác nhận

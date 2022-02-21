@@ -7,6 +7,7 @@ const planDetailSlice = createSlice({
     temInPlan: [],
     currentCat: { kpi_category: {} },
     currentInPlan: { catList: [], temList: [] },
+    newInPlan: { catList: [], temList: [] },
   },
   reducers: {
     setCatInPlan: (state, action) => {
@@ -37,6 +38,9 @@ const planDetailSlice = createSlice({
         findTem.weight = action.payload.value
       }
     },
+    setNewInPlan: (state, action) => {
+      state.newInPlan = action.payload.value
+    },
   },
 })
 
@@ -47,5 +51,6 @@ export const {
   setCurrentInPlan,
   changeWeightInCat,
   changeWeightInTem,
+  setNewInPlan,
 } = planDetailSlice.actions
 export default planDetailSlice

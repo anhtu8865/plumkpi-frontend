@@ -19,12 +19,13 @@ import { setLoading, setReload } from 'src/slices/viewSlice'
 import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetailSlice'
 import { AddKpiToPlanButton } from './AddKpiToPlanButton'
 import api from 'src/views/axiosConfig'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 
 const PlanDetail = () => {
   const { id } = useParams()
+  const history = useHistory()
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
   const { catInPlan, temInPlan, currentCat } = useSelector((state) => state.planDetail)
@@ -98,8 +99,14 @@ const PlanDetail = () => {
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <Button variant="contained" color="primary">
-                Thay đổi KPI
+              <Button
+                variant="contained"
+                color="primary"
+                /*onClick={() => {
+                  history.push(`/edit`)
+                }}*/
+              >
+                Thay đổi trọng số/ KPI
               </Button>
             </div>
           </CCol>

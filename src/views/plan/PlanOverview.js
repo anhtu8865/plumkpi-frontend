@@ -30,13 +30,6 @@ export const PlanOverview = () => {
       <CCard className="shadow-sm">
         <CCardBody>
           <CRow>
-            <CCol className="text-end">
-              <Button variant="contained" color="primary">
-                Thay đổi trọng số
-              </Button>
-            </CCol>
-          </CRow>
-          <CRow className="mt-2">
             <CCol xs={12} sm={6}></CCol>
             <CCol xs={12} sm={6}>
               {catInPlan.map((item) => (
