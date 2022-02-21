@@ -1,4 +1,5 @@
 import { CCard, CCardBody, CCol, CContainer, CRow } from '@coreui/react'
+import { Pagination, Avatar, Grid, IconButton } from '@mui/material'
 import * as React from 'react'
 import './CompanyTree.scss'
 const CompanyTree = () => {
@@ -13,59 +14,88 @@ const CompanyTree = () => {
                   <CCol>
                     <h4>Sơ đồ cơ cấu tổ chức và nhân sự</h4>
                   </CCol>
-                </CRow>{' '}
-                <ul>
-                  <li>
-                    {' '}
-                    <a href="#">
-                      <span>Giám đốc</span>
-                      <img
-                        src={
-                          'https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-avatar-dep-cho-con-gai-dai-dien-Facebook-Zalo-Tiktok.jpg'
-                        }
-                      />
-                      <span>Phuoc Loc</span>
-                    </a>
-                    <ul>
-                      <li>
-                        <a href="#">
-                          {' '}
-                          <span>Sale</span>
-                          <img
-                            src={
-                              'https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-avatar-dep-cho-con-gai-dai-dien-Facebook-Zalo-Tiktok.jpg'
-                            }
-                          />
-                          <span>Grand Child</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          {' '}
-                          <span>Sale</span>
-                          <img
-                            src={
-                              'https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-avatar-dep-cho-con-gai-dai-dien-Facebook-Zalo-Tiktok.jpg'
-                            }
-                          />
-                          <span>Grand Child</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          {' '}
-                          <span>Sale</span>
-                          <img
-                            src={
-                              'https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-avatar-dep-cho-con-gai-dai-dien-Facebook-Zalo-Tiktok.jpg'
-                            }
-                          />
-                          <span>Grand Child</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
+                </CRow>
+                <div id="wrapper">
+                  <span className="label">
+                    <Grid container direction="column" justifyContent="center" alignItems="center">
+                      <p className="test">Giám đốc</p>
+                      <Avatar src={null} />
+                      <p className="">Nguyễn Hồ Phước Lộc</p>
+                    </Grid>
+                  </span>
+                  <div className="branch lv1">
+                    <div className="entry">
+                      <span className="label">
+                        <Grid
+                          container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <p>Sale</p>
+                          <Avatar src={null} />
+                          <p>Nguyễn Hồ Phước Lộc</p>
+                        </Grid>
+                      </span>
+                    </div>
+                    <div className="entry">
+                      <span className="label">
+                        <Grid
+                          container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <p>Marketing</p>
+                          <Avatar src={null} />
+                          <p>Nguyễn Hồ Phước Lộc</p>
+                        </Grid>
+                      </span>
+                    </div>
+                    <div className="entry">
+                      <span className="label">
+                        <Grid
+                          container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <p>Giám đốc</p>
+                          <Avatar src={null} />
+                          <p>Nguyễn Hồ Phước Lộc</p>
+                        </Grid>
+                      </span>
+                    </div>
+                    <div className="entry">
+                      <span className="label">
+                        <Grid
+                          container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <p>Giám đốc</p>
+                          <Avatar src={null} />
+                          <p>Nguyễn Hồ Phước Lộc</p>
+                        </Grid>
+                      </span>
+                    </div>
+                    <div className="entry">
+                      <span className="label">
+                        <Grid
+                          container
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <p>Giám đốc</p>
+                          <Avatar src={null} />
+                          <p>Nguyễn Hồ Phước Lộc</p>
+                        </Grid>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </CCardBody>
             </CCard>
           </CCol>
