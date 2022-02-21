@@ -1,0 +1,214 @@
+import React, { useState } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCol,
+  CContainer,
+  CRow,
+  CCardTitle,
+  CCardText,
+  CProgress,
+  CProgressBar,
+  CFormInput,
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
+  CTableFoot,
+} from '@coreui/react'
+import { Pagination, IconButton, Button } from '@mui/material'
+import { LoadingCircle } from 'src/components/LoadingCircle'
+import { useDispatch, useSelector } from 'react-redux'
+import SystemAlert from 'src/components/SystemAlert'
+import { createAlert } from 'src/slices/alertSlice'
+import { setLoading, setReload } from 'src/slices/viewSlice'
+import {
+  setCatInPlan,
+  setTemInPlan,
+  setCurrentCat,
+  setCurrentInPlan,
+  changeWeightInCat,
+  changeWeightInTem,
+} from 'src/slices/planDetailSlice'
+import { AddKpiToPlanButton } from './AddKpiToPlanButton'
+import api from 'src/views/axiosConfig'
+import { useParams } from 'react-router-dom'
+import { PlanOverview } from './PlanOverview'
+import { PlanKpiTable } from './PlanKpiTable'
+import CheckIcon from '@mui/icons-material/Check'
+
+const EditKpiAndWeightView = () => {
+  const { id } = useParams()
+  const dispatch = useDispatch()
+  const { reload, loading } = useSelector((state) => state.view)
+  const { catInPlan, temInPlan, currentCat, currentInPlan } = useSelector(
+    (state) => state.planDetail,
+  )
+  const [plan, setPlan] = useState({ plan_name: '' })
+  const [catItem, setCatItem] = useState({ kpi_category: {} })
+
+  React.useEffect(() => {
+    const catList = []
+    const temList = []
+    api
+      .get(`plans/user/${id}`)
+      .then((response) => {
+        response.data.plan_kpi_categories.map((item) => {
+          catList.push({ cat: item.kpi_category, weight: item.weight })
+        })
+        response.data.plan_kpi_templates.map((item) => {
+          temList.push({ tem: item.kpi_template, weight: item.weight })
+        })
+        dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
+      })
+      .catch((error) => {
+        if (error.response) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
+      })
+  }, [dispatch])
+
+  const handleCatValue = (id) => {
+    const findCat = currentInPlan.catList.find((item) => item.cat.kpi_category_id === id)
+    if (findCat) {
+      return findCat.weight
+    }
+    return 0
+  }
+
+  const handleTemValue = (id) => {
+    const findTem = currentInPlan.temList.find((item) => item.tem.kpi_template_id === id)
+    if (findTem) {
+      return findTem.weight
+    }
+    return 0
+  }
+
+  const handleCatOnChange = (event, id) => {
+    if (event.target.value === '') {
+      dispatch(changeWeightInCat({ id: id, value: 0 }))
+    } else {
+      dispatch(changeWeightInCat({ id: id, value: event.target.value }))
+    }
+  }
+
+  const handleTemOnChange = (event, id) => {
+    if (event.target.value === '') {
+      dispatch(changeWeightInTem({ id: id, value: 0 }))
+    } else {
+      dispatch(changeWeightInTem({ id: id, value: event.target.value }))
+    }
+  }
+
+  const WeightTable = () => {
+    return (
+      <>
+        {currentInPlan.catList.length !== 0 ? (
+          <>
+            <CTable align="middle" className="mb-0 border table-bordered" hover responsive>
+              <CTableHead color="light">
+                <CTableRow>
+                  <CTableHeaderCell>KPI/ DANH MỤC</CTableHeaderCell>
+                  <CTableHeaderCell>TRỌNG SỐ</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {currentInPlan.catList.map((item, index) => {
+                  return (
+                    <>
+                      <CTableRow key={index} color="info">
+                        <CTableDataCell>{item.cat.kpi_category_name}</CTableDataCell>
+                        <CTableDataCell>
+                          <CFormInput
+                            type="number"
+                            value={handleCatValue(item.cat.kpi_category_id)}
+                            onChange={(event) => {
+                              handleCatOnChange(event, item.cat.kpi_category_id)
+                            }}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                      {currentInPlan.temList
+                        .filter(
+                          (temItem) =>
+                            temItem.tem.kpi_category.kpi_category_id === item.cat.kpi_category_id,
+                        )
+                        .map((temItem) => (
+                          <CTableRow key={temItem.tem.kpi_category_id}>
+                            <CTableDataCell>{temItem.tem.kpi_template_name}</CTableDataCell>
+                            <CTableDataCell>
+                              <CFormInput
+                                type="number"
+                                value={handleTemValue(temItem.tem.kpi_template_id)}
+                                onChange={(event) => {
+                                  handleTemOnChange(event, temItem.tem.kpi_template_id)
+                                }}
+                              />
+                            </CTableDataCell>
+                          </CTableRow>
+                        ))}
+                    </>
+                  )
+                })}
+              </CTableBody>
+            </CTable>
+          </>
+        ) : null}
+      </>
+    )
+  }
+
+  const View = () => {
+    return (
+      <>
+        <CRow>
+          <CCol xs={12} sm={6}>
+            <h4>Thay đổi trọng số</h4>
+          </CCol>
+          <CCol xs={12} sm={6}>
+            <div className="d-grid gap-3 d-md-flex justify-content-end">
+              <Button variant="contained" color="primary">
+                Thay đổi KPI
+              </Button>
+            </div>
+          </CCol>
+        </CRow>
+        <CRow className="mt-4">{WeightTable()}</CRow>
+        <CRow className="mt-2">
+          <div className="d-md-flex justify-content-end">
+            <Button variant="contained" color="success" startIcon={<CheckIcon />}>
+              Xác nhận
+            </Button>
+          </div>
+        </CRow>
+      </>
+    )
+  }
+
+  return (
+    <div className="bg-light min-vh-100 d-flex flex-col">
+      <CContainer>
+        <CRow className="justify-content-center">
+          <CCol xs={12}>
+            <CCard>
+              <CCardBody className="p-5">
+                {View()}
+                {loading && <LoadingCircle />}
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </CContainer>
+      <SystemAlert />
+    </div>
+  )
+}
+
+export default EditKpiAndWeightView
