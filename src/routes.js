@@ -11,6 +11,7 @@ const Plan = React.lazy(() => import('./views/plan/Plan'))
 const UserDepartment = React.lazy(() => import('./views/pages/department/UserDepartment'))
 const PlanDetail = React.lazy(() => import('./views/plan/PlanDetail'))
 const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTree'))
+const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -24,6 +25,7 @@ const routes = [
   { path: '/depts', exact: true, name: 'Department', component: Department },
   { path: '/depts/:id', name: 'User In Department', component: UserDepartment },
   { path: '/companytree', name: 'Company', component: CompanyTree },
+  { path: '/kpiregistration', name: 'KPI Registration', component: KpiRegistration },
 ]
 
 export default routes
