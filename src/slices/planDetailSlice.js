@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const planDetailSlice = createSlice({
   name: 'planDetail',
   initialState: {
+    plan: { plan_name: '' },
     catInPlan: [],
     temInPlan: [],
     currentCat: { kpi_category: {} },
@@ -10,6 +11,9 @@ const planDetailSlice = createSlice({
     newInPlan: { catList: [], temList: [] },
   },
   reducers: {
+    setPlan: (state, action) => {
+      state.plan = action.payload.value
+    },
     setCatInPlan: (state, action) => {
       state.catInPlan = action.payload.value
     },
@@ -45,6 +49,7 @@ const planDetailSlice = createSlice({
 })
 
 export const {
+  setPlan,
   setCatInPlan,
   setTemInPlan,
   setCurrentCat,

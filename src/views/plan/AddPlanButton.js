@@ -24,7 +24,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
 import api from 'src/views/axiosConfig'
-import { checkTimeRange } from 'src/utils/function'
+import { checkTimeRange, formatDate } from 'src/utils/function'
 
 export const AddPlanButton = () => {
   const dispatch = useDispatch()
@@ -50,7 +50,9 @@ export const AddPlanButton = () => {
           const result = checkTimeRange(value, this.parent.end_date, planList)
           if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
             return createError({
-              message: `Trùng thời gian với kế hoạch ${result.plan_name} (${result.start_date} - ${result.end_date})`,
+              message: `Trùng thời gian với kế hoạch ${result.plan_name} ( ${formatDate(
+                result.start_date,
+              )} - ${formatDate(result.end_date)} )`,
             })
           }
         }

@@ -46,6 +46,7 @@ const EditKpiAndWeightView = () => {
   const [selectedTem, setSelectedTem] = useState([])
   const [plan, setPlan] = useState({ plan_name: '' })
   const [isSubmit, setIsSubmit] = useState(false)
+  const [planEmpty, setPlanEmpty] = useState(false)
 
   React.useEffect(() => {
     const catList = []
@@ -57,10 +58,14 @@ const EditKpiAndWeightView = () => {
         response.data.plan_kpi_categories.map((item) => {
           catList.push({ cat: item.kpi_category, weight: item.weight })
         })
-        response.data.plan_kpi_templates.map((item) => {
-          temList.push({ tem: item.kpi_template, weight: item.weight })
-          selectTem.push(item.kpi_template.kpi_template_id)
-        })
+        if (response.data.plan_kpi_templates.length === 0) {
+          setPlanEmpty(true)
+        } else {
+          response.data.plan_kpi_templates.map((item) => {
+            temList.push({ tem: item.kpi_template, weight: item.weight })
+            selectTem.push(item.kpi_template.kpi_template_id)
+          })
+        }
         dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
         setSelectedTem(selectTem)
         setPlan(response.data)
@@ -265,7 +270,9 @@ const EditKpiAndWeightView = () => {
               </CTableBody>
             </CTable>
           </>
-        ) : null}
+        ) : (
+          <div>Kế hoạch chưa có KPI</div>
+        )}
       </>
     )
   }
@@ -287,7 +294,7 @@ const EditKpiAndWeightView = () => {
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <EditKpiInPlanButton arraySelectedTem={selectedTem} />
+              <EditKpiInPlanButton arraySelectedTem={selectedTem} planEmpty={planEmpty} />
             </div>
           </CCol>
         </CRow>

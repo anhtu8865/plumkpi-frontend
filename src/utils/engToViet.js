@@ -26,3 +26,10 @@ export const weightErrorList = [
     viet: 'Tổng trọng số tất cả KPI trong từng danh mục phải đúng bằng 100',
   },
 ]
+
+export const assignKpiErrorList = [
+  {
+    eng: 'Sum Of categories must be the same as parent target',
+    viet: 'Tổng chỉ tiêu phân cho phòng ban/ nhân viên phải đúng bằng với chỉ tiêu tổng của KPI.',
+  },
+]

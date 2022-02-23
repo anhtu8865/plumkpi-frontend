@@ -19,6 +19,7 @@ import { setLoading, setReload } from 'src/slices/viewSlice'
 import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
+import GaugeChart from 'react-gauge-chart'
 
 export const PlanOverview = () => {
   const dispatch = useDispatch()
@@ -30,7 +31,9 @@ export const PlanOverview = () => {
       <CCard className="shadow-sm">
         <CCardBody>
           <CRow>
-            <CCol xs={12} sm={6}></CCol>
+            <CCol xs={12} sm={6}>
+              <GaugeChart id="gauge-chart1" percent={0} />
+            </CCol>
             <CCol xs={12} sm={6}>
               {catInPlan.map((item) => (
                 <>

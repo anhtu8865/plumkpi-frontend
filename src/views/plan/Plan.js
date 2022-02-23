@@ -148,13 +148,13 @@ const Plan = () => {
                   </CRow>
                   <CRow className="mt-2">
                     <div className="d-flex flex-row justify-content-end">
-                      {/*<IconButton
+                      <IconButton
                         onClick={() => {
                           history.push(`plan/${planItem.plan_id}`)
                         }}
                       >
                         <ArrowCircleRightIcon />
-                      </IconButton>*/}
+                      </IconButton>
                       <EditPlanButton inPlan={planItem} />
                       <DeletePlanButton inPlan={planItem} />
                     </div>
@@ -196,13 +196,13 @@ const Plan = () => {
                   </CRow>
                   <CRow className="mt-2">
                     <div className="d-flex flex-row justify-content-end">
-                      {/*<IconButton
+                      <IconButton
                         onClick={() => {
                           history.push(`plan/${planItem.plan_id}`)
                         }}
                       >
                         <ArrowCircleRightIcon />
-                      </IconButton>*/}
+                      </IconButton>
                       <DeletePlanButton inPlan={planItem} />
                     </div>
                   </CRow>

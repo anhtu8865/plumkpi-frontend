@@ -140,6 +140,9 @@ export const EditKpiInPlanButton = (props) => {
       Object.assign(categories[i], { kpi_templates: templates })
     }
     setTemByCat(categories)
+    if (props.planEmpty === true) {
+      setModalVisible(true)
+    }
   }, [dispatch])
 
   React.useEffect(async () => {
@@ -228,4 +231,5 @@ export const EditKpiInPlanButton = (props) => {
 
 EditKpiInPlanButton.propTypes = {
   arraySelectedTem: PropTypes.array,
+  planEmpty: PropTypes.bool,
 }

@@ -25,9 +25,9 @@ import PropTypes from 'prop-types'
 import { frequencyList } from 'src/utils/engToViet'
 import { translate } from 'src/utils/function'
 import { EditPlanKpiButton } from './EditPlanKpiButton'
-import { DeletePlanKpiButton } from './DeletePlanKpiButton'
+import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 
-export const PlanKpiTable = (props) => {
+export const PlanKpiTable = (catItem) => {
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
   const entryPerPage = 10
@@ -39,7 +39,7 @@ export const PlanKpiTable = (props) => {
   const Table = () => {
     return (
       <>
-        {temInPlan.length !== 0 ? (
+        {temInPlan.length !== 0 && catItem ? (
           <>
             <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
               <CTableHead color="light">
@@ -55,7 +55,7 @@ export const PlanKpiTable = (props) => {
                   .filter(
                     (item) =>
                       item.kpi_template.kpi_category.kpi_category_id ===
-                      props.catItem.kpi_category.kpi_category_id,
+                      catItem.kpi_category.kpi_category_id,
                   )
                   .map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
@@ -64,8 +64,8 @@ export const PlanKpiTable = (props) => {
                       <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
                       <CTableDataCell className="text-center">
                         <div className="d-flex flex-row justify-content-center">
+                          {AssignPlanKpiButton(item)}
                           <EditPlanKpiButton />
-                          <DeletePlanKpiButton />
                         </div>
                       </CTableDataCell>
                     </CTableRow>
@@ -99,7 +99,7 @@ export const PlanKpiTable = (props) => {
       <CCard className="shadow-sm">
         <CCardBody>
           <CRow>
-            <h5>{props.catItem.kpi_category.kpi_category_name}</h5>
+            <h5>{catItem ? catItem.kpi_category.kpi_category_name : null}</h5>
           </CRow>
           <CRow className="mt-2">
             <div>
@@ -112,6 +112,6 @@ export const PlanKpiTable = (props) => {
   )
 }
 
-PlanKpiTable.propTypes = {
+/*PlanKpiTable.propTypes = {
   catItem: PropTypes.object,
-}
+}*/
