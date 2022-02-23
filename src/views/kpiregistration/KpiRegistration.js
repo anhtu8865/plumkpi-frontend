@@ -28,7 +28,9 @@ import { createAlert } from 'src/slices/alertSlice'
 import { setUserLoading } from 'src/slices/userSlice'
 import api from 'src/views/axiosConfig'
 
-const User = () => {
+import AddKpiRegistration from './AddKpiRegistration'
+
+const KpiRegistration = () => {
   const dispatch = useDispatch()
 
   const MOCK_DATA = []
@@ -94,7 +96,9 @@ const User = () => {
                     <h4>Đăng ký KPI cá nhân</h4>
                   </CCol>
                   <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">{/*Button */}</div>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <AddKpiRegistration />
+                    </div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
@@ -111,4 +115,4 @@ const User = () => {
   )
 }
 
-export default User
+export default KpiRegistration
