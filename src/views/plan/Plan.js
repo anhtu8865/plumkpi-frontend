@@ -31,6 +31,7 @@ const Plan = () => {
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
   const { planList } = useSelector((state) => state.plan)
+  const { user } = useSelector((state) => state.user)
 
   React.useEffect(() => {
     api
@@ -147,13 +148,13 @@ const Plan = () => {
                   </CRow>
                   <CRow className="mt-2">
                     <div className="d-flex flex-row justify-content-end">
-                      <IconButton
+                      {/*<IconButton
                         onClick={() => {
                           history.push(`plan/${planItem.plan_id}`)
                         }}
                       >
                         <ArrowCircleRightIcon />
-                      </IconButton>
+                      </IconButton>*/}
                       <EditPlanButton inPlan={planItem} />
                       <DeletePlanButton inPlan={planItem} />
                     </div>
@@ -195,13 +196,13 @@ const Plan = () => {
                   </CRow>
                   <CRow className="mt-2">
                     <div className="d-flex flex-row justify-content-end">
-                      <IconButton
+                      {/*<IconButton
                         onClick={() => {
                           history.push(`plan/${planItem.plan_id}`)
                         }}
                       >
                         <ArrowCircleRightIcon />
-                      </IconButton>
+                      </IconButton>*/}
                       <DeletePlanButton inPlan={planItem} />
                     </div>
                   </CRow>
@@ -227,7 +228,7 @@ const Plan = () => {
                   </CCol>
                   <CCol xs={12} sm={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddPlanButton />
+                      {user.role === 'Director' && <AddPlanButton />}
                     </div>
                   </CCol>
                 </CRow>

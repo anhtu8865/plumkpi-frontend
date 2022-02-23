@@ -31,6 +31,7 @@ const PlanDetail = () => {
   const { catInPlan, temInPlan, currentCat } = useSelector((state) => state.planDetail)
   const [plan, setPlan] = useState({ plan_name: '' })
   const [catItem, setCatItem] = useState({ kpi_category: {} })
+  const { user } = useSelector((state) => state.user)
 
   React.useEffect(() => {
     api
@@ -102,9 +103,9 @@ const PlanDetail = () => {
               <Button
                 variant="contained"
                 color="primary"
-                /*onClick={() => {
-                  history.push(`/edit`)
-                }}*/
+                onClick={() => {
+                  history.replace(`/plan/${id}/edit`)
+                }}
               >
                 Thay đổi trọng số/ KPI
               </Button>
@@ -128,7 +129,8 @@ const PlanDetail = () => {
           <CCol xs={12}>
             <CCard>
               <CCardBody className="p-5">
-                {temInPlan.length === 0 ? <NoTemView /> : <HasTemView />}
+                {user.role === 'Director' &&
+                  (temInPlan.length === 0 ? <NoTemView /> : <HasTemView />)}
                 {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>

@@ -46,7 +46,7 @@ export const PlanOverview = () => {
                       style={{ cursor: 'pointer' }}
                     >
                       <small>
-                        {item.kpi_category.kpi_category_name} ({item.weight})%
+                        {item.kpi_category.kpi_category_name} ({item.weight}%)
                       </small>
                     </div>
                   </CRow>

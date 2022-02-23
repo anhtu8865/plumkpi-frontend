@@ -3,7 +3,11 @@
 import { formulaOperators, checkValidError } from 'src/utils/constant'
 
 export const translate = (str, engToVietList) => {
-  return engToVietList.filter((item) => item.eng == str)[0].viet
+  const find = engToVietList.filter((item) => item.eng == str)[0].viet
+  if (find) {
+    return find
+  }
+  return ''
 }
 
 export const isNumeric = (str) => {

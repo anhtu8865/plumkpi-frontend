@@ -15,6 +15,7 @@ import {
   CTableFoot,
 } from '@coreui/react'
 import { IconButton, Button } from '@mui/material'
+import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
@@ -27,18 +28,24 @@ import {
   setNewInPlan,
 } from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import CheckIcon from '@mui/icons-material/Check'
+import HelpIcon from '@mui/icons-material/Help'
 import { EditKpiInPlanButton } from './EditKpiInPlanButton'
 import cloneDeep from 'lodash/cloneDeep'
+import { weightKpiRule } from 'src/utils/constant'
+import { translate } from 'src/utils/function'
+import { weightErrorList } from 'src/utils/engToViet'
 
 const EditKpiAndWeightView = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { reload, loading } = useSelector((state) => state.view)
   const { currentInPlan, newInPlan } = useSelector((state) => state.planDetail)
   const [selectedTem, setSelectedTem] = useState([])
   const [plan, setPlan] = useState({ plan_name: '' })
+  const [isSubmit, setIsSubmit] = useState(false)
 
   React.useEffect(() => {
     const catList = []
@@ -124,16 +131,95 @@ const EditKpiAndWeightView = () => {
     }
   }
 
+  const onSubmit = async () => {
+    const objectToReturn = []
+    for (var i = 0; i < currentInPlan.catList.length; i++) {
+      const selectedTemByCat = currentInPlan.temList.filter(
+        (item) =>
+          item.tem.kpi_category.kpi_category_id === currentInPlan.catList[i].cat.kpi_category_id,
+      )
+      if (selectedTemByCat.length !== 0) {
+        const kpi_templates = []
+        selectedTemByCat.map((item) => {
+          kpi_templates.push({
+            kpi_template_id: item.tem.kpi_template_id,
+            weight: Number(item.weight),
+          })
+        })
+        objectToReturn.push({
+          kpi_category_id: currentInPlan.catList[i].cat.kpi_category_id,
+          weight: Number(currentInPlan.catList[i].weight),
+          kpi_templates: kpi_templates,
+        })
+      }
+    }
+    await addToPlan(objectToReturn)
+  }
+
+  const addToPlan = async (objectToReturn) => {
+    try {
+      const response = await api.post(`/plans/add-kpi-categories`, {
+        plan_id: Number(plan.plan_id),
+        kpi_categories: objectToReturn,
+      })
+      dispatch(
+        createAlert({
+          message: 'Chỉnh sửa trọng số/ KPI trong kế hoạch thành công',
+          type: 'success',
+        }),
+      )
+      setIsSubmit(false)
+      history.replace(`/plan/${id}`)
+    } catch (error) {
+      if (error.response) {
+        const find = translate(error.response.data.message, weightErrorList)
+        if (find !== '') {
+          dispatch(
+            createAlert({
+              message: find,
+              type: 'error',
+            }),
+          )
+        } else {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
+      }
+      setIsSubmit(false)
+    }
+  }
+
   const WeightTable = () => {
     return (
       <>
         {currentInPlan.catList.length !== 0 ? (
           <>
-            <CTable align="middle" className="mb-0 border table-bordered overflow-auto" hover>
+            <CRow>
+              <CCol xs>
+                <div className="d-flex align-items-start flex-row">
+                  <CustomWidthTooltip title={weightKpiRule} placement="right">
+                    <IconButton size="small">
+                      <HelpIcon fontSize="inherit" />
+                    </IconButton>
+                  </CustomWidthTooltip>
+                  <div className="ms-1">Lưu ý</div>
+                </div>
+              </CCol>
+            </CRow>
+            <CTable
+              align="middle"
+              className="mb-0 border table-bordered overflow-auto mt-2"
+              hover
+              responsive
+            >
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI/ DANH MỤC</CTableHeaderCell>
-                  <CTableHeaderCell>TRỌNG SỐ</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">TRỌNG SỐ (%)</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -142,8 +228,9 @@ const EditKpiAndWeightView = () => {
                     <>
                       <CTableRow key={index} color="info">
                         <CTableDataCell>{item.cat.kpi_category_name}</CTableDataCell>
-                        <CTableDataCell>
+                        <CTableDataCell className="w-25">
                           <CFormInput
+                            size="sm"
                             type="number"
                             value={handleCatValue(item.cat.kpi_category_id)}
                             onChange={(event) => {
@@ -160,8 +247,9 @@ const EditKpiAndWeightView = () => {
                         .map((temItem) => (
                           <CTableRow key={temItem.tem.kpi_category_id}>
                             <CTableDataCell>{temItem.tem.kpi_template_name}</CTableDataCell>
-                            <CTableDataCell>
+                            <CTableDataCell className="w-25">
                               <CFormInput
+                                size="sm"
                                 type="number"
                                 value={handleTemValue(temItem.tem.kpi_template_id)}
                                 onChange={(event) => {
@@ -188,7 +276,14 @@ const EditKpiAndWeightView = () => {
         <CRow>
           <CCol xs={12} sm={6}>
             <h4>Thay đổi trọng số</h4>
-            <h6>Kế hoạch {plan.plan_name}</h6>
+            <div
+              onClick={() => {
+                history.replace(`/plan/${plan.plan_id}`)
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              <h6>Kế hoạch {plan.plan_name}</h6>
+            </div>
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
@@ -199,7 +294,16 @@ const EditKpiAndWeightView = () => {
         <CRow className="mt-4">{WeightTable()}</CRow>
         <CRow className="mt-4">
           <div className="d-md-flex justify-content-end">
-            <Button variant="contained" color="success" startIcon={<CheckIcon />}>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              onClick={() => {
+                setIsSubmit(true)
+                onSubmit()
+              }}
+              disabled={isSubmit}
+            >
               Xác nhận
             </Button>
           </div>
@@ -216,7 +320,7 @@ const EditKpiAndWeightView = () => {
             <CCard>
               <CCardBody className="p-5">
                 {View()}
-                {loading && <LoadingCircle />}
+                {isSubmit && <LoadingCircle />}
               </CCardBody>
             </CCard>
           </CCol>
