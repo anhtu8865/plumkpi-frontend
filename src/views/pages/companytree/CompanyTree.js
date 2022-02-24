@@ -60,35 +60,7 @@ const CompanyTree = () => {
                           justifyContent="center"
                           alignItems="center"
                         >
-                          <p>Giám đốc</p>
-                          <Avatar src={null} />
-                          <p>Nguyễn Hồ Phước Lộc</p>
-                        </Grid>
-                      </span>
-                    </div>
-                    <div className="entry">
-                      <span className="label">
-                        <Grid
-                          container
-                          direction="column"
-                          justifyContent="center"
-                          alignItems="center"
-                        >
-                          <p>Giám đốc</p>
-                          <Avatar src={null} />
-                          <p>Nguyễn Hồ Phước Lộc</p>
-                        </Grid>
-                      </span>
-                    </div>
-                    <div className="entry">
-                      <span className="label">
-                        <Grid
-                          container
-                          direction="column"
-                          justifyContent="center"
-                          alignItems="center"
-                        >
-                          <p>Giám đốc</p>
+                          <p>Marketing</p>
                           <Avatar src={null} />
                           <p>Nguyễn Hồ Phước Lộc</p>
                         </Grid>
