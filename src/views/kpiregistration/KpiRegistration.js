@@ -33,7 +33,28 @@ import AddKpiRegistration from './AddKpiRegistration'
 const KpiRegistration = () => {
   const dispatch = useDispatch()
 
-  const MOCK_DATA = []
+  const MOCK_DATA = [
+    {
+      kpi_template_id: 1,
+      kpi_template_name: 'MarketingKPI1',
+      description: 'd2',
+      frequency: 'Daily',
+      direction: 'Up',
+      aggregation: 'Sum',
+      unit: 'USD',
+      formula: ' ',
+      createdAt: '2022-02-11T00:28:08.697Z',
+      updatedAt: '2022-02-21T03:49:52.314Z',
+      kpi_category: {
+        kpi_category_id: 1,
+        kpi_category_name: 'Marketing KPIs',
+        description: null,
+        createdAt: '2022-02-11T00:28:08.697Z',
+        updatedAt: '2022-02-11T00:28:08.697Z',
+      },
+      target: 1000,
+    },
+  ]
 
   const [entry, setEntry] = React.useState(MOCK_DATA)
 
@@ -55,17 +76,12 @@ const KpiRegistration = () => {
           <CTableBody>
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
-                <CTableDataCell>{row.user_id}</CTableDataCell>
-                <CTableDataCell className="d-flex flex-row">
-                  <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
-                  {row.user_name}
-                </CTableDataCell>
-                <CTableDataCell>{row.email}</CTableDataCell>
-                <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
-                <CTableDataCell>{row.role}</CTableDataCell>
-                {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
-                    {row.is_active ? 'Active' : 'Block'}
-                  </CTableDataCell>*/}
+                <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
+
+                <CTableDataCell>{row.description}</CTableDataCell>
+                <CTableDataCell>{row.target}</CTableDataCell>
+                <CTableDataCell>{row.unit}</CTableDataCell>
+                <CTableDataCell>Pending</CTableDataCell>
                 <CTableDataCell className="text-center"></CTableDataCell>
               </CTableRow>
             ))}

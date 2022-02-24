@@ -111,7 +111,7 @@ const AddUser = () => {
           onClose={() => setModalVisible(false)}
         >
           <CModalHeader>
-            <CModalTitle>Thêm người dúng mới</CModalTitle>
+            <CModalTitle>Thêm người dùng mới</CModalTitle>
           </CModalHeader>
           <CModalBody>
             <h6>Nhập thông tin cá nhân</h6>
