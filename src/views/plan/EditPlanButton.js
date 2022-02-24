@@ -25,7 +25,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
 import api from 'src/views/axiosConfig'
-import { checkTimeRange } from 'src/utils/function'
+import { checkTimeRange, formatDate } from 'src/utils/function'
 import EditIcon from '@mui/icons-material/Edit'
 
 export const EditPlanButton = (props) => {
@@ -55,7 +55,9 @@ export const EditPlanButton = (props) => {
               return true
             }
             return createError({
-              message: `Trùng thời gian với kế hoạch ${result.plan_name} (${result.start_date} - ${result.end_date})`,
+              message: `Trùng thời gian với kế hoạch ${result.plan_name} ( ${formatDate(
+                result.start_date,
+              )} - ${formatDate(result.end_date)} )`,
             })
           }
         }

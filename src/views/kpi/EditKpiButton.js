@@ -107,6 +107,7 @@ export const EditKpiButton = (props) => {
       frequency: props.inTem.frequency,
       direction: props.inTem.direction,
       unit: props.inTem.unit,
+      aggregation: props.inTem.aggregation,
       formula: finalFormula,
       category: props.inTem.kpi_category.kpi_category_id,
     },
@@ -128,6 +129,7 @@ export const EditKpiButton = (props) => {
           frequency: values.frequency,
           direction: values.direction,
           unit: values.unit,
+          aggregation: values.aggregation,
           kpi_category: selectedCat,
           formula: newFormula,
         })
@@ -213,7 +215,7 @@ export const EditKpiButton = (props) => {
               </CCol>
             </CRow>
             <CRow className="mt-3">
-              <CCol xs>
+              <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
                 <CFormSelect
                   id="freq"
@@ -234,7 +236,7 @@ export const EditKpiButton = (props) => {
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.frequency}</CFormFeedback>
               </CCol>
-              <CCol xs>
+              <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="direction">Chiều hướng</CFormLabel>
                 <CFormSelect
                   id="direction"
@@ -255,7 +257,7 @@ export const EditKpiButton = (props) => {
               </CCol>
             </CRow>
             <CRow className="mt-3">
-              <CCol xs>
+              <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
                 <CFormInput
                   id="unit"
@@ -270,7 +272,7 @@ export const EditKpiButton = (props) => {
                 />
                 <CFormFeedback invalid>{formik.errors.unit}</CFormFeedback>
               </CCol>
-              <CCol xs>
+              <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="category">Danh mục</CFormLabel>
                 <CFormSelect
                   id="category"
@@ -289,6 +291,30 @@ export const EditKpiButton = (props) => {
                   ))}
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.category}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol xs={12} sm={6}>
+                <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
+                <CFormSelect
+                  id="aggregation"
+                  {...formik.getFieldProps('aggregation')}
+                  invalid={formik.touched.aggregation && formik.errors.aggregation ? true : false}
+                  valid={
+                    !formik.touched.aggregation ||
+                    (formik.touched.aggregation && formik.errors.aggregation)
+                      ? false
+                      : true
+                  }
+                >
+                  <option value="Sum">Tổng</option>
+                  <option value="Average">Trung bình</option>
+                  <option value="WeightedAverage">Trung bình có trọng số</option>
+                  <option value="Max">Lấy giá trị lớn nhất</option>
+                  <option value="Min">Lấy giá trị nhỏ nhất</option>
+                  <option value="New">Lấy giá trị mới nhất</option>
+                </CFormSelect>
+                <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
               </CCol>
             </CRow>
             <CRow className="mt-3">

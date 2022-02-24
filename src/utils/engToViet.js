@@ -15,3 +15,21 @@ export const frequencyList = [
   { eng: 'Quarterly', viet: 'Quý' },
   { eng: 'Yearly', viet: 'Năm' },
 ]
+
+export const weightErrorList = [
+  {
+    eng: 'Sum Of categories must be 100',
+    viet: 'Tổng trọng số tất cả các danh mục phải đúng bằng 100',
+  },
+  {
+    eng: 'Sum Of templates must be 100',
+    viet: 'Tổng trọng số tất cả KPI trong từng danh mục phải đúng bằng 100',
+  },
+]
+
+export const assignKpiErrorList = [
+  {
+    eng: 'Sum Of categories must be the same as parent target',
+    viet: 'Tổng chỉ tiêu phân cho phòng ban/ nhân viên phải đúng bằng với chỉ tiêu tổng của KPI.',
+  },
+]

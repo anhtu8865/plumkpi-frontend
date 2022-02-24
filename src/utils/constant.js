@@ -53,3 +53,15 @@ export const formulaTypingRule = (
 export const checkValidError = (str) => {
   return `Không tồn tại KPI có tên "${str}". Xin hãy kiểm tra lại dấu cách giữa các phép toán, số và KPI cũng như dấu _ trong tên KPI`
 }
+
+export const weightKpiRule = (
+  <div>
+    Trọng số của danh mục và KPI phải là số nguyên. <br />
+    <br />
+    Tổng tất cả trọng số của các danh mục (các dòng màu xanh) phải đúng bằng 100.
+    <br />
+    <br />
+    Tổng tất cả trọng số của các KPI trong một danh mục (các dòng màu trắng sau 1 dòng màu xanh)
+    phải đúng bằng 100.
+  </div>
+)

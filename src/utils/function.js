@@ -1,9 +1,14 @@
 //chứa những hàm để xử lý dữ liệu
 
 import { formulaOperators, checkValidError } from 'src/utils/constant'
+import { format, parse } from 'date-fns'
 
 export const translate = (str, engToVietList) => {
-  return engToVietList.filter((item) => item.eng == str)[0].viet
+  const find = engToVietList.filter((item) => item.eng == str)[0].viet
+  if (find) {
+    return find
+  }
+  return ''
 }
 
 export const isNumeric = (str) => {
@@ -195,4 +200,13 @@ export const sortPlanList = (planList) => {
 export const calculateTimeProgress = (start, end) => {
   const today = new Date().toLocaleDateString('en-CA')
   return Math.ceil(((new Date(today) - new Date(start)) / (new Date(end) - new Date(start))) * 100)
+}
+
+export const formatDate = (str) => {
+  if (str) {
+    const date = parse(str, 'yyyy-MM-dd', new Date())
+    const result = format(date, 'dd/MM/yyyy')
+    return result
+  }
+  return ''
 }

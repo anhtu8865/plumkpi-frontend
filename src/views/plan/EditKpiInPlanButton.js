@@ -28,13 +28,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
+import { setNewInPlan } from 'src/slices/planDetailSlice'
 
-export const AddKpiToPlanButton = (props) => {
+export const EditKpiInPlanButton = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [temByCat, setTemByCat] = useState([])
   const [selectedCat, setSelectedCat] = useState([])
-  const [selectedTem, setSelectedTem] = useState([])
+  const [selectedTem, setSelectedTem] = useState(props.arraySelectedTem)
   const [isSubmit, setIsSubmit] = useState(false)
 
   const handleCatChange = (catItem) => {
@@ -76,69 +77,28 @@ export const AddKpiToPlanButton = (props) => {
     }
   }
 
-  const onSubmit = async () => {
-    const objectToReturn = []
+  const onSubmit = () => {
+    const objectToReturn = { catList: [], temList: [] }
     for (var i = 0; i < temByCat.length; i++) {
       const selectedTemByCat = temByCat[i].kpi_templates.filter((item) =>
         selectedTem.includes(item.kpi_template_id),
       )
       if (selectedTemByCat.length !== 0) {
-        const tem = []
-        selectedTemByCat.map((item, index) => {
-          if (index !== selectedTemByCat.length - 1) {
-            tem.push({
-              kpi_template_id: item.kpi_template_id,
-              weight: Math.round(100 / selectedTemByCat.length),
-            })
-          } else {
-            tem.push({
-              kpi_template_id: item.kpi_template_id,
-              weight:
-                100 - (selectedTemByCat.length - 1) * Math.round(100 / selectedTemByCat.length),
-            })
-          }
+        selectedTemByCat.map((item) => {
+          objectToReturn.temList.push({ tem: item, weight: 0 })
         })
-        objectToReturn.push({
-          kpi_category_id: temByCat[i].kpi_category_id,
-          kpi_templates: tem,
+        objectToReturn.catList.push({
+          cat: {
+            kpi_category_id: temByCat[i].kpi_category_id,
+            kpi_category_name: temByCat[i].kpi_category_name,
+          },
+          weight: 0,
         })
       }
     }
-    objectToReturn.map((item, index) => {
-      if (index !== objectToReturn.length - 1) {
-        item.weight = Math.round(100 / objectToReturn.length)
-      } else {
-        item.weight = 100 - (objectToReturn.length - 1) * Math.round(100 / objectToReturn.length)
-      }
-    })
-    await addToPlan(objectToReturn)
+    dispatch(setNewInPlan({ value: objectToReturn }))
     setIsSubmit(false)
     setModalVisible(false)
-    window.location.reload()
-  }
-
-  const addToPlan = async (objectToReturn) => {
-    try {
-      const response = await api.post(`/plans/add-kpi-categories`, {
-        plan_id: Number(props.planId),
-        kpi_categories: objectToReturn,
-      })
-      dispatch(
-        createAlert({
-          message: 'Thêm KPI vào kế hoạch thành công',
-          type: 'success',
-        }),
-      )
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
   }
 
   const getCategory = async () => {
@@ -180,7 +140,14 @@ export const AddKpiToPlanButton = (props) => {
       Object.assign(categories[i], { kpi_templates: templates })
     }
     setTemByCat(categories)
+    if (props.planEmpty === true) {
+      setModalVisible(true)
+    }
   }, [dispatch])
+
+  React.useEffect(async () => {
+    setSelectedTem(props.arraySelectedTem)
+  }, [props.arraySelectedTem])
 
   return (
     <>
@@ -190,7 +157,7 @@ export const AddKpiToPlanButton = (props) => {
         onClick={() => setModalVisible(true)}
         startIcon={<AddCircleIcon />}
       >
-        Thêm KPI
+        Thay đổi KPI
       </Button>
 
       <CModal
@@ -201,7 +168,7 @@ export const AddKpiToPlanButton = (props) => {
         onClose={() => setModalVisible(false)}
       >
         <CModalHeader>
-          <CModalTitle>Thêm KPI vào kế hoạch</CModalTitle>
+          <CModalTitle>Thay đổi KPI trong kế hoạch</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
           <CAccordion>
@@ -253,7 +220,7 @@ export const AddKpiToPlanButton = (props) => {
             }}
             disabled={selectedTem.length === 0 || isSubmit}
           >
-            Thêm KPI
+            Xác nhận
           </Button>
           {isSubmit && <LoadingCircle />}
         </CModalFooter>
@@ -262,6 +229,7 @@ export const AddKpiToPlanButton = (props) => {
   )
 }
 
-AddKpiToPlanButton.propTypes = {
-  planId: PropTypes.number,
+EditKpiInPlanButton.propTypes = {
+  arraySelectedTem: PropTypes.array,
+  planEmpty: PropTypes.bool,
 }
