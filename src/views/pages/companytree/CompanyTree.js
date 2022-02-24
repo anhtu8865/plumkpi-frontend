@@ -7,8 +7,10 @@ import api from 'src/views/axiosConfig'
 import { createAlert } from 'src/slices/alertSlice'
 import SystemAlert from 'src/components/SystemAlert'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 const CompanyTree = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const [deptList, setDeptList] = React.useState([])
   const [director, setDirector] = React.useState({})
@@ -82,7 +84,14 @@ const CompanyTree = () => {
                         }
                       })
                       .map((row, index) => (
-                        <div className="entry" key={index}>
+                        <div
+                          className="entry"
+                          key={index}
+                          onClick={() => {
+                            history.push(`companytree/${row.dept_id}`)
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <span className="label">
                             <Grid
                               container
