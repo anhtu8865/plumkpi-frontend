@@ -8,6 +8,7 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CFormCheck,
   CRow,
 } from '@coreui/react'
 import AddBoxIcon from '@mui/icons-material/AddBox'
@@ -23,9 +24,11 @@ import * as yup from 'yup'
 
 const AddUser = () => {
   const [deptList, setDeptList] = React.useState([])
+  const [deptVisible, setDeptVisible] = React.useState(false)
 
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
+
   async function fetchDeptList() {
     api
       .get('/depts')
@@ -49,46 +52,131 @@ const AddUser = () => {
   })
 
   const formik = useFormik({
-    initialValues: { user_name: '', email: '', password: '', role: '', dept: { dept_id: null } },
+    enableReinitialize: true,
+    initialValues: {
+      user_name: '',
+      email: '',
+      password: '',
+      role: '',
+      dept: { dept_id: null },
+      manage: { dept_id: null },
+    },
     validateOnBlur: true,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       if (values.role === 'Admin' || values.role === 'Director') {
-        values.dept.dept_id = null
+        api
+          .post('users', {
+            user_name: values.user_name,
+            email: values.email,
+            password: values.password,
+            role: values.role,
+          })
+          .then(() => {
+            dispatch(
+              createAlert({
+                message: 'Tạo người dùng mới thành công.',
+                type: 'success',
+              }),
+            )
+            dispatch(
+              setUserLoading({
+                value: true,
+              }),
+            )
+            dispatch(setUserReload())
+            setModalVisible(false)
+          })
+          .catch((error) => {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+          })
+      } else if (values.role === 'Employee') {
+        //console.log(values)
+        api
+          .post('users', {
+            user_name: values.user_name,
+            email: values.email,
+            password: values.password,
+            role: values.role,
+            dept: values.dept,
+          })
+          .then(() => {
+            dispatch(
+              createAlert({
+                message: 'Tạo người dùng mới thành công.',
+                type: 'success',
+              }),
+            )
+            dispatch(
+              setUserLoading({
+                value: true,
+              }),
+            )
+            dispatch(setUserReload())
+            setModalVisible(false)
+          })
+          .catch((error) => {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+          })
+      } else if (values.role === 'Manager') {
+        let tmp = parseInt(values.dept.dept_id)
+        values.dept.dept_id = tmp
+        values.manage.dept_id = tmp
+
+        console.log(values)
+        api
+          .post('users', {
+            user_name: values.user_name,
+            email: values.email,
+            password: values.password,
+            role: values.role,
+            dept: values.dept,
+            manage: values.dept,
+          })
+          .then(() => {
+            dispatch(
+              createAlert({
+                message: 'Tạo người dùng mới thành công.',
+                type: 'success',
+              }),
+            )
+            dispatch(
+              setUserLoading({
+                value: true,
+              }),
+            )
+            dispatch(setUserReload())
+            setModalVisible(false)
+          })
+          .catch((error) => {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          })
+          .finally(() => {
+            formik.setSubmitting(false)
+          })
       }
-      api
-        .post('users', {
-          user_name: values.user_name,
-          email: values.email,
-          password: values.password,
-          role: values.role,
-          dept: values.dept,
-        })
-        .then(() => {
-          dispatch(
-            createAlert({
-              message: 'Tạo người dùng mới thành công.',
-              type: 'success',
-            }),
-          )
-          dispatch(
-            setUserLoading({
-              value: true,
-            }),
-          )
-          dispatch(setUserReload())
-          setModalVisible(false)
-        })
-        .catch((error) => {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        })
-        .finally(() => {
-          formik.setSubmitting(false)
-        })
+
+      //resetForm()
     },
     validationSchema: validationSchema,
   })
@@ -121,9 +209,7 @@ const AddUser = () => {
                   <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
                   <CFormInput
                     id="inputFirstName"
-                    name="user_name"
-                    value={formik.values.user_name}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps('user_name')}
                     invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
                     valid={
                       !formik.touched.user_name ||
@@ -141,10 +227,8 @@ const AddUser = () => {
                   <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
                   <CFormInput
                     id="inputEmail"
-                    name="email"
                     type="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps('email')}
                     invalid={formik.touched.email && formik.errors.email ? true : false}
                     valid={
                       !formik.touched.email || (formik.touched.email && formik.errors.email)
@@ -162,9 +246,7 @@ const AddUser = () => {
                   <CFormInput
                     id="inputPassword"
                     type="password"
-                    name="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps('password')}
                     invalid={formik.touched.password && formik.errors.password ? true : false}
                     valid={
                       !formik.touched.password ||
@@ -174,25 +256,6 @@ const AddUser = () => {
                     }
                   />
                   <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
-                </CCol>
-              </CRow>
-            </div>
-            <div className="userform-item mt-4">
-              <h6>Gán người dùng vào phòng ban</h6>
-              <CRow>
-                <CCol>
-                  <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
-                  <FormikProvider value={formik}>
-                    <Field as="select" name="dept.dept_id" className="form-select">
-                      <option value="" label="Chọn phòng ban" />
-                      {deptList.map((row) => (
-                        <option value={row.dept_id} key={row.dept_id}>
-                          {row.dept_name}
-                        </option>
-                      ))}
-                    </Field>
-                  </FormikProvider>
-                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
                 </CCol>
               </CRow>
             </div>
@@ -209,6 +272,9 @@ const AddUser = () => {
                         type="radio"
                         name="role"
                         value="Employee"
+                        onClick={() => {
+                          setDeptVisible(true)
+                        }}
                       />
                       <label className="form-check-label">Nhân viên</label>
                     </div>
@@ -218,6 +284,9 @@ const AddUser = () => {
                         type="radio"
                         name="role"
                         value="Manager"
+                        onClick={() => {
+                          setDeptVisible(true)
+                        }}
                       />
                       <label className="form-check-label">Quản lý</label>
                     </div>
@@ -227,17 +296,49 @@ const AddUser = () => {
                         type="radio"
                         name="role"
                         value="Director"
+                        onClick={() => {
+                          setDeptVisible(false)
+                        }}
                       />
                       <label className="form-check-label">Giám đốc</label>
                     </div>
                     <div className="form-check">
-                      <Field className="form-check-input" type="radio" name="role" value="Admin" />
+                      <Field
+                        className="form-check-input"
+                        type="radio"
+                        name="role"
+                        value="Admin"
+                        onClick={() => {
+                          setDeptVisible(false)
+                        }}
+                      />
                       <label className="form-check-label">Quản trị viên</label>
                     </div>
                   </FormikProvider>
                 </CCol>
               </fieldset>
             </div>
+            {deptVisible && (
+              <div className="userform-item mt-4">
+                <h6>Gán người dùng vào phòng ban</h6>
+                <CRow>
+                  <CCol>
+                    <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
+                    <FormikProvider value={formik}>
+                      <Field as="select" name="dept.dept_id" className="form-select">
+                        <option value="" label="Chọn phòng ban" />
+                        {deptList.map((row) => (
+                          <option value={row.dept_id} key={row.dept_id}>
+                            {row.dept_name}
+                          </option>
+                        ))}
+                      </Field>
+                    </FormikProvider>
+                    <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
+                  </CCol>
+                </CRow>
+              </div>
+            )}
           </CModalBody>
           <CModalFooter>
             <Button
