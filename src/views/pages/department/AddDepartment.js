@@ -32,8 +32,7 @@ const AddDepartment = () => {
   const formik = useFormik({
     initialValues: { dept_name: '', description: '' },
     validateOnBlur: true,
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: (values, { resetForm }) => {
       api
         .post('depts', { dept_name: values.dept_name, description: values.description })
         .then(() => {
@@ -62,6 +61,7 @@ const AddDepartment = () => {
         .finally(() => {
           formik.setSubmitting(false)
         })
+      resetForm()
     },
     validationSchema: validationSchema,
   })
