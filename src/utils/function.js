@@ -135,9 +135,12 @@ export const checkFormulaLogic = (formulaArray) => {
 }
 
 export const findKpi = (str, kpiList) => {
-  return kpiList
-    .filter((item) => item.kpi_template_id == str)[0]
-    .kpi_template_name.replaceAll(' ', '_')
+  const find = kpiList.find((item) => item.kpi_template_id === Number(str))
+  if (find) {
+    return find.kpi_template_name.replaceAll(' ', '_')
+  } else {
+    return ''
+  }
 }
 
 export const convertFormula = (str, kpiList) => {

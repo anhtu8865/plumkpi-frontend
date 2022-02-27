@@ -32,6 +32,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import CheckIcon from '@mui/icons-material/Check'
 import { translate } from 'src/utils/function'
 import { assignKpiErrorList } from 'src/utils/engToViet'
+import * as yup from 'yup'
 
 export const AssignPlanKpiButton = (kpiItem) => {
   const dispatch = useDispatch()
@@ -42,6 +43,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
   const [selectedDeptList, setSelectedDeptList] = useState([])
   const [selectValue, setSelectValue] = useState('')
   const { plan } = useSelector((state) => state.planDetail)
+  const [target, setTarget] = useState(kpiItem.target)
 
   const getDeptList = async () => {
     try {
@@ -59,12 +61,30 @@ export const AssignPlanKpiButton = (kpiItem) => {
     }
   }
 
-  const assignKpi = async (listToReturn) => {
+  const getInfoTargetKpi = async () => {
+    try {
+      const response = await api.get(
+        `/plans/plan/${plan.plan_id}/assign-kpi/${kpiItem.kpi_template.kpi_template_id}`,
+      )
+      return response.data
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const assignKpi = async (listToReturn, target) => {
     try {
       await api.post(`/plans/assign-kpi`, {
         parent_plan_id: plan.plan_id,
         kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        parent_target: kpiItem.target,
+        parent_target: Number(target),
         children: listToReturn,
       })
       dispatch(
@@ -74,6 +94,12 @@ export const AssignPlanKpiButton = (kpiItem) => {
         }),
       )
       setModalVisible(false)
+      dispatch(
+        setLoading({
+          value: true,
+        }),
+      )
+      dispatch(setReload())
     } catch (error) {
       if (error.response) {
         const find = translate(error.response.data.message, assignKpiErrorList)
@@ -97,11 +123,28 @@ export const AssignPlanKpiButton = (kpiItem) => {
   }
 
   React.useEffect(async () => {
+    const deptId = []
+    const deptList = []
+    const option = []
     const depts = await getDeptList()
+    const assignDepts = await getInfoTargetKpi()
+    if (assignDepts) {
+      assignDepts.map((item) => {
+        const copyItem = cloneDeep(item.plan.user.dept)
+        copyItem.manager = item.plan.user
+        deptList.push({ dept: copyItem, target: item.target })
+        deptId.push(item.plan.user.dept.dept_id)
+      })
+      setSelectedDeptList(deptList)
+    }
     setDeptList(depts)
-    depts.map((item) =>
-      setSelectOption([...selectOption, { value: item.dept_id, label: item.dept_name }]),
-    )
+    depts
+      .filter((item) => !deptId.includes(item.dept_id))
+      .map((item) => option.push({ value: item.dept_id, label: item.dept_name }))
+    setSelectOption(option)
+    if (kpiItem && kpiItem.target) {
+      setTarget(kpiItem.target)
+    }
   }, [dispatch])
 
   const handleSelectOnChange = (event) => {
@@ -134,9 +177,9 @@ export const AssignPlanKpiButton = (kpiItem) => {
     setSelectedDeptList(copySelectedDeptList)
   }
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event, target) => {
     const find = selectedDeptList.find((item) => item.target === '')
-    if (find) {
+    if (find || target === '') {
       event.preventDefault()
     } else {
       setIsSubmit(true)
@@ -144,9 +187,13 @@ export const AssignPlanKpiButton = (kpiItem) => {
       selectedDeptList.map((item) => {
         listToReturn.push({ user_id: item.dept.manager.user_id, target: Number(item.target) })
       })
-      await assignKpi(listToReturn)
+      await assignKpi(listToReturn, target)
       setIsSubmit(false)
     }
+  }
+
+  const handlePTargetOnChange = (event) => {
+    setTarget(event.target.value)
   }
 
   const NoTargetView = () => {
@@ -156,6 +203,22 @@ export const AssignPlanKpiButton = (kpiItem) => {
   const HasTargetView = () => {
     return (
       <>
+        <CRow className="mt-2">
+          <CCol xs>
+            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI</CFormLabel>
+            <CFormInput
+              id="parenttarget"
+              placeholder="Nhập chỉ tiêu KPI"
+              type="number"
+              value={target}
+              onChange={(event) => {
+                handlePTargetOnChange(event)
+              }}
+              invalid={target === ''}
+            />
+            <CFormFeedback invalid></CFormFeedback>
+          </CCol>
+        </CRow>
         <CRow className="mt-2">
           <CCol xs={12}>
             <CFormLabel htmlFor="depts">Phòng ban</CFormLabel>
@@ -227,7 +290,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
                   )
                 })}
               </CTableBody>
-              <CTableFoot>
+              {/*<CTableFoot>
                 <CTableRow>
                   <CTableHeaderCell>CHỈ TIÊU TỔNG</CTableHeaderCell>
                   <CTableDataCell />
@@ -235,7 +298,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
                     {kpiItem.target ? kpiItem.target : 'Chưa có'}
                   </CTableDataCell>
                 </CTableRow>
-              </CTableFoot>
+              </CTableFoot>*/}
             </CTable>
           ) : (
             <div>Chưa có phòng ban nào được chọn cho KPI này.</div>
@@ -268,9 +331,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
         <CModalHeader>
           <CModalTitle>Gán KPI {kpiItem.kpi_template.kpi_template_name}</CModalTitle>
         </CModalHeader>
-        <CModalBody className="mx-4 mb-3">
-          {kpiItem.target ? HasTargetView() : <NoTargetView />}
-        </CModalBody>
+        <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
           <Button
             variant="contained"
@@ -278,7 +339,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
             startIcon={<CheckIcon />}
             type="submit"
             onClick={(event) => {
-              onSubmit(event)
+              onSubmit(event, target)
             }}
             disabled={isSubmit || selectedDeptList.length === 0}
           >

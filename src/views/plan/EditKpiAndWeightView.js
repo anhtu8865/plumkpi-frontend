@@ -121,23 +121,17 @@ const EditKpiAndWeightView = () => {
   }
 
   const handleCatOnChange = (event, id) => {
-    if (event.target.value === '') {
-      dispatch(changeWeightInCat({ id: id, value: 0 }))
-    } else {
-      dispatch(changeWeightInCat({ id: id, value: event.target.value }))
-    }
+    dispatch(changeWeightInCat({ id: id, value: event.target.value }))
   }
 
   const handleTemOnChange = (event, id) => {
-    if (event.target.value === '') {
-      dispatch(changeWeightInTem({ id: id, value: 0 }))
-    } else {
-      dispatch(changeWeightInTem({ id: id, value: event.target.value }))
-    }
+    dispatch(changeWeightInTem({ id: id, value: event.target.value }))
   }
 
-  const onSubmit = async () => {
+  const onSubmit = async (event) => {
+    let valid = true
     const objectToReturn = []
+    let totalSum = 0
     for (var i = 0; i < currentInPlan.catList.length; i++) {
       const selectedTemByCat = currentInPlan.temList.filter(
         (item) =>
@@ -145,20 +139,44 @@ const EditKpiAndWeightView = () => {
       )
       if (selectedTemByCat.length !== 0) {
         const kpi_templates = []
+        let sum = 0
         selectedTemByCat.map((item) => {
           kpi_templates.push({
             kpi_template_id: item.tem.kpi_template_id,
             weight: Number(item.weight),
           })
+          sum = sum + Number(item.weight)
         })
+        if (sum !== 100) {
+          dispatch(
+            createAlert({
+              message: `Tổng KPI trong danh mục ${currentInPlan.catList[i].cat.kpi_category_name} không bằng 100`,
+              type: 'error',
+            }),
+          )
+          valid = false
+        }
         objectToReturn.push({
           kpi_category_id: currentInPlan.catList[i].cat.kpi_category_id,
           weight: Number(currentInPlan.catList[i].weight),
           kpi_templates: kpi_templates,
         })
+        totalSum = totalSum + Number(currentInPlan.catList[i].weight)
       }
     }
-    await addToPlan(objectToReturn)
+    if (totalSum !== 100) {
+      dispatch(
+        createAlert({
+          message: `Tổng KPI của tất cả các danh mục không bằng 100`,
+          type: 'error',
+        }),
+      )
+      valid = false
+    }
+    if (valid) {
+      setIsSubmit(true)
+      await addToPlan(objectToReturn)
+    }
   }
 
   const addToPlan = async (objectToReturn) => {
@@ -241,6 +259,7 @@ const EditKpiAndWeightView = () => {
                             onChange={(event) => {
                               handleCatOnChange(event, item.cat.kpi_category_id)
                             }}
+                            invalid={handleCatValue(item.cat.kpi_category_id) === ''}
                           />
                         </CTableDataCell>
                       </CTableRow>
@@ -260,6 +279,7 @@ const EditKpiAndWeightView = () => {
                                 onChange={(event) => {
                                   handleTemOnChange(event, temItem.tem.kpi_template_id)
                                 }}
+                                invalid={handleTemValue(temItem.tem.kpi_template_id) === ''}
                               />
                             </CTableDataCell>
                           </CTableRow>
@@ -306,7 +326,6 @@ const EditKpiAndWeightView = () => {
               color="success"
               startIcon={<CheckIcon />}
               onClick={() => {
-                setIsSubmit(true)
                 onSubmit()
               }}
               disabled={isSubmit}

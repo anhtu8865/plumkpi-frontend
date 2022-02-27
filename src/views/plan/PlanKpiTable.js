@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import {
   CCard,
   CCardBody,
-  CCol,
-  CContainer,
   CRow,
   CTable,
   CTableBody,
@@ -11,30 +9,14 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CTableFoot,
 } from '@coreui/react'
-import { Pagination } from '@mui/material'
-import { LoadingCircle } from 'src/components/LoadingCircle'
-import api from 'src/views/axiosConfig'
-import { useDispatch, useSelector } from 'react-redux'
-import SystemAlert from 'src/components/SystemAlert'
-import { createAlert } from 'src/slices/alertSlice'
-import { setLoading } from 'src/slices/viewSlice'
-import { useParams } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { frequencyList } from 'src/utils/engToViet'
-import { translate } from 'src/utils/function'
-import { EditPlanKpiButton } from './EditPlanKpiButton'
+import { useSelector } from 'react-redux'
+import { KpiInfoButton } from './KpiInfoButton'
 import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 
 export const PlanKpiTable = (catItem) => {
-  const dispatch = useDispatch()
-  const { reload, loading } = useSelector((state) => state.view)
-  const entryPerPage = 10
-  const [page, setPage] = React.useState(1)
-  const [totalPage, setTotalPage] = React.useState(1)
-  const [entry, setEntry] = React.useState([])
-  const { catInPlan, temInPlan } = useSelector((state) => state.planDetail)
+  const { temInPlan } = useSelector((state) => state.planDetail)
+  const { user } = useSelector((state) => state.user)
 
   const Table = () => {
     return (
@@ -45,9 +27,9 @@ export const PlanKpiTable = (catItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  <CTableHeaderCell>TRỌNG SỐ</CTableHeaderCell>
-                  <CTableHeaderCell>MỤC TIÊU</CTableHeaderCell>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>
+                  <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -62,31 +44,15 @@ export const PlanKpiTable = (catItem) => {
                       <CTableDataCell>{item.kpi_template.kpi_template_name}</CTableDataCell>
                       <CTableDataCell>{item.weight}</CTableDataCell>
                       <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
-                      <CTableDataCell className="text-center">
+                      <CTableDataCell className="text-center w-25">
                         <div className="d-flex flex-row justify-content-center">
-                          {AssignPlanKpiButton(item)}
-                          <EditPlanKpiButton />
+                          {user.role === 'Director' && AssignPlanKpiButton(item)}
+                          <KpiInfoButton kpiItem={item} />
                         </div>
                       </CTableDataCell>
                     </CTableRow>
                   ))}
               </CTableBody>
-              <CTableFoot>
-                <CTableRow>
-                  <CTableDataCell colSpan="4">
-                    <Pagination
-                      page={page}
-                      count={totalPage}
-                      showFirstButton
-                      showLastButton
-                      size="small"
-                      onChange={(event, page) => {
-                        setPage(page)
-                      }}
-                    />
-                  </CTableDataCell>
-                </CTableRow>
-              </CTableFoot>
             </CTable>
           </>
         ) : null}

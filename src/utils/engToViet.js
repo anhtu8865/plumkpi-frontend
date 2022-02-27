@@ -16,6 +16,21 @@ export const frequencyList = [
   { eng: 'Yearly', viet: 'Năm' },
 ]
 
+export const directionList = [
+  { eng: 'None', viet: 'Không có' },
+  { eng: 'Up', viet: 'Lên' },
+  { eng: 'Down', viet: 'Xuống' },
+]
+
+export const aggList = [
+  { eng: 'Sum', viet: 'Tổng' },
+  { eng: 'Average', viet: 'Trung bình' },
+  { eng: 'WeightedAverage', viet: 'Trung bình có trọng số' },
+  { eng: 'Max', viet: 'Lấy giá trị lớn nhất' },
+  { eng: 'Min', viet: 'Lấy giá trị nhỏ nhất' },
+  { eng: 'New', viet: 'Lấy giá trị mới nhất' },
+]
+
 export const weightErrorList = [
   {
     eng: 'Sum Of categories must be 100',
