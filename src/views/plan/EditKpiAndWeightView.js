@@ -32,6 +32,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import CheckIcon from '@mui/icons-material/Check'
 import HelpIcon from '@mui/icons-material/Help'
 import { EditKpiInPlanButton } from './EditKpiInPlanButton'
+import { DeleteKpiInPlanButton } from './DeleteKpiInPlanButton'
 import cloneDeep from 'lodash/cloneDeep'
 import { weightKpiRule } from 'src/utils/constant'
 import { translate } from 'src/utils/function'
@@ -181,7 +182,7 @@ const EditKpiAndWeightView = () => {
 
   const addToPlan = async (objectToReturn) => {
     try {
-      const response = await api.post(`/plans/add-kpi-categories`, {
+      await api.post(`/plans/add-kpi-categories`, {
         plan_id: Number(plan.plan_id),
         kpi_categories: objectToReturn,
       })
@@ -314,6 +315,7 @@ const EditKpiAndWeightView = () => {
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
+              {selectedTem.length > 0 && <DeleteKpiInPlanButton planItem={plan} />}
               <EditKpiInPlanButton arraySelectedTem={selectedTem} planEmpty={planEmpty} />
             </div>
           </CCol>

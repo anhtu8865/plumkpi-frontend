@@ -23,41 +23,67 @@ const PlanDetail = () => {
   const [catItem, setCatItem] = useState({ kpi_category: {} })
   const { user } = useSelector((state) => state.user)
 
-  React.useEffect(() => {
-    api
-      .get(`plans/user/${id}`)
-      .then((response) => {
+  const getPlan = async () => {
+    try {
+      const response = await api.get(`plans/user/${Number(id)}`)
+      return response.data
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  React.useEffect(async () => {
+    const result = await getPlan()
+    if (result) {
+      if (result.plan_kpi_categories.length > 0) {
         dispatch(
           setCatInPlan({
-            value: response.data.plan_kpi_categories,
-          }),
-        )
-        dispatch(
-          setTemInPlan({
-            value: response.data.plan_kpi_templates,
-          }),
-        )
-        dispatch(
-          setPlan({
-            value: response.data,
+            value: result.plan_kpi_categories,
           }),
         )
         dispatch(
           setCurrentCat({
-            value: response.data.plan_kpi_categories[0],
+            value: result.plan_kpi_categories[0],
           }),
         )
-      })
-      .catch((error) => {
-        if (error.response) {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        }
-      })
+      } else {
+        const catId = []
+        const catList = []
+        result.plan_kpi_templates.map((item) => {
+          if (!catId.includes(item.kpi_template.kpi_category.kpi_category_id)) {
+            catList.push({ kpi_category: item.kpi_template.kpi_category, weight: null })
+            catId.push(item.kpi_template.kpi_category.kpi_category_id)
+          }
+        })
+        dispatch(
+          setCatInPlan({
+            value: catList,
+          }),
+        )
+        dispatch(
+          setCurrentCat({
+            value: catList[0],
+          }),
+        )
+      }
+      dispatch(
+        setTemInPlan({
+          value: result.plan_kpi_templates,
+        }),
+      )
+      dispatch(
+        setPlan({
+          value: result,
+        }),
+      )
+    }
     dispatch(
       setLoading({
         value: false,
@@ -75,23 +101,25 @@ const PlanDetail = () => {
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          <CCol xs={12} sm={6}>
-            <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  history.replace(`/plan/${id}/edit`)
-                }}
-                startIcon={<AddCircleIcon />}
-              >
-                Thêm KPI
-              </Button>
-            </div>
-          </CCol>
+          {user.role === 'Director' && (
+            <CCol xs={12} sm={6}>
+              <div className="d-grid gap-3 d-md-flex justify-content-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    history.replace(`/plan/${id}/edit`)
+                  }}
+                  startIcon={<AddCircleIcon />}
+                >
+                  Thêm KPI
+                </Button>
+              </div>
+            </CCol>
+          )}
         </CRow>
         <CRow className="mt-2">
-          <div>Kế hoạch chưa có KPI. Hãy tiến hành thêm KPI nào!</div>
+          <div>Kế hoạch chưa có KPI.</div>
         </CRow>
       </>
     )
@@ -107,19 +135,21 @@ const PlanDetail = () => {
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          <CCol xs={12} sm={6}>
-            <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  history.replace(`/plan/${id}/edit`)
-                }}
-              >
-                Thay đổi trọng số/ KPI
-              </Button>
-            </div>
-          </CCol>
+          {user.role === 'Director' && (
+            <CCol xs={12} sm={6}>
+              <div className="d-grid gap-3 d-md-flex justify-content-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    history.replace(`/plan/${id}/edit`)
+                  }}
+                >
+                  Thay đổi trọng số/ KPI
+                </Button>
+              </div>
+            </CCol>
+          )}
         </CRow>
         <CRow className="mt-4">
           <PlanOverview />
@@ -136,8 +166,7 @@ const PlanDetail = () => {
           <CCol xs={12}>
             <CCard>
               <CCardBody className="p-5">
-                {user.role === 'Director' &&
-                  (temInPlan.length === 0 ? <NoTemView /> : <HasTemView />)}
+                {user.role !== 'Admin' && (temInPlan.length === 0 ? <NoTemView /> : <HasTemView />)}
                 {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>

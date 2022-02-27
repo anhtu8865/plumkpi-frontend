@@ -13,6 +13,7 @@ import {
 import { useSelector } from 'react-redux'
 import { KpiInfoButton } from './KpiInfoButton'
 import { AssignPlanKpiButton } from './AssignPlanKpiButton'
+import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
 
 export const PlanKpiTable = (catItem) => {
   const { temInPlan } = useSelector((state) => state.planDetail)
@@ -27,7 +28,7 @@ export const PlanKpiTable = (catItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>
+                  {user.role === 'Director' && <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>}
                   <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
@@ -42,11 +43,14 @@ export const PlanKpiTable = (catItem) => {
                   .map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell>{item.kpi_template.kpi_template_name}</CTableDataCell>
-                      <CTableDataCell>{item.weight}</CTableDataCell>
+                      {user.role === 'Director' && (
+                        <CTableDataCell>{item.weight ? item.weight : null}</CTableDataCell>
+                      )}
                       <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
                       <CTableDataCell className="text-center w-25">
                         <div className="d-flex flex-row justify-content-center">
                           {user.role === 'Director' && AssignPlanKpiButton(item)}
+                          {user.role === 'Manager' && AssignPlanKpiButtonM(item)}
                           <KpiInfoButton kpiItem={item} />
                         </div>
                       </CTableDataCell>

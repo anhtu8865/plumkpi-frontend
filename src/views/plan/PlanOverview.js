@@ -3,7 +3,6 @@ import {
   CCard,
   CCardBody,
   CCol,
-  CContainer,
   CRow,
   CCardTitle,
   CCardText,
@@ -11,19 +10,13 @@ import {
   CProgressBar,
 } from '@coreui/react'
 import { Button } from '@mui/material'
-import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
-import SystemAlert from 'src/components/SystemAlert'
-import { createAlert } from 'src/slices/alertSlice'
-import { setLoading, setReload } from 'src/slices/viewSlice'
 import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
-import { useParams } from 'react-router-dom'
 import GaugeChart from 'react-gauge-chart'
 
 export const PlanOverview = () => {
   const dispatch = useDispatch()
-  const { reload, loading } = useSelector((state) => state.view)
   const { catInPlan, temInPlan, currentCat } = useSelector((state) => state.planDetail)
 
   return (
@@ -49,7 +42,8 @@ export const PlanOverview = () => {
                       style={{ cursor: 'pointer' }}
                     >
                       <small>
-                        {item.kpi_category.kpi_category_name} ({item.weight}%)
+                        {item.kpi_category.kpi_category_name}{' '}
+                        {item.weight ? `(${item.weight})%` : null}
                       </small>
                     </div>
                   </CRow>
