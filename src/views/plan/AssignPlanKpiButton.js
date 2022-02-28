@@ -30,7 +30,7 @@ import Select from 'react-select'
 import cloneDeep from 'lodash/cloneDeep'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import CheckIcon from '@mui/icons-material/Check'
-import { translate } from 'src/utils/function'
+import { translate, compareToToday } from 'src/utils/function'
 import { assignKpiErrorList } from 'src/utils/engToViet'
 import * as yup from 'yup'
 
@@ -341,7 +341,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
             onClick={(event) => {
               onSubmit(event, target)
             }}
-            disabled={isSubmit || selectedDeptList.length === 0}
+            disabled={isSubmit || selectedDeptList.length === 0 || !compareToToday(plan.end_date)}
           >
             Xác nhận
           </Button>

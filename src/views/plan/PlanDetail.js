@@ -12,7 +12,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
-import { formatDate } from 'src/utils/function'
+import { formatDate, compareToToday } from 'src/utils/function'
 
 const PlanDetail = () => {
   const { id } = useParams()
@@ -101,7 +101,7 @@ const PlanDetail = () => {
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          {user.role === 'Director' && (
+          {user.role === 'Director' && compareToToday(plan.end_date) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -135,7 +135,7 @@ const PlanDetail = () => {
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          {user.role === 'Director' && (
+          {user.role === 'Director' && compareToToday(plan.end_date) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button

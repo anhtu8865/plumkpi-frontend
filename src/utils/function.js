@@ -213,3 +213,11 @@ export const formatDate = (str) => {
   }
   return ''
 }
+
+export const compareToToday = (end_date) => {
+  const today = new Date().toLocaleDateString('en-CA')
+  if (end_date < today) {
+    return false
+  }
+  return true
+}

@@ -105,8 +105,8 @@ const Plan = () => {
                           >
                             <ArrowCircleRightIcon />
                           </IconButton>
-                          <EditPlanButton inPlan={planItem} />
-                          <DeletePlanButton inPlan={planItem} />
+                          {user.role === 'Director' && <EditPlanButton inPlan={planItem} />}
+                          {user.role === 'Director' && <DeletePlanButton inPlan={planItem} />}
                         </div>
                       </CRow>
                     </CCardBody>
@@ -155,8 +155,8 @@ const Plan = () => {
                       >
                         <ArrowCircleRightIcon />
                       </IconButton>
-                      <EditPlanButton inPlan={planItem} />
-                      <DeletePlanButton inPlan={planItem} />
+                      {user.role === 'Director' && <EditPlanButton inPlan={planItem} />}
+                      {user.role === 'Director' && <DeletePlanButton inPlan={planItem} />}
                     </div>
                   </CRow>
                 </CCardBody>
@@ -203,7 +203,7 @@ const Plan = () => {
                       >
                         <ArrowCircleRightIcon />
                       </IconButton>
-                      <DeletePlanButton inPlan={planItem} />
+                      {user.role === 'Director' && <DeletePlanButton inPlan={planItem} />}
                     </div>
                   </CRow>
                 </CCardBody>
