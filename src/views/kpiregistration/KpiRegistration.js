@@ -35,9 +35,9 @@ import EditKpiRegistration from './EditKpiRegistration'
 import { InfoKpiRegistration } from './InfoKpiRegistration'
 
 function colorStatus(status) {
-  if (status == 'Pending') return 'text-warning'
-  else if (status == 'Approve') return 'text-success'
-  else if (status == 'Denied') return 'text-danger'
+  if (status == 'Đang xử lý') return 'text-warning'
+  else if (status == 'Chấp nhận') return 'text-success'
+  else if (status == 'Từ chối') return 'text-danger'
 }
 
 const KpiRegistration = () => {
@@ -92,7 +92,7 @@ const KpiRegistration = () => {
           <CTableBody>
             {props.temList
               .filter((item) => {
-                if (item.approve_registration !== 'None') {
+                if (item.approve_registration !== 'Không') {
                   return item
                 }
               })
@@ -107,7 +107,7 @@ const KpiRegistration = () => {
                     {row.approve_registration}
                   </CTableDataCell>
                   <CTableDataCell className="text-center">
-                    {row.approve_registration == 'Pending' ? (
+                    {row.approve_registration == 'Đang xử lý' ? (
                       <Grid container direction="row" justifyContent="center" alignItems="center">
                         <InfoKpiRegistration kpiItem={row} />
                         <EditKpiRegistration inCat={row} plan_id={id} />
