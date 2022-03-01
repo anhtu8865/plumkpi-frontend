@@ -67,7 +67,7 @@ const AppHeaderDropdown = () => {
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         <CRow>
           <CCol className="mt-2">
-            <CBadge color="secondary">{user.role ? translate(user.role, roleList) : null}</CBadge>
+            <CBadge color="secondary">{user.role ? user.role : null}</CBadge>
           </CCol>
           <CCol>
             <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 40, height: 40 }} />
