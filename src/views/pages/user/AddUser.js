@@ -271,7 +271,7 @@ const AddUser = () => {
                         className="form-check-input"
                         type="radio"
                         name="role"
-                        value="Employee"
+                        value="Nhân viên"
                         onClick={() => {
                           setDeptVisible(true)
                         }}
@@ -283,7 +283,7 @@ const AddUser = () => {
                         className="form-check-input"
                         type="radio"
                         name="role"
-                        value="Manager"
+                        value="Quản lý"
                         onClick={() => {
                           setDeptVisible(true)
                         }}
