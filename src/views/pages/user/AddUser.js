@@ -295,7 +295,7 @@ const AddUser = () => {
                         className="form-check-input"
                         type="radio"
                         name="role"
-                        value="Director"
+                        value="Giám đốc"
                         onClick={() => {
                           setDeptVisible(false)
                         }}
