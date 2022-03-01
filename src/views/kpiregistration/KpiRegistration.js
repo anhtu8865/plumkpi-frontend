@@ -34,6 +34,12 @@ import DeleteKpiRegistration from './DeleteKpiRegistration'
 import EditKpiRegistration from './EditKpiRegistration'
 import { InfoKpiRegistration } from './InfoKpiRegistration'
 
+function colorStatus(status) {
+  if (status == 'Pending') return 'text-warning'
+  else if (status == 'Approve') return 'text-success'
+  else if (status == 'Denied') return 'text-danger'
+}
+
 const KpiRegistration = () => {
   const { id } = useParams()
   //console.log(id)
@@ -97,7 +103,9 @@ const KpiRegistration = () => {
                   <CTableDataCell>{row.kpi_template.description}</CTableDataCell>
                   <CTableDataCell>{row.target}</CTableDataCell>
                   <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
-                  <CTableDataCell>{row.approve_registration}</CTableDataCell>
+                  <CTableDataCell className={colorStatus(row.approve_registration)}>
+                    {row.approve_registration}
+                  </CTableDataCell>
                   <CTableDataCell className="text-center">
                     {row.approve_registration == 'Pending' ? (
                       <Grid container direction="row" justifyContent="center" alignItems="center">
