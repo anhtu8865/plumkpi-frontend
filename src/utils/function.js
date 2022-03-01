@@ -8,7 +8,7 @@ export const translate = (str, engToVietList) => {
   if (find) {
     return find
   }
-  return ''
+  return str
 }
 
 export const isNumeric = (str) => {
