@@ -102,7 +102,7 @@ const PlanDetail = () => {
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          {user.role === 'Director' && compareToToday(plan.end_date) && (
+          {user.role === 'Giám đốc' && compareToToday(plan.end_date) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -130,27 +130,29 @@ const PlanDetail = () => {
     return (
       <>
         <CRow>
-          <CCol xs={6} sm={6}>
+          <CCol xs={12} sm={6}>
             <h4>{plan.plan_name}</h4>
             <h6>
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          <CCol xs={6} sm={6}>
-            <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddBoxIcon />}
-                onClick={() => {
-                  history.push(`/kpiregistration/${id}`)
-                }}
-              >
-                Đăng ký KPI cá nhân
-              </Button>
-            </div>
-          </CCol>
-          {user.role === 'Director' && compareToToday(plan.end_date) && (
+          {['Quản lý', 'Nhân viên'].includes(user.role) && compareToToday(plan.end_date) && (
+            <CCol xs={12} sm={6}>
+              <div className="d-grid gap-3 d-md-flex justify-content-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddBoxIcon />}
+                  onClick={() => {
+                    history.push(`/kpiregistration/${id}`)
+                  }}
+                >
+                  Đăng ký KPI cá nhân
+                </Button>
+              </div>
+            </CCol>
+          )}
+          {user.role === 'Giám đốc' && compareToToday(plan.end_date) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button

@@ -268,9 +268,9 @@ const UserInfo = () => {
                     : true
                 }
               >
-                <option value="None">Khác</option>
-                <option value="Male">Nam</option>
-                <option value="Female">Nữ</option>
+                <option value="Không">Không</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
               </CFormSelect>
             </CCol>
             <CCol xs>

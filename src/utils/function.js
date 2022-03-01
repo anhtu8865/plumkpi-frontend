@@ -4,9 +4,9 @@ import { formulaOperators, checkValidError } from 'src/utils/constant'
 import { format, parse } from 'date-fns'
 
 export const translate = (str, engToVietList) => {
-  const find = engToVietList.filter((item) => item.eng == str)[0].viet
+  const find = engToVietList.find((item) => item.eng == str)
   if (find) {
-    return find
+    return find.viet
   }
   return str
 }

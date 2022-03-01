@@ -228,11 +228,11 @@ export const EditKpiButton = (props) => {
                       : true
                   }
                 >
-                  <option value="Daily">Ngày</option>
-                  <option value="Weekly">Tuần</option>
-                  <option value="Monthly">Tháng</option>
-                  <option value="Quarterly">Quý</option>
-                  <option value="Yearly">Năm</option>
+                  <option value="Ngày">Ngày</option>
+                  <option value="Tuần">Tuần</option>
+                  <option value="Tháng">Tháng</option>
+                  <option value="Quý">Quý</option>
+                  <option value="Năm">Năm</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.frequency}</CFormFeedback>
               </CCol>
@@ -249,9 +249,9 @@ export const EditKpiButton = (props) => {
                       : true
                   }
                 >
-                  <option value="Up">Lên</option>
-                  <option value="Down">Xuống</option>
-                  <option value="None">Không có</option>
+                  <option value="Lên">Lên</option>
+                  <option value="Xuống">Xuống</option>
+                  <option value="Không">Không</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.direction}</CFormFeedback>
               </CCol>
@@ -307,12 +307,12 @@ export const EditKpiButton = (props) => {
                       : true
                   }
                 >
-                  <option value="Sum">Tổng</option>
-                  <option value="Average">Trung bình</option>
-                  <option value="WeightedAverage">Trung bình có trọng số</option>
-                  <option value="Max">Lấy giá trị lớn nhất</option>
-                  <option value="Min">Lấy giá trị nhỏ nhất</option>
-                  <option value="New">Lấy giá trị mới nhất</option>
+                  <option value="Tổng">Tổng</option>
+                  <option value="Trung bình">Trung bình</option>
+                  <option value="Trung bình trọng số">Trung bình trọng số</option>
+                  <option value="Lớn nhất">Lớn nhất</option>
+                  <option value="Bé nhất">Bé nhất</option>
+                  <option value="Mới nhất">Mới nhất</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
               </CCol>

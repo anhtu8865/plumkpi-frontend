@@ -17,7 +17,7 @@ export const frequencyList = [
 ]
 
 export const directionList = [
-  { eng: 'None', viet: 'Không có' },
+  { eng: 'None', viet: 'Không' },
   { eng: 'Up', viet: 'Lên' },
   { eng: 'Down', viet: 'Xuống' },
 ]
@@ -25,10 +25,10 @@ export const directionList = [
 export const aggList = [
   { eng: 'Sum', viet: 'Tổng' },
   { eng: 'Average', viet: 'Trung bình' },
-  { eng: 'WeightedAverage', viet: 'Trung bình có trọng số' },
-  { eng: 'Max', viet: 'Lấy giá trị lớn nhất' },
-  { eng: 'Min', viet: 'Lấy giá trị nhỏ nhất' },
-  { eng: 'New', viet: 'Lấy giá trị mới nhất' },
+  { eng: 'WeightedAverage', viet: 'Trung bình trọng số' },
+  { eng: 'Max', viet: 'Lớn nhất' },
+  { eng: 'Min', viet: 'Bé nhất' },
+  { eng: 'New', viet: 'Mới nhất' },
 ]
 
 export const weightErrorList = [

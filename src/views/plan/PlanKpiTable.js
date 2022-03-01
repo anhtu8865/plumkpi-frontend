@@ -28,7 +28,7 @@ export const PlanKpiTable = (catItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  {user.role === 'Director' && <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>}
+                  {user.role === 'Giám đốc' && <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>}
                   <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
@@ -43,14 +43,14 @@ export const PlanKpiTable = (catItem) => {
                   .map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell>{item.kpi_template.kpi_template_name}</CTableDataCell>
-                      {user.role === 'Director' && (
+                      {user.role === 'Giám đốc' && (
                         <CTableDataCell>{item.weight ? item.weight : null}</CTableDataCell>
                       )}
                       <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
                       <CTableDataCell className="text-center w-25">
                         <div className="d-flex flex-row justify-content-center">
-                          {user.role === 'Director' && AssignPlanKpiButton(item)}
-                          {user.role === 'Manager' && AssignPlanKpiButtonM(item)}
+                          {user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
+                          {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
                           <KpiInfoButton kpiItem={item} />
                         </div>
                       </CTableDataCell>

@@ -105,8 +105,8 @@ const Plan = () => {
                           >
                             <ArrowCircleRightIcon />
                           </IconButton>
-                          {user.role === 'Director' && <EditPlanButton inPlan={planItem} />}
-                          {user.role === 'Director' && <DeletePlanButton inPlan={planItem} />}
+                          {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
+                          {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
                         </div>
                       </CRow>
                     </CCardBody>
@@ -155,8 +155,8 @@ const Plan = () => {
                       >
                         <ArrowCircleRightIcon />
                       </IconButton>
-                      {user.role === 'Director' && <EditPlanButton inPlan={planItem} />}
-                      {user.role === 'Director' && <DeletePlanButton inPlan={planItem} />}
+                      {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
+                      {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
                     </div>
                   </CRow>
                 </CCardBody>
@@ -203,7 +203,7 @@ const Plan = () => {
                       >
                         <ArrowCircleRightIcon />
                       </IconButton>
-                      {user.role === 'Director' && <DeletePlanButton inPlan={planItem} />}
+                      {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
                     </div>
                   </CRow>
                 </CCardBody>
@@ -228,7 +228,7 @@ const Plan = () => {
                   </CCol>
                   <CCol xs={12} sm={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      {user.role === 'Director' && <AddPlanButton />}
+                      {user.role === 'Giám đốc' && <AddPlanButton />}
                     </div>
                   </CCol>
                 </CRow>
