@@ -51,11 +51,11 @@ const AppSidebar = () => {
 function chooseNav(role) {
   if (role === 'Admin') {
     return navigationAdmin
-  } else if (role === 'Employee') {
+  } else if (role === 'Nhân viên') {
     return navigationEmployee
-  } else if (role === 'Manager') {
+  } else if (role === 'Quản lý') {
     return navigationManager
-  } else if (role === 'Director') {
+  } else if (role === 'Giám đốc') {
     return navigationDirector
   }
 }
