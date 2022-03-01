@@ -61,25 +61,6 @@ export const PlanOverview = (props) => {
                   </CRow>
                 </>
               ))}
-              <CRow className="mt-2">
-                <div
-                  onClick={() => {
-                    history.push(`/kpiregistration/${props.plan_id}`)
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <small>Personal KPIs</small>
-                </div>
-              </CRow>
-              <CRow className="mt-1">
-                <div>
-                  <CProgress>
-                    <CProgressBar color="info" variant="striped" value={0}>
-                      0%
-                    </CProgressBar>
-                  </CProgress>
-                </div>
-              </CRow>
             </CCol>
           </CRow>
         </CCardBody>

@@ -166,6 +166,15 @@ const PlanDetail = () => {
           <CCol xs={12}>
             <CCard>
               <CCardBody className="p-5">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    history.push(`/kpiregistration/${id}`)
+                  }}
+                >
+                  Đăng ký KPI cá nhân
+                </Button>
                 {user.role !== 'Admin' && (temInPlan.length === 0 ? <NoTemView /> : <HasTemView />)}
                 {loading && <LoadingCircle />}
               </CCardBody>
