@@ -32,6 +32,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 const UserDepartment = (props) => {
   const history = useHistory()
   const { id } = useParams()
+  // console.log(typeof id)
 
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)

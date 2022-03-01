@@ -29,7 +29,12 @@ const routes = [
   { path: '/depts/:id', name: 'User In Department', component: UserDepartment },
   { path: '/companytree', exact: true, name: 'Company', component: CompanyTree },
   { path: '/companytree/:id', exact: true, name: 'Company Table', component: CompanyTable },
-  { path: '/kpiregistration', name: 'KPI Registration', component: KpiRegistration },
+  {
+    path: '/kpiregistration/:id',
+    exact: true,
+    name: 'KPI Registration',
+    component: KpiRegistration,
+  },
 ]
 
 export default routes

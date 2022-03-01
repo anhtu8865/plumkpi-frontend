@@ -152,7 +152,7 @@ const PlanDetail = () => {
           )}
         </CRow>
         <CRow className="mt-4">
-          <PlanOverview />
+          <PlanOverview plan_id={id} />
         </CRow>
         <CRow className="mt-4">{PlanKpiTable(currentCat)}</CRow>
       </>

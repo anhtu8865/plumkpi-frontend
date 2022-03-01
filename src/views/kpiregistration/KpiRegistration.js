@@ -25,40 +25,48 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setUserLoading } from 'src/slices/userSlice'
+import { setKpiRegisLoading } from 'src/slices/kpiRegisSlice'
 import api from 'src/views/axiosConfig'
+import { useParams } from 'react-router-dom'
 
 import AddKpiRegistration from './AddKpiRegistration'
+import DeleteKpiRegistration from './DeleteKpiRegistration'
 
 const KpiRegistration = () => {
+  const { id } = useParams()
+  //console.log(id)
   const dispatch = useDispatch()
 
-  const MOCK_DATA = [
-    {
-      kpi_template_id: 1,
-      kpi_template_name: 'MarketingKPI1',
-      description: 'd2',
-      frequency: 'Daily',
-      direction: 'Up',
-      aggregation: 'Sum',
-      unit: 'USD',
-      formula: ' ',
-      createdAt: '2022-02-11T00:28:08.697Z',
-      updatedAt: '2022-02-21T03:49:52.314Z',
-      kpi_category: {
-        kpi_category_id: 1,
-        kpi_category_name: 'Marketing KPIs',
-        description: null,
-        createdAt: '2022-02-11T00:28:08.697Z',
-        updatedAt: '2022-02-11T00:28:08.697Z',
-      },
-      target: 1000,
-    },
-  ]
+  const [entry, setEntry] = React.useState([])
+  const { kpiRegisReload, kpiRegisLoading } = useSelector((state) => state.kpiRegis)
 
-  const [entry, setEntry] = React.useState(MOCK_DATA)
+  React.useEffect(() => {
+    async function fetchDeptList() {
+      api
+        .get(`/plans/user/${id}`)
+        .then((response) => {
+          setEntry(response.data.plan_kpi_templates)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
 
-  const UserTable = (props) => {
+    fetchDeptList()
+
+    dispatch(
+      setKpiRegisLoading({
+        value: false,
+      }),
+    )
+  }, [kpiRegisReload, dispatch])
+
+  const KpiRegistrationTable = (props) => {
     return (
       <>
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
@@ -74,17 +82,29 @@ const KpiRegistration = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {props.temList.map((row, index) => (
-              <CTableRow v-for="item in tableItems" key={index}>
-                <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
+            {props.temList
+              .filter((item) => {
+                if (item.approve_registration !== 'None') {
+                  return item
+                }
+              })
+              .map((row, index) => (
+                <CTableRow v-for="item in tableItems" key={index}>
+                  <CTableDataCell>{row.kpi_template.kpi_template_name}</CTableDataCell>
 
-                <CTableDataCell>{row.description}</CTableDataCell>
-                <CTableDataCell>{row.target}</CTableDataCell>
-                <CTableDataCell>{row.unit}</CTableDataCell>
-                <CTableDataCell>Pending</CTableDataCell>
-                <CTableDataCell className="text-center"></CTableDataCell>
-              </CTableRow>
-            ))}
+                  <CTableDataCell>{row.kpi_template.description}</CTableDataCell>
+                  <CTableDataCell>{row.target}</CTableDataCell>
+                  <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
+                  <CTableDataCell>{row.approve_registration}</CTableDataCell>
+                  <CTableDataCell className="text-center">
+                    {row.approve_registration == 'Pending' ? (
+                      <Grid container direction="row" justifyContent="center" alignItems="center">
+                        <DeleteKpiRegistration inCat={row} plan_id={id} />
+                      </Grid>
+                    ) : null}
+                  </CTableDataCell>
+                </CTableRow>
+              ))}
           </CTableBody>
           <CTableFoot>
             <CTableRow>
@@ -96,7 +116,7 @@ const KpiRegistration = () => {
     )
   }
 
-  UserTable.propTypes = {
+  KpiRegistrationTable.propTypes = {
     temList: PropTypes.array,
   }
 
@@ -113,13 +133,13 @@ const KpiRegistration = () => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddKpiRegistration />
+                      <AddKpiRegistration plan_id={id} />
                     </div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <UserTable temList={entry} />
+                  <KpiRegistrationTable temList={entry} />
                 </div>
               </CCardBody>
             </CCard>

@@ -18,14 +18,85 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
-import { setUserLoading, setUserReload } from 'src/slices/userSlice'
+import { setKpiRegisLoading, setKpiRegisReload } from 'src/slices/kpiRegisSlice'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 import CheckIcon from '@mui/icons-material/Check'
+import PropTypes from 'prop-types'
 
-const AddKpiRegistration = () => {
+import AddKpiRegisDetails from './AddKpiRegisDetails'
+
+const AddKpiRegistration = (props) => {
+  const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
-  const [modalVisible2, setModalVisible2] = React.useState(false)
+  // const [modalVisible2, setModalVisible2] = React.useState(false)
+  const [personalKpisList, setPersonalKpisList] = React.useState([])
+
+  const validationSchema = yup.object({
+    target: yup.number().required('Đây là trường bắt buộc'),
+  })
+
+  React.useEffect(() => {
+    async function fetchPersonalKpisList() {
+      api
+        .get('kpi-categories/personal-kpis')
+        .then((response) => {
+          setPersonalKpisList(response.data.kpi_templates)
+        })
+        .catch((error) => {})
+    }
+
+    fetchPersonalKpisList()
+  })
+
+  const formik = useFormik({
+    initialValues: {
+      plan: { plan_id: props.plan_id },
+      kpi_template: {
+        kpi_template_id: null,
+      },
+      target: null,
+    },
+    validateOnBlur: true,
+    onSubmit: (values, { resetForm }) => {
+      console.log(values)
+      api
+        .post('plans/register-personal-kpi', {
+          plan: values.plan,
+          kpi_template: values.kpi_template,
+          target: values.target,
+        })
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Đăng ký KPI thành công.',
+              type: 'success',
+            }),
+          )
+          dispatch(
+            setKpiRegisLoading({
+              value: true,
+            }),
+          )
+          dispatch(setKpiRegisReload())
+          setModalVisible(false)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          formik.setSubmitting(false)
+        })
+      //resetForm()
+    },
+    validationSchema: validationSchema,
+  })
+
   return (
     <>
       <Button
@@ -38,7 +109,7 @@ const AddKpiRegistration = () => {
       >
         Đăng kí KPI
       </Button>
-      <form>
+      <form onSubmit={formik.handleSubmit}>
         <CModal
           alignment="center"
           scrollable
@@ -49,23 +120,42 @@ const AddKpiRegistration = () => {
             <CModalTitle>Đăng ký KPI cá nhân</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CCol md={12}>
+            {/* <CCol md={12}>
               <CFormLabel htmlFor="inputEmail4">Chọn kế hoạch</CFormLabel>
               <CFormSelect id="inputState">
                 <option>Choose...</option>
                 <option>Plan 1</option>
               </CFormSelect>
-            </CCol>
+            </CCol> */}
             <CCol md={12}>
-              <CFormLabel htmlFor="inputEmail4">Chọn KPI</CFormLabel>
-              <CFormSelect id="inputState">
-                <option>Choose...</option>
-                <option>KPI template 1</option>
-              </CFormSelect>
+              <CFormLabel htmlFor="inputKPI">Chọn KPI</CFormLabel>
+              <FormikProvider value={formik}>
+                <Field as="select" name="kpi_template.kpi_template_id" className="form-select">
+                  <option value="" label="Chọn KPI" />
+                  {personalKpisList.map((row) => (
+                    <option value={row.kpi_template_id} key={row.kpi_template_id}>
+                      {row.kpi_template_name}
+                    </option>
+                  ))}
+                </Field>
+              </FormikProvider>
             </CCol>
+            <AddKpiRegisDetails />
             <CCol md={12}>
-              <CFormLabel htmlFor="inputEmail4">Nhập mục tiêu đề ra</CFormLabel>
-              <CFormInput type="email" id="inputEmail4" />
+              <CFormLabel htmlFor="inputKPITarget">Nhập mục tiêu đề ra</CFormLabel>
+              <CFormInput
+                type="number"
+                name="target"
+                id="inputKPITarget"
+                value={formik.values.target}
+                onChange={formik.handleChange}
+                invalid={formik.touched.target && formik.errors.target ? true : false}
+                valid={
+                  !formik.touched.target || (formik.touched.target && formik.errors.target)
+                    ? false
+                    : true
+                }
+              />
             </CCol>
           </CModalBody>
           <CModalFooter>
@@ -74,19 +164,21 @@ const AddKpiRegistration = () => {
               color="success"
               startIcon={<AddBoxIcon />}
               type="submit"
-              onClick={() => {
-                setModalVisible2(true)
-              }}
-              // disabled={formik.isSubmitting}
+              onClick={formik.submitForm}
+              disabled={formik.isSubmitting}
             >
-              Next
+              Đăng ký
             </Button>
-            {/* {formik.isSubmitting && <LoadingCircle />} */}
+            {formik.isSubmitting && <LoadingCircle />}
           </CModalFooter>
         </CModal>
       </form>
     </>
   )
+}
+
+AddKpiRegistration.propTypes = {
+  plan_id: PropTypes.string,
 }
 
 export default AddKpiRegistration
