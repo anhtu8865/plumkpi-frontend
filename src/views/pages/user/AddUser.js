@@ -63,7 +63,8 @@ const AddUser = () => {
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
-      if (values.role === 'Admin' || values.role === 'Director') {
+      console.log(values)
+      if (values.role === 'Admin' || values.role === 'Giám đốc') {
         api
           .post('users', {
             user_name: values.user_name,
@@ -97,8 +98,8 @@ const AddUser = () => {
           .finally(() => {
             formik.setSubmitting(false)
           })
-      } else if (values.role === 'Employee') {
-        //console.log(values)
+      } else if (values.role === 'Nhân viên') {
+        // console.log(values)
         api
           .post('users', {
             user_name: values.user_name,
@@ -133,7 +134,7 @@ const AddUser = () => {
           .finally(() => {
             formik.setSubmitting(false)
           })
-      } else if (values.role === 'Manager') {
+      } else if (values.role === 'Quản lý') {
         let tmp = parseInt(values.dept.dept_id)
         values.dept.dept_id = tmp
         values.manage.dept_id = tmp
