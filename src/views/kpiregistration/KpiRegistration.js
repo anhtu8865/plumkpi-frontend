@@ -32,6 +32,7 @@ import { useParams } from 'react-router-dom'
 import AddKpiRegistration from './AddKpiRegistration'
 import DeleteKpiRegistration from './DeleteKpiRegistration'
 import EditKpiRegistration from './EditKpiRegistration'
+import { InfoKpiRegistration } from './InfoKpiRegistration'
 
 const KpiRegistration = () => {
   const { id } = useParams()
@@ -100,10 +101,15 @@ const KpiRegistration = () => {
                   <CTableDataCell className="text-center">
                     {row.approve_registration == 'Pending' ? (
                       <Grid container direction="row" justifyContent="center" alignItems="center">
+                        <InfoKpiRegistration kpiItem={row} />
                         <EditKpiRegistration inCat={row} plan_id={id} />
                         <DeleteKpiRegistration inCat={row} plan_id={id} />
                       </Grid>
-                    ) : null}
+                    ) : (
+                      <Grid container direction="row" justifyContent="center" alignItems="center">
+                        <InfoKpiRegistration kpiItem={row} />
+                      </Grid>
+                    )}
                   </CTableDataCell>
                 </CTableRow>
               ))}
