@@ -13,6 +13,7 @@ import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { formatDate, compareToToday } from 'src/utils/function'
+import AddBoxIcon from '@mui/icons-material/AddBox'
 
 const PlanDetail = () => {
   const { id } = useParams()
@@ -140,6 +141,7 @@ const PlanDetail = () => {
               <Button
                 variant="contained"
                 color="primary"
+                startIcon={<AddBoxIcon />}
                 onClick={() => {
                   history.push(`/kpiregistration/${id}`)
                 }}
