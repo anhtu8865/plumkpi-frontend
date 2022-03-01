@@ -63,7 +63,7 @@ const AddUser = () => {
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
-      console.log(values)
+      // console.log(values)
       if (values.role === 'Admin' || values.role === 'Giám đốc') {
         api
           .post('users', {
