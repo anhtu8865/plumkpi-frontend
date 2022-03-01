@@ -23,6 +23,7 @@ import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 import CheckIcon from '@mui/icons-material/Check'
 import PropTypes from 'prop-types'
+import Select, { Option, ReactSelectProps } from 'react-select'
 
 import { AddKpiRegisDetails } from './AddKpiRegisDetails'
 
@@ -50,6 +51,10 @@ const AddKpiRegistration = (props) => {
 
     fetchPersonalKpisList()
   })
+
+  const handleSelected = (e) => {
+    setPersonalKpiID(e.target.value)
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -131,26 +136,23 @@ const AddKpiRegistration = (props) => {
             </CCol> */}
             <CCol md={12}>
               <CFormLabel htmlFor="inputKPI">Chọn KPI</CFormLabel>
-              <FormikProvider value={formik}>
-                <Field
-                  as="select"
-                  //name="kpi_template.kpi_template_id"
-                  {...formik.getFieldProps('kpi_template.kpi_template_id')}
-                  className="form-select"
-                  // onChange={(e) => {
-                  //   setPersonalKpiID(e.target.value)
-                  // }}
-                >
-                  <option value="" label="Chọn KPI" />
-                  {personalKpisList.map((row) => (
-                    <option value={row.kpi_template_id} key={row.kpi_template_id}>
-                      {row.kpi_template_name}
-                    </option>
-                  ))}
-                </Field>
-              </FormikProvider>
+              <CFormSelect
+                CFormSelect
+                as="select"
+                name="kpi_template.kpi_template_id"
+                {...formik.getFieldProps('kpi_template.kpi_template_id')}
+                className="form-select"
+              >
+                <option value="" label="Chọn KPI" />
+                {personalKpisList.map((row) => (
+                  <option value={row.kpi_template_id} key={row.kpi_template_id}>
+                    {row.kpi_template_name}
+                  </option>
+                ))}
+              </CFormSelect>
             </CCol>
-            <AddKpiRegisDetails kpiItemID={personalKpiID} />
+            {setPersonalKpiID(formik.values.kpi_template.kpi_template_id)}
+            {personalKpiID != null ? <AddKpiRegisDetails kpiItemID={personalKpiID} /> : null}
             <CCol md={12}>
               <CFormLabel htmlFor="inputKPITarget">Mục tiêu</CFormLabel>
               <CFormInput
