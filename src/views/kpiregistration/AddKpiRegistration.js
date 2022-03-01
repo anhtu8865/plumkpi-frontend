@@ -24,7 +24,7 @@ import * as yup from 'yup'
 import CheckIcon from '@mui/icons-material/Check'
 import PropTypes from 'prop-types'
 
-import AddKpiRegisDetails from './AddKpiRegisDetails'
+import { AddKpiRegisDetails } from './AddKpiRegisDetails'
 
 const AddKpiRegistration = (props) => {
   const dispatch = useDispatch()
@@ -35,6 +35,8 @@ const AddKpiRegistration = (props) => {
   const validationSchema = yup.object({
     target: yup.number().required('Đây là trường bắt buộc'),
   })
+
+  const [personalKpiID, setPersonalKpiID] = React.useState()
 
   React.useEffect(() => {
     async function fetchPersonalKpisList() {
@@ -130,7 +132,15 @@ const AddKpiRegistration = (props) => {
             <CCol md={12}>
               <CFormLabel htmlFor="inputKPI">Chọn KPI</CFormLabel>
               <FormikProvider value={formik}>
-                <Field as="select" name="kpi_template.kpi_template_id" className="form-select">
+                <Field
+                  as="select"
+                  //name="kpi_template.kpi_template_id"
+                  {...formik.getFieldProps('kpi_template.kpi_template_id')}
+                  className="form-select"
+                  // onChange={(e) => {
+                  //   setPersonalKpiID(e.target.value)
+                  // }}
+                >
                   <option value="" label="Chọn KPI" />
                   {personalKpisList.map((row) => (
                     <option value={row.kpi_template_id} key={row.kpi_template_id}>
@@ -140,9 +150,9 @@ const AddKpiRegistration = (props) => {
                 </Field>
               </FormikProvider>
             </CCol>
-            <AddKpiRegisDetails />
+            <AddKpiRegisDetails kpiItemID={personalKpiID} />
             <CCol md={12}>
-              <CFormLabel htmlFor="inputKPITarget">Nhập mục tiêu đề ra</CFormLabel>
+              <CFormLabel htmlFor="inputKPITarget">Mục tiêu</CFormLabel>
               <CFormInput
                 type="number"
                 name="target"

@@ -259,7 +259,7 @@ const AddUser = () => {
                 </CCol>
               </CRow>
             </div>
-
+            <hr />
             <div>
               <h6>Vai trò và quyền hạn</h6>
               <fieldset className="row mb-3">
@@ -320,6 +320,7 @@ const AddUser = () => {
             </div>
             {deptVisible && (
               <div className="userform-item mt-4">
+                <hr />
                 <h6>Gán người dùng vào phòng ban</h6>
                 <CRow>
                   <CCol>
