@@ -151,8 +151,10 @@ const AddKpiRegistration = (props) => {
                 ))}
               </CFormSelect>
             </CCol>
-            {setPersonalKpiID(formik.values.kpi_template.kpi_template_id)}
-            {personalKpiID != null ? <AddKpiRegisDetails kpiItemID={personalKpiID} /> : null}
+            {/* {setPersonalKpiID(formik.values.kpi_template.kpi_template_id)}*/}
+            {formik.values.kpi_template.kpi_template_id != null ? (
+              <AddKpiRegisDetails kpiItemID={formik.values.kpi_template.kpi_template_id} />
+            ) : null}
             <CCol md={12}>
               <CFormLabel htmlFor="inputKPITarget">Mục tiêu</CFormLabel>
               <CFormInput
