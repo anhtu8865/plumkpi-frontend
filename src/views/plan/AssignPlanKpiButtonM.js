@@ -19,7 +19,6 @@ import {
   CFormFeedback,
   CFormLabel,
 } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
@@ -32,7 +31,6 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import CheckIcon from '@mui/icons-material/Check'
 import { translate, compareToToday } from 'src/utils/function'
 import { assignKpiErrorList } from 'src/utils/engToViet'
-import * as yup from 'yup'
 
 export const AssignPlanKpiButtonM = (kpiItem) => {
   const dispatch = useDispatch()
@@ -44,6 +42,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
   const [selectValue, setSelectValue] = useState('')
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
+  const [sum, setSum] = useState(0)
 
   const getEmployeeList = async () => {
     try {
@@ -68,7 +67,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
       )
       return response.data
     } catch (error) {
-      if (error.response) {
+      if (error.response && plan.plan_id) {
         dispatch(
           createAlert({
             message: error.response.data.message,
@@ -142,6 +141,14 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     setSelectOption(option)
   }, [dispatch])
 
+  React.useEffect(() => {
+    let sumTarget = 0
+    selectedEmployeeList.map((item) => {
+      sumTarget = sumTarget + Number(item.target)
+    })
+    setSum(sumTarget)
+  }, [selectedEmployeeList])
+
   const handleSelectOnChange = (event) => {
     const find = employeeList.find((item) => item.user_id === event.value)
     if (find) {
@@ -189,12 +196,25 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     }
   }
 
+  const handleSelectAll = () => {
+    const copySelectOption = cloneDeep(selectOption)
+    copySelectOption.map((i) => {
+      const find = employeeList.find((item) => item.user_id === i.value)
+      if (find) {
+        selectedEmployeeList.push({ user: find, target: 0 })
+      }
+    })
+    setSelectOption([])
+  }
+
   const HasTargetView = () => {
     return (
       <>
         <CRow className="mt-2">
           <CCol xs>
-            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI được giao</CFormLabel>
+            <CFormLabel htmlFor="parenttarget">
+              Chỉ tiêu KPI được giao (đơn vị: {kpiItem.kpi_template.unit})
+            </CFormLabel>
             <CFormInput
               id="parenttarget"
               defaultValue={kpiItem.target ? kpiItem.target : `Không`}
@@ -202,15 +222,32 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
             />
           </CCol>
         </CRow>
-        <CRow className="mt-2">
+        <CRow className="mt-4">
           <CCol xs={12}>
-            <CFormLabel htmlFor="employees">Nhân viên</CFormLabel>
+            <CRow>
+              <CCol xs={12} sm={6}>
+                <CFormLabel htmlFor="employees">Nhân viên</CFormLabel>
+              </CCol>
+              <CCol xs={12} sm={6} className="text-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  size="small"
+                  onClick={() => {
+                    handleSelectAll()
+                  }}
+                >
+                  Chọn tất cả
+                </Button>
+              </CCol>
+            </CRow>
             <Select
               id="employees"
               isSearchable="true"
               value={selectValue}
               placeholder="Chọn nhân viên cần gán KPI (có thể tìm kiếm)"
-              menuPlacement="bottom"
+              menuPlacement="top"
               onChange={(event) => {
                 handleSelectOnChange(event)
               }}
@@ -229,8 +266,10 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
-                  <CTableHeaderCell className="w-5" />
+                  <CTableHeaderCell className="w-25">
+                    CHỈ TIÊU ({kpiItem.kpi_template.unit})
+                  </CTableHeaderCell>
+                  <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -256,7 +295,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
                             }}
                           />
                         </CTableDataCell>
-                        <CTableDataCell className="w-5 text-center">
+                        <CTableDataCell className="text-center">
                           <IconButton
                             color="error"
                             onClick={() => {
@@ -271,15 +310,12 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
                   )
                 })}
               </CTableBody>
-              {/*<CTableFoot>
+              <CTableFoot>
                 <CTableRow>
-                  <CTableHeaderCell>CHỈ TIÊU TỔNG</CTableHeaderCell>
-                  <CTableDataCell />
-                  <CTableDataCell colSpan="2">
-                    {kpiItem.target ? kpiItem.target : 'Chưa có'}
-                  </CTableDataCell>
+                  <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                  <CTableDataCell>{sum}</CTableDataCell>
                 </CTableRow>
-              </CTableFoot>*/}
+              </CTableFoot>
             </CTable>
           ) : (
             <div>Chưa có nhân viên nào được chọn cho KPI này.</div>

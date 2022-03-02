@@ -157,7 +157,7 @@ export const EditKpiInPlanButton = (props) => {
         onClick={() => setModalVisible(true)}
         startIcon={<AddCircleIcon />}
       >
-        Thay đổi KPI
+        Thêm KPI
       </Button>
 
       <CModal
@@ -168,7 +168,10 @@ export const EditKpiInPlanButton = (props) => {
         onClose={() => setModalVisible(false)}
       >
         <CModalHeader>
-          <CModalTitle>Thay đổi KPI trong kế hoạch</CModalTitle>
+          {props.arraySelectedTem.length === 0 && <CModalTitle>Thêm KPI vào kế hoạch</CModalTitle>}
+          {props.arraySelectedTem.length !== 0 && (
+            <CModalTitle>Thay đổi KPI trong kế hoạch</CModalTitle>
+          )}
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
           <CAccordion>

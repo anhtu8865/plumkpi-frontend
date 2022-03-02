@@ -26,7 +26,6 @@ import { createAlert } from 'src/slices/alertSlice'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
-import { roleList } from 'src/utils/engToViet'
 
 const UserInfo = () => {
   const { user } = useSelector((state) => state.user)
@@ -43,12 +42,14 @@ const UserInfo = () => {
         dispatch(setUser({ value: response.data }))
       })
       .catch((error) => {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
+        if (error.response) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
       })
     setLoading(false)
     setReload(false)
@@ -317,15 +318,7 @@ const UserInfo = () => {
             </CCol>
             <CCol xs>
               <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
-              <CFormInput
-                id="userrole"
-                disabled
-                value={
-                  user.role
-                    ? roleList.filter((roleItem) => roleItem.eng == user.role)[0].viet
-                    : 'Không'
-                }
-              />
+              <CFormInput id="userrole" disabled value={user.role} />
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">

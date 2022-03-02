@@ -303,12 +303,12 @@ const EditKpiAndWeightView = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>Thay đổi trọng số</h4>
+            <h4>Trọng số KPI</h4>
             <div
               onClick={() => {
                 history.replace(`/plan/${plan.plan_id}`)
               }}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', color: 'dodgerblue' }}
             >
               <h6>Kế hoạch {plan.plan_name}</h6>
             </div>

@@ -14,13 +14,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
 import GaugeChart from 'react-gauge-chart'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import PropTypes from 'prop-types'
 
 export const PlanOverview = (props) => {
   const dispatch = useDispatch()
   const { catInPlan, temInPlan, currentCat } = useSelector((state) => state.planDetail)
-  const history = useHistory()
 
   return (
     <>
@@ -42,7 +40,14 @@ export const PlanOverview = (props) => {
                           }),
                         )
                       }}
-                      style={{ cursor: 'pointer' }}
+                      style={{
+                        cursor: 'pointer',
+                        color:
+                          item.kpi_category.kpi_category_id ===
+                          currentCat.kpi_category.kpi_category_id
+                            ? 'dodgerblue'
+                            : 'black',
+                      }}
                     >
                       <small>
                         {item.kpi_category.kpi_category_name}{' '}
@@ -67,12 +72,4 @@ export const PlanOverview = (props) => {
       </CCard>
     </>
   )
-}
-
-PlanOverview.propTypes = {
-  plan_id: PropTypes.string,
-}
-
-PlanOverview.defaultProps = {
-  plan_id: '1',
 }

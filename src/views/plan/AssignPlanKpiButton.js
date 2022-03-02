@@ -19,7 +19,6 @@ import {
   CFormFeedback,
   CFormLabel,
 } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
@@ -32,7 +31,6 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import CheckIcon from '@mui/icons-material/Check'
 import { translate, compareToToday } from 'src/utils/function'
 import { assignKpiErrorList } from 'src/utils/engToViet'
-import * as yup from 'yup'
 
 export const AssignPlanKpiButton = (kpiItem) => {
   const dispatch = useDispatch()
@@ -43,7 +41,8 @@ export const AssignPlanKpiButton = (kpiItem) => {
   const [selectedDeptList, setSelectedDeptList] = useState([])
   const [selectValue, setSelectValue] = useState('')
   const { plan } = useSelector((state) => state.planDetail)
-  const [target, setTarget] = useState(kpiItem.target)
+  const [target, setTarget] = useState(0)
+  const [sum, setSum] = useState(0)
 
   const getDeptList = async () => {
     try {
@@ -68,7 +67,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
       )
       return response.data
     } catch (error) {
-      if (error.response) {
+      if (error.response && plan.plan_id) {
         dispatch(
           createAlert({
             message: error.response.data.message,
@@ -147,6 +146,14 @@ export const AssignPlanKpiButton = (kpiItem) => {
     }
   }, [dispatch])
 
+  React.useEffect(() => {
+    let sumTarget = 0
+    selectedDeptList.map((item) => {
+      sumTarget = sumTarget + Number(item.target)
+    })
+    setSum(sumTarget)
+  }, [selectedDeptList])
+
   const handleSelectOnChange = (event) => {
     const selectedDept = deptList.find((item) => item.dept_id === event.value)
     if (selectedDept) {
@@ -196,8 +203,15 @@ export const AssignPlanKpiButton = (kpiItem) => {
     setTarget(event.target.value)
   }
 
-  const NoTargetView = () => {
-    return <div>KPI này chưa có chỉ tiêu. Cần thiết lập chỉ tiêu trước khi tiến hành gán KPI.</div>
+  const handleSelectAll = () => {
+    const copySelectOption = cloneDeep(selectOption)
+    copySelectOption.map((i) => {
+      const find = deptList.find((item) => item.dept_id === i.value)
+      if (find) {
+        selectedDeptList.push({ dept: find, target: 0 })
+      }
+    })
+    setSelectOption([])
   }
 
   const HasTargetView = () => {
@@ -205,7 +219,9 @@ export const AssignPlanKpiButton = (kpiItem) => {
       <>
         <CRow className="mt-2">
           <CCol xs>
-            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI</CFormLabel>
+            <CFormLabel htmlFor="parenttarget">
+              Chỉ tiêu KPI (đơn vị: {kpiItem.kpi_template.unit})
+            </CFormLabel>
             <CFormInput
               id="parenttarget"
               placeholder="Nhập chỉ tiêu KPI"
@@ -219,15 +235,32 @@ export const AssignPlanKpiButton = (kpiItem) => {
             <CFormFeedback invalid></CFormFeedback>
           </CCol>
         </CRow>
-        <CRow className="mt-2">
+        <CRow className="mt-4">
           <CCol xs={12}>
-            <CFormLabel htmlFor="depts">Phòng ban</CFormLabel>
+            <CRow>
+              <CCol xs={12} sm={6}>
+                <CFormLabel htmlFor="depts">Phòng ban</CFormLabel>
+              </CCol>
+              <CCol xs={12} sm={6} className="text-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  size="small"
+                  onClick={() => {
+                    handleSelectAll()
+                  }}
+                >
+                  Chọn tất cả
+                </Button>
+              </CCol>
+            </CRow>
             <Select
               id="depts"
               isSearchable="true"
               value={selectValue}
               placeholder="Chọn phòng ban cần gán KPI (có thể tìm kiếm)"
-              menuPlacement="bottom"
+              menuPlacement="top"
               onChange={(event) => {
                 handleSelectOnChange(event)
               }}
@@ -247,8 +280,10 @@ export const AssignPlanKpiButton = (kpiItem) => {
                 <CTableRow>
                   <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
                   <CTableHeaderCell>QUẢN LÝ</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
-                  <CTableHeaderCell className="w-5" />
+                  <CTableHeaderCell className="w-25">
+                    CHỈ TIÊU ({kpiItem.kpi_template.unit})
+                  </CTableHeaderCell>
+                  <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -275,7 +310,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
                             }}
                           />
                         </CTableDataCell>
-                        <CTableDataCell className="w-5 text-center">
+                        <CTableDataCell className="text-center">
                           <IconButton
                             color="error"
                             onClick={() => {
@@ -290,15 +325,13 @@ export const AssignPlanKpiButton = (kpiItem) => {
                   )
                 })}
               </CTableBody>
-              {/*<CTableFoot>
+              <CTableFoot>
                 <CTableRow>
-                  <CTableHeaderCell>CHỈ TIÊU TỔNG</CTableHeaderCell>
+                  <CTableHeaderCell>TỔNG</CTableHeaderCell>
                   <CTableDataCell />
-                  <CTableDataCell colSpan="2">
-                    {kpiItem.target ? kpiItem.target : 'Chưa có'}
-                  </CTableDataCell>
+                  <CTableDataCell>{sum}</CTableDataCell>
                 </CTableRow>
-              </CTableFoot>*/}
+              </CTableFoot>
             </CTable>
           ) : (
             <div>Chưa có phòng ban nào được chọn cho KPI này.</div>
