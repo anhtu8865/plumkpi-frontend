@@ -182,9 +182,9 @@ const User = () => {
             <Field as="select" name="filter_role" className="form-select">
               <option value="" label="Chọn vai trò" />
               <option value="Admin">Admin</option>
-              <option value="Manager">Manager</option>
-              <option value="Director">Director</option>
-              <option value="Employee">Employee</option>
+              <option value="Quản lý">Manager</option>
+              <option value="Giám đốc">Director</option>
+              <option value="Nhân viên">Employee</option>
             </Field>
           </FormikProvider>
         </CCol>
