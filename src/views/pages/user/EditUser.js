@@ -248,7 +248,7 @@ const EditUser = (props) => {
                         className="form-check-input"
                         type="radio"
                         name="editrole"
-                        value="Employee"
+                        value="Nhân viên"
                         onClick={() => {
                           setDeptVisible(true)
                         }}
@@ -260,7 +260,7 @@ const EditUser = (props) => {
                         className="form-check-input"
                         type="radio"
                         name="editrole"
-                        value="Manager"
+                        value="Quản lý"
                         onClick={() => {
                           setDeptVisible(true)
                         }}
@@ -272,7 +272,7 @@ const EditUser = (props) => {
                         className="form-check-input"
                         type="radio"
                         name="editrole"
-                        value="Director"
+                        value="Giám đốc"
                         onClick={() => {
                           setDeptVisible(false)
                         }}
