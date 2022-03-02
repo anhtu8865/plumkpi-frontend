@@ -56,7 +56,7 @@ const AddUser = () => {
     initialValues: {
       user_name: '',
       email: '',
-      password: '',
+      password: '123456',
       role: '',
       dept: { dept_id: null },
       manage: { dept_id: null },
@@ -241,7 +241,7 @@ const AddUser = () => {
                   <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
                 </CCol>
               </CRow>
-              <CRow className="mt-4">
+              {/* <CRow className="mt-4">
                 <CCol>
                   <CFormLabel htmlFor="inputPassword">Mật khẩu</CFormLabel>
                   <CFormInput
@@ -258,7 +258,7 @@ const AddUser = () => {
                   />
                   <CFormFeedback invalid>{formik.errors.password}</CFormFeedback>
                 </CCol>
-              </CRow>
+              </CRow> */}
             </div>
             <hr />
             <div>
