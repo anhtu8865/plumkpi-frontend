@@ -37,8 +37,6 @@ const AddKpiRegistration = (props) => {
     target: yup.number().required('Đây là trường bắt buộc'),
   })
 
-  const [personalKpiID, setPersonalKpiID] = React.useState()
-
   React.useEffect(() => {
     async function fetchPersonalKpisList() {
       api
@@ -50,11 +48,7 @@ const AddKpiRegistration = (props) => {
     }
 
     fetchPersonalKpisList()
-  })
-
-  const handleSelected = (e) => {
-    setPersonalKpiID(e.target.value)
-  }
+  }, [])
 
   const formik = useFormik({
     initialValues: {
@@ -66,7 +60,7 @@ const AddKpiRegistration = (props) => {
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
-      console.log(values)
+      // console.log(values)
       api
         .post('plans/register-personal-kpi', {
           plan: values.plan,
@@ -142,6 +136,7 @@ const AddKpiRegistration = (props) => {
                 name="kpi_template.kpi_template_id"
                 {...formik.getFieldProps('kpi_template.kpi_template_id')}
                 className="form-select"
+                onChange={formik.handleChange}
               >
                 <option value="" label="Chọn KPI" />
                 {personalKpisList.map((row) => (
