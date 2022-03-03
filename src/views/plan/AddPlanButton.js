@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CCol,
   CFormLabel,
@@ -10,8 +10,9 @@ import {
   CModalTitle,
   CModalHeader,
   CFormFeedback,
+  CFormSelect,
 } from '@coreui/react'
-import { Button, TextField } from '@mui/material'
+import { Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
@@ -20,58 +21,55 @@ import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { setReload, setLoading } from 'src/slices/viewSlice'
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import DatePicker from '@mui/lab/DatePicker'
 import api from 'src/views/axiosConfig'
-import { checkTimeRange, formatDate } from 'src/utils/function'
+import { checkTimeRange, formatDate, getYearsList } from 'src/utils/function'
 
 export const AddPlanButton = () => {
   const dispatch = useDispatch()
-  const [modalVisible, setModalVisible] = React.useState(false)
-  const today = new Date().toLocaleDateString('en-CA')
+  const [modalVisible, setModalVisible] = useState(false)
   const { planList } = useSelector((state) => state.plan)
+  const yearsList = getYearsList()
   const ValidationSchema = yup.object({
     plan_name: yup
       .string()
       .min(6, 'Để đảm bảo tên có ý nghĩa, độ dài tên cần từ 6 kí tự trở lên')
       .required('Đây là trường bắt buộc'),
-    start_date: yup
-      .string()
-      .required('Đây là trường bắt buộc')
-      .test('checkstartdate', 'Kiểm tra ngày', function (value, { createError }) {
-        if (!value || !this.parent.end_date) {
-          return true
-        } else if (value >= this.parent.end_date) {
-          return createError({ message: 'Ngày bắt đầu phải trước ngày kết thúc' })
-        } else if (this.parent.end_date < today) {
-          return createError({ message: 'Ngày kết thúc kế hoạch phải là một ngày trong tương lai' })
-        } else {
-          const result = checkTimeRange(value, this.parent.end_date, planList)
-          if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
-            return createError({
-              message: `Trùng thời gian với kế hoạch ${result.plan_name} ( ${formatDate(
-                result.start_date,
-              )} - ${formatDate(result.end_date)} )`,
-            })
-          }
-        }
+    year: yup.number().test('checkdate', 'Kiểm tra ngày', function (value, { createError }) {
+      if (!value) {
         return true
-      }),
-    end_date: yup.string().required('Đây là trường bắt buộc'),
+      } else {
+        const result = checkTimeRange(
+          value.toString() + '-01-01',
+          value.toString() + '-12-31',
+          planList,
+        )
+        if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
+          return createError({
+            message: `Trùng thời gian với kế hoạch ${result.plan_name} ( ${formatDate(
+              result.start_date,
+            )} - ${formatDate(result.end_date)} )`,
+          })
+        }
+      }
+      return true
+    }),
   })
 
   const formik = useFormik({
     initialValues: {
       plan_name: '',
       description: null,
-      start_date: today,
-      end_date: today,
+      year: new Date().getFullYear(),
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
       api
-        .post('/plans', values)
+        .post('/plans', {
+          plan_name: values.plan_name,
+          description: values.description,
+          start_date: values.year.toString() + '-01-01',
+          end_date: values.year.toString() + '-12-31',
+        })
         .then(() => {
           dispatch(
             createAlert({
@@ -150,6 +148,23 @@ export const AddPlanButton = () => {
             </CRow>
             <CRow className="mt-3">
               <CCol xs={12} sm={6}>
+                <CFormLabel htmlFor="year">Năm thực hiện</CFormLabel>
+                <CFormSelect
+                  id="year"
+                  {...formik.getFieldProps('year')}
+                  invalid={formik.errors.year ? true : false}
+                >
+                  {yearsList.map((item, index) => (
+                    <option value={item} key={index}>
+                      {item}
+                    </option>
+                  ))}
+                </CFormSelect>
+                <CFormFeedback invalid>{formik.errors.year}</CFormFeedback>
+              </CCol>
+            </CRow>
+            {/*<CRow className="mt-3">
+              <CCol xs={12} sm={6}>
                 <CRow>
                   <CFormLabel htmlFor="start">Ngày bắt đầu</CFormLabel>
                 </CRow>
@@ -213,16 +228,7 @@ export const AddPlanButton = () => {
                   </LocalizationProvider>
                 </CRow>
               </CCol>
-            </CRow>
-            <CRow className="mt-1">
-              <div className="text-danger">
-                <small>
-                  {formik.errors.start_date && formik.errors.start_date !== 'Đây là trường bắt buộc'
-                    ? formik.errors.start_date
-                    : null}
-                </small>
-              </div>
-            </CRow>
+                        </CRow>*/}
           </CModalBody>
           <CModalFooter>
             <Button
