@@ -48,6 +48,7 @@ const EditKpiAndWeightView = () => {
   const [plan, setPlan] = useState({ plan_name: '' })
   const [isSubmit, setIsSubmit] = useState(false)
   const [planEmpty, setPlanEmpty] = useState(false)
+  const [sumList, setSumList] = useState([])
 
   React.useEffect(() => {
     const catList = []
@@ -105,6 +106,35 @@ const EditKpiAndWeightView = () => {
     }
   }, [newInPlan])
 
+  React.useEffect(() => {
+    const array = []
+    let totalSum = 0
+    for (var i = 0; i < currentInPlan.catList.length; i++) {
+      const selectedTemByCat = currentInPlan.temList.filter(
+        (item) =>
+          item.tem.kpi_category.kpi_category_id === currentInPlan.catList[i].cat.kpi_category_id,
+      )
+      if (selectedTemByCat.length !== 0) {
+        let sum = 0
+        selectedTemByCat.map((item) => {
+          sum = sum + Number(item.weight)
+        })
+        array.push({ id: currentInPlan.catList[i].cat.kpi_category_id, sum: sum })
+      }
+      totalSum = totalSum + Number(currentInPlan.catList[i].weight)
+    }
+    array.push({ id: 0, sum: totalSum })
+    setSumList(array)
+  }, [currentInPlan])
+
+  const handleSumValue = (id) => {
+    const find = sumList.find((item) => item.id === id)
+    if (find) {
+      return find.sum
+    }
+    return 0
+  }
+
   const handleCatValue = (id) => {
     const findCat = currentInPlan.catList.find((item) => item.cat.kpi_category_id === id)
     if (findCat) {
@@ -151,7 +181,7 @@ const EditKpiAndWeightView = () => {
         if (sum !== 100) {
           dispatch(
             createAlert({
-              message: `Tổng KPI trong danh mục ${currentInPlan.catList[i].cat.kpi_category_name} không bằng 100`,
+              message: `Tổng trọng số KPI trong danh mục ${currentInPlan.catList[i].cat.kpi_category_name} không bằng 100`,
               type: 'error',
             }),
           )
@@ -168,7 +198,7 @@ const EditKpiAndWeightView = () => {
     if (totalSum !== 100) {
       dispatch(
         createAlert({
-          message: `Tổng KPI của tất cả các danh mục không bằng 100`,
+          message: `Tổng trọng số của tất cả các danh mục không bằng 100`,
           type: 'error',
         }),
       )
@@ -234,61 +264,107 @@ const EditKpiAndWeightView = () => {
                 </div>
               </CCol>
             </CRow>
-            <CTable
-              align="middle"
-              className="mb-0 border table-bordered overflow-auto mt-2"
-              hover
-              responsive
-            >
-              <CTableHead color="light">
+            {/*<CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI/ DANH MỤC</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">TRỌNG SỐ (%)</CTableHeaderCell>
                 </CTableRow>
+              </CTableHead>*/}
+            {currentInPlan.catList.map((item, index) => {
+              return (
+                <>
+                  <CCol xs={12} lg={6}>
+                    <CTable
+                      align="middle"
+                      className="border-start border-end border-top overflow-auto mt-2"
+                      hover
+                      responsive
+                    >
+                      <CTableHead color="light">
+                        <CTableRow>
+                          <CTableHeaderCell className="w-25">DANH MỤC</CTableHeaderCell>
+                          <CTableHeaderCell>KPI</CTableHeaderCell>
+                          <CTableHeaderCell className="w-25">TRỌNG SỐ (%)</CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      <CTableBody>
+                        <CTableRow key={index} color="info">
+                          <CTableDataCell colSpan={2}>{item.cat.kpi_category_name}</CTableDataCell>
+                          <CTableDataCell className="w-25">
+                            <CFormInput
+                              size="sm"
+                              type="number"
+                              value={handleCatValue(item.cat.kpi_category_id)}
+                              onChange={(event) => {
+                                handleCatOnChange(event, item.cat.kpi_category_id)
+                              }}
+                              invalid={handleCatValue(item.cat.kpi_category_id) === ''}
+                            />
+                          </CTableDataCell>
+                        </CTableRow>
+                        {currentInPlan.temList
+                          .filter(
+                            (temItem) =>
+                              temItem.tem.kpi_category.kpi_category_id === item.cat.kpi_category_id,
+                          )
+                          .map((temItem) => (
+                            <CTableRow key={temItem.tem.kpi_category_id}>
+                              <CTableDataCell className="w-25" />
+                              <CTableDataCell>{temItem.tem.kpi_template_name}</CTableDataCell>
+                              <CTableDataCell className="w-25">
+                                <CFormInput
+                                  size="sm"
+                                  type="number"
+                                  value={handleTemValue(temItem.tem.kpi_template_id)}
+                                  onChange={(event) => {
+                                    handleTemOnChange(event, temItem.tem.kpi_template_id)
+                                  }}
+                                  invalid={handleTemValue(temItem.tem.kpi_template_id) === ''}
+                                />
+                              </CTableDataCell>
+                            </CTableRow>
+                          ))}
+                      </CTableBody>
+                      <CTableFoot>
+                        <CTableRow>
+                          <CTableHeaderCell className="w-25" />
+                          <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                          <CTableHeaderCell className="w-25">
+                            <CFormInput
+                              size="sm"
+                              disabled
+                              value={handleSumValue(item.cat.kpi_category_id)}
+                              invalid={handleSumValue(item.cat.kpi_category_id) !== 100}
+                              valid={handleSumValue(item.cat.kpi_category_id) === 100}
+                            />
+                          </CTableHeaderCell>
+                        </CTableRow>
+                      </CTableFoot>
+                    </CTable>
+                  </CCol>
+                </>
+              )
+            })}
+            <CTable
+              align="middle"
+              className="border-start border-end border-top mt-2"
+              hover
+              responsive
+            >
+              <CTableHead color="info">
+                <CTableRow>
+                  <CTableHeaderCell>TỔNG TRỌNG SỐ DANH MỤC</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25 text-end">
+                    <CFormInput
+                      size="sm"
+                      disabled
+                      value={handleSumValue(0)}
+                      invalid={handleSumValue(0) !== 100}
+                      valid={handleSumValue(0) === 100}
+                    />
+                  </CTableHeaderCell>
+                </CTableRow>
               </CTableHead>
-              <CTableBody>
-                {currentInPlan.catList.map((item, index) => {
-                  return (
-                    <>
-                      <CTableRow key={index} color="info">
-                        <CTableDataCell>{item.cat.kpi_category_name}</CTableDataCell>
-                        <CTableDataCell className="w-25">
-                          <CFormInput
-                            size="sm"
-                            type="number"
-                            value={handleCatValue(item.cat.kpi_category_id)}
-                            onChange={(event) => {
-                              handleCatOnChange(event, item.cat.kpi_category_id)
-                            }}
-                            invalid={handleCatValue(item.cat.kpi_category_id) === ''}
-                          />
-                        </CTableDataCell>
-                      </CTableRow>
-                      {currentInPlan.temList
-                        .filter(
-                          (temItem) =>
-                            temItem.tem.kpi_category.kpi_category_id === item.cat.kpi_category_id,
-                        )
-                        .map((temItem) => (
-                          <CTableRow key={temItem.tem.kpi_category_id}>
-                            <CTableDataCell>{temItem.tem.kpi_template_name}</CTableDataCell>
-                            <CTableDataCell className="w-25">
-                              <CFormInput
-                                size="sm"
-                                type="number"
-                                value={handleTemValue(temItem.tem.kpi_template_id)}
-                                onChange={(event) => {
-                                  handleTemOnChange(event, temItem.tem.kpi_template_id)
-                                }}
-                                invalid={handleTemValue(temItem.tem.kpi_template_id) === ''}
-                              />
-                            </CTableDataCell>
-                          </CTableRow>
-                        ))}
-                    </>
-                  )
-                })}
-              </CTableBody>
             </CTable>
           </>
         ) : (
