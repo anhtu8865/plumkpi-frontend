@@ -37,65 +37,35 @@ const KpiApproving = () => {
   const [entry, setEntry] = React.useState([])
   const { kpiRegisReload, kpiRegisLoading } = useSelector((state) => state.kpiRegis)
 
-  React.useEffect(() => {
-    async function fetchDeptList() {
-      api
-        .get(`/plans/user/${id}`)
-        .then((response) => {
-          setEntry(response.data.plan_kpi_templates)
-        })
-        .catch((error) => {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        })
-    }
+  React.useEffect(() => {}, [])
 
-    fetchDeptList()
-
-    dispatch(
-      setKpiRegisLoading({
-        value: false,
-      }),
-    )
-  }, [kpiRegisReload, dispatch])
-
-  const KpiRegistrationTable = (props) => {
+  const KpiApprovingTable = (props) => {
     return (
       <>
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>KPI</CTableHeaderCell>
-              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
               <CTableHeaderCell>MỤC TIÊU</CTableHeaderCell>
               <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+              <CTableHeaderCell>NGƯỜI ĐĂNG KÝ</CTableHeaderCell>
               <CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {props.temList
-              .filter((item) => {
-                if (item.approve_registration !== 'Không') {
-                  return item
-                }
-              })
-              .map((row, index) => (
-                <CTableRow v-for="item in tableItems" key={index}>
-                  <CTableDataCell>{row.kpi_template.kpi_template_name}</CTableDataCell>
+            {props.temList.map((row, index) => (
+              <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>{row.kpi_template.kpi_template_name}</CTableDataCell>
 
-                  <CTableDataCell>{row.kpi_template.description}</CTableDataCell>
-                  <CTableDataCell>{row.target}</CTableDataCell>
-                  <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
-                  <CTableDataCell>{row.approve_registration}</CTableDataCell>
-                  <CTableDataCell className="text-center"></CTableDataCell>
-                </CTableRow>
-              ))}
+                <CTableDataCell>{row.kpi_template.description}</CTableDataCell>
+                <CTableDataCell>{row.target}</CTableDataCell>
+                <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
+                <CTableDataCell>{row.approve_registration}</CTableDataCell>
+                <CTableDataCell className="text-center"></CTableDataCell>
+              </CTableRow>
+            ))}
           </CTableBody>
           <CTableFoot>
             <CTableRow>
@@ -107,7 +77,7 @@ const KpiApproving = () => {
     )
   }
 
-  KpiRegistrationTable.propTypes = {
+  KpiApprovingTable.propTypes = {
     temList: PropTypes.array,
   }
 
@@ -120,7 +90,7 @@ const KpiApproving = () => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h4>Đăng ký KPI cá nhân</h4>
+                    <h4>Duyệt KPI cá nhân</h4>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
@@ -128,7 +98,7 @@ const KpiApproving = () => {
                 </CRow>
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <KpiRegistrationTable temList={entry} />
+                  <KpiApprovingTable temList={entry} />
                 </div>
               </CCardBody>
             </CCard>
