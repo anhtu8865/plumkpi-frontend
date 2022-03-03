@@ -29,18 +29,7 @@ import { setKpiRegisLoading } from 'src/slices/kpiRegisSlice'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
 
-import AddKpiRegistration from './AddKpiRegistration'
-import DeleteKpiRegistration from './DeleteKpiRegistration'
-import EditKpiRegistration from './EditKpiRegistration'
-import { InfoKpiRegistration } from './InfoKpiRegistration'
-
-function colorStatus(status) {
-  if (status == 'Đang xử lý') return 'text-warning'
-  else if (status == 'Chấp nhận') return 'text-success'
-  else if (status == 'Từ chối') return 'text-danger'
-}
-
-const KpiRegistration = () => {
+const KpiApproving = () => {
   const { id } = useParams()
   //console.log(id)
   const dispatch = useDispatch()
@@ -49,7 +38,7 @@ const KpiRegistration = () => {
   const { kpiRegisReload, kpiRegisLoading } = useSelector((state) => state.kpiRegis)
 
   React.useEffect(() => {
-    async function fetchKpiRegisList() {
+    async function fetchDeptList() {
       api
         .get(`/plans/user/${id}`)
         .then((response) => {
@@ -65,7 +54,7 @@ const KpiRegistration = () => {
         })
     }
 
-    fetchKpiRegisList()
+    fetchDeptList()
 
     dispatch(
       setKpiRegisLoading({
@@ -103,22 +92,8 @@ const KpiRegistration = () => {
                   <CTableDataCell>{row.kpi_template.description}</CTableDataCell>
                   <CTableDataCell>{row.target}</CTableDataCell>
                   <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
-                  <CTableDataCell className={colorStatus(row.approve_registration)}>
-                    {row.approve_registration}
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    {row.approve_registration == 'Đang xử lý' ? (
-                      <Grid container direction="row" justifyContent="center" alignItems="center">
-                        <InfoKpiRegistration kpiItem={row} />
-                        <EditKpiRegistration inCat={row} plan_id={id} />
-                        <DeleteKpiRegistration inCat={row} plan_id={id} />
-                      </Grid>
-                    ) : (
-                      <Grid container direction="row" justifyContent="center" alignItems="center">
-                        <InfoKpiRegistration kpiItem={row} />
-                      </Grid>
-                    )}
-                  </CTableDataCell>
+                  <CTableDataCell>{row.approve_registration}</CTableDataCell>
+                  <CTableDataCell className="text-center"></CTableDataCell>
                 </CTableRow>
               ))}
           </CTableBody>
@@ -148,9 +123,7 @@ const KpiRegistration = () => {
                     <h4>Đăng ký KPI cá nhân</h4>
                   </CCol>
                   <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddKpiRegistration plan_id={id} />
-                    </div>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
@@ -167,4 +140,4 @@ const KpiRegistration = () => {
   )
 }
 
-export default KpiRegistration
+export default KpiApproving

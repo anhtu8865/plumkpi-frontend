@@ -22,7 +22,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Duyệt đăng kí KPI',
-        to: '/',
+        to: '/kpiapproving',
       },
     ],
   },

@@ -14,6 +14,7 @@ const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTr
 const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
 const EditKpiAndWeightView = React.lazy(() => import('./views/plan/EditKpiAndWeightView'))
 const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
+const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -35,6 +36,7 @@ const routes = [
     name: 'KPI Registration',
     component: KpiRegistration,
   },
+  { path: '/kpiapproving', exact: true, name: 'KPI Approving', component: KpiApproving },
 ]
 
 export default routes
