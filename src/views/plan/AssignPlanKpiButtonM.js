@@ -313,7 +313,15 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               <CTableFoot>
                 <CTableRow>
                   <CTableHeaderCell>TỔNG</CTableHeaderCell>
-                  <CTableDataCell>{sum}</CTableDataCell>
+                  <CTableDataCell>
+                    <CFormInput
+                      size="sm"
+                      disabled
+                      value={sum}
+                      invalid={Number(sum) !== Number(kpiItem.target)}
+                      valid={Number(sum) === Number(kpiItem.target)}
+                    />
+                  </CTableDataCell>
                 </CTableRow>
               </CTableFoot>
             </CTable>

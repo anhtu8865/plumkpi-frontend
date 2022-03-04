@@ -41,7 +41,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
   const [selectedDeptList, setSelectedDeptList] = useState([])
   const [selectValue, setSelectValue] = useState('')
   const { plan } = useSelector((state) => state.planDetail)
-  const [target, setTarget] = useState(0)
+  const [target, setTarget] = useState('')
   const [sum, setSum] = useState(0)
 
   const getDeptList = async () => {
@@ -329,7 +329,15 @@ export const AssignPlanKpiButton = (kpiItem) => {
                 <CTableRow>
                   <CTableHeaderCell>TỔNG</CTableHeaderCell>
                   <CTableDataCell />
-                  <CTableDataCell>{sum}</CTableDataCell>
+                  <CTableDataCell>
+                    <CFormInput
+                      size="sm"
+                      disabled
+                      value={sum}
+                      invalid={Number(sum) !== Number(target)}
+                      valid={Number(sum) === Number(target)}
+                    />
+                  </CTableDataCell>
                 </CTableRow>
               </CTableFoot>
             </CTable>

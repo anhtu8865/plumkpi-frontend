@@ -221,3 +221,12 @@ export const compareToToday = (end_date) => {
   }
   return true
 }
+
+export const getYearsList = () => {
+  const currentYear = new Date().getFullYear()
+  const returnList = []
+  for (var i = 0; i < 5; i++) {
+    returnList.push(currentYear + i)
+  }
+  return returnList
+}
