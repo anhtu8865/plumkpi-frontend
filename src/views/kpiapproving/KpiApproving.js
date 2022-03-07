@@ -17,7 +17,7 @@ import {
 } from '@coreui/react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
-import { Avatar, Button, Grid, Pagination } from '@mui/material'
+import { Avatar, Button, Grid, Pagination, Checkbox } from '@mui/material'
 import { Field, FormikProvider, useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -49,6 +49,22 @@ const KpiApproving = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
+  const [selectedKpi, setSelectedKpi] = React.useState([])
+
+  const handleKpiChange = (item) => {
+    if (!selectedKpi.includes(item)) {
+      setSelectedKpi([...selectedKpi, item])
+    } else if (selectedKpi.includes(item)) {
+      setSelectedKpi(
+        selectedKpi.filter((tmp) => {
+          if (tmp !== item) {
+            return tmp
+          }
+        }),
+      )
+    }
+  }
+
   React.useEffect(() => {
     async function fetchKPIList() {
       api
@@ -78,6 +94,7 @@ const KpiApproving = () => {
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
+              <CTableHeaderCell />
               <CTableHeaderCell>KPI</CTableHeaderCell>
               <CTableHeaderCell>MỤC TIÊU</CTableHeaderCell>
               <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
@@ -90,6 +107,16 @@ const KpiApproving = () => {
           <CTableBody>
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>
+                  {' '}
+                  <Checkbox
+                    size="small"
+                    checked={selectedKpi.includes(row)}
+                    onChange={() => {
+                      handleKpiChange(row)
+                    }}
+                  />
+                </CTableDataCell>
                 <CTableDataCell>{row.kpi_template.kpi_template_name}</CTableDataCell>
                 <CTableDataCell>{row.target}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
@@ -150,6 +177,7 @@ const KpiApproving = () => {
                 {/*Table*/}
                 <div className="mt-2 p-4">
                   <KpiApprovingTable temList={entry} />
+                  {console.log(selectedKpi)}
                 </div>
               </CCardBody>
             </CCard>
