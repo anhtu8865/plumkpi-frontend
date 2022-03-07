@@ -25,19 +25,52 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setKpiRegisLoading } from 'src/slices/kpiRegisSlice'
+import { setKpiApprovingLoading } from 'src/slices/kpiApprovingSlice'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
+
+import { InfoKpiApproving } from './InfoKpiApproving'
+
+function colorStatus(status) {
+  if (status == 'Đang xử lý') return 'text-warning'
+  else if (status == 'Chấp nhận') return 'text-success'
+  else if (status == 'Từ chối') return 'text-danger'
+}
 
 const KpiApproving = () => {
   const { id } = useParams()
   //console.log(id)
   const dispatch = useDispatch()
 
-  const [entry, setEntry] = React.useState([])
-  const { kpiRegisReload, kpiRegisLoading } = useSelector((state) => state.kpiRegis)
+  const { kpiApprovingReload, kpiApprovingLoading } = useSelector((state) => state.kpiApproving)
 
-  React.useEffect(() => {}, [])
+  const entryPerPage = 10
+  const [page, setPage] = React.useState(1)
+  const [totalPage, setTotalPage] = React.useState(1)
+  const [entry, setEntry] = React.useState([])
+
+  React.useEffect(() => {
+    async function fetchKPIList() {
+      api
+        .get(`/plans/plan/${id}/personal-kpis`, {
+          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
+        })
+        .then((response) => {
+          setTotalPage(Math.ceil(response.data.count / entryPerPage))
+          setEntry(response.data.items)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
+
+    fetchKPIList()
+  }, [kpiApprovingReload, dispatch])
 
   const KpiApprovingTable = (props) => {
     return (
@@ -58,18 +91,36 @@ const KpiApproving = () => {
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
                 <CTableDataCell>{row.kpi_template.kpi_template_name}</CTableDataCell>
-
-                <CTableDataCell>{row.kpi_template.description}</CTableDataCell>
                 <CTableDataCell>{row.target}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template.unit}</CTableDataCell>
-                <CTableDataCell>{row.approve_registration}</CTableDataCell>
-                <CTableDataCell className="text-center"></CTableDataCell>
+                <CTableDataCell className="d-flex flex-row">
+                  <Avatar
+                    src={row.plan.user.avatar !== null ? row.plan.user.avatar.url : null}
+                    className="me-3"
+                  />
+                  {row.plan.user.user_name}
+                </CTableDataCell>
+                <CTableDataCell className={colorStatus(row.approve_registration)}>
+                  {row.approve_registration}
+                </CTableDataCell>
+                <CTableDataCell className="text-center">
+                  <InfoKpiApproving kpiItem={row} />
+                </CTableDataCell>
               </CTableRow>
             ))}
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4"></CTableDataCell>
+              <CTableDataCell colSpan="4">
+                <Pagination
+                  page={page}
+                  count={totalPage}
+                  showFirstButton
+                  showLastButton
+                  size="small"
+                  onChange={(event, page) => setPage(page)}
+                />
+              </CTableDataCell>
             </CTableRow>
           </CTableFoot>
         </CTable>

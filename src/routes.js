@@ -36,7 +36,7 @@ const routes = [
     name: 'KPI Registration',
     component: KpiRegistration,
   },
-  { path: '/kpiapproving', exact: true, name: 'KPI Approving', component: KpiApproving },
+  { path: '/kpiapproving/:id', exact: true, name: 'KPI Approving', component: KpiApproving },
 ]
 
 export default routes

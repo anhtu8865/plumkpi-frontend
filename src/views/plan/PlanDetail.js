@@ -14,6 +14,7 @@ import { PlanKpiTable } from './PlanKpiTable'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { formatDate, compareToToday } from 'src/utils/function'
 import AddBoxIcon from '@mui/icons-material/AddBox'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
 const PlanDetail = () => {
   const { id } = useParams()
@@ -136,7 +137,7 @@ const PlanDetail = () => {
               ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
             </h6>
           </CCol>
-          {['Quản lý', 'Nhân viên'].includes(user.role) && compareToToday(plan.end_date) && (
+          {user.role === 'Nhân viên' && compareToToday(plan.end_date) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -147,7 +148,33 @@ const PlanDetail = () => {
                     history.push(`/kpiregistration/${id}`)
                   }}
                 >
-                  Đăng ký KPI cá nhân
+                  Đăng ký KPI
+                </Button>
+              </div>
+            </CCol>
+          )}
+          {['Quản lý'].includes(user.role) && compareToToday(plan.end_date) && (
+            <CCol xs={6} sm={6}>
+              <div className="d-grid gap-3 d-md-flex justify-content-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CheckBoxIcon />}
+                  onClick={() => {
+                    history.push(`/kpiapproving/${id}`)
+                  }}
+                >
+                  Duyệt KPI
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddBoxIcon />}
+                  onClick={() => {
+                    history.push(`/kpiregistration/${id}`)
+                  }}
+                >
+                  Đăng ký KPI
                 </Button>
               </div>
             </CCol>
@@ -155,6 +182,16 @@ const PlanDetail = () => {
           {user.role === 'Giám đốc' && compareToToday(plan.end_date) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CheckBoxIcon />}
+                  onClick={() => {
+                    history.push(`/kpiapproving/${id}`)
+                  }}
+                >
+                  Duyệt KPI
+                </Button>
                 <Button
                   variant="contained"
                   color="primary"
