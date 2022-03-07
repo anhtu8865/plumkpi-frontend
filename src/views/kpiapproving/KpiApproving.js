@@ -30,6 +30,7 @@ import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
 
 import { InfoKpiApproving } from './InfoKpiApproving'
+import AcceptedKpi from './AcceptedKpiApproving'
 
 function colorStatus(status) {
   if (status == 'Đang xử lý') return 'text-warning'
@@ -171,13 +172,14 @@ const KpiApproving = () => {
                     <h4>Duyệt KPI cá nhân</h4>
                   </CCol>
                   <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <AcceptedKpi plan_id={id} selectedKpi={selectedKpi} />
+                    </div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
                 <div className="mt-2 p-4">
                   <KpiApprovingTable temList={entry} />
-                  {console.log(selectedKpi)}
                 </div>
               </CCardBody>
             </CCard>
