@@ -29,16 +29,18 @@ const AddUser = () => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
 
-  async function fetchDeptList() {
-    api
-      .get('/depts')
-      .then((response) => {
-        setDeptList(response.data.items)
-      })
-      .catch((error) => {})
-  }
+  React.useEffect(() => {
+    async function fetchDeptList() {
+      api
+        .get('/depts/all')
+        .then((response) => {
+          setDeptList(response.data)
+        })
+        .catch((error) => {})
+    }
 
-  fetchDeptList()
+    fetchDeptList()
+  }, [])
 
   const validationSchema = yup.object({
     user_name: yup.string().required('Đây là trường bắt buộc'),
@@ -57,125 +59,46 @@ const AddUser = () => {
       user_name: '',
       email: '',
       password: '123456',
-      role: '',
+      role: 'Nhân viên',
       dept: { dept_id: null },
-      manage: { dept_id: null },
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
       // console.log(values)
-      if (values.role === 'Admin' || values.role === 'Giám đốc') {
-        api
-          .post('users', {
-            user_name: values.user_name,
-            email: values.email,
-            password: values.password,
-            role: values.role,
-          })
-          .then(() => {
-            dispatch(
-              createAlert({
-                message: 'Tạo người dùng mới thành công.',
-                type: 'success',
-              }),
-            )
-            dispatch(
-              setUserLoading({
-                value: true,
-              }),
-            )
-            dispatch(setUserReload())
-            setModalVisible(false)
-          })
-          .catch((error) => {
-            dispatch(
-              createAlert({
-                message: error.response.data.message,
-                type: 'error',
-              }),
-            )
-          })
-          .finally(() => {
-            formik.setSubmitting(false)
-          })
-      } else if (values.role === 'Nhân viên') {
-        // console.log(values)
-        api
-          .post('users', {
-            user_name: values.user_name,
-            email: values.email,
-            password: values.password,
-            role: values.role,
-            dept: values.dept,
-          })
-          .then(() => {
-            dispatch(
-              createAlert({
-                message: 'Tạo người dùng mới thành công.',
-                type: 'success',
-              }),
-            )
-            dispatch(
-              setUserLoading({
-                value: true,
-              }),
-            )
-            dispatch(setUserReload())
-            setModalVisible(false)
-          })
-          .catch((error) => {
-            dispatch(
-              createAlert({
-                message: error.response.data.message,
-                type: 'error',
-              }),
-            )
-          })
-          .finally(() => {
-            formik.setSubmitting(false)
-          })
-      } else if (values.role === 'Quản lý') {
-        let tmp = parseInt(values.dept.dept_id)
-        values.dept.dept_id = tmp
-        values.manage.dept_id = tmp
-
-        console.log(values)
-        api
-          .post('users', {
-            user_name: values.user_name,
-            email: values.email,
-            password: values.password,
-            role: values.role,
-            dept: values.dept,
-            manage: values.dept,
-          })
-          .then(() => {
-            dispatch(
-              createAlert({
-                message: 'Tạo người dùng mới thành công.',
-                type: 'success',
-              }),
-            )
-            dispatch(
-              setUserLoading({
-                value: true,
-              }),
-            )
-            dispatch(setUserReload())
-            setModalVisible(false)
-          })
-          .catch((error) => {
-            dispatch(
-              createAlert({
-                message: error.response.data.message,
-                type: 'error',
-              }),
-            )
-          })
-          .finally(() => {
-            formik.setSubmitting(false)
-          })
-      }
+      api
+        .post('users', {
+          user_name: values.user_name,
+          email: values.email,
+          password: values.password,
+          role: values.role,
+          dept: values.dept,
+        })
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Tạo người dùng mới thành công.',
+              type: 'success',
+            }),
+          )
+          dispatch(
+            setUserLoading({
+              value: true,
+            }),
+          )
+          dispatch(setUserReload())
+          setModalVisible(false)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          formik.setSubmitting(false)
+        })
 
       //resetForm()
     },
@@ -261,86 +184,25 @@ const AddUser = () => {
               </CRow> */}
             </div>
             <hr />
-            <div>
-              <h6>Vai trò và quyền hạn</h6>
-              <fieldset className="row mb-3">
-                <legend className="col-form-label col-sm-5 pt-0">Chọn vai trò</legend>
-                <CCol sm={7}>
+            <div className="userform-item mt-4">
+              <h6>Gán người dùng vào phòng ban</h6>
+              <CRow>
+                <CCol>
+                  <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
                   <FormikProvider value={formik}>
-                    <div className="form-check">
-                      <Field
-                        className="form-check-input"
-                        type="radio"
-                        name="role"
-                        value="Nhân viên"
-                        onClick={() => {
-                          setDeptVisible(true)
-                        }}
-                      />
-                      <label className="form-check-label">Nhân viên</label>
-                    </div>
-                    <div className="form-check">
-                      <Field
-                        className="form-check-input"
-                        type="radio"
-                        name="role"
-                        value="Quản lý"
-                        onClick={() => {
-                          setDeptVisible(true)
-                        }}
-                      />
-                      <label className="form-check-label">Quản lý</label>
-                    </div>
-                    <div className="form-check">
-                      <Field
-                        className="form-check-input"
-                        type="radio"
-                        name="role"
-                        value="Giám đốc"
-                        onClick={() => {
-                          setDeptVisible(false)
-                        }}
-                      />
-                      <label className="form-check-label">Giám đốc</label>
-                    </div>
-                    <div className="form-check">
-                      <Field
-                        className="form-check-input"
-                        type="radio"
-                        name="role"
-                        value="Admin"
-                        onClick={() => {
-                          setDeptVisible(false)
-                        }}
-                      />
-                      <label className="form-check-label">Quản trị viên</label>
-                    </div>
+                    <Field as="select" name="dept.dept_id" className="form-select">
+                      <option value="" label="Chọn phòng ban" />
+                      {deptList.map((row) => (
+                        <option value={row.dept_id} key={row.dept_id}>
+                          {row.dept_name}
+                        </option>
+                      ))}
+                    </Field>
                   </FormikProvider>
+                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
                 </CCol>
-              </fieldset>
+              </CRow>
             </div>
-            {deptVisible && (
-              <div className="userform-item mt-4">
-                <hr />
-                <h6>Gán người dùng vào phòng ban</h6>
-                <CRow>
-                  <CCol>
-                    <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
-                    <FormikProvider value={formik}>
-                      <Field as="select" name="dept.dept_id" className="form-select">
-                        <option value="" label="Chọn phòng ban" />
-                        {deptList.map((row) => (
-                          <option value={row.dept_id} key={row.dept_id}>
-                            {row.dept_name}
-                          </option>
-                        ))}
-                      </Field>
-                    </FormikProvider>
-                    <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
-                  </CCol>
-                </CRow>
-              </div>
-            )}
           </CModalBody>
           <CModalFooter>
             <Button
