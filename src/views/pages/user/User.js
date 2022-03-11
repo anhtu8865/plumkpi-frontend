@@ -77,15 +77,17 @@ const User = () => {
 
   const UserFilter = () => {
     const [deptList, setDeptList] = React.useState([])
+    React.useEffect(() => {
+      api
+        .get('/depts/all')
+        .then((response) => {
+          setDeptList(response.data)
+        })
+        .catch((error) => {
+          alert('Failed')
+        })
+    }, [])
 
-    api
-      .get('/depts/all')
-      .then((response) => {
-        setDeptList(response.data)
-      })
-      .catch((error) => {
-        alert('Failed')
-      })
     const formik = useFormik({
       initialValues: {
         filter_name: '',
