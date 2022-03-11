@@ -88,7 +88,7 @@ const Department = () => {
       onSubmit: (values) => {
         //console.log('Đây là search')
         console.log(values)
-        let apiLink = '/depts?'
+        let apiLink = '/depts?offset=0&limit=10&'
         if (values.filter_name !== '') {
           apiLink += 'name=' + values.filter_name
         }

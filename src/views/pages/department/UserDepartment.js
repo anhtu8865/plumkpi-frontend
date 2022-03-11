@@ -19,15 +19,16 @@ import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setUserLoading } from 'src/slices/userSlice'
+//import { setUserLoading } from 'src/slices/userSlice'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 
-import AddUser from 'src/views/pages/user/AddUser'
 import DeleteUser from 'src/views/pages/user/DeleteUser'
 import EditUser from 'src/views/pages/user/EditUser'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import AddManager from './AddManager'
+import { setDepartmentLoading } from 'src/slices/departmentSlice'
 
 const UserDepartment = (props) => {
   const history = useHistory()
@@ -39,7 +40,9 @@ const UserDepartment = (props) => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
-  const { userReload, userLoading } = useSelector((state) => state.user)
+  //const { userReload, userLoading } = useSelector((state) => state.user)
+  const { departmentReload, departmentLoading } = useSelector((state) => state.department)
+
   const dispatch = useDispatch()
 
   React.useEffect(() => {
@@ -65,11 +68,11 @@ const UserDepartment = (props) => {
     fetchDeptList()
 
     dispatch(
-      setUserLoading({
+      setDepartmentLoading({
         value: false,
       }),
     )
-  }, [userReload, page, dispatch])
+  }, [departmentReload, page, dispatch])
 
   const UserTable = (props) => {
     return (
@@ -83,7 +86,7 @@ const UserDepartment = (props) => {
               <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
               <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
-              <CTableHeaderCell />
+              {/* <CTableHeaderCell /> */}
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -100,12 +103,12 @@ const UserDepartment = (props) => {
                 {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
                   </CTableDataCell>*/}
-                <CTableDataCell className="text-center">
+                {/* <CTableDataCell className="text-center">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
                     <EditUser inCat={row} />
                     <DeleteUser inCat={row} />
                   </Grid>
-                </CTableDataCell>
+                </CTableDataCell> */}
               </CTableRow>
             ))}
           </CTableBody>
@@ -151,7 +154,7 @@ const UserDepartment = (props) => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddUser />
+                      <AddManager dept_id={id} />
                     </div>
                   </CCol>
                 </CRow>

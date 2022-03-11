@@ -50,6 +50,7 @@ const AddUser = () => {
       .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
       .required('Đây là trường bắt buộc'),
     role: yup.string().required('Đây là trường bắt buộc'),
+
     //dept: yup.required('Đây là trường bắt buộc'),
   })
 

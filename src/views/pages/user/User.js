@@ -121,9 +121,6 @@ const User = () => {
             //alert('Thành công')
             setFilter(res.data.items)
             console.log(res.data.items)
-            /*setSuccessMessage('Thêm người dùng thành công')
-            setSuccess(true)
-            setLoading(true)*/
           })
           .catch((error) => {
             alert('Thất bại')

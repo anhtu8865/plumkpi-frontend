@@ -18,10 +18,10 @@ const CompanyTree = () => {
   React.useEffect(() => {
     async function fetchDeptList() {
       api
-        .get('/depts')
+        .get('/depts/all')
         .then((response) => {
-          setDeptList(response.data.items)
-          console.log(response.data.items)
+          setDeptList(response.data)
+          //console.log(response.data.items)
         })
         .catch((error) => {
           dispatch(
