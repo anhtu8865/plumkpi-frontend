@@ -88,7 +88,6 @@ const User = () => {
       })
     const formik = useFormik({
       initialValues: {
-        filter_id: null,
         filter_name: '',
         filter_email: '',
         filter_role: '',
@@ -98,7 +97,7 @@ const User = () => {
       onSubmit: (values) => {
         console.log('Đây là search')
         console.log(values)
-        let apiLink = '/users?offset=0&limit=10&'
+        let apiLink = '/users?'
         if (values.filter_name !== '') {
           apiLink += 'user_name=' + values.filter_name
         }
@@ -116,7 +115,12 @@ const User = () => {
         }
         //apiLink = 'users?user_name=' + values.filter_name + '&user_id=' + values.filter_id
         api
-          .get(apiLink)
+          .get(apiLink, {
+            params: {
+              offset: (page - 1) * entryPerPage,
+              limit: entryPerPage,
+            },
+          })
           .then((res) => {
             //alert('Thành công')
             setFilter(res.data.items)
@@ -130,7 +134,7 @@ const User = () => {
     })
     return (
       <CForm className="row g-3">
-        <CCol md={1}>
+        {/* <CCol md={1}>
           <CFormLabel htmlFor="filterID">ID</CFormLabel>
           <CFormInput
             type={'number'}
@@ -139,7 +143,7 @@ const User = () => {
             value={formik.values.filter_id}
             onChange={formik.handleChange}
           />
-        </CCol>
+        </CCol> */}
         <CCol md={3}>
           <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
           <CFormInput
