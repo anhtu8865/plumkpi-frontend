@@ -180,6 +180,15 @@ export const checkTimeRange = (start, end, planList) => {
   return {}
 }
 
+export const checkYearOverlap = (year, planList) => {
+  for (var i = 0; i < planList.length; i++) {
+    if (year === planList[i].year) {
+      return planList[i]
+    }
+  }
+  return {}
+}
+
 export const sortPlanList = (planList) => {
   if (planList.length === 0) {
     return { oldPlan: [], currentPlan: [], futurePlan: [] }
@@ -192,6 +201,26 @@ export const sortPlanList = (planList) => {
     if (planItem.start_date > today) {
       futurePlan.push(planItem)
     } else if (planItem.end_date < today) {
+      oldPlan.push(planItem)
+    } else {
+      currentPlan.push(planItem)
+    }
+  })
+  return { oldPlan: oldPlan, currentPlan: currentPlan, futurePlan: futurePlan }
+}
+
+export const sortPlanListByYear = (planList) => {
+  if (planList.length === 0) {
+    return { oldPlan: [], currentPlan: [], futurePlan: [] }
+  }
+  const today = new Date().getFullYear()
+  const oldPlan = []
+  const currentPlan = []
+  const futurePlan = []
+  planList.map((planItem) => {
+    if (planItem.year > today) {
+      futurePlan.push(planItem)
+    } else if (planItem.year < today) {
       oldPlan.push(planItem)
     } else {
       currentPlan.push(planItem)

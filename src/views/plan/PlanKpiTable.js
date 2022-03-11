@@ -49,8 +49,8 @@ export const PlanKpiTable = (catItem) => {
                       <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
                       <CTableDataCell className="text-center w-25">
                         <div className="d-flex flex-row justify-content-center">
-                          {user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
-                          {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
+                          {/*{user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
+                          {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}*/}
                           <KpiInfoButton kpiItem={item} />
                         </div>
                       </CTableDataCell>

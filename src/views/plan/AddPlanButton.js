@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
-import { checkTimeRange, formatDate, getYearsList } from 'src/utils/function'
+import { checkTimeRange, formatDate, getYearsList, checkYearOverlap } from 'src/utils/function'
 
 export const AddPlanButton = () => {
   const dispatch = useDispatch()
@@ -38,16 +38,10 @@ export const AddPlanButton = () => {
       if (!value) {
         return true
       } else {
-        const result = checkTimeRange(
-          value.toString() + '-01-01',
-          value.toString() + '-12-31',
-          planList,
-        )
+        const result = checkYearOverlap(value, planList)
         if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
           return createError({
-            message: `Trùng thời gian với kế hoạch ${result.plan_name} ( ${formatDate(
-              result.start_date,
-            )} - ${formatDate(result.end_date)} )`,
+            message: `Trùng thời gian với kế hoạch ${result.plan_name} ( Năm ${result.year} )`,
           })
         }
       }
@@ -67,8 +61,7 @@ export const AddPlanButton = () => {
         .post('/plans', {
           plan_name: values.plan_name,
           description: values.description,
-          start_date: values.year.toString() + '-01-01',
-          end_date: values.year.toString() + '-12-31',
+          year: Number(values.year),
         })
         .then(() => {
           dispatch(

@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
-import { checkTimeRange, formatDate, getYearsList } from 'src/utils/function'
+import { checkTimeRange, formatDate, getYearsList, checkYearOverlap } from 'src/utils/function'
 import EditIcon from '@mui/icons-material/Edit'
 
 export const EditPlanButton = (props) => {
@@ -39,17 +39,11 @@ export const EditPlanButton = (props) => {
       if (!value) {
         return true
       } else {
-        const result = checkTimeRange(
-          value.toString() + '-01-01',
-          value.toString() + '-12-31',
-          planList,
-        )
+        const result = checkYearOverlap(value, planList)
         if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
           if (result.plan_id !== props.inPlan.plan_id) {
             return createError({
-              message: `Trùng thời gian với kế hoạch ${result.plan_name} ( ${formatDate(
-                result.start_date,
-              )} - ${formatDate(result.end_date)} )`,
+              message: `Trùng thời gian với kế hoạch ${result.plan_name} ( Năm ${result.year} )`,
             })
           }
         }
@@ -62,7 +56,7 @@ export const EditPlanButton = (props) => {
     initialValues: {
       plan_name: props.inPlan.plan_name,
       description: props.inPlan.description,
-      year: Number(props.inPlan.start_date.slice(0, 4)),
+      year: props.inPlan.year,
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
@@ -70,8 +64,7 @@ export const EditPlanButton = (props) => {
         .put(`/plans/${props.inPlan.plan_id}`, {
           plan_name: values.plan_name,
           description: values.description,
-          start_date: values.year.toString() + '-01-01',
-          end_date: values.year.toString() + '-12-31',
+          year: Number(values.year),
         })
         .then(() => {
           dispatch(
