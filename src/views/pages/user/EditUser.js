@@ -60,115 +60,39 @@ const EditUser = (props) => {
     onSubmit: (values) => {
       // assume that we already login
       //block director, admin
-      if (values.editrole === 'Admin' || values.editrole === 'Director') {
-        values.editdept.dept_id = null
-        api
-          .put(`/users/${props.inCat.user_id}`, {
-            user_name: values.editusername,
-            email: values.editemail,
-            role: values.editrole,
-            dept: values.editdept,
-          })
-          .then(() => {
-            dispatch(
-              createAlert({
-                message: 'Cập nhật người dùng thành công.',
-                type: 'success',
-              }),
-            )
-            dispatch(
-              setUserLoading({
-                value: true,
-              }),
-            )
-            dispatch(setUserReload())
-            setModalVisible(false)
-          })
-          .catch((error) => {
-            dispatch(
-              createAlert({
-                message: error.response.data.message,
-                type: 'error',
-              }),
-            )
-          })
-          .finally(() => {
-            formik.setSubmitting(false)
-          })
-      } else if (values.editrole === 'Employee') {
-        api
-          .put(`/users/${props.inCat.user_id}`, {
-            user_name: values.editusername,
-            email: values.editemail,
-            role: values.editrole,
-            dept: values.editdept,
-          })
-          .then(() => {
-            dispatch(
-              createAlert({
-                message: 'Cập nhật người dùng thành công.',
-                type: 'success',
-              }),
-            )
-            dispatch(
-              setUserLoading({
-                value: true,
-              }),
-            )
-            dispatch(setUserReload())
-            setModalVisible(false)
-          })
-          .catch((error) => {
-            dispatch(
-              createAlert({
-                message: error.response.data.message,
-                type: 'error',
-              }),
-            )
-          })
-          .finally(() => {
-            formik.setSubmitting(false)
-          })
-      } else {
-        let tmp = parseInt(values.editdept.dept_id)
-        values.editdept.dept_id = tmp
-        values.editmanage.dept_id = tmp
-        console.log(values)
-        api
-          .put(`/users/${props.inCat.user_id}`, {
-            user_name: values.editusername,
-            email: values.editemail,
-            role: values.editrole,
-            dept: values.editdept,
-            manage: values.editmanage,
-          })
-          .then(() => {
-            dispatch(
-              createAlert({
-                message: 'Cập nhật người dùng thành công.',
-                type: 'success',
-              }),
-            )
-            dispatch(
-              setUserLoading({
-                value: true,
-              }),
-            )
-            dispatch(setUserReload())
-            setModalVisible(false)
-          })
-          .catch((error) => {
-            dispatch(
-              createAlert({
-                message: error.response.data.message,
-                type: 'error',
-              }),
-            )
-          })
-          .finally(() => {
-            formik.setSubmitting(false)
-          })
-      }
+
+      api
+        .put(`/users/${props.inCat.user_id}`, {
+          user_name: values.editusername,
+          email: values.editemail,
+          dept: values.editdept,
+        })
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Cập nhật người dùng thành công.',
+              type: 'success',
+            }),
+          )
+          dispatch(
+            setUserLoading({
+              value: true,
+            }),
+          )
+          dispatch(setUserReload())
+          setModalVisible(false)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          formik.setSubmitting(false)
+        })
     },
   })
 
@@ -239,7 +163,7 @@ const EditUser = (props) => {
                 </CCol>
               </CRow>
             </div>
-            <div>
+            {/* <div>
               <h6>Vai trò và quyền hạn</h6>
               <fieldset className="row mb-3">
                 <legend className="col-form-label col-sm-5 pt-0">Chọn vai trò</legend>
@@ -296,28 +220,27 @@ const EditUser = (props) => {
                   </FormikProvider>
                 </CCol>
               </fieldset>
+                      </div>*/}
+
+            <div className="userform-item mt-4">
+              <h6>Gán người dùng vào phòng ban</h6>
+              <CRow>
+                <CCol>
+                  <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
+                  <FormikProvider value={formik}>
+                    <Field as="select" name="editdept.dept_id" className="form-select">
+                      <option value="" label="Chọn phòng ban" />
+                      {deptList.map((row) => (
+                        <option value={row.dept_id} key={row.dept_id}>
+                          {row.dept_name}
+                        </option>
+                      ))}
+                    </Field>
+                  </FormikProvider>
+                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
+                </CCol>
+              </CRow>
             </div>
-            {deptVisible && (
-              <div className="userform-item mt-4">
-                <h6>Gán người dùng vào phòng ban</h6>
-                <CRow>
-                  <CCol>
-                    <CFormLabel htmlFor="inputDept">Phòng ban</CFormLabel>
-                    <FormikProvider value={formik}>
-                      <Field as="select" name="editdept.dept_id" className="form-select">
-                        <option value="" label="Chọn phòng ban" />
-                        {deptList.map((row) => (
-                          <option value={row.dept_id} key={row.dept_id}>
-                            {row.dept_name}
-                          </option>
-                        ))}
-                      </Field>
-                    </FormikProvider>
-                    <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
-                  </CCol>
-                </CRow>
-              </div>
-            )}
           </CModalBody>
           <CModalFooter>
             <Button

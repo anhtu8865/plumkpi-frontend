@@ -79,9 +79,9 @@ const User = () => {
     const [deptList, setDeptList] = React.useState([])
 
     api
-      .get('/depts')
+      .get('/depts/all')
       .then((response) => {
-        setDeptList(response.data.items)
+        setDeptList(response.data)
       })
       .catch((error) => {
         alert('Failed')
@@ -98,7 +98,7 @@ const User = () => {
       onSubmit: (values) => {
         console.log('Đây là search')
         console.log(values)
-        let apiLink = '/users?'
+        let apiLink = '/users?offset=0&limit=10&'
         if (values.filter_name !== '') {
           apiLink += 'user_name=' + values.filter_name
         }
@@ -182,9 +182,9 @@ const User = () => {
             <Field as="select" name="filter_role" className="form-select">
               <option value="" label="Chọn vai trò" />
               <option value="Admin">Admin</option>
-              <option value="Quản lý">Manager</option>
-              <option value="Giám đốc">Director</option>
-              <option value="Nhân viên">Employee</option>
+              <option value="Quản lý">Quản lý</option>
+              <option value="Giám đốc">Giám đốc</option>
+              <option value="Nhân viên">Nhân viên</option>
             </Field>
           </FormikProvider>
         </CCol>
