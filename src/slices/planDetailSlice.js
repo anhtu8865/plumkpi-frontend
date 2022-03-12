@@ -24,7 +24,12 @@ const planDetailSlice = createSlice({
       state.currentCat = action.payload.value
     },
     setCurrentInPlan: (state, action) => {
-      state.currentInPlan = action.payload.value
+      if (action.payload.value.catList) {
+        state.currentInPlan.catList = action.payload.value.catList
+      }
+      if (action.payload.value.temList) {
+        state.currentInPlan.temList = action.payload.value.temList
+      }
     },
     changeWeightInCat: (state, action) => {
       const findCat = state.currentInPlan.catList.find(

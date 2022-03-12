@@ -50,7 +50,8 @@ const EditKpiAndWeightView = () => {
   const [planEmpty, setPlanEmpty] = useState(false)
   const [sumList, setSumList] = useState([])
   const { user } = useSelector((state) => state.user)
-  const [tempList, setTempList] = []
+  const [catList, setCatList] = useState([])
+  const [temList, setTemList] = useState([])
 
   const getPlan = async () => {
     try {
@@ -103,25 +104,25 @@ const EditKpiAndWeightView = () => {
   }
 
   React.useEffect(async () => {
-    const catList = []
-    const temList = []
-    const selectTem = []
+    //const catList = []
+    //let temList = []
     const result = await getPlan()
     const res = await getCatPlan()
     if (res) {
       res.map(async (i) => {
-        catList.push({ cat: i.kpi_category, weight: i.weight })
+        setCatList((catList) => [...catList, { cat: i.kpi_category, weight: i.weight }])
+        //catList.push({ cat: i.kpi_category, weight: i.weight })
         const res1 = await getTemInOneCatPlan(i.kpi_category.kpi_category_id)
         if (res1) {
           res1.map((item) => {
-            temList.push({ tem: item.kpi_template, weight: item.weight })
-            selectTem.push(item.kpi_template.kpi_template_id)
+            item.kpi_template.kpi_category = i.kpi_category
+            setTemList((temList) => [...temList, { tem: item.kpi_template, weight: item.weight }])
+            setSelectedTem((selectedTem) => [...selectedTem, item.kpi_template.kpi_template_id])
           })
         }
       })
     }
-    dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
-    setSelectedTem(selectTem)
+    //dispatch(setCurrentInPlan({ value: { catList: catList } }))
     setPlan(result)
     /*api
       .get(`plans/user/${id}`)
@@ -152,6 +153,10 @@ const EditKpiAndWeightView = () => {
         }
       })*/
   }, [dispatch])
+
+  React.useEffect(() => {
+    dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
+  }, [catList, temList])
 
   React.useEffect(() => {
     let copyNewInPlan = cloneDeep(newInPlan)
@@ -378,7 +383,7 @@ const EditKpiAndWeightView = () => {
                               temItem.tem.kpi_category.kpi_category_id === item.cat.kpi_category_id,
                           )
                           .map((temItem) => (
-                            <CTableRow key={temItem.tem.kpi_category_id}>
+                            <CTableRow key={temItem.tem.kpi_template_id}>
                               <CTableDataCell className="w-25" />
                               <CTableDataCell>{temItem.tem.kpi_template_name}</CTableDataCell>
                               <CTableDataCell className="w-25">
