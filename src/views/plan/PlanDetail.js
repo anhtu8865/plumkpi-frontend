@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { CCard, CCardBody, CCol, CContainer, CRow } from '@coreui/react'
+import {
+  CCard,
+  CCardBody,
+  CCol,
+  CContainer,
+  CRow,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+} from '@coreui/react'
 import { Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
@@ -243,6 +252,14 @@ const PlanDetail = () => {
               </div>
             </CCol>
           )}
+        </CRow>
+        <CRow className="mt-4 d-flex justify-content-start">
+          <CCol xs={2}>
+            <CInputGroup size="sm">
+              <CInputGroupText>Năm</CInputGroupText>
+              <CFormInput className="text-center" defaultValue={plan.year} disabled />
+            </CInputGroup>
+          </CCol>
         </CRow>
         <CRow className="mt-4">
           <PlanOverview plan_id={id} />
