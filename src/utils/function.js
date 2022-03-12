@@ -251,6 +251,14 @@ export const compareToToday = (end_date) => {
   return true
 }
 
+export const compareYear = (year) => {
+  const today = new Date().getFullYear
+  if (year < today) {
+    return false
+  }
+  return true
+}
+
 export const getYearsList = () => {
   const currentYear = new Date().getFullYear()
   const returnList = []

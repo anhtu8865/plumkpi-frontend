@@ -12,7 +12,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
-import { formatDate, compareToToday } from 'src/utils/function'
+import { formatDate, compareToToday, compareYear } from 'src/utils/function'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
@@ -27,8 +27,46 @@ const PlanDetail = () => {
 
   const getPlan = async () => {
     try {
-      const response = await api.get(`plans/user/${Number(id)}`)
+      const response = await api.get(`plans/${id}`)
       return response.data
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const getCatPlan = async () => {
+    try {
+      if (user.role === 'Giám đốc') {
+        const response = await api.get(`plans/${id}/kpi-categories/director`)
+        return response.data
+      }
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const getTemInOneCatPlan = async (catId) => {
+    try {
+      if (user.role === 'Giám đốc') {
+        const response = await api.get(`plans/${id}/kpis/director`, {
+          params: { offset: 0, limit: 10, kpi_category_id: catId },
+        })
+        return response.data.items
+      }
     } catch (error) {
       if (error.response) {
         dispatch(
@@ -43,20 +81,21 @@ const PlanDetail = () => {
 
   React.useEffect(async () => {
     const result = await getPlan()
-    if (result) {
-      if (result.plan_kpi_categories.length > 0) {
+    const res = await getCatPlan()
+    if (res) {
+      if (res.length > 0) {
         dispatch(
           setCatInPlan({
-            value: result.plan_kpi_categories,
+            value: res,
           }),
         )
         dispatch(
           setCurrentCat({
-            value: result.plan_kpi_categories[0],
+            value: res[0],
           }),
         )
       } else {
-        const catId = []
+        /*const catId = []
         const catList = []
         result.plan_kpi_templates.map((item) => {
           if (!catId.includes(item.kpi_template.kpi_category.kpi_category_id)) {
@@ -73,13 +112,8 @@ const PlanDetail = () => {
           setCurrentCat({
             value: catList[0],
           }),
-        )
+        )*/
       }
-      dispatch(
-        setTemInPlan({
-          value: result.plan_kpi_templates,
-        }),
-      )
       dispatch(
         setPlan({
           value: result,
@@ -93,17 +127,24 @@ const PlanDetail = () => {
     )
   }, [reload, dispatch])
 
+  React.useEffect(async () => {
+    if (currentCat.kpi_category.kpi_category_id) {
+      const result = await getTemInOneCatPlan(currentCat.kpi_category.kpi_category_id)
+      if (result) {
+        dispatch(setTemInPlan({ value: result }))
+      }
+    }
+  }, [currentCat])
+
   const NoTemView = () => {
     return (
       <>
         <CRow>
           <CCol xs={12} sm={6}>
             <h4>{plan.plan_name}</h4>
-            <h6>
-              ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
-            </h6>
+            <h6>{plan.description ? plan.description : null}</h6>
           </CCol>
-          {user.role === 'Giám đốc' && compareToToday(plan.end_date) && (
+          {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -133,11 +174,9 @@ const PlanDetail = () => {
         <CRow>
           <CCol xs={12} sm={6}>
             <h4>{plan.plan_name}</h4>
-            <h6>
-              ( {formatDate(plan.start_date)} - {formatDate(plan.end_date)} )
-            </h6>
+            <h6>{plan.description ? plan.description : null}</h6>
           </CCol>
-          {user.role === 'Nhân viên' && compareToToday(plan.end_date) && (
+          {user.role === 'Nhân viên' && compareYear(plan.year) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -153,7 +192,7 @@ const PlanDetail = () => {
               </div>
             </CCol>
           )}
-          {['Quản lý'].includes(user.role) && compareToToday(plan.end_date) && (
+          {user.role === 'Quản lý' && compareYear(plan.year) && (
             <CCol xs={6} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -179,7 +218,7 @@ const PlanDetail = () => {
               </div>
             </CCol>
           )}
-          {user.role === 'Giám đốc' && compareToToday(plan.end_date) && (
+          {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
@@ -220,7 +259,7 @@ const PlanDetail = () => {
           <CCol xs={12}>
             <CCard>
               <CCardBody className="p-5">
-                {user.role !== 'Admin' && (temInPlan.length === 0 ? <NoTemView /> : <HasTemView />)}
+                {user.role !== 'Admin' && (catInPlan.length === 0 ? <NoTemView /> : <HasTemView />)}
                 {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>

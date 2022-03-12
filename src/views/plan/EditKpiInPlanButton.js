@@ -103,8 +103,8 @@ export const EditKpiInPlanButton = (props) => {
 
   const getCategory = async () => {
     try {
-      const response = await api.get(`/kpi-categories`)
-      return response.data.items
+      const response = await api.get(`/kpi-categories/all`)
+      return response.data
     } catch (error) {
       if (error.response) {
         dispatch(
@@ -119,8 +119,10 @@ export const EditKpiInPlanButton = (props) => {
 
   const getTemplate = async (id) => {
     try {
-      const response = await api.get(`/kpi-categories/${id}`)
-      return response.data.kpi_templates
+      const response = await api.get('/kpi-templates/', {
+        params: { kpi_category_id: id, offset: 0, limit: 10 },
+      })
+      return response.data.items
     } catch (error) {
       if (error.response) {
         dispatch(

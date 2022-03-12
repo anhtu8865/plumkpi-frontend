@@ -49,12 +49,81 @@ const EditKpiAndWeightView = () => {
   const [isSubmit, setIsSubmit] = useState(false)
   const [planEmpty, setPlanEmpty] = useState(false)
   const [sumList, setSumList] = useState([])
+  const { user } = useSelector((state) => state.user)
+  const [tempList, setTempList] = []
 
-  React.useEffect(() => {
+  const getPlan = async () => {
+    try {
+      const response = await api.get(`plans/${id}`)
+      return response.data
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const getCatPlan = async () => {
+    try {
+      const response = await api.get(`plans/${id}/kpi-categories/director`)
+      return response.data
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const getTemInOneCatPlan = async (catId) => {
+    try {
+      const response = await api.get(`plans/${id}/kpis/director`, {
+        params: { offset: 0, limit: 10, kpi_category_id: catId },
+      })
+      return response.data.items
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  React.useEffect(async () => {
     const catList = []
     const temList = []
     const selectTem = []
-    api
+    const result = await getPlan()
+    const res = await getCatPlan()
+    if (res) {
+      res.map(async (i) => {
+        catList.push({ cat: i.kpi_category, weight: i.weight })
+        const res1 = await getTemInOneCatPlan(i.kpi_category.kpi_category_id)
+        if (res1) {
+          res1.map((item) => {
+            temList.push({ tem: item.kpi_template, weight: item.weight })
+            selectTem.push(item.kpi_template.kpi_template_id)
+          })
+        }
+      })
+    }
+    dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
+    setSelectedTem(selectTem)
+    setPlan(result)
+    /*api
       .get(`plans/user/${id}`)
       .then((response) => {
         response.data.plan_kpi_categories.map((item) => {
@@ -81,7 +150,7 @@ const EditKpiAndWeightView = () => {
             }),
           )
         }
-      })
+      })*/
   }, [dispatch])
 
   React.useEffect(() => {
@@ -162,6 +231,7 @@ const EditKpiAndWeightView = () => {
   const onSubmit = async (event) => {
     let valid = true
     const objectToReturn = []
+    const temArrayToReturn = []
     let totalSum = 0
     for (var i = 0; i < currentInPlan.catList.length; i++) {
       const selectedTemByCat = currentInPlan.temList.filter(
@@ -187,10 +257,13 @@ const EditKpiAndWeightView = () => {
           )
           valid = false
         }
+        temArrayToReturn.push({
+          kpi_category_id: currentInPlan.catList[i].cat.kpi_category_id,
+          kpis: kpi_templates,
+        })
         objectToReturn.push({
           kpi_category_id: currentInPlan.catList[i].cat.kpi_category_id,
           weight: Number(currentInPlan.catList[i].weight),
-          kpi_templates: kpi_templates,
         })
         totalSum = totalSum + Number(currentInPlan.catList[i].weight)
       }
@@ -206,15 +279,22 @@ const EditKpiAndWeightView = () => {
     }
     if (valid) {
       setIsSubmit(true)
-      await addToPlan(objectToReturn)
+      await addToPlan(objectToReturn, temArrayToReturn)
     }
   }
 
-  const addToPlan = async (objectToReturn) => {
+  const addToPlan = async (objectToReturn, temArrayToReturn) => {
     try {
-      await api.post(`/plans/add-kpi-categories`, {
+      await api.post(`/plans/register-kpi-categories`, {
         plan_id: Number(plan.plan_id),
         kpi_categories: objectToReturn,
+      })
+      temArrayToReturn.map(async (item) => {
+        await api.post(`/plans/register-kpis`, {
+          plan_id: Number(plan.plan_id),
+          kpi_category_id: item.kpi_category_id,
+          kpis: item.kpis,
+        })
       })
       dispatch(
         createAlert({
@@ -226,22 +306,12 @@ const EditKpiAndWeightView = () => {
       history.replace(`/plan/${id}`)
     } catch (error) {
       if (error.response) {
-        const find = translate(error.response.data.message, weightErrorList)
-        if (find !== '') {
-          dispatch(
-            createAlert({
-              message: find,
-              type: 'error',
-            }),
-          )
-        } else {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        }
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
       }
       setIsSubmit(false)
     }

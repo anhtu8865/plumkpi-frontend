@@ -16,13 +16,13 @@ import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
 
 export const PlanKpiTable = (catItem) => {
-  const { temInPlan } = useSelector((state) => state.planDetail)
+  const { temInPlan, catInPlan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
 
   const Table = () => {
     return (
       <>
-        {temInPlan.length !== 0 && catItem ? (
+        {catInPlan.length !== 0 && catItem ? (
           <>
             <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
               <CTableHead color="light">
@@ -30,32 +30,28 @@ export const PlanKpiTable = (catItem) => {
                   <CTableHeaderCell>KPI</CTableHeaderCell>
                   {user.role === 'Giám đốc' && <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>}
                   <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
+                  <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {temInPlan
-                  .filter(
-                    (item) =>
-                      item.kpi_template.kpi_category.kpi_category_id ===
-                      catItem.kpi_category.kpi_category_id,
-                  )
-                  .map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell>{item.kpi_template.kpi_template_name}</CTableDataCell>
-                      {user.role === 'Giám đốc' && (
-                        <CTableDataCell>{item.weight ? item.weight : null}</CTableDataCell>
-                      )}
-                      <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
-                      <CTableDataCell className="text-center w-25">
-                        <div className="d-flex flex-row justify-content-center">
-                          {/*{user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
-                          {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}*/}
-                          <KpiInfoButton kpiItem={item} />
-                        </div>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
+                {temInPlan.map((item, index) => (
+                  <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{item.kpi_template.kpi_template_name}</CTableDataCell>
+                    {user.role === 'Giám đốc' && (
+                      <CTableDataCell>{item.weight ? item.weight : null}</CTableDataCell>
+                    )}
+                    <CTableDataCell>{item.target ? item.target : 'Chưa có'}</CTableDataCell>
+                    <CTableDataCell>{item.kpi_template.unit}</CTableDataCell>
+                    <CTableDataCell className="text-center w-25">
+                      <div className="d-flex flex-row justify-content-center">
+                        {/*{user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
+                          {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
+                        <KpiInfoButton kpiItem={item} />*/}
+                      </div>
+                    </CTableDataCell>
+                  </CTableRow>
+                ))}
               </CTableBody>
             </CTable>
           </>

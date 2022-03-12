@@ -41,9 +41,9 @@ const KpiTemplate = () => {
 
   React.useEffect(() => {
     api
-      .get('/kpi-categories')
+      .get('/kpi-categories/all')
       .then((response) => {
-        dispatch(setCategoryList({ value: response.data.items }))
+        dispatch(setCategoryList({ value: response.data }))
       })
       .catch((error) => {
         dispatch(
@@ -71,7 +71,7 @@ const KpiTemplate = () => {
   React.useEffect(() => {
     api
       .get('/kpi-templates/', {
-        params: { kpi_category: id, offset: (page - 1) * entryPerPage, limit: entryPerPage },
+        params: { kpi_category_id: id, offset: (page - 1) * entryPerPage, limit: entryPerPage },
       })
       .then((response) => {
         setTotalPage(Math.ceil(response.data.count / entryPerPage))

@@ -47,13 +47,13 @@ export const AddKpiButton = (props) => {
         .get(`/kpi-categories/${catItem.kpi_category_id}`)
         .then((response) => {
           let kpiTemInCat = []
-          response.data.kpi_templates.map((temItem) => {
+          /*response.data.kpi_templates.map((temItem) => {
             kpiTemInCat.push({
               value: temItem.kpi_template_name.replaceAll(' ', '_'),
               label: temItem.kpi_template_name,
             })
             kpiList.push(temItem)
-          })
+          })*/
           kpiTemList.push({
             label: catItem.kpi_category_name,
             options: kpiTemInCat,
@@ -130,7 +130,7 @@ export const AddKpiButton = (props) => {
           unit: values.unit,
           aggregation: values.aggregation,
           kpi_category: selectedCat,
-          formula: newFormula,
+          //formula: newFormula,
         })
         .then(() => {
           dispatch(
@@ -150,7 +150,7 @@ export const AddKpiButton = (props) => {
         .catch((error) => {
           dispatch(
             createAlert({
-              message: 'Tên KPI trùng với tên KPI khác đã có trong hệ thống',
+              message: error.response.data.error,
               type: 'error',
             }),
           )
