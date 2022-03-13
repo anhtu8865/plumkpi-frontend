@@ -8,6 +8,7 @@ import {
   CFormInput,
   CInputGroup,
   CInputGroupText,
+  CFormSelect,
 } from '@coreui/react'
 import { Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
@@ -33,6 +34,9 @@ const PlanDetail = () => {
   const { catInPlan, temInPlan, currentCat, plan } = useSelector((state) => state.planDetail)
   const [catItem, setCatItem] = useState({ kpi_category: {} })
   const { user } = useSelector((state) => state.user)
+  const [quarterSelectValue, setQuarterSelectValue] = useState(1)
+  const [newResult, setNewResult] = useState([])
+  const [newCatResult, setNewCatResult] = useState([])
 
   const getPlan = async () => {
     try {
@@ -55,6 +59,9 @@ const PlanDetail = () => {
       if (user.role === 'Giám đốc') {
         const response = await api.get(`plans/${id}/kpi-categories/director`)
         return response.data
+      } else if (user.role === 'Quản lý') {
+        const response = await api.get(`plans/${id}/kpi-categories/manager`)
+        return response.data
       }
     } catch (error) {
       if (error.response) {
@@ -72,6 +79,11 @@ const PlanDetail = () => {
     try {
       if (user.role === 'Giám đốc') {
         const response = await api.get(`plans/${id}/kpis/director`, {
+          params: { offset: 0, limit: 10, kpi_category_id: catId },
+        })
+        return response.data.items
+      } else if (user.role === 'Quản lý') {
+        const response = await api.get(`plans/${id}/kpis/manager`, {
           params: { offset: 0, limit: 10, kpi_category_id: catId },
         })
         return response.data.items
@@ -93,16 +105,26 @@ const PlanDetail = () => {
     const res = await getCatPlan()
     if (res) {
       if (res.length > 0) {
-        dispatch(
-          setCatInPlan({
-            value: res,
-          }),
-        )
-        dispatch(
-          setCurrentCat({
-            value: res[0],
-          }),
-        )
+        if (user.role === 'Giám đốc') {
+          dispatch(
+            setCatInPlan({
+              value: res,
+            }),
+          )
+          dispatch(
+            setCurrentCat({
+              value: res[0],
+            }),
+          )
+        } else if (user.role === 'Quản lý') {
+          res.map((item) => {
+            item.kpi_category = {
+              kpi_category_id: item.kpi_category_id,
+              kpi_category_name: item.kpi_category_name,
+            }
+            setNewCatResult((newCatResult) => [...newCatResult, item])
+          })
+        }
       } else {
         /*const catId = []
         const catList = []
@@ -140,10 +162,38 @@ const PlanDetail = () => {
     if (currentCat.kpi_category.kpi_category_id) {
       const result = await getTemInOneCatPlan(currentCat.kpi_category.kpi_category_id)
       if (result) {
-        dispatch(setTemInPlan({ value: result }))
+        if (user.role === 'Giám đốc') {
+          dispatch(setTemInPlan({ value: result }))
+        } else if (user.role === 'Quản lý') {
+          result.map((item) => {
+            item.kpi_template = item.plan_kpi_template.kpi_template
+            setNewResult((newResult) => [...newResult, item])
+          })
+        }
       }
     }
   }, [currentCat])
+
+  React.useEffect(async () => {
+    if (user.role === 'Quản lý' && newCatResult.length > 0) {
+      dispatch(
+        setCatInPlan({
+          value: newCatResult,
+        }),
+      )
+      dispatch(
+        setCurrentCat({
+          value: newCatResult[0],
+        }),
+      )
+    }
+  }, [newCatResult])
+
+  React.useEffect(async () => {
+    if (user.role === 'Quản lý') {
+      dispatch(setTemInPlan({ value: newResult }))
+    }
+  }, [newResult])
 
   const NoTemView = () => {
     return (
@@ -254,6 +304,26 @@ const PlanDetail = () => {
           )}
         </CRow>
         <CRow className="mt-4 d-flex justify-content-start">
+          {user.role === 'Quản lý' && (
+            <CCol xs={2}>
+              <CInputGroup size="sm">
+                <CInputGroupText>Quý</CInputGroupText>
+                <CFormSelect
+                  id="freq"
+                  className="text-center"
+                  value={quarterSelectValue}
+                  onChange={(event) => {
+                    setQuarterSelectValue(event.target.value)
+                  }}
+                >
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                </CFormSelect>
+              </CInputGroup>
+            </CCol>
+          )}
           <CCol xs={2}>
             <CInputGroup size="sm">
               <CInputGroupText>Năm</CInputGroupText>
@@ -264,7 +334,7 @@ const PlanDetail = () => {
         <CRow className="mt-4">
           <PlanOverview plan_id={id} />
         </CRow>
-        <CRow className="mt-4">{PlanKpiTable(currentCat)}</CRow>
+        <CRow className="mt-4">{PlanKpiTable(currentCat, quarterSelectValue)}</CRow>
       </>
     )
   }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -18,6 +18,9 @@ import {
   CFormInput,
   CFormFeedback,
   CFormLabel,
+  CFormSelect,
+  CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
@@ -25,29 +28,28 @@ import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import Select from 'react-select'
 import cloneDeep from 'lodash/cloneDeep'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import CheckIcon from '@mui/icons-material/Check'
-import { translate, compareToToday } from 'src/utils/function'
-import { assignKpiErrorList } from 'src/utils/engToViet'
+import DoDisturbIcon from '@mui/icons-material/DoDisturb'
+import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/function'
 
 export const AssignPlanKpiButtonM = (kpiItem) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
-  const [employeeList, setEmployeeList] = useState([])
-  const [selectOption, setSelectOption] = useState([])
-  const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
-  const [selectValue, setSelectValue] = useState('')
+  const [deptList, setDeptList] = useState([])
+  const [selectedDeptList, setSelectedDeptList] = useState([])
+  const [selectValue, setSelectValue] = useState('Quarter')
+  const [quarterSelectValue, setQuarterSelectValue] = useState(1)
   const { plan } = useSelector((state) => state.planDetail)
-  const { user } = useSelector((state) => state.user)
+  const [target, setTarget] = useState(0)
   const [sum, setSum] = useState(0)
+  const [sampleTarget, setSampleTarget] = useState('')
 
-  const getEmployeeList = async () => {
+  /*const getDeptList = async () => {
     try {
-      const response = await api.get(`/depts/manager`)
-      return response.data.users
+      const response = await api.get(`/depts/all`)
+      return response.data
     } catch (error) {
       if (error.response) {
         dispatch(
@@ -62,9 +64,9 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
 
   const getInfoTargetKpi = async () => {
     try {
-      const response = await api.get(
-        `/plans/plan/${plan.plan_id}/assign-kpi/${kpiItem.kpi_template.kpi_template_id}`,
-      )
+      const response = await api.get(`plans/plan/target-kpi-of-depts`, {
+        params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template.kpi_template_id },
+      })
       return response.data
     } catch (error) {
       if (error.response && plan.plan_id) {
@@ -78,17 +80,16 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     }
   }
 
-  const assignKpi = async (listToReturn, target) => {
+  const assignKpi = async (listToReturn) => {
     try {
-      await api.post(`/plans/assign-kpi`, {
-        parent_plan_id: plan.plan_id,
+      await api.post(`/plans/assign-kpi-depts`, {
+        plan_id: plan.plan_id,
         kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        parent_target: kpiItem.target,
-        children: listToReturn,
+        depts: listToReturn,
       })
       dispatch(
         createAlert({
-          message: 'Gán KPI cho nhân viên thành công',
+          message: 'Gán KPI cho phòng ban thành công',
           type: 'success',
         }),
       )
@@ -101,209 +102,248 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
       dispatch(setReload())
     } catch (error) {
       if (error.response) {
-        const find = translate(error.response.data.message, assignKpiErrorList)
-        if (find !== '') {
-          dispatch(
-            createAlert({
-              message: find,
-              type: 'error',
-            }),
-          )
-        } else {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        }
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const setTargetKpi = async (target) => {
+    try {
+      await api.put(`/plans/register-target/director`, {
+        plan_id: plan.plan_id,
+        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
+        target: Number(target),
+      })
+      dispatch(
+        createAlert({
+          message: 'Thiết lập chỉ tiêu cho KPI thành công',
+          type: 'success',
+        }),
+      )
+      setModalVisible(false)
+      dispatch(
+        setLoading({
+          value: true,
+        }),
+      )
+      dispatch(setReload())
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
       }
     }
   }
 
   React.useEffect(async () => {
-    const employeeList = []
-    const employeeId = [user.user_id]
-    const option = []
-    const employees = await getEmployeeList()
-    const assignEmployees = await getInfoTargetKpi()
-    if (assignEmployees) {
-      assignEmployees.map((item) => {
-        employeeList.push({ user: item.plan.user, target: item.target })
-        employeeId.push(item.plan.user.user_id)
+    const deptList = []
+    const depts = await getDeptList()
+    const assignDepts = await getInfoTargetKpi()
+    if (assignDepts) {
+      assignDepts.map((item) => {
+        deptList.push(item)
       })
-      setSelectedEmployeeList(employeeList)
+      setSelectedDeptList(deptList)
     }
-    setEmployeeList(employees)
-    employees
-      .filter((item) => !employeeId.includes(item.user_id))
-      .map((item) => option.push({ value: item.user_id, label: item.user_name }))
-    setSelectOption(option)
+    setDeptList(depts)
+    if (kpiItem && kpiItem.target) {
+      setTarget(kpiItem.target)
+    }
   }, [dispatch])
 
   React.useEffect(() => {
     let sumTarget = 0
-    selectedEmployeeList.map((item) => {
+    selectedDeptList.map((item) => {
       sumTarget = sumTarget + Number(item.target)
     })
     setSum(sumTarget)
-  }, [selectedEmployeeList])
+  }, [selectedDeptList])*/
 
-  const handleSelectOnChange = (event) => {
-    const find = employeeList.find((item) => item.user_id === event.value)
-    if (find) {
-      setSelectedEmployeeList([...selectedEmployeeList, { user: find, target: 0 }])
+  const handleCheckbox = (deptItem) => {
+    const result = handleCheckboxValue(deptItem.dept_id)
+    if (result) {
+      setSelectedDeptList(selectedDeptList.filter((item) => item.dept.dept_id !== deptItem.dept_id))
+    } else {
+      setSelectedDeptList([...selectedDeptList, { dept: deptItem, target: 0 }])
     }
-    setSelectOption(selectOption.filter((item) => item.value !== event.value))
   }
 
-  const handleDeleteOnClick = (item) => {
-    setSelectOption([...selectOption, { value: item.user.user_id, label: item.user.user_name }])
-    setSelectedEmployeeList(
-      selectedEmployeeList.filter((i) => i.user.user_id !== item.user.user_id),
-    )
+  const handleCheckboxValue = (id) => {
+    const find = selectedDeptList.find((item) => item.dept.dept_id === id)
+    if (find) {
+      return true
+    }
+    return false
   }
 
   const handleTargetValue = (id) => {
-    const find = selectedEmployeeList.find((item) => item.user.user_id === id)
-    if (find) {
-      return find.target
+    const selectedDept = selectedDeptList.find((item) => item.dept.dept_id === id)
+    if (selectedDept) {
+      return selectedDept.target
     }
-    return 0
+    return ''
   }
 
   const handleTargetOnChange = (event, id) => {
-    const copyList = cloneDeep(selectedEmployeeList)
-    const find = copyList.find((item) => item.user.user_id === id)
-    if (find) {
-      find.target = event.target.value
+    const copySelectedDeptList = cloneDeep(selectedDeptList)
+    const selectedDept = copySelectedDeptList.find((item) => item.dept.dept_id === id)
+    if (selectedDept) {
+      selectedDept.target = event.target.value
     }
-    setSelectedEmployeeList(copyList)
+    setSelectedDeptList(copySelectedDeptList)
   }
 
-  const onSubmit = async (event, target) => {
-    const find = selectedEmployeeList.find((item) => item.target === '')
-    if (find) {
-      event.preventDefault()
-    } else {
-      setIsSubmit(true)
-      const listToReturn = []
-      selectedEmployeeList.map((item) => {
-        listToReturn.push({ user_id: item.user.user_id, target: Number(item.target) })
-      })
-      await assignKpi(listToReturn, target)
-      setIsSubmit(false)
-    }
-  }
-
-  const handleSelectAll = () => {
-    const copySelectOption = cloneDeep(selectOption)
-    copySelectOption.map((i) => {
-      const find = employeeList.find((item) => item.user_id === i.value)
-      if (find) {
-        selectedEmployeeList.push({ user: find, target: 0 })
-      }
+  const handleSampleTargetOnChange = (event) => {
+    setSampleTarget(event.target.value)
+    const copySelectedDeptList = cloneDeep(selectedDeptList)
+    copySelectedDeptList.map((item) => {
+      item.target = event.target.value
     })
-    setSelectOption([])
+    setSelectedDeptList(copySelectedDeptList)
   }
 
-  const HasTargetView = () => {
+  /*const onSubmit = async (event, target) => {
+    setIsSubmit(true)
+    if (selectValue === 'Year') {
+      const listToReturn = []
+      let valid = true
+      selectedDeptList.map((item) => {
+        if (item.target === '') {
+          valid = false
+        }
+        listToReturn.push({ dept_id: item.dept.dept_id, target: Number(item.target) })
+      })
+      if (valid) {
+        await setTargetKpi(target)
+        await assignKpi(listToReturn)
+      }
+    }
+    setIsSubmit(false)
+  }*/
+
+  const QuarterTargetView = () => {
     return (
       <>
         <CRow className="mt-2">
-          <CCol xs>
-            <CFormLabel htmlFor="parenttarget">
-              Chỉ tiêu KPI được giao (đơn vị: {kpiItem.kpi_template.unit})
-            </CFormLabel>
-            <CFormInput
-              id="parenttarget"
-              defaultValue={kpiItem.target ? kpiItem.target : `Không`}
-              disabled
-            />
+          <CCol xs={12} sm={6}>
+            <CFormLabel htmlFor="freq">Chọn quý</CFormLabel>
+            <CFormSelect
+              id="freq"
+              value={quarterSelectValue}
+              onChange={(event) => {
+                setQuarterSelectValue(event.target.value)
+              }}
+            >
+              <option value={1}>Quý 1</option>
+              <option value={2}>Quý 2</option>
+              <option value={3}>Quý 3</option>
+              <option value={4}>Quý 4</option>
+            </CFormSelect>
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12}>
-            <CRow>
-              <CCol xs={12} sm={6}>
-                <CFormLabel htmlFor="employees">Nhân viên</CFormLabel>
-              </CCol>
-              <CCol xs={12} sm={6} className="text-end">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  size="small"
-                  onClick={() => {
-                    handleSelectAll()
-                  }}
-                >
-                  Chọn tất cả
-                </Button>
-              </CCol>
-            </CRow>
-            <Select
-              id="employees"
-              isSearchable="true"
-              value={selectValue}
-              placeholder="Chọn nhân viên cần gán KPI (có thể tìm kiếm)"
-              menuPlacement="top"
-              onChange={(event) => {
-                handleSelectOnChange(event)
-              }}
-              options={selectOption}
-            />
+            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI quý {quarterSelectValue}</CFormLabel>
+            <CInputGroup>
+              <CFormInput
+                id="parenttarget"
+                placeholder="Nhập chỉ tiêu KPI"
+                type="number"
+                value={target}
+                onChange={(event) => {
+                  setTarget(event.target.value)
+                }}
+                invalid={target === ''}
+              />
+              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+            </CInputGroup>
+            <CFormFeedback invalid></CFormFeedback>
           </CCol>
         </CRow>
-        <CRow className="mt-4">
+        {/*<CRow className="mt-4">
           <div>
-            <h6>Nhân viên đã chọn</h6>
+            <h6>Phòng ban</h6>
           </div>
         </CRow>
         <CRow>
-          {selectedEmployeeList.length > 0 ? (
+          {deptList.length > 0 ? (
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">
-                    CHỈ TIÊU ({kpiItem.kpi_template.unit})
-                  </CTableHeaderCell>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
+                  <CTableHeaderCell>QUẢN LÝ</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {selectedEmployeeList.map((item, index) => {
+                <CTableRow>
+                  <CTableHeaderCell />
+                  <CTableHeaderCell />
+                  <CTableHeaderCell />
+                  <CTableHeaderCell className="w-25">
+                    <CInputGroup size="sm">
+                      <CFormInput
+                        size="sm"
+                        type="number"
+                        value={sampleTarget}
+                        onChange={(event) => {
+                          handleSampleTargetOnChange(event)
+                        }}
+                      />
+                      <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                    </CInputGroup>
+                  </CTableHeaderCell>
+                </CTableRow>
+                {deptList.map((item, index) => {
                   return (
                     <>
-                      <CTableRow key={index}>
+                      <CTableRow
+                        key={index}
+                        color={handleCheckboxValue(item.dept_id) ? null : 'secondary'}
+                      >
+                        <CTableDataCell>
+                          <Checkbox
+                            size="small"
+                            checked={handleCheckboxValue(item.dept_id)}
+                            onChange={() => {
+                              handleCheckbox(item)
+                            }}
+                          />
+                        </CTableDataCell>
+                        <CTableDataCell>{item.dept_name}</CTableDataCell>
                         <CTableDataCell className="d-flex flex-row">
                           <Avatar
-                            src={item.user.avatar ? item.user.avatar.url : null}
+                            src={item.manager.avatar ? item.manager.avatar.url : null}
                             className="me-3"
                           />
-                          {item.user.user_name}
+                          {item.manager.user_name}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CFormInput
-                            size="sm"
-                            type="number"
-                            value={handleTargetValue(item.user.user_id)}
-                            invalid={handleTargetValue(item.user.user_id) === ''}
-                            onChange={(event) => {
-                              handleTargetOnChange(event, item.user.user_id)
-                            }}
-                          />
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          <IconButton
-                            color="error"
-                            onClick={() => {
-                              handleDeleteOnClick(item)
-                            }}
-                          >
-                            <HighlightOffIcon />
-                          </IconButton>
+                          <CInputGroup size="sm">
+                            <CFormInput
+                              type="number"
+                              value={handleTargetValue(item.dept_id)}
+                              invalid={
+                                handleTargetValue(item.dept_id) === '' &&
+                                handleCheckboxValue(item.dept_id)
+                              }
+                              onChange={(event) => {
+                                handleTargetOnChange(event, item.dept_id)
+                              }}
+                              disabled={!handleCheckboxValue(item.dept_id)}
+                            />
+                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                          </CInputGroup>
                         </CTableDataCell>
                       </CTableRow>
                     </>
@@ -312,23 +352,53 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
+                  <CTableDataCell />
                   <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                  <CTableDataCell />
                   <CTableDataCell>
-                    <CFormInput
-                      size="sm"
-                      disabled
-                      value={sum}
-                      invalid={Number(sum) !== Number(kpiItem.target)}
-                      valid={Number(sum) === Number(kpiItem.target)}
-                    />
+                    <CInputGroup size="sm">
+                      <CFormInput size="sm" disabled value={formatNumber(sum)} />
+                      <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                    </CInputGroup>
                   </CTableDataCell>
                 </CTableRow>
               </CTableFoot>
             </CTable>
           ) : (
-            <div>Chưa có nhân viên nào được chọn cho KPI này.</div>
+            <div>Chưa có phòng ban nào được chọn cho KPI này.</div>
           )}
+          </CRow>*/}
+      </>
+    )
+  }
+
+  const HasTargetView = () => {
+    return (
+      <>
+        <CRow className="mt-2">
+          <CCol xs={12} sm={6}>
+            <CFormLabel htmlFor="kpiname">KPI</CFormLabel>
+            <CFormInput
+              id="kpiname"
+              defaultValue={kpiItem.kpi_template.kpi_template_name}
+              disabled
+            />
+          </CCol>
+          <CCol xs={12} sm={6}>
+            <CFormLabel htmlFor="freq">Gán chỉ tiêu theo</CFormLabel>
+            <CFormSelect
+              id="freq"
+              value={selectValue}
+              onChange={(event) => {
+                setSelectValue(event.target.value)
+              }}
+            >
+              <option value="Quarter">Quý</option>
+              <option value="Month">Tháng</option>
+            </CFormSelect>
+          </CCol>
         </CRow>
+        {selectValue === 'Quarter' && QuarterTargetView()}
       </>
     )
   }
@@ -354,24 +424,29 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Gán KPI {kpiItem.kpi_template.kpi_template_name}</CModalTitle>
+          <CModalTitle>Gán KPI</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<CheckIcon />}
-            type="submit"
-            onClick={(event) => {
-              onSubmit(event)
-            }}
-            disabled={
-              isSubmit || selectedEmployeeList.length === 0 || !compareToToday(plan.end_date)
-            }
-          >
-            Xác nhận
-          </Button>
+          {selectValue === 'Quarter' && (
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              /*onClick={(event) => {
+                onSubmit(event, target)
+              }}
+              disabled={
+                isSubmit ||
+                target === '' ||
+                selectedDeptList.length === 0 ||
+                !compareYear(plan.year)
+              }*/
+            >
+              Xác nhận
+            </Button>
+          )}
           {isSubmit && <LoadingCircle />}
         </CModalFooter>
       </CModal>

@@ -20,7 +20,7 @@ export const KpiInfoButton = (props) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [kpiList, setKpiList] = useState([])
 
-  const getKpiTemplates = async () => {
+  /*const getKpiTemplates = async () => {
     try {
       const response = await api.get(`/kpi-templates`)
       return response.data.items
@@ -32,7 +32,7 @@ export const KpiInfoButton = (props) => {
     if (kList) {
       setKpiList(kList)
     }
-  }, [])
+  }, [])*/
 
   return (
     <>
@@ -111,14 +111,14 @@ export const KpiInfoButton = (props) => {
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol xs={12} sm={6}>
+            {/*<CCol xs={12} sm={6}>
               <CFormLabel htmlFor="category">Danh mục</CFormLabel>
               <CFormInput
                 id="category"
                 defaultValue={props.kpiItem.kpi_template.kpi_category.kpi_category_name}
                 disabled
               />
-            </CCol>
+      </CCol>*/}
             <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
               <CFormInput
@@ -128,7 +128,7 @@ export const KpiInfoButton = (props) => {
               />
             </CCol>
           </CRow>
-          <CRow className="mt-3">
+          {/*<CRow className="mt-3">
             <CCol xs>
               <CFormLabel htmlFor="formula">Công thức</CFormLabel>
               <CFormInput
@@ -137,7 +137,7 @@ export const KpiInfoButton = (props) => {
                 disabled
               />
             </CCol>
-          </CRow>
+      </CRow>*/}
         </CModalBody>
       </CModal>
     </>
