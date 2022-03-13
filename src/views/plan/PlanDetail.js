@@ -101,6 +101,8 @@ const PlanDetail = () => {
   }
 
   React.useEffect(async () => {
+    setNewCatResult([])
+    setNewResult([])
     const result = await getPlan()
     const res = await getCatPlan()
     if (res) {
@@ -313,7 +315,7 @@ const PlanDetail = () => {
                   className="text-center"
                   value={quarterSelectValue}
                   onChange={(event) => {
-                    setQuarterSelectValue(event.target.value)
+                    setQuarterSelectValue(Number(event.target.value))
                   }}
                 >
                   <option value={1}>1</option>

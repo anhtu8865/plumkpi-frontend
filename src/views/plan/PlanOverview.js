@@ -8,6 +8,7 @@ import {
   CCardText,
   CProgress,
   CProgressBar,
+  CBadge,
 } from '@coreui/react'
 import { Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,16 +43,26 @@ export const PlanOverview = (props) => {
                       }}
                       style={{
                         cursor: 'pointer',
-                        color:
+                        /*color:
                           item.kpi_category.kpi_category_id ===
                           currentCat.kpi_category.kpi_category_id
                             ? 'dodgerblue'
-                            : 'black',
+                            : 'black',*/
                       }}
                     >
                       <small>
-                        {item.kpi_category.kpi_category_name}{' '}
-                        {item.weight ? `(${item.weight})%` : null}
+                        {item.kpi_category.kpi_category_id ===
+                        currentCat.kpi_category.kpi_category_id ? (
+                          <b>{item.kpi_category.kpi_category_name}</b>
+                        ) : (
+                          item.kpi_category.kpi_category_name
+                        )}
+                        {'    '}
+                        {item.weight ? <CBadge color="dark">{item.weight}%</CBadge> : null}
+                        {item.kpi_category.kpi_category_id ===
+                        currentCat.kpi_category.kpi_category_id ? (
+                          <CBadge color="danger">Đang chọn</CBadge>
+                        ) : null}
                       </small>
                     </div>
                   </CRow>

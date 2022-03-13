@@ -17,6 +17,8 @@ import {
   CFormSelect,
   CFormTextarea,
   CFormCheck,
+  CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -108,6 +110,10 @@ export const AddKpiButton = (props) => {
       formula: '',
       aggregation: 'Tổng',
       category: props.inCat.kpi_category_id,
+      red: 0,
+      red_yellow: 50,
+      yellow_green: 70,
+      green: 100,
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
@@ -131,6 +137,10 @@ export const AddKpiButton = (props) => {
           aggregation: values.aggregation,
           kpi_category: selectedCat,
           //formula: newFormula,
+          red_threshold: values.red,
+          red_yellow_threshold: values.red_yellow,
+          yellow_green_threshold: values.yellow_green,
+          green_threshold: values.green,
         })
         .then(() => {
           dispatch(
@@ -317,6 +327,118 @@ export const AddKpiButton = (props) => {
                   <option value="Mới nhất">Mới nhất</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <div>Ngưỡng mức:</div>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol xs={12} sm={4}>
+                <div>Ngưỡng nguy hiểm</div>
+              </CCol>
+              <CCol xs={12} sm={4}>
+                <CFormLabel htmlFor="dangerfrom">Từ</CFormLabel>
+                <CInputGroup>
+                  <CFormInput
+                    id="dangerfrom"
+                    type="number"
+                    placeholder="Nhập ngưỡng nguy hiểm dưới"
+                    {...formik.getFieldProps('red')}
+                    invalid={formik.touched.red && formik.errors.red ? true : false}
+                    valid={
+                      !formik.touched.red || (formik.touched.red && formik.errors.red)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CInputGroupText>%</CInputGroupText>
+                </CInputGroup>
+                <CFormFeedback invalid>{formik.errors.red}</CFormFeedback>
+              </CCol>
+              <CCol xs={12} sm={4}>
+                <CFormLabel htmlFor="dangerto">Đến</CFormLabel>
+                <CInputGroup>
+                  <CFormInput
+                    id="dangerto"
+                    type="number"
+                    placeholder="Nhập ngưỡng nguy hiểm trên"
+                    {...formik.getFieldProps('red_yellow')}
+                    invalid={formik.touched.red_yellow && formik.errors.red_yellow ? true : false}
+                    valid={
+                      !formik.touched.red_yellow ||
+                      (formik.touched.red_yellow && formik.errors.red_yellow)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CInputGroupText>%</CInputGroupText>
+                </CInputGroup>
+                <CFormFeedback invalid>{formik.errors.red_yellow}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol xs={12} sm={4}>
+                <div>Ngưỡng cần chú ý</div>
+              </CCol>
+              <CCol xs={12} sm={4}>
+                <CFormLabel htmlFor="midfrom">Từ</CFormLabel>
+                <CInputGroup>
+                  <CFormInput id="midfrom" {...formik.getFieldProps('red_yellow')} disabled />
+                  <CInputGroupText>%</CInputGroupText>
+                </CInputGroup>
+              </CCol>
+              <CCol xs={12} sm={4}>
+                <CFormLabel htmlFor="midto">Đến</CFormLabel>
+                <CInputGroup>
+                  <CFormInput
+                    id="midto"
+                    type="number"
+                    placeholder="Nhập ngưỡng cần chú ý trên"
+                    {...formik.getFieldProps('yellow_green')}
+                    invalid={
+                      formik.touched.yellow_green && formik.errors.yellow_green ? true : false
+                    }
+                    valid={
+                      !formik.touched.yellow_green ||
+                      (formik.touched.yellow_green && formik.errors.yellow_green)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CInputGroupText>%</CInputGroupText>
+                </CInputGroup>
+                <CFormFeedback invalid>{formik.errors.yellow_green}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol xs={12} sm={4}>
+                <div>Ngưỡng đạt</div>
+              </CCol>
+              <CCol xs={12} sm={4}>
+                <CFormLabel htmlFor="okfrom">Từ</CFormLabel>
+                <CInputGroup>
+                  <CFormInput id="okfrom" {...formik.getFieldProps('yellow_green')} disabled />
+                  <CInputGroupText>%</CInputGroupText>
+                </CInputGroup>
+              </CCol>
+              <CCol xs={12} sm={4}>
+                <CFormLabel htmlFor="okto">Đến</CFormLabel>
+                <CInputGroup>
+                  <CFormInput
+                    id="okto"
+                    type="number"
+                    placeholder="Nhập ngưỡng đạt trên"
+                    {...formik.getFieldProps('green')}
+                    invalid={formik.touched.green && formik.errors.green ? true : false}
+                    valid={
+                      !formik.touched.green || (formik.touched.green && formik.errors.green)
+                        ? false
+                        : true
+                    }
+                  />
+                  <CInputGroupText>%</CInputGroupText>
+                </CInputGroup>
+                <CFormFeedback invalid>{formik.errors.green}</CFormFeedback>
               </CCol>
             </CRow>
             <CRow className="mt-3">

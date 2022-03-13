@@ -40,11 +40,12 @@ export const AssignPlanKpiButton = (kpiItem) => {
   const [deptList, setDeptList] = useState([])
   const [selectedDeptList, setSelectedDeptList] = useState([])
   const [selectValue, setSelectValue] = useState('Year')
-  const [quarterSelectValue, setQuarterSelectValue] = useState(1)
+  const [selectedQuarter, setSelectedQuarter] = useState(1)
   const { plan } = useSelector((state) => state.planDetail)
   const [target, setTarget] = useState(0)
   const [sum, setSum] = useState(0)
   const [sampleTarget, setSampleTarget] = useState('')
+  const [selectedDeptApprove, setSelectedDeptApprove] = useState([])
 
   const getDeptList = async () => {
     try {
@@ -144,6 +145,78 @@ export const AssignPlanKpiButton = (kpiItem) => {
     }
   }
 
+  const approveQuarterTarget = async (selectedDeptApprove) => {
+    try {
+      selectedDeptApprove.map(async (item) => {
+        await api.put(`/plans/approve-quarterly-target/director`, {
+          plan_id: plan.plan_id,
+          kpi_template_id: kpiItem.kpi_template.kpi_template_id,
+          dept_id: Number(item),
+          quarter: Number(selectedQuarter),
+          approve: 'Chấp nhận',
+        })
+      })
+      dispatch(
+        createAlert({
+          message: 'Duyệt chỉ tiêu KPI cho phòng ban thành công',
+          type: 'success',
+        }),
+      )
+      setModalVisible(false)
+      dispatch(
+        setLoading({
+          value: true,
+        }),
+      )
+      dispatch(setReload())
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
+  const denyQuarterTarget = async (selectedDeptApprove) => {
+    try {
+      selectedDeptApprove.map(async (item) => {
+        await api.put(`/plans/approve-quarterly-target/director`, {
+          plan_id: plan.plan_id,
+          kpi_template_id: kpiItem.kpi_template.kpi_template_id,
+          dept_id: Number(item),
+          quarter: Number(selectedQuarter),
+          approve: 'Từ chối',
+        })
+      })
+      dispatch(
+        createAlert({
+          message: 'Từ chối chỉ tiêu KPI của phòng ban thành công',
+          type: 'success',
+        }),
+      )
+      setModalVisible(false)
+      dispatch(
+        setLoading({
+          value: true,
+        }),
+      )
+      dispatch(setReload())
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          createAlert({
+            message: error.response.data.message,
+            type: 'error',
+          }),
+        )
+      }
+    }
+  }
+
   React.useEffect(async () => {
     const deptList = []
     const depts = await getDeptList()
@@ -167,6 +240,10 @@ export const AssignPlanKpiButton = (kpiItem) => {
     })
     setSum(sumTarget)
   }, [selectedDeptList])
+
+  React.useEffect(() => {
+    setSelectedDeptApprove([])
+  }, [selectedQuarter])
 
   const handleCheckbox = (deptItem) => {
     const result = handleCheckboxValue(deptItem.dept_id)
@@ -209,6 +286,68 @@ export const AssignPlanKpiButton = (kpiItem) => {
       item.target = event.target.value
     })
     setSelectedDeptList(copySelectedDeptList)
+  }
+
+  const handleQuarterTargetValue = (item) => {
+    if (selectedQuarter === 1) {
+      if (item.first_quarterly_target) {
+        return formatNumber(item.first_quarterly_target.target)
+      }
+    } else if (selectedQuarter === 2) {
+      if (item.second_quarterly_target) {
+        return formatNumber(item.second_quarterly_target.target)
+      }
+    } else if (selectedQuarter === 3) {
+      if (item.third_quarterly_target) {
+        return formatNumber(item.third_quarterly_target.target)
+      }
+    } else if (selectedQuarter === 4) {
+      if (item.fourth_quarterly_target) {
+        return formatNumber(item.fourth_quarterly_target.target)
+      }
+    }
+    return 'Chưa đăng ký'
+  }
+
+  const handleQuarterTargetStatus = (item) => {
+    if (selectedQuarter === 1) {
+      if (item.first_quarterly_target) {
+        return item.first_quarterly_target.approve
+      }
+    } else if (selectedQuarter === 2) {
+      if (item.second_quarterly_target) {
+        return item.second_quarterly_target.approve
+      }
+    } else if (selectedQuarter === 3) {
+      if (item.third_quarterly_target) {
+        return item.third_quarterly_target.approve
+      }
+    } else if (selectedQuarter === 4) {
+      if (item.fourth_quarterly_target) {
+        return item.fourth_quarterly_target.approve
+      }
+    }
+    return ''
+  }
+
+  const handleApproveCheckbox = (item) => {
+    if (selectedDeptApprove.includes(item.dept.dept_id)) {
+      setSelectedDeptApprove(selectedDeptApprove.filter((i) => i !== item.dept.dept_id))
+    } else {
+      setSelectedDeptApprove([...selectedDeptApprove, item.dept.dept_id])
+    }
+  }
+
+  const onApproveSubmit = async () => {
+    setIsSubmit(true)
+    await approveQuarterTarget(selectedDeptApprove)
+    setIsSubmit(false)
+  }
+
+  const onDenySubmit = async () => {
+    setIsSubmit(true)
+    await denyQuarterTarget(selectedDeptApprove)
+    setIsSubmit(false)
   }
 
   const onSubmit = async (event, target) => {
@@ -363,9 +502,9 @@ export const AssignPlanKpiButton = (kpiItem) => {
             <CFormLabel htmlFor="freq">Chọn quý</CFormLabel>
             <CFormSelect
               id="freq"
-              value={quarterSelectValue}
+              value={selectedQuarter}
               onChange={(event) => {
-                setQuarterSelectValue(event.target.value)
+                setSelectedQuarter(Number(event.target.value))
               }}
             >
               <option value={1}>Quý 1</option>
@@ -395,20 +534,14 @@ export const AssignPlanKpiButton = (kpiItem) => {
                   return (
                     <>
                       <CTableRow key={index}>
-                        <CTableDataCell>
-                          {item.first_quarterly_target ? (
-                            item.first_quarterly_target.approve === 'Pending' ? (
-                              true
-                            ) : (
-                              false
-                            )
-                          ) : false ? (
+                        <CTableDataCell className="text-center">
+                          {handleQuarterTargetStatus(item) === 'Đang xử lý' ? (
                             <Checkbox
                               size="small"
-                              /*checked={handleCheckboxValue(item.dept_id)}
-                            onChange={() => {
-                              handleCheckbox(item)
-                            }}*/
+                              checked={selectedDeptApprove.includes(item.dept.dept_id)}
+                              onChange={() => {
+                                handleApproveCheckbox(item)
+                              }}
                             />
                           ) : null}
                         </CTableDataCell>
@@ -416,25 +549,9 @@ export const AssignPlanKpiButton = (kpiItem) => {
                         <CTableDataCell className="w-25">
                           <CInputGroup size="sm">
                             <CFormInput
-                              defaultValue={
-                                item.first_quarterly_target
-                                  ? item.first_quarterly_target.target
-                                  : 'Chưa đăng ký'
-                              }
-                              valid={
-                                item.first_quarterly_target
-                                  ? item.first_quarterly_target.approve === 'Accepted'
-                                    ? true
-                                    : false
-                                  : false
-                              }
-                              invalid={
-                                item.first_quarterly_target
-                                  ? item.first_quarterly_target.approve === 'Denied'
-                                    ? true
-                                    : false
-                                  : false
-                              }
+                              value={handleQuarterTargetValue(item)}
+                              valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
+                              invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
                               disabled
                             />
                             <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
@@ -507,7 +624,8 @@ export const AssignPlanKpiButton = (kpiItem) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Gán KPI</CModalTitle>
+          {selectValue === 'Year' && <CModalTitle>Gán chỉ tiêu KPI</CModalTitle>}
+          {selectValue === 'Quarter' && <CModalTitle>Xét duyệt chỉ tiêu KPI</CModalTitle>}
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
@@ -537,10 +655,10 @@ export const AssignPlanKpiButton = (kpiItem) => {
                 color="error"
                 startIcon={<DoDisturbIcon />}
                 type="submit"
-                /*onClick={(event) => {
-                  onSubmit(event, target)
-                }}*/
-                disabled={isSubmit || selectedDeptList.length === 0 || !compareYear(plan.year)}
+                onClick={() => {
+                  onDenySubmit()
+                }}
+                disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
               >
                 Từ chối
               </Button>
@@ -549,10 +667,10 @@ export const AssignPlanKpiButton = (kpiItem) => {
                 color="success"
                 startIcon={<CheckIcon />}
                 type="submit"
-                /*onClick={(event) => {
-                  onSubmit(event, target)
-                }}*/
-                disabled={isSubmit || selectedDeptList.length === 0 || !compareYear(plan.year)}
+                onClick={() => {
+                  onApproveSubmit()
+                }}
+                disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
               >
                 Chấp nhận
               </Button>

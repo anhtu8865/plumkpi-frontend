@@ -22,19 +22,19 @@ export const PlanKpiTable = (catItem, selectedQuarter) => {
 
   const handleQuarterTargetValue = (item) => {
     if (selectedQuarter === 1) {
-      if (item.first_quarterly_target) {
+      if (item.first_quarterly_target && item.first_quarterly_target.approve === 'Chấp nhận') {
         return formatNumber(item.first_quarterly_target.target)
       }
     } else if (selectedQuarter === 2) {
-      if (item.second_quarterly_target) {
+      if (item.second_quarterly_target && item.second_quarterly_target.approve === 'Chấp nhận') {
         return formatNumber(item.second_quarterly_target.target)
       }
     } else if (selectedQuarter === 3) {
-      if (item.third_quarterly_target) {
+      if (item.third_quarterly_target && item.third_quarterly_target.approve === 'Chấp nhận') {
         return formatNumber(item.third_quarterly_target.target)
       }
     } else if (selectedQuarter === 4) {
-      if (item.fourth_quarterly_target) {
+      if (item.fourth_quarterly_target && item.fourth_quarterly_target.approve === 'Chấp nhận') {
         return formatNumber(item.fourth_quarterly_target.target)
       }
     }
