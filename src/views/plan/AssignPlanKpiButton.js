@@ -294,21 +294,25 @@ export const AssignPlanKpiButton = (kpiItem) => {
         if (item.first_quarterly_target) {
           return item.first_quarterly_target.target
         }
+        return 'Chưa đăng ký'
       }
       case 2: {
         if (item.second_quarterly_target) {
           return item.second_quarterly_target.target
         }
+        return 'Chưa đăng ký'
       }
       case 3: {
         if (item.third_quarterly_target) {
           return item.third_quarterly_target.target
         }
+        return 'Chưa đăng ký'
       }
       case 4: {
         if (item.fourth_quarterly_target) {
           return item.fourth_quarterly_target.target
         }
+        return 'Chưa đăng ký'
       }
       default:
         return 'Chưa đăng ký'
@@ -321,21 +325,25 @@ export const AssignPlanKpiButton = (kpiItem) => {
         if (item.first_quarterly_target) {
           return item.first_quarterly_target.approve
         }
+        return ''
       }
       case 2: {
         if (item.second_quarterly_target) {
           return item.second_quarterly_target.approve
         }
+        return ''
       }
       case 3: {
         if (item.third_quarterly_target) {
           return item.third_quarterly_target.approve
         }
+        return ''
       }
       case 4: {
         if (item.fourth_quarterly_target) {
           return item.fourth_quarterly_target.approve
         }
+        return ''
       }
       default:
         return ''
