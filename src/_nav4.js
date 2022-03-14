@@ -22,11 +22,23 @@ const _nav = [
     ],
   },
 
+  // {
+  //   component: CNavItem,
+  //   name: 'Số liệu',
+  //   to: '/data',
+  //   icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  // },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Số liệu',
-    to: '/data',
     icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Duyệt số liệu',
+        to: '/',
+      },
+    ],
   },
   {
     component: CNavItem,
