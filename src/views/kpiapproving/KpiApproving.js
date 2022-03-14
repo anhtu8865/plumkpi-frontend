@@ -46,6 +46,53 @@ function colorStatus(status) {
 }
 
 const KpiApproving = () => {
+  const MOCK_DATA = [
+    {
+      approve_registration: 'Chấp nhận',
+      target: '5000',
+      kpi_template: {
+        kpi_template_id: 1,
+        kpi_template_name: 'KPI1',
+        unit: 'VND',
+      },
+      plan: {
+        user: {
+          user_name: 'Name1',
+          avatar: null,
+        },
+      },
+    },
+    {
+      approve_registration: 'Từ chối',
+      target: '5000',
+      kpi_template: {
+        kpi_template_id: 1,
+        kpi_template_name: 'KPI1',
+        unit: 'VND',
+      },
+      plan: {
+        user: {
+          user_name: 'Name1',
+          avatar: null,
+        },
+      },
+    },
+    {
+      approve_registration: 'Đang xử lý',
+      target: '5000',
+      kpi_template: {
+        kpi_template_id: 1,
+        kpi_template_name: 'KPI1',
+        unit: 'VND',
+      },
+      plan: {
+        user: {
+          user_name: 'Name1',
+          avatar: null,
+        },
+      },
+    },
+  ]
   const { id } = useParams()
   //console.log(id)
   const dispatch = useDispatch()
@@ -55,7 +102,7 @@ const KpiApproving = () => {
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)
   const [totalPage, setTotalPage] = React.useState(1)
-  const [entry, setEntry] = React.useState([])
+  const [entry, setEntry] = React.useState(MOCK_DATA)
 
   const [selectedKpi, setSelectedKpi] = React.useState([])
 
@@ -363,7 +410,7 @@ const KpiApproving = () => {
                   {row.approve_registration}
                 </CTableDataCell>
                 <CTableDataCell className="text-center">
-                  <InfoKpiApproving kpiItem={row} />
+                  {/* <InfoKpiApproving kpiItem={row} /> */}
                 </CTableDataCell>
               </CTableRow>
             ))}
