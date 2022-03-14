@@ -584,7 +584,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
             />
           </CCol>
           <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="freq">Gán chỉ tiêu theo</CFormLabel>
+            <CFormLabel htmlFor="freq">Theo</CFormLabel>
             <CFormSelect
               id="freq"
               value={selectValue}

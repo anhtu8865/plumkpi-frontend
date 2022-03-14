@@ -161,6 +161,7 @@ const PlanDetail = () => {
   }, [reload, dispatch])
 
   React.useEffect(async () => {
+    setNewResult([])
     if (currentCat.kpi_category.kpi_category_id) {
       const result = await getTemInOneCatPlan(currentCat.kpi_category.kpi_category_id)
       if (result) {
@@ -280,7 +281,7 @@ const PlanDetail = () => {
             </CCol>
           )}
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
-            <CCol xs={12} sm={6}>
+            <CCol xs={6} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
@@ -307,7 +308,7 @@ const PlanDetail = () => {
         </CRow>
         <CRow className="mt-4 d-flex justify-content-start">
           {user.role === 'Quản lý' && (
-            <CCol xs={2}>
+            <CCol xs={12} sm={4} xl={2}>
               <CInputGroup size="sm">
                 <CInputGroupText>Quý</CInputGroupText>
                 <CFormSelect
@@ -326,7 +327,7 @@ const PlanDetail = () => {
               </CInputGroup>
             </CCol>
           )}
-          <CCol xs={2}>
+          <CCol xs={12} sm={4} xl={2}>
             <CInputGroup size="sm">
               <CInputGroupText>Năm</CInputGroupText>
               <CFormInput className="text-center" defaultValue={plan.year} disabled />
