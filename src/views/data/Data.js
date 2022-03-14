@@ -37,9 +37,7 @@ const User = () => {
             <CCard>
               <CCardBody className="p-4">
                 <CRow>
-                  <CCol xs={6}>
-                    <h4>Người dùng</h4>
-                  </CCol>
+                  <CCol xs={6}></CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
                   </CCol>
