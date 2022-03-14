@@ -290,16 +290,16 @@ const EditKpiAndWeightView = () => {
 
   const addToPlan = async (objectToReturn, temArrayToReturn) => {
     try {
-      await api.post(`/plans/register-kpi-categories`, {
-        plan_id: Number(plan.plan_id),
-        kpi_categories: objectToReturn,
-      })
       temArrayToReturn.map(async (item) => {
         await api.post(`/plans/register-kpis`, {
           plan_id: Number(plan.plan_id),
           kpi_category_id: item.kpi_category_id,
           kpis: item.kpis,
         })
+      })
+      await api.post(`/plans/register-kpi-categories`, {
+        plan_id: Number(plan.plan_id),
+        kpi_categories: objectToReturn,
       })
       dispatch(
         createAlert({

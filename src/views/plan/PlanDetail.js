@@ -16,7 +16,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import { setLoading, setReload } from 'src/slices/viewSlice'
-import { setCatInPlan, setTemInPlan, setCurrentCat, setPlan } from 'src/slices/planDetailSlice'
+import {
+  setCatInPlan,
+  setTemInPlan,
+  setCurrentCat,
+  setPlan,
+  setTemPage,
+  setTemTotalPage,
+} from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
 import { PlanOverview } from './PlanOverview'
@@ -32,13 +39,13 @@ const PlanDetail = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
-  const { catInPlan, temInPlan, currentCat, plan } = useSelector((state) => state.planDetail)
-  const [catItem, setCatItem] = useState({ kpi_category: {} })
+  const { catInPlan, currentCat, plan, temPage } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
   const [selectedQuarter, setSelectedQuarter] = useState(1)
   const [selectedMonth, setSelectedMonth] = useState(3)
   const [newResult, setNewResult] = useState([])
   const [newCatResult, setNewCatResult] = useState([])
+  const entryPerPage = 10
 
   const getPlan = async () => {
     try {
@@ -80,22 +87,25 @@ const PlanDetail = () => {
     }
   }
 
-  const getTemInOneCatPlan = async (catId) => {
+  const getTemInOneCatPlan = async (offset, catId) => {
     try {
       if (user.role === 'Giám đốc') {
         const response = await api.get(`plans/${id}/kpis/director`, {
-          params: { offset: 0, limit: 10, kpi_category_id: catId },
+          params: { offset: offset, limit: 10, kpi_category_id: catId },
         })
+        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
         return response.data.items
       } else if (user.role === 'Quản lý') {
         const response = await api.get(`plans/${id}/kpis/manager`, {
-          params: { offset: 0, limit: 10, kpi_category_id: catId },
+          params: { offset: offset, limit: 10, kpi_category_id: catId },
         })
+        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
         return response.data.items
       } else if (user.role === 'Nhân viên') {
         const response = await api.get(`plans/${id}/kpis/employee`, {
-          params: { offset: 0, limit: 10, kpi_category_id: catId },
+          params: { offset: offset, limit: 10, kpi_category_id: catId },
         })
+        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
         return response.data.items
       }
     } catch (error) {
@@ -154,7 +164,28 @@ const PlanDetail = () => {
   React.useEffect(async () => {
     setNewResult([])
     if (currentCat.kpi_category.kpi_category_id) {
-      const result = await getTemInOneCatPlan(currentCat.kpi_category.kpi_category_id)
+      const result = await getTemInOneCatPlan(
+        (temPage - 1) * entryPerPage,
+        currentCat.kpi_category.kpi_category_id,
+      )
+      if (result) {
+        if (user.role === 'Giám đốc') {
+          dispatch(setTemInPlan({ value: result }))
+        } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
+          result.map((item) => {
+            item.kpi_template = item.plan_kpi_template.kpi_template
+            setNewResult((newResult) => [...newResult, item])
+          })
+        }
+      }
+    }
+  }, [temPage])
+
+  React.useEffect(async () => {
+    dispatch(setTemPage({ value: 1 }))
+    setNewResult([])
+    if (currentCat.kpi_category.kpi_category_id) {
+      const result = await getTemInOneCatPlan(0, currentCat.kpi_category.kpi_category_id)
       if (result) {
         if (user.role === 'Giám đốc') {
           dispatch(setTemInPlan({ value: result }))
@@ -168,7 +199,7 @@ const PlanDetail = () => {
     }
   }, [currentCat])
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     if (['Quản lý', 'Nhân viên'].includes(user.role) && newCatResult.length > 0) {
       dispatch(
         setCatInPlan({
@@ -183,7 +214,7 @@ const PlanDetail = () => {
     }
   }, [newCatResult])
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     if (['Quản lý', 'Nhân viên'].includes(user.role)) {
       dispatch(setTemInPlan({ value: newResult }))
     }

@@ -9,16 +9,20 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CTableFoot,
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
+import { Pagination } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { setTemPage } from 'src/slices/planDetailSlice'
 import { KpiInfoButton } from './KpiInfoButton'
 import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
 import { formatNumber } from 'src/utils/function'
 
 export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
-  const { temInPlan, catInPlan } = useSelector((state) => state.planDetail)
+  const { temInPlan, catInPlan, temPage, temTotalPage } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
 
   const handleQuarterTargetValue = (item) => {
     switch (selectedQuarter) {
@@ -184,6 +188,22 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                   </CTableRow>
                 ))}
               </CTableBody>
+              <CTableFoot>
+                <CTableRow>
+                  <CTableDataCell colSpan={user.role === 'Nhân viên' ? '4' : '5'}>
+                    <Pagination
+                      page={temPage}
+                      count={temTotalPage}
+                      showFirstButton
+                      showLastButton
+                      size="small"
+                      onChange={(event, page) => {
+                        dispatch(setTemPage({ value: page }))
+                      }}
+                    />
+                  </CTableDataCell>
+                </CTableRow>
+              </CTableFoot>
             </CTable>
           </>
         ) : null}

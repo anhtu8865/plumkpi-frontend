@@ -17,7 +17,7 @@ export const DeleteKpiInPlanButton = (props) => {
   const history = useHistory()
 
   const deleteKpiPlan = async () => {
-    try {
+    /*try {
       await api.post(`/plans/add-kpi-categories`, {
         plan_id: Number(props.planItem.plan_id),
         kpi_categories: [],
@@ -38,7 +38,7 @@ export const DeleteKpiInPlanButton = (props) => {
           }),
         )
       }
-    }
+    }*/
   }
 
   const onClickDelete = async () => {
