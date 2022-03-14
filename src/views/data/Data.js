@@ -98,7 +98,9 @@ const Data = () => {
               <CTableBody>
                 <CTableRow v-for="item in tableItems">
                   <CTableDataCell>Overdue Service Requests</CTableDataCell>
-                  <CTableDataCell className="text-center">x</CTableDataCell>
+                  <CTableDataCell className="text-center">
+                    <CFormInput></CFormInput>
+                  </CTableDataCell>
                   <CTableDataCell className="text-center">80</CTableDataCell>
                   <CTableDataCell className="text-center">VND</CTableDataCell>
                   <CTableDataCell className="text-center">
