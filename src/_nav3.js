@@ -14,15 +14,15 @@ const _nav = [
         name: 'Kế hoạch KPI',
         to: '/plan',
       },
-      // {
-      //   component: CNavItem,
-      //   name: 'Đăng ký KPI cá nhân',
-      //   to: '/kpiregistration',
-      // },
+      {
+        component: CNavItem,
+        name: 'Đăng ký KPI cá nhân',
+        to: '/kpiregistration/1',
+      },
       {
         component: CNavItem,
         name: 'Duyệt đăng kí KPI',
-        to: '/kpiapproving',
+        to: '/kpiapproving/1',
       },
     ],
   },
