@@ -81,11 +81,19 @@ export const KpiInfoButton = (props) => {
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol xs={12} sm={6}>
+            {/*<CCol xs={12} sm={6}>
               <CFormLabel htmlFor="target">Chỉ tiêu</CFormLabel>
               <CFormInput
                 id="target"
                 defaultValue={props.kpiItem.target ? props.kpiItem.target : 'Chưa có'}
+                disabled
+              />
+      </CCol>*/}
+            <CCol xs={12} sm={6}>
+              <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
+              <CFormInput
+                id="aggregation"
+                defaultValue={translate(props.kpiItem.kpi_template.aggregation, aggList)}
                 disabled
               />
             </CCol>
@@ -120,7 +128,7 @@ export const KpiInfoButton = (props) => {
                 defaultValue={props.kpiItem.kpi_template.kpi_category.kpi_category_name}
                 disabled
               />
-      </CCol>*/}
+      </CCol>
             <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
               <CFormInput
@@ -128,7 +136,7 @@ export const KpiInfoButton = (props) => {
                 defaultValue={translate(props.kpiItem.kpi_template.aggregation, aggList)}
                 disabled
               />
-            </CCol>
+            </CCol>*/}
           </CRow>
           <CRow className="mt-3">
             <div>Ngưỡng mức:</div>

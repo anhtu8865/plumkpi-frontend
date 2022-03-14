@@ -289,45 +289,57 @@ export const AssignPlanKpiButton = (kpiItem) => {
   }
 
   const handleQuarterTargetValue = (item) => {
-    if (selectedQuarter === 1) {
-      if (item.first_quarterly_target) {
-        return formatNumber(item.first_quarterly_target.target)
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          return item.first_quarterly_target.target
+        }
       }
-    } else if (selectedQuarter === 2) {
-      if (item.second_quarterly_target) {
-        return formatNumber(item.second_quarterly_target.target)
+      case 2: {
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.target
+        }
       }
-    } else if (selectedQuarter === 3) {
-      if (item.third_quarterly_target) {
-        return formatNumber(item.third_quarterly_target.target)
+      case 3: {
+        if (item.third_quarterly_target) {
+          return item.third_quarterly_target.target
+        }
       }
-    } else if (selectedQuarter === 4) {
-      if (item.fourth_quarterly_target) {
-        return formatNumber(item.fourth_quarterly_target.target)
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          return item.fourth_quarterly_target.target
+        }
       }
+      default:
+        return 'Chưa đăng ký'
     }
-    return 'Chưa đăng ký'
   }
 
   const handleQuarterTargetStatus = (item) => {
-    if (selectedQuarter === 1) {
-      if (item.first_quarterly_target) {
-        return item.first_quarterly_target.approve
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          return item.first_quarterly_target.approve
+        }
       }
-    } else if (selectedQuarter === 2) {
-      if (item.second_quarterly_target) {
-        return item.second_quarterly_target.approve
+      case 2: {
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.approve
+        }
       }
-    } else if (selectedQuarter === 3) {
-      if (item.third_quarterly_target) {
-        return item.third_quarterly_target.approve
+      case 3: {
+        if (item.third_quarterly_target) {
+          return item.third_quarterly_target.approve
+        }
       }
-    } else if (selectedQuarter === 4) {
-      if (item.fourth_quarterly_target) {
-        return item.fourth_quarterly_target.approve
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          return item.fourth_quarterly_target.approve
+        }
       }
+      default:
+        return ''
     }
-    return ''
   }
 
   const handleApproveCheckbox = (item) => {
@@ -547,15 +559,19 @@ export const AssignPlanKpiButton = (kpiItem) => {
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <CFormInput
-                              value={handleQuarterTargetValue(item)}
-                              valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
-                              invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
-                              disabled
-                            />
-                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                          </CInputGroup>
+                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                value={formatNumber(handleQuarterTargetValue(item))}
+                                valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
+                                invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
+                                disabled
+                              />
+                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                            </CInputGroup>
+                          ) : (
+                            'Chưa đăng ký'
+                          )}
                         </CTableDataCell>
                       </CTableRow>
                     </>
@@ -650,30 +666,32 @@ export const AssignPlanKpiButton = (kpiItem) => {
           )}
           {selectValue === 'Quarter' && (
             <>
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<DoDisturbIcon />}
-                type="submit"
-                onClick={() => {
-                  onDenySubmit()
-                }}
-                disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
-              >
-                Từ chối
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<CheckIcon />}
-                type="submit"
-                onClick={() => {
-                  onApproveSubmit()
-                }}
-                disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
-              >
-                Chấp nhận
-              </Button>
+              <div className="d-grid gap-3 d-md-flex justify-content-end">
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DoDisturbIcon />}
+                  type="submit"
+                  onClick={() => {
+                    onDenySubmit()
+                  }}
+                  disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
+                >
+                  Từ chối
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<CheckIcon />}
+                  type="submit"
+                  onClick={() => {
+                    onApproveSubmit()
+                  }}
+                  disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
+                >
+                  Chấp nhận
+                </Button>
+              </div>
             </>
           )}
           {isSubmit && <LoadingCircle />}

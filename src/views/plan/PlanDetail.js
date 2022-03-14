@@ -23,6 +23,7 @@ import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { formatDate, compareToToday, compareYear } from 'src/utils/function'
+import { monthArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
@@ -34,7 +35,8 @@ const PlanDetail = () => {
   const { catInPlan, temInPlan, currentCat, plan } = useSelector((state) => state.planDetail)
   const [catItem, setCatItem] = useState({ kpi_category: {} })
   const { user } = useSelector((state) => state.user)
-  const [quarterSelectValue, setQuarterSelectValue] = useState(1)
+  const [selectedQuarter, setSelectedQuarter] = useState(1)
+  const [selectedMonth, setSelectedMonth] = useState(3)
   const [newResult, setNewResult] = useState([])
   const [newCatResult, setNewCatResult] = useState([])
 
@@ -62,6 +64,9 @@ const PlanDetail = () => {
       } else if (user.role === 'Quản lý') {
         const response = await api.get(`plans/${id}/kpi-categories/manager`)
         return response.data
+      } else if (user.role === 'Nhân viên') {
+        const response = await api.get(`plans/${id}/kpi-categories/employee`)
+        return response.data
       }
     } catch (error) {
       if (error.response) {
@@ -84,6 +89,11 @@ const PlanDetail = () => {
         return response.data.items
       } else if (user.role === 'Quản lý') {
         const response = await api.get(`plans/${id}/kpis/manager`, {
+          params: { offset: 0, limit: 10, kpi_category_id: catId },
+        })
+        return response.data.items
+      } else if (user.role === 'Nhân viên') {
+        const response = await api.get(`plans/${id}/kpis/employee`, {
           params: { offset: 0, limit: 10, kpi_category_id: catId },
         })
         return response.data.items
@@ -118,7 +128,7 @@ const PlanDetail = () => {
               value: res[0],
             }),
           )
-        } else if (user.role === 'Quản lý') {
+        } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
           res.map((item) => {
             item.kpi_category = {
               kpi_category_id: item.kpi_category_id,
@@ -127,25 +137,6 @@ const PlanDetail = () => {
             setNewCatResult((newCatResult) => [...newCatResult, item])
           })
         }
-      } else {
-        /*const catId = []
-        const catList = []
-        result.plan_kpi_templates.map((item) => {
-          if (!catId.includes(item.kpi_template.kpi_category.kpi_category_id)) {
-            catList.push({ kpi_category: item.kpi_template.kpi_category, weight: null })
-            catId.push(item.kpi_template.kpi_category.kpi_category_id)
-          }
-        })
-        dispatch(
-          setCatInPlan({
-            value: catList,
-          }),
-        )
-        dispatch(
-          setCurrentCat({
-            value: catList[0],
-          }),
-        )*/
       }
       dispatch(
         setPlan({
@@ -167,7 +158,7 @@ const PlanDetail = () => {
       if (result) {
         if (user.role === 'Giám đốc') {
           dispatch(setTemInPlan({ value: result }))
-        } else if (user.role === 'Quản lý') {
+        } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
           result.map((item) => {
             item.kpi_template = item.plan_kpi_template.kpi_template
             setNewResult((newResult) => [...newResult, item])
@@ -178,7 +169,7 @@ const PlanDetail = () => {
   }, [currentCat])
 
   React.useEffect(async () => {
-    if (user.role === 'Quản lý' && newCatResult.length > 0) {
+    if (['Quản lý', 'Nhân viên'].includes(user.role) && newCatResult.length > 0) {
       dispatch(
         setCatInPlan({
           value: newCatResult,
@@ -193,7 +184,7 @@ const PlanDetail = () => {
   }, [newCatResult])
 
   React.useEffect(async () => {
-    if (user.role === 'Quản lý') {
+    if (['Quản lý', 'Nhân viên'].includes(user.role)) {
       dispatch(setTemInPlan({ value: newResult }))
     }
   }, [newResult])
@@ -312,17 +303,36 @@ const PlanDetail = () => {
               <CInputGroup size="sm">
                 <CInputGroupText>Quý</CInputGroupText>
                 <CFormSelect
-                  id="freq"
                   className="text-center"
-                  value={quarterSelectValue}
+                  value={selectedQuarter}
                   onChange={(event) => {
-                    setQuarterSelectValue(Number(event.target.value))
+                    setSelectedQuarter(Number(event.target.value))
                   }}
                 >
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>
                   <option value={4}>4</option>
+                </CFormSelect>
+              </CInputGroup>
+            </CCol>
+          )}
+          {user.role === 'Nhân viên' && (
+            <CCol xs={12} sm={4} xl={2}>
+              <CInputGroup size="sm">
+                <CInputGroupText>Tháng</CInputGroupText>
+                <CFormSelect
+                  className="text-center"
+                  value={selectedMonth}
+                  onChange={(event) => {
+                    setSelectedMonth(Number(event.target.value))
+                  }}
+                >
+                  {monthArray.map((item) => (
+                    <option value={item} key={item}>
+                      {item}
+                    </option>
+                  ))}
                 </CFormSelect>
               </CInputGroup>
             </CCol>
@@ -337,7 +347,7 @@ const PlanDetail = () => {
         <CRow className="mt-4">
           <PlanOverview plan_id={id} />
         </CRow>
-        <CRow className="mt-4">{PlanKpiTable(currentCat, quarterSelectValue)}</CRow>
+        <CRow className="mt-4">{PlanKpiTable(currentCat, selectedQuarter, selectedMonth)}</CRow>
       </>
     )
   }
