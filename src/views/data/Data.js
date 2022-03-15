@@ -38,6 +38,7 @@ import {
   TabList,
   IconButton,
   Input,
+  TextField,
 } from '@mui/material'
 import FilePresentIcon from '@mui/icons-material/FilePresent'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
@@ -52,7 +53,14 @@ import { createAlert } from 'src/slices/alertSlice'
 import { setUserLoading } from 'src/slices/userSlice'
 import api from 'src/views/axiosConfig'
 
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker'
+
 const Data = () => {
+  const [value, setValue] = React.useState(null)
+  const [saveVisible, setSaveVisible] = React.useState('none')
+
   const DataTable = (props) => {
     const [activeKey, setActiveKey] = React.useState(1)
     return (
@@ -92,11 +100,12 @@ const Data = () => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>TÊN</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">14/03</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">16/03/2022</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">TRỌNG SỐ</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">ĐƠN VỊ</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">TIẾN ĐỘ</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">NOTE</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center"></CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -106,7 +115,7 @@ const Data = () => {
                     <CRow>
                       <CCol className="align-self-center">
                         {' '}
-                        <input
+                        <CFormInput
                           type="number"
                           defaultValue={800}
                           aria-describedby="passwordHelpInline"
@@ -124,6 +133,45 @@ const Data = () => {
                   <CTableDataCell className="text-center">
                     <IconButton id="edit" color="primary">
                       <FilePresentIcon />
+                    </IconButton>
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {' '}
+                    <IconButton variant="contained" color="primary">
+                      <SaveIcon />
+                    </IconButton>
+                  </CTableDataCell>
+                </CTableRow>
+                <CTableRow v-for="item in tableItems">
+                  <CTableDataCell>KPI HR hàng ngày</CTableDataCell>
+                  <CTableDataCell className="text-center">
+                    <CRow>
+                      <CCol className="align-self-center">
+                        {' '}
+                        <CFormInput
+                          type="number"
+                          defaultValue={800}
+                          aria-describedby="passwordHelpInline"
+                        />
+                      </CCol>
+                    </CRow>
+                  </CTableDataCell>
+                  <CTableDataCell className="text-center">80</CTableDataCell>
+                  <CTableDataCell className="text-center">VND</CTableDataCell>
+                  <CTableDataCell className="text-center">
+                    <CProgress className="mb-3">
+                      <CProgressBar value={80}>800/1000</CProgressBar>
+                    </CProgress>
+                  </CTableDataCell>
+                  <CTableDataCell className="text-center">
+                    <IconButton id="edit" color="primary">
+                      <FilePresentIcon />
+                    </IconButton>
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {' '}
+                    <IconButton variant="contained" color="primary">
+                      <SaveIcon />
                     </IconButton>
                   </CTableDataCell>
                 </CTableRow>
@@ -165,22 +213,17 @@ const Data = () => {
                   <CCol xs={6}></CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      {' '}
                       <CForm>
-                        <Grid
-                          container
-                          direction="row"
-                          justifyContent="flex-end"
-                          alignItems="center"
-                        >
-                          {' '}
-                          <IconButton id="edit" color="primary">
-                            <CalendarTodayIcon />
-                          </IconButton>
-                          <IconButton id="edit" color="primary">
-                            <SaveIcon />
-                          </IconButton>
-                        </Grid>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DatePicker
+                            label="Chọn ngày nhập"
+                            value={value}
+                            onChange={(newValue) => {
+                              setValue(newValue)
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                          />
+                        </LocalizationProvider>
                       </CForm>
                     </div>
                   </CCol>
