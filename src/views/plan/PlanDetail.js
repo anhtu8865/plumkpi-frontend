@@ -120,83 +120,92 @@ const PlanDetail = () => {
     }
   }
 
-  React.useEffect(async () => {
-    setNewCatResult([])
-    setNewResult([])
-    const result = await getPlan()
-    const res = await getCatPlan()
-    if (res) {
-      if (res.length > 0) {
-        if (user.role === 'Giám đốc') {
-          dispatch(
-            setCatInPlan({
-              value: res,
-            }),
-          )
-          dispatch(
-            setCurrentCat({
-              value: res[0],
-            }),
-          )
-        } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
-          res.map((item) => {
-            item.kpi_category = {
-              kpi_category_id: item.kpi_category_id,
-              kpi_category_name: item.kpi_category_name,
-            }
-            setNewCatResult((newCatResult) => [...newCatResult, item])
-          })
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setNewCatResult([])
+      setNewResult([])
+      const result = await getPlan()
+      const res = await getCatPlan()
+      if (res) {
+        if (res.length > 0) {
+          if (user.role === 'Giám đốc') {
+            dispatch(
+              setCatInPlan({
+                value: res,
+              }),
+            )
+            dispatch(
+              setCurrentCat({
+                value: res[0],
+              }),
+            )
+          } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
+            res.map((item) => {
+              item.kpi_category = {
+                kpi_category_id: item.kpi_category_id,
+                kpi_category_name: item.kpi_category_name,
+              }
+              setNewCatResult((newCatResult) => [...newCatResult, item])
+            })
+          }
         }
+        dispatch(
+          setPlan({
+            value: result,
+          }),
+        )
       }
       dispatch(
-        setPlan({
-          value: result,
+        setLoading({
+          value: false,
         }),
       )
     }
-    dispatch(
-      setLoading({
-        value: false,
-      }),
-    )
+    fetchData()
   }, [reload, dispatch])
 
-  React.useEffect(async () => {
-    setNewResult([])
-    if (currentCat.kpi_category.kpi_category_id) {
-      const result = await getTemInOneCatPlan(
-        (temPage - 1) * entryPerPage,
-        currentCat.kpi_category.kpi_category_id,
-      )
-      if (result) {
-        if (user.role === 'Giám đốc') {
-          dispatch(setTemInPlan({ value: result }))
-        } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
-          result.map((item) => {
-            item.kpi_template = item.plan_kpi_template.kpi_template
-            setNewResult((newResult) => [...newResult, item])
-          })
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setNewResult([])
+      if (currentCat.kpi_category.kpi_category_id) {
+        const result = await getTemInOneCatPlan(
+          (temPage - 1) * entryPerPage,
+          currentCat.kpi_category.kpi_category_id,
+        )
+        if (result) {
+          if (user.role === 'Giám đốc') {
+            dispatch(setTemInPlan({ value: result }))
+          } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
+            result.map((item) => {
+              item.kpi_template = item.plan_kpi_template.kpi_template
+              setNewResult((newResult) => [...newResult, item])
+            })
+          }
         }
       }
     }
+    fetchData()
   }, [temPage])
 
-  React.useEffect(async () => {
-    dispatch(setTemPage({ value: 1 }))
-    setNewResult([])
-    if (currentCat.kpi_category.kpi_category_id) {
-      const result = await getTemInOneCatPlan(0, currentCat.kpi_category.kpi_category_id)
-      if (result) {
-        if (user.role === 'Giám đốc') {
-          dispatch(setTemInPlan({ value: result }))
-        } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
-          result.map((item) => {
-            item.kpi_template = item.plan_kpi_template.kpi_template
-            setNewResult((newResult) => [...newResult, item])
-          })
+  React.useEffect(() => {
+    const fetchData = async () => {
+      dispatch(setTemPage({ value: 1 }))
+      setNewResult([])
+      if (currentCat.kpi_category.kpi_category_id) {
+        const result = await getTemInOneCatPlan(0, currentCat.kpi_category.kpi_category_id)
+        if (result) {
+          if (user.role === 'Giám đốc') {
+            dispatch(setTemInPlan({ value: result }))
+          } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
+            result.map((item) => {
+              item.kpi_template = item.plan_kpi_template.kpi_template
+              setNewResult((newResult) => [...newResult, item])
+            })
+          }
         }
       }
     }
+    fetchData()
   }, [currentCat])
 
   React.useEffect(() => {

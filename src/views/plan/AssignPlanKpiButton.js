@@ -217,21 +217,24 @@ export const AssignPlanKpiButton = (kpiItem) => {
     }
   }
 
-  React.useEffect(async () => {
-    const deptList = []
-    const depts = await getDeptList()
-    const assignDepts = await getInfoTargetKpi()
-    if (assignDepts) {
-      assignDepts.map((item) => {
-        deptList.push(item)
-      })
-      setSelectedDeptList(deptList)
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const deptList = []
+      const depts = await getDeptList()
+      const assignDepts = await getInfoTargetKpi()
+      if (assignDepts) {
+        assignDepts.map((item) => {
+          deptList.push(item)
+        })
+        setSelectedDeptList(deptList)
+      }
+      setDeptList(depts)
+      if (kpiItem && kpiItem.target) {
+        setTarget(kpiItem.target)
+      }
     }
-    setDeptList(depts)
-    if (kpiItem && kpiItem.target) {
-      setTarget(kpiItem.target)
-    }
-  }, [dispatch])
+    fetchData()
+  }, [])
 
   React.useEffect(() => {
     let sumTarget = 0

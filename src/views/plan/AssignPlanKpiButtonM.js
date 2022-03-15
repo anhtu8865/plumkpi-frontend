@@ -152,16 +152,19 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     }
   }
 
-  React.useEffect(async () => {
-    const employees = await getEmployeeList()
-    const assignEmployees = await getInfoTargetKpi()
-    if (assignEmployees) {
-      setTempSelectedList(assignEmployees)
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const employees = await getEmployeeList()
+      const assignEmployees = await getInfoTargetKpi()
+      if (assignEmployees) {
+        setTempSelectedList(assignEmployees)
+      }
+      setEmployeeList(employees)
     }
-    setEmployeeList(employees)
-  }, [dispatch])
+    fetchData()
+  }, [])
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     setSelectedEmployeeList([])
     setSampleTarget('')
     if (tempSelectedList.length > 0) {

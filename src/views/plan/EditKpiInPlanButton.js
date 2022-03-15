@@ -135,19 +135,22 @@ export const EditKpiInPlanButton = (props) => {
     }
   }
 
-  React.useEffect(async () => {
-    const categories = await getCategory()
-    for (var i = 0; i < categories.length; i++) {
-      const templates = await getTemplate(categories[i].kpi_category_id)
-      Object.assign(categories[i], { kpi_templates: templates })
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const categories = await getCategory()
+      for (var i = 0; i < categories.length; i++) {
+        const templates = await getTemplate(categories[i].kpi_category_id)
+        Object.assign(categories[i], { kpi_templates: templates })
+      }
+      setTemByCat(categories)
+      if (props.planEmpty === true) {
+        setModalVisible(true)
+      }
     }
-    setTemByCat(categories)
-    if (props.planEmpty === true) {
-      setModalVisible(true)
-    }
-  }, [dispatch])
+    fetchData()
+  }, [])
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     setSelectedTem(props.arraySelectedTem)
   }, [props.arraySelectedTem])
 

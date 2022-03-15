@@ -103,56 +103,27 @@ const EditKpiAndWeightView = () => {
     }
   }
 
-  React.useEffect(async () => {
-    //const catList = []
-    //let temList = []
-    const result = await getPlan()
-    const res = await getCatPlan()
-    if (res) {
-      res.map(async (i) => {
-        setCatList((catList) => [...catList, { cat: i.kpi_category, weight: i.weight }])
-        //catList.push({ cat: i.kpi_category, weight: i.weight })
-        const res1 = await getTemInOneCatPlan(i.kpi_category.kpi_category_id)
-        if (res1) {
-          res1.map((item) => {
-            item.kpi_template.kpi_category = i.kpi_category
-            setTemList((temList) => [...temList, { tem: item.kpi_template, weight: item.weight }])
-            setSelectedTem((selectedTem) => [...selectedTem, item.kpi_template.kpi_template_id])
-          })
-        }
-      })
-    }
-    //dispatch(setCurrentInPlan({ value: { catList: catList } }))
-    setPlan(result)
-    /*api
-      .get(`plans/user/${id}`)
-      .then((response) => {
-        response.data.plan_kpi_categories.map((item) => {
-          catList.push({ cat: item.kpi_category, weight: item.weight })
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const result = await getPlan()
+      const res = await getCatPlan()
+      if (res) {
+        res.map(async (i) => {
+          setCatList((catList) => [...catList, { cat: i.kpi_category, weight: i.weight }])
+          const res1 = await getTemInOneCatPlan(i.kpi_category.kpi_category_id)
+          if (res1) {
+            res1.map((item) => {
+              item.kpi_template.kpi_category = i.kpi_category
+              setTemList((temList) => [...temList, { tem: item.kpi_template, weight: item.weight }])
+              setSelectedTem((selectedTem) => [...selectedTem, item.kpi_template.kpi_template_id])
+            })
+          }
         })
-        if (response.data.plan_kpi_templates.length === 0) {
-          setPlanEmpty(true)
-        } else {
-          response.data.plan_kpi_templates.map((item) => {
-            temList.push({ tem: item.kpi_template, weight: item.weight })
-            selectTem.push(item.kpi_template.kpi_template_id)
-          })
-        }
-        dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
-        setSelectedTem(selectTem)
-        setPlan(response.data)
-      })
-      .catch((error) => {
-        if (error.response) {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        }
-      })*/
-  }, [dispatch])
+      }
+      setPlan(result)
+    }
+    fetchData()
+  }, [])
 
   React.useEffect(() => {
     dispatch(setCurrentInPlan({ value: { catList: catList, temList: temList } }))
