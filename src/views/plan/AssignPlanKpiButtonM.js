@@ -172,7 +172,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 1: {
           tempSelectedList.map((item) => {
             if (item.first_monthly_target) {
-              item.target = item.first_monthly_target
+              item.target = item.first_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -181,7 +181,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 2: {
           tempSelectedList.map((item) => {
             if (item.second_monthly_target) {
-              item.target = item.second_monthly_target
+              item.target = item.second_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -190,7 +190,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 3: {
           tempSelectedList.map((item) => {
             if (item.third_monthly_target) {
-              item.target = item.third_monthly_target
+              item.target = item.third_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -199,7 +199,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 4: {
           tempSelectedList.map((item) => {
             if (item.fourth_monthly_target) {
-              item.target = item.fourth_monthly_target
+              item.target = item.fourth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -208,7 +208,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 5: {
           tempSelectedList.map((item) => {
             if (item.fifth_monthly_target) {
-              item.target = item.fifth_monthly_target
+              item.target = item.fifth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -217,7 +217,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 6: {
           tempSelectedList.map((item) => {
             if (item.sixth_monthly_target) {
-              item.target = item.sixth_monthly_target
+              item.target = item.sixth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -226,7 +226,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 7: {
           tempSelectedList.map((item) => {
             if (item.seventh_monthly_target) {
-              item.target = item.seventh_monthly_target
+              item.target = item.seventh_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -235,7 +235,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 8: {
           tempSelectedList.map((item) => {
             if (item.eighth_monthly_target) {
-              item.target = item.eighth_monthly_target
+              item.target = item.eighth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -244,7 +244,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 9: {
           tempSelectedList.map((item) => {
             if (item.ninth_monthly_target) {
-              item.target = item.ninth_monthly_target
+              item.target = item.ninth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -253,7 +253,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 10: {
           tempSelectedList.map((item) => {
             if (item.tenth_monthly_target) {
-              item.target = item.tenth_monthly_target
+              item.target = item.tenth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -262,7 +262,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 11: {
           tempSelectedList.map((item) => {
             if (item.eleventh_monthly_target) {
-              item.target = item.eleventh_monthly_target
+              item.target = item.eleventh_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
@@ -271,7 +271,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         case 12: {
           tempSelectedList.map((item) => {
             if (item.twelfth_monthly_target) {
-              item.target = item.twelfth_monthly_target
+              item.target = item.twelfth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
             }
           })
