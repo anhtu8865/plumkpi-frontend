@@ -105,23 +105,32 @@ const Data = () => {
                   <CTableHeaderCell className="text-center">ĐƠN VỊ</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">TIẾN ĐỘ</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">NOTE</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center"></CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 <CTableRow v-for="item in tableItems">
                   <CTableDataCell>KPI sale hàng ngày</CTableDataCell>
                   <CTableDataCell className="text-center">
-                    <CRow>
-                      <CCol className="align-self-center">
-                        {' '}
-                        <CFormInput
-                          type="number"
-                          defaultValue={800}
-                          aria-describedby="passwordHelpInline"
-                        />
-                      </CCol>
-                    </CRow>
+                    <CForm>
+                      <CRow>
+                        <CCol className="align-self-center">
+                          <CRow>
+                            <CCol xs={10}>
+                              <CFormInput
+                                type="number"
+                                defaultValue={800}
+                                aria-describedby="passwordHelpInline"
+                              />
+                            </CCol>
+                            <CCol xs={2}>
+                              <IconButton variant="contained" color="primary">
+                                <SaveIcon />
+                              </IconButton>
+                            </CCol>
+                          </CRow>
+                        </CCol>
+                      </CRow>
+                    </CForm>
                   </CTableDataCell>
                   <CTableDataCell className="text-center">80</CTableDataCell>
                   <CTableDataCell className="text-center">VND</CTableDataCell>
@@ -133,28 +142,32 @@ const Data = () => {
                   <CTableDataCell className="text-center">
                     <IconButton id="edit" color="primary">
                       <FilePresentIcon />
-                    </IconButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    {' '}
-                    <IconButton variant="contained" color="primary">
-                      <SaveIcon />
                     </IconButton>
                   </CTableDataCell>
                 </CTableRow>
                 <CTableRow v-for="item in tableItems">
                   <CTableDataCell>KPI HR hàng ngày</CTableDataCell>
                   <CTableDataCell className="text-center">
-                    <CRow>
-                      <CCol className="align-self-center">
-                        {' '}
-                        <CFormInput
-                          type="number"
-                          defaultValue={800}
-                          aria-describedby="passwordHelpInline"
-                        />
-                      </CCol>
-                    </CRow>
+                    <CForm>
+                      <CRow>
+                        <CCol className="align-self-center">
+                          <CRow>
+                            <CCol xs={10}>
+                              <CFormInput
+                                type="number"
+                                defaultValue={800}
+                                aria-describedby="passwordHelpInline"
+                              />
+                            </CCol>
+                            <CCol xs={2}>
+                              <IconButton variant="contained" color="primary">
+                                <SaveIcon />
+                              </IconButton>
+                            </CCol>
+                          </CRow>
+                        </CCol>
+                      </CRow>
+                    </CForm>
                   </CTableDataCell>
                   <CTableDataCell className="text-center">80</CTableDataCell>
                   <CTableDataCell className="text-center">VND</CTableDataCell>
@@ -166,12 +179,6 @@ const Data = () => {
                   <CTableDataCell className="text-center">
                     <IconButton id="edit" color="primary">
                       <FilePresentIcon />
-                    </IconButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    {' '}
-                    <IconButton variant="contained" color="primary">
-                      <SaveIcon />
                     </IconButton>
                   </CTableDataCell>
                 </CTableRow>
