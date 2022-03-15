@@ -1261,6 +1261,11 @@
     "@coreui/chartjs" "^3.0.0"
     "chart.js" "^3.5.0"
 
+"@coreui/react-pro@^4.2.0-beta.0":
+  "integrity" "sha512-8HESAV/+vs/Sws/bH4wF6HCKWBgWc0xUPVskLHG2dFqvkVzVq2B38CWxm8BBFsKkaD1gLImioygjXfvx5n3bHA=="
+  "resolved" "https://registry.npmjs.org/@coreui/react-pro/-/react-pro-4.2.0-beta.0.tgz"
+  "version" "4.2.0-beta.0"
+
 "@coreui/react@^4.1.0":
   "integrity" "sha512-o6sCBQacf0Gj4H/Ku7LhJ+8m3x1GksnzWVegclqeX65x64NgiIfYKbYbHa6WLSeuL+iWZJ8RqAUixD4HrGiRRg=="
   "resolved" "https://registry.npmjs.org/@coreui/react/-/react-4.1.0.tgz"
