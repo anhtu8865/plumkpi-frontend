@@ -22,6 +22,7 @@ import {
   CTabPane,
   CProgressBar,
   CProgress,
+  CFormSelect,
 } from '@coreui/react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
@@ -36,8 +37,11 @@ import {
   TabContext,
   TabList,
   IconButton,
+  Input,
 } from '@mui/material'
 import FilePresentIcon from '@mui/icons-material/FilePresent'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import SaveIcon from '@mui/icons-material/Save'
 import { Field, FormikProvider, useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -97,15 +101,24 @@ const Data = () => {
               </CTableHead>
               <CTableBody>
                 <CTableRow v-for="item in tableItems">
-                  <CTableDataCell>Overdue Service Requests</CTableDataCell>
+                  <CTableDataCell>KPI sale hàng ngày</CTableDataCell>
                   <CTableDataCell className="text-center">
-                    <CFormInput></CFormInput>
+                    <CRow>
+                      <CCol className="align-self-center">
+                        {' '}
+                        <input
+                          type="number"
+                          defaultValue={800}
+                          aria-describedby="passwordHelpInline"
+                        />
+                      </CCol>
+                    </CRow>
                   </CTableDataCell>
                   <CTableDataCell className="text-center">80</CTableDataCell>
                   <CTableDataCell className="text-center">VND</CTableDataCell>
                   <CTableDataCell className="text-center">
                     <CProgress className="mb-3">
-                      <CProgressBar value={50}>50%</CProgressBar>
+                      <CProgressBar value={80}>800/1000</CProgressBar>
                     </CProgress>
                   </CTableDataCell>
                   <CTableDataCell className="text-center">
@@ -151,7 +164,25 @@ const Data = () => {
                 <CRow>
                   <CCol xs={6}></CCol>
                   <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      {' '}
+                      <CForm>
+                        <Grid
+                          container
+                          direction="row"
+                          justifyContent="flex-end"
+                          alignItems="center"
+                        >
+                          {' '}
+                          <IconButton id="edit" color="primary">
+                            <CalendarTodayIcon />
+                          </IconButton>
+                          <IconButton id="edit" color="primary">
+                            <SaveIcon />
+                          </IconButton>
+                        </Grid>
+                      </CForm>
+                    </div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
