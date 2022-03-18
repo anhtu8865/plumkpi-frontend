@@ -95,6 +95,7 @@ const User = () => {
         filter_email: '',
         filter_role: '',
         filter_dept: '',
+        filter_phone: '',
       },
       validateOnBlur: true,
       onSubmit: (values) => {
@@ -115,6 +116,9 @@ const User = () => {
         }
         if (values.filter_role !== '') {
           apiLink += '&role=' + values.filter_role
+        }
+        if (values.filter_phone !== '') {
+          apiLink += '&phone=' + values.filter_phone
         }
         //apiLink = 'users?user_name=' + values.filter_name + '&user_id=' + values.filter_id
         api
@@ -147,7 +151,7 @@ const User = () => {
             onChange={formik.handleChange}
           />
         </CCol> */}
-        <CCol md={3}>
+        <CCol md={4}>
           <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
           <CFormInput
             type="text"
@@ -157,13 +161,23 @@ const User = () => {
             onChange={formik.handleChange}
           />
         </CCol>
-        <CCol md={3}>
+        <CCol md={4}>
           <CFormLabel htmlFor="filterEmail">Email</CFormLabel>
           <CFormInput
             id="filterEmail"
             type="email"
             name="filter_email"
             value={formik.values.filter_email}
+            onChange={formik.handleChange}
+          />
+        </CCol>
+        <CCol md={4}>
+          <CFormLabel htmlFor="filterPhone">Phone</CFormLabel>
+          <CFormInput
+            id="filterPhone"
+            type="number"
+            name="filter_phone"
+            value={formik.values.filter_phone}
             onChange={formik.handleChange}
           />
         </CCol>
@@ -180,7 +194,7 @@ const User = () => {
             </Field>
           </FormikProvider>
         </CCol>
-        <CCol md={2}>
+        <CCol md={3}>
           <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
           <FormikProvider value={formik}>
             <Field as="select" name="filter_role" className="form-select">
@@ -200,6 +214,7 @@ const User = () => {
             startIcon={<SearchIcon />}
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
+            style={{ marginBottom: '10px' }}
           >
             Tìm
           </Button>
