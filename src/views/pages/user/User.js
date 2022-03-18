@@ -32,6 +32,7 @@ import AddUser from './AddUser'
 import DeleteUser from './DeleteUser'
 import EditUser from './EditUser'
 import InfoUser from './InfoUser'
+import ResetPwUser from './ResetPwUser'
 
 const User = () => {
   const [showUserFilter, setShowUserFilter] = React.useState(false)
@@ -256,6 +257,7 @@ const User = () => {
                 <CTableDataCell className="text-center">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
                     <InfoUser userItem={row} />
+                    <ResetPwUser userItem={row} />
                     <EditUser inCat={row} />
                     <DeleteUser inCat={row} />
                   </Grid>
