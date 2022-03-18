@@ -39,6 +39,7 @@ const UserDepartment = (props) => {
   const [page, setPage] = React.useState(1)
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
+  const [deptName, setDeptName] = React.useState('')
 
   //const { userReload, userLoading } = useSelector((state) => state.user)
   const { departmentReload, departmentLoading } = useSelector((state) => state.department)
@@ -65,7 +66,25 @@ const UserDepartment = (props) => {
         })
     }
 
+    async function fetchDeptName() {
+      api
+        .get(`depts/${id}`)
+        .then((response) => {
+          setDeptName(response.data.dept_name)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
+
     fetchDeptList()
+
+    fetchDeptName()
 
     dispatch(
       setDepartmentLoading({
@@ -83,7 +102,7 @@ const UserDepartment = (props) => {
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
               <CTableHeaderCell>EMAIL</CTableHeaderCell>
-              <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
+
               <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               {/* <CTableHeaderCell /> */}
@@ -98,7 +117,6 @@ const UserDepartment = (props) => {
                   {row.user_name}
                 </CTableDataCell>
                 <CTableDataCell>{row.email}</CTableDataCell>
-                <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
                 <CTableDataCell>{row.role}</CTableDataCell>
                 {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
@@ -144,13 +162,16 @@ const UserDepartment = (props) => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <IconButton
-                      onClick={() => {
-                        history.push('/depts')
-                      }}
-                    >
-                      <ArrowCircleLeftIcon />
-                    </IconButton>
+                    <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+                      <IconButton
+                        onClick={() => {
+                          history.push('/depts')
+                        }}
+                      >
+                        <ArrowCircleLeftIcon />
+                      </IconButton>
+                      <h4>Phòng ban: {deptName}</h4>
+                    </Grid>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">

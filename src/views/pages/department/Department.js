@@ -18,7 +18,7 @@ import {
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
-import { Button, Grid, Pagination, IconButton } from '@mui/material'
+import { Button, Grid, Pagination, IconButton, Avatar } from '@mui/material'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -145,6 +145,7 @@ const Department = () => {
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
               <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
+              <CTableHeaderCell>QUẢN LÝ</CTableHeaderCell>
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
@@ -154,6 +155,15 @@ const Department = () => {
                 <CTableDataCell>{catItem.dept_id}</CTableDataCell>
                 <CTableDataCell>{catItem.dept_name}</CTableDataCell>
                 <CTableDataCell>{catItem.description}</CTableDataCell>
+                <CTableDataCell className="d-flex flex-row">
+                  {catItem.manager != null ? (
+                    <Avatar
+                      src={catItem.manager.avatar !== null ? catItem.manager.avatar.url : null}
+                      className="me-3"
+                    />
+                  ) : null}
+                  {catItem.manager != null ? catItem.manager.user_name : null}
+                </CTableDataCell>
                 <CTableDataCell className="">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
                     <IconButton

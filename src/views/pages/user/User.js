@@ -31,6 +31,7 @@ import api from 'src/views/axiosConfig'
 import AddUser from './AddUser'
 import DeleteUser from './DeleteUser'
 import EditUser from './EditUser'
+import InfoUser from './InfoUser'
 
 const User = () => {
   const [showUserFilter, setShowUserFilter] = React.useState(false)
@@ -239,6 +240,7 @@ const User = () => {
                   </CTableDataCell>*/}
                 <CTableDataCell className="text-center">
                   <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <InfoUser userItem={row} />
                     <EditUser inCat={row} />
                     <DeleteUser inCat={row} />
                   </Grid>
@@ -278,7 +280,7 @@ const User = () => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h4>Người dùng</h4>
+                    <h4>Quản lý người dùng</h4>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
