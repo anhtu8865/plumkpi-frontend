@@ -159,7 +159,7 @@ const EditDepartment = (props) => {
             </CRow>
             <CRow className="mt-2 mb-2 mx-2">
               <CCol>
-                <CFormLabel htmlFor="inputDept">Chọn một nhân viên trở thành quản lý</CFormLabel>
+                <CFormLabel htmlFor="inputDept">Chọn quản lý</CFormLabel>
                 <FormikProvider value={formik}>
                   <Field as="select" name="editmanager.user_id" className="form-select">
                     <option value={null} label="Chọn nhân viên" />

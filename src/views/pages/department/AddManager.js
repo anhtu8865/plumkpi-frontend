@@ -115,25 +115,22 @@ const AddManager = (props) => {
             <CModalTitle>Gán quản lý phòng ban</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <div className="userform-item mt-4">
-              <h6>Chọn một nhân viên trở thành quản lý</h6>
-              <CRow>
-                <CCol>
-                  <CFormLabel htmlFor="inputDept">Nhân viên</CFormLabel>
-                  <FormikProvider value={formik}>
-                    <Field as="select" name="manager.user_id" className="form-select">
-                      <option value={null} label="Chọn nhân viên" />
-                      {userList.map((row) => (
-                        <option value={row.user_id} key={row.user_id}>
-                          {row.user_name}
-                        </option>
-                      ))}
-                    </Field>
-                  </FormikProvider>
-                  <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
-                </CCol>
-              </CRow>
-            </div>
+            <CRow>
+              <CCol>
+                <CFormLabel htmlFor="inputDept">Chọn quản lý</CFormLabel>
+                <FormikProvider value={formik}>
+                  <Field as="select" name="manager.user_id" className="form-select">
+                    <option value={null} label="Chọn nhân viên" />
+                    {userList.map((row) => (
+                      <option value={row.user_id} key={row.user_id}>
+                        {row.user_name}
+                      </option>
+                    ))}
+                  </Field>
+                </FormikProvider>
+                <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
+              </CCol>
+            </CRow>
           </CModalBody>
           <CModalFooter>
             <Button

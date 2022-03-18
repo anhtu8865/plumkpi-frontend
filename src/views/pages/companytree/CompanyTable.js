@@ -26,10 +26,15 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
+import InfoUserCompany from './InfoUserCompany'
+
 const CompanyTable = (props) => {
   const history = useHistory()
   const { id } = useParams()
 
+  const entryPerPage = 10
+  const [page, setPage] = React.useState(1)
+  const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
   const dispatch = useDispatch()
@@ -37,10 +42,12 @@ const CompanyTable = (props) => {
   React.useEffect(() => {
     async function fetchDeptList() {
       api
-        .get(`/depts/${id}`)
+        .get(`users?dept=${id}`, {
+          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
+        })
         .then((response) => {
-          setEntry(response.data.users)
-          //console.log(response.data.items)
+          setTotalPage(Math.ceil(response.data.count / entryPerPage))
+          setEntry(response.data.items)
         })
         .catch((error) => {
           dispatch(
@@ -72,7 +79,7 @@ const CompanyTable = (props) => {
               <CTableHeaderCell>EMAIL</CTableHeaderCell>
               <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
               <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
-              {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
+              <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -89,10 +96,26 @@ const CompanyTable = (props) => {
                 {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
                   </CTableDataCell>*/}
+                <CTableDataCell>
+                  <InfoUserCompany userItem={row} />
+                </CTableDataCell>
               </CTableRow>
             ))}
           </CTableBody>
-          <CTableFoot></CTableFoot>
+          <CTableFoot>
+            <CTableRow>
+              <CTableDataCell colSpan="4">
+                <Pagination
+                  page={page}
+                  count={totalPage}
+                  showFirstButton
+                  showLastButton
+                  size="small"
+                  onChange={(event, page) => setPage(page)}
+                />
+              </CTableDataCell>
+            </CTableRow>
+          </CTableFoot>
         </CTable>
       </>
     )
