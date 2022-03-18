@@ -17,7 +17,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
 import api from 'src/views/axiosConfig'
-import { useFormik } from 'formik'
+import { useFormik, Field, FormikProvider } from 'formik'
 import * as yup from 'yup'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
@@ -26,6 +26,29 @@ import { setDepartmentLoading, setDepartmentReload } from 'src/slices/department
 const EditDepartment = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
+
+  const [userList, setUserList] = React.useState([])
+
+  React.useEffect(() => {
+    async function fetchUserList() {
+      api
+        .get(`/depts/${props.inCat.dept_id}`)
+        .then((response) => {
+          setUserList(response.data.users)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
+
+    fetchUserList()
+  }, [])
+
   const ValidationSchema = yup.object({
     editdept: yup.string().required('Đây là trường bắt buộc'),
   })
@@ -34,6 +57,7 @@ const EditDepartment = (props) => {
     initialValues: {
       editdept: props.inCat.dept_name,
       editdes: props.inCat.description,
+      editmanager: null,
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
@@ -42,6 +66,7 @@ const EditDepartment = (props) => {
         .put(`/depts/${props.inCat.dept_id}`, {
           dept_name: values.editdept,
           description: values.editdes,
+          manager: values.editmanager,
         })
         .then(() => {
           dispatch(
@@ -130,6 +155,22 @@ const EditDepartment = (props) => {
                   }
                 />
                 <CFormFeedback invalid>{formik.errors.editdes}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-2 mb-2 mx-2">
+              <CCol>
+                <CFormLabel htmlFor="inputDept">Chọn một nhân viên trở thành quản lý</CFormLabel>
+                <FormikProvider value={formik}>
+                  <Field as="select" name="editmanager.user_id" className="form-select">
+                    <option value={null} label="Chọn nhân viên" />
+                    {userList.map((row) => (
+                      <option value={row.user_id} key={row.user_id}>
+                        {row.user_name}
+                      </option>
+                    ))}
+                  </Field>
+                </FormikProvider>
+                <CFormFeedback invalid>{formik.errors.dept}</CFormFeedback>
               </CCol>
             </CRow>
           </CModalBody>

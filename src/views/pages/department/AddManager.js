@@ -122,7 +122,7 @@ const AddManager = (props) => {
                   <CFormLabel htmlFor="inputDept">Nhân viên</CFormLabel>
                   <FormikProvider value={formik}>
                     <Field as="select" name="manager.user_id" className="form-select">
-                      <option value="" label="Chọn nhân viên" />
+                      <option value={null} label="Chọn nhân viên" />
                       {userList.map((row) => (
                         <option value={row.user_id} key={row.user_id}>
                           {row.user_name}

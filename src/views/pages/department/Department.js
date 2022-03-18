@@ -212,7 +212,7 @@ const Department = () => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h4>Phòng ban</h4>
+                    <h4>Quản lý phòng ban</h4>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
