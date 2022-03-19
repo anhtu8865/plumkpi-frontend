@@ -44,7 +44,6 @@ const PlanDetail = () => {
   const [selectedQuarter, setSelectedQuarter] = useState(1)
   const [selectedMonth, setSelectedMonth] = useState(3)
   const [newResult, setNewResult] = useState([])
-  const [newCatResult, setNewCatResult] = useState([])
   const entryPerPage = 10
 
   const getPlan = async () => {
@@ -122,38 +121,35 @@ const PlanDetail = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setNewCatResult([])
       const result = await getPlan()
       const res = await getCatPlan()
       if (res) {
-        if (res.length > 0) {
-          if (user.role === 'Giám đốc') {
-            dispatch(
-              setCatInPlan({
-                value: res,
-              }),
-            )
+        {
+          dispatch(
+            setCatInPlan({
+              value: res,
+            }),
+          )
+          if (res.length > 0) {
             dispatch(
               setCurrentCat({
                 value: res[0],
               }),
             )
-          } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
-            res.map((item) => {
-              item.kpi_category = {
-                kpi_category_id: item.kpi_category_id,
-                kpi_category_name: item.kpi_category_name,
-              }
-              setNewCatResult((newCatResult) => [...newCatResult, item])
-            })
+          } else {
+            dispatch(
+              setCurrentCat({
+                value: { kpi_category: {} },
+              }),
+            )
           }
         }
-        dispatch(
-          setPlan({
-            value: result,
-          }),
-        )
       }
+      dispatch(
+        setPlan({
+          value: result,
+        }),
+      )
       dispatch(
         setLoading({
           value: false,
@@ -176,6 +172,7 @@ const PlanDetail = () => {
   }, [currentCat])
 
   React.useEffect(() => {
+    let isCalled = true
     const fetchData = async () => {
       if (newResult.length === 0) {
         if (currentCat.kpi_category.kpi_category_id) {
@@ -183,7 +180,7 @@ const PlanDetail = () => {
             (temPage - 1) * entryPerPage,
             currentCat.kpi_category.kpi_category_id,
           )
-          if (result) {
+          if (result && isCalled) {
             if (user.role === 'Giám đốc') {
               dispatch(setTemInPlan({ value: result }))
             } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
@@ -197,22 +194,8 @@ const PlanDetail = () => {
       }
     }
     fetchData()
+    return () => (isCalled = false)
   }, [newResult])
-
-  React.useEffect(() => {
-    if (['Quản lý', 'Nhân viên'].includes(user.role) && newCatResult.length > 0) {
-      dispatch(
-        setCatInPlan({
-          value: newCatResult,
-        }),
-      )
-      dispatch(
-        setCurrentCat({
-          value: newCatResult[0],
-        }),
-      )
-    }
-  }, [newCatResult])
 
   React.useEffect(() => {
     if (['Quản lý', 'Nhân viên'].includes(user.role)) {

@@ -256,40 +256,40 @@ const EditKpiAndWeightView = () => {
     if (valid) {
       setIsSubmit(true)
       await addToPlan(objectToReturn, temArrayToReturn)
+      setIsSubmit(false)
     }
   }
 
   const addToPlan = async (objectToReturn, temArrayToReturn) => {
-    try {
-      temArrayToReturn.map(async (item) => {
+    for (let i = 0; i < temArrayToReturn.length; i++) {
+      try {
         await api.post(`/plans/register-kpis`, {
           plan_id: Number(plan.plan_id),
-          kpi_category_id: item.kpi_category_id,
-          kpis: item.kpis,
+          kpi_category_id: temArrayToReturn[i].kpi_category_id,
+          kpis: temArrayToReturn[i].kpis,
         })
-      })
-      await api.post(`/plans/register-kpi-categories`, {
-        plan_id: Number(plan.plan_id),
-        kpi_categories: objectToReturn,
-      })
-      dispatch(
-        createAlert({
-          message: 'Chỉnh sửa trọng số/ KPI trong kế hoạch thành công',
-          type: 'success',
-        }),
-      )
-      setIsSubmit(false)
-      history.replace(`/plan/${id}`)
-    } catch (error) {
-      if (error.response) {
+        if (i === temArrayToReturn.length - 1) {
+          await api.post(`/plans/register-kpi-categories`, {
+            plan_id: Number(plan.plan_id),
+            kpi_categories: objectToReturn,
+          })
+          dispatch(
+            createAlert({
+              message: 'Chỉnh sửa trọng số/ KPI trong kế hoạch thành công',
+              type: 'success',
+            }),
+          )
+          history.replace(`/plan/${id}`)
+        }
+      } catch (error) {
         dispatch(
           createAlert({
             message: error.response.data.message,
             type: 'error',
           }),
         )
+        break
       }
-      setIsSubmit(false)
     }
   }
 

@@ -2,43 +2,53 @@ import React, { useState } from 'react'
 import { Button, IconButton } from '@mui/material'
 import { CModal, CModalBody, CModalFooter, CModalTitle, CModalHeader } from '@coreui/react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 export const DeleteKpiInPlanButton = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
   const history = useHistory()
+  const { id } = useParams()
+  const { catInPlan } = useSelector((state) => state.planDetail)
 
   const deleteKpiPlan = async () => {
-    /*try {
-      await api.post(`/plans/add-kpi-categories`, {
-        plan_id: Number(props.planItem.plan_id),
-        kpi_categories: [],
-      })
-      dispatch(
-        createAlert({
-          message: 'Xóa KPI trong kế hoạch thành công',
-          type: 'success',
-        }),
-      )
-      history.replace(`/plan/${props.planItem.plan_id}`)
-    } catch (error) {
-      if (error.response) {
+    for (let i = 0; i < catInPlan.length; i++) {
+      try {
+        await api.post(`/plans/register-kpis`, {
+          plan_id: Number(props.planItem.plan_id),
+          kpi_category_id: Number(catInPlan[i].kpi_category.kpi_category_id),
+          kpis: [],
+        })
+        if (i === catInPlan.length - 1) {
+          await api.post(`/plans/register-kpi-categories`, {
+            plan_id: Number(props.planItem.plan_id),
+            kpi_categories: [],
+          })
+          dispatch(
+            createAlert({
+              message: 'Xóa KPI trong kế hoạch thành công',
+              type: 'success',
+            }),
+          )
+          history.replace(`/plan/${id}`)
+        }
+      } catch (error) {
         dispatch(
           createAlert({
             message: error.response.data.message,
             type: 'error',
           }),
         )
+        break
       }
-    }*/
+    }
   }
 
   const onClickDelete = async () => {
