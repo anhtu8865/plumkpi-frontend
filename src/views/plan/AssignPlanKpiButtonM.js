@@ -85,8 +85,13 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     }
   }
 
-  const assignKpi = async (listToReturn) => {
+  const assignKpi = async (listToReturn, listUser) => {
     try {
+      await api.post(`/plans/assign-kpi-employees`, {
+        plan_id: plan.plan_id,
+        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
+        users: listUser,
+      })
       await api.put(`/plans/register-monthly-target/manager`, {
         plan_id: plan.plan_id,
         kpi_template_id: kpiItem.kpi_template.kpi_template_id,
@@ -342,15 +347,17 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     setIsSubmit(true)
     if (selectValue === 'Month') {
       const listToReturn = []
+      const listUser = []
       let valid = true
       selectedEmployeeList.map((item) => {
         if (item.target === '') {
           valid = false
         }
         listToReturn.push({ user_id: item.user.user_id, target: Number(item.target) })
+        listUser.push({ user_id: item.user.user_id })
       })
       if (valid) {
-        await assignKpi(listToReturn)
+        await assignKpi(listToReturn, listUser)
       }
     }
     setIsSubmit(false)
