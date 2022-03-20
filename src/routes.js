@@ -16,6 +16,8 @@ const EditKpiAndWeightView = React.lazy(() => import('./views/plan/EditKpiAndWei
 const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
 const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
 const DataInput = React.lazy(() => import('./views/data/Data'))
+const EditWeightDept = React.lazy(() => import('./views/plan/EditWeightDept'))
+const DeptPlan = React.lazy(() => import('./views/plan/DeptPlan'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -39,6 +41,17 @@ const routes = [
   },
   { path: '/kpiapproving/:id', exact: true, name: 'KPI Approving', component: KpiApproving },
   { path: '/data', name: 'Data', component: DataInput },
+  {
+    path: '/plan/:id/deptplan/:deptId',
+    name: 'Edit Weight Of Dept Plan',
+    component: EditWeightDept,
+  },
+  {
+    path: '/plan/:id/deptplan',
+    exact: true,
+    name: 'Dept Plan',
+    component: DeptPlan,
+  },
 ]
 
 export default routes
