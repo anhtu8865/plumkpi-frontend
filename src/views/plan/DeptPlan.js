@@ -90,7 +90,7 @@ const DeptPlan = () => {
                     <CTableDataCell>
                       <div
                         onClick={() => {
-                          history.replace(`/plan/${id}/deptplan/${item.dept_id}`)
+                          history.push(`/plan/${id}/deptplan/${item.dept_id}`)
                         }}
                         style={{ cursor: 'pointer', color: 'dodgerblue' }}
                       >
@@ -103,16 +103,18 @@ const DeptPlan = () => {
               <CTableFoot>
                 <CTableRow>
                   <CTableDataCell colSpan="3">
-                    <Pagination
-                      page={page}
-                      count={totalPage}
-                      showFirstButton
-                      showLastButton
-                      size="small"
-                      onChange={(event, page) => {
-                        setPage(page)
-                      }}
-                    />
+                    <div className="d-flex flex-row justify-content-end">
+                      <Pagination
+                        page={page}
+                        count={totalPage}
+                        showFirstButton
+                        showLastButton
+                        size="small"
+                        onChange={(event, page) => {
+                          setPage(page)
+                        }}
+                      />
+                    </div>
                   </CTableDataCell>
                 </CTableRow>
               </CTableFoot>
@@ -133,7 +135,7 @@ const DeptPlan = () => {
             <h4>Kế hoạch phòng ban</h4>
             <div
               onClick={() => {
-                history.replace(`/plan/${id}`)
+                history.push(`/plan/${id}`)
               }}
               style={{ cursor: 'pointer', color: 'dodgerblue' }}
             >

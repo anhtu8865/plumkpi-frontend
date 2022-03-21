@@ -123,15 +123,19 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
+      setIsSubmit(true)
       const employees = await getEmployeeList()
       const assignEmployees = await getInfoTargetKpi()
       if (assignEmployees) {
         setTempSelectedList(assignEmployees)
       }
       setEmployeeList(employees)
+      setIsSubmit(false)
     }
-    fetchData()
-  }, [])
+    if (modalVisible) {
+      fetchData()
+    }
+  }, [modalVisible])
 
   React.useEffect(() => {
     setSelectedEmployeeList([])
@@ -344,7 +348,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
             </CFormSelect>
           </CCol>
         </CRow>
-        <CRow className="mt-4">
+        {/*<CRow className="mt-4">
           <CCol xs={12}>
             <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI tháng {selectedMonth}</CFormLabel>
             <CInputGroup>
@@ -361,7 +365,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
             </CInputGroup>
             <CFormFeedback invalid></CFormFeedback>
           </CCol>
-        </CRow>
+              </CRow>*/}
         <CRow className="mt-4">
           <div>
             <h6>Nhân viên</h6>

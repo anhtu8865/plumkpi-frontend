@@ -13,6 +13,8 @@ import {
   CTableHeaderCell,
   CTableRow,
   CTableFoot,
+  CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
 import { IconButton, Button, Pagination, Avatar } from '@mui/material'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
@@ -292,7 +294,7 @@ const EditWeightDept = () => {
                         <CTableRow>
                           <CTableHeaderCell className="w-25">DANH MỤC</CTableHeaderCell>
                           <CTableHeaderCell>KPI</CTableHeaderCell>
-                          <CTableHeaderCell className="w-25">TRỌNG SỐ (%)</CTableHeaderCell>
+                          <CTableHeaderCell className="w-25">TRỌNG SỐ</CTableHeaderCell>
                         </CTableRow>
                       </CTableHead>
                       <CTableBody>
@@ -301,15 +303,18 @@ const EditWeightDept = () => {
                             {item.kpi_category.kpi_category_name}
                           </CTableDataCell>
                           <CTableDataCell className="w-25">
-                            <CFormInput
-                              size="sm"
-                              type="number"
-                              value={item.weight}
-                              onChange={(event) => {
-                                handleCatOnChange(event, item.kpi_category.kpi_category_id)
-                              }}
-                              invalid={item.weight === ''}
-                            />
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                size="sm"
+                                type="number"
+                                value={item.weight}
+                                onChange={(event) => {
+                                  handleCatOnChange(event, item.kpi_category.kpi_category_id)
+                                }}
+                                invalid={item.weight === ''}
+                              />
+                              <CInputGroupText>%</CInputGroupText>
+                            </CInputGroup>
                           </CTableDataCell>
                         </CTableRow>
                         {item.displayKpis.map((temItem) => (
@@ -319,55 +324,63 @@ const EditWeightDept = () => {
                               {temItem.kpi_template.kpi_template_name}
                             </CTableDataCell>
                             <CTableDataCell className="w-25">
-                              <CFormInput
-                                size="sm"
-                                type="number"
-                                value={handleTemValue(
-                                  item.kpi_category.kpi_category_id,
-                                  temItem.kpi_template.kpi_template_id,
-                                )}
-                                onChange={(event) => {
-                                  handleTemOnChange(
-                                    event,
+                              <CInputGroup size="sm">
+                                <CFormInput
+                                  size="sm"
+                                  type="number"
+                                  value={handleTemValue(
                                     item.kpi_category.kpi_category_id,
                                     temItem.kpi_template.kpi_template_id,
-                                  )
-                                }}
-                                invalid={
-                                  handleTemValue(
-                                    item.kpi_category.kpi_category_id,
-                                    temItem.kpi_template.kpi_template_id,
-                                  ) === ''
-                                }
-                              />
+                                  )}
+                                  onChange={(event) => {
+                                    handleTemOnChange(
+                                      event,
+                                      item.kpi_category.kpi_category_id,
+                                      temItem.kpi_template.kpi_template_id,
+                                    )
+                                  }}
+                                  invalid={
+                                    handleTemValue(
+                                      item.kpi_category.kpi_category_id,
+                                      temItem.kpi_template.kpi_template_id,
+                                    ) === ''
+                                  }
+                                />
+                                <CInputGroupText>%</CInputGroupText>
+                              </CInputGroup>
                             </CTableDataCell>
                           </CTableRow>
                         ))}
                       </CTableBody>
                       <CTableFoot>
                         <CTableDataCell colSpan="3">
-                          <Pagination
-                            page={item.page}
-                            count={item.totalPage}
-                            //showFirstButton
-                            //showLastButton
-                            size="small"
-                            onChange={async (event, page) => {
-                              await handlePage(page, item.kpi_category.kpi_category_id)
-                            }}
-                          />
+                          <div className="d-flex flex-row justify-content-end">
+                            <Pagination
+                              page={item.page}
+                              count={item.totalPage}
+                              //showFirstButton
+                              //showLastButton
+                              size="small"
+                              onChange={async (event, page) => {
+                                await handlePage(page, item.kpi_category.kpi_category_id)
+                              }}
+                            />
+                          </div>
                         </CTableDataCell>
                         <CTableRow>
                           <CTableHeaderCell className="w-25" />
                           <CTableHeaderCell>TỔNG</CTableHeaderCell>
                           <CTableHeaderCell className="w-25">
-                            <CFormInput
-                              size="sm"
-                              disabled
-                              value={handleSumValue(item.kpi_category.kpi_category_id)}
-                              invalid={handleSumValue(item.kpi_category.kpi_category_id) !== 100}
-                              valid={handleSumValue(item.kpi_category.kpi_category_id) === 100}
-                            />
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                size="sm"
+                                disabled
+                                value={handleSumValue(item.kpi_category.kpi_category_id)}
+                                invalid={handleSumValue(item.kpi_category.kpi_category_id) !== 100}
+                                valid={handleSumValue(item.kpi_category.kpi_category_id) === 100}
+                              />
+                              <CInputGroupText>%</CInputGroupText>
+                            </CInputGroup>
                           </CTableHeaderCell>
                         </CTableRow>
                       </CTableFoot>
@@ -386,13 +399,16 @@ const EditWeightDept = () => {
                 <CTableRow>
                   <CTableHeaderCell>TỔNG TRỌNG SỐ DANH MỤC</CTableHeaderCell>
                   <CTableHeaderCell className="w-25 text-end">
-                    <CFormInput
-                      size="sm"
-                      disabled
-                      value={handleSumValue(0)}
-                      invalid={handleSumValue(0) !== 100}
-                      valid={handleSumValue(0) === 100}
-                    />
+                    <CInputGroup size="sm">
+                      <CFormInput
+                        size="sm"
+                        disabled
+                        value={handleSumValue(0)}
+                        invalid={handleSumValue(0) !== 100}
+                        valid={handleSumValue(0) === 100}
+                      />
+                      <CInputGroupText>%</CInputGroupText>
+                    </CInputGroup>
                   </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -413,7 +429,7 @@ const EditWeightDept = () => {
             <h4>Chỉnh sửa trọng số KPI phòng ban</h4>
             <div
               onClick={() => {
-                history.replace(`/plan/${id}/deptplan`)
+                history.push(`/plan/${id}/deptplan`)
               }}
               style={{ cursor: 'pointer', color: 'dodgerblue' }}
             >

@@ -12,7 +12,6 @@ const UserDepartment = React.lazy(() => import('./views/pages/department/UserDep
 const PlanDetail = React.lazy(() => import('./views/plan/PlanDetail'))
 const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTree'))
 const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
-const EditKpiAndWeightView = React.lazy(() => import('./views/plan/EditKpiAndWeightView'))
 const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
 const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
 const DataInput = React.lazy(() => import('./views/data/Data'))
@@ -29,7 +28,6 @@ const routes = [
   { path: '/kpiadmin/:id', name: 'KPI Template', component: KpiTemplate },
   { path: '/plan', exact: true, name: 'Plan', component: Plan },
   { path: '/plan/:id', exact: true, name: 'Plan Detail', component: PlanDetail },
-  { path: '/plan/:id/edit', name: 'Edit KPI & Weight in Plan', component: EditKpiAndWeightView },
   { path: '/users', name: 'User', component: UserPage },
   { path: '/depts', exact: true, name: 'Department', component: Department },
   { path: '/depts/:id', name: 'User In Department', component: UserDepartment },

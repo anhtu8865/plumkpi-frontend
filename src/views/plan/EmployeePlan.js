@@ -89,7 +89,7 @@ const EmployeePlan = () => {
                     <CTableDataCell>
                       <div
                         onClick={() => {
-                          history.replace(`/plan/${id}/employeeplan/${item.user_id}`)
+                          history.push(`/plan/${id}/employeeplan/${item.user_id}`)
                         }}
                         style={{ cursor: 'pointer', color: 'dodgerblue' }}
                       >
@@ -102,16 +102,18 @@ const EmployeePlan = () => {
               <CTableFoot>
                 <CTableRow>
                   <CTableDataCell colSpan="4">
-                    <Pagination
-                      page={page}
-                      count={totalPage}
-                      showFirstButton
-                      showLastButton
-                      size="small"
-                      onChange={(event, page) => {
-                        setPage(page)
-                      }}
-                    />
+                    <div className="d-flex flex-row justify-content-end">
+                      <Pagination
+                        page={page}
+                        count={totalPage}
+                        showFirstButton
+                        showLastButton
+                        size="small"
+                        onChange={(event, page) => {
+                          setPage(page)
+                        }}
+                      />
+                    </div>
                   </CTableDataCell>
                 </CTableRow>
               </CTableFoot>
@@ -132,7 +134,7 @@ const EmployeePlan = () => {
             <h4>Kế hoạch nhân viên</h4>
             <div
               onClick={() => {
-                history.replace(`/plan/${id}`)
+                history.push(`/plan/${id}`)
               }}
               style={{ cursor: 'pointer', color: 'dodgerblue' }}
             >

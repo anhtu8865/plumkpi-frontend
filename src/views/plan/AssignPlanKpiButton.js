@@ -144,6 +144,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
+      setIsSubmit(true)
       const deptList = []
       const depts = await getDeptList()
       const assignDepts = await getInfoTargetKpi()
@@ -157,9 +158,12 @@ export const AssignPlanKpiButton = (kpiItem) => {
       if (kpiItem && kpiItem.target) {
         setTarget(kpiItem.target)
       }
+      setIsSubmit(false)
     }
-    fetchData()
-  }, [])
+    if (modalVisible) {
+      fetchData()
+    }
+  }, [modalVisible])
 
   React.useEffect(() => {
     let sumTarget = 0

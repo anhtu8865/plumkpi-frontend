@@ -134,6 +134,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
+      setIsSubmit(true)
       const deptList = []
       const assignDepts = await getInfoTargetKpi()
       if (assignDepts) {
@@ -142,9 +143,12 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
         })
         setSelectedDeptList(deptList)
       }
+      setIsSubmit(false)
     }
-    fetchData()
-  }, [])
+    if (modalVisible) {
+      fetchData()
+    }
+  }, [modalVisible])
 
   React.useEffect(() => {
     setSelectedDeptApprove([])

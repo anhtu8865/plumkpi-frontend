@@ -132,16 +132,18 @@ const KpiTemplate = () => {
               <CTableFoot>
                 <CTableRow>
                   <CTableDataCell colSpan="4">
-                    <Pagination
-                      page={page}
-                      count={totalPage}
-                      showFirstButton
-                      showLastButton
-                      size="small"
-                      onChange={(event, page) => {
-                        setPage(page)
-                      }}
-                    />
+                    <div className="d-flex flex-row justify-content-end">
+                      <Pagination
+                        page={page}
+                        count={totalPage}
+                        showFirstButton
+                        showLastButton
+                        size="small"
+                        onChange={(event, page) => {
+                          setPage(page)
+                        }}
+                      />
+                    </div>
                   </CTableDataCell>
                 </CTableRow>
               </CTableFoot>

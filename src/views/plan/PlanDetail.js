@@ -33,6 +33,8 @@ import { formatDate, compareToToday, compareYear } from 'src/utils/function'
 import { monthArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
+import BookIcon from '@mui/icons-material/Book'
 
 const PlanDetail = () => {
   const { id } = useParams()
@@ -214,16 +216,7 @@ const PlanDetail = () => {
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    history.replace(`/plan/${id}/edit`)
-                  }}
-                  startIcon={<AddCircleIcon />}
-                >
-                  Thêm KPI
-                </Button>
+                {EditCategoryInPlanButton()}
               </div>
             </CCol>
           )}
@@ -239,12 +232,12 @@ const PlanDetail = () => {
     return (
       <>
         <CRow>
-          <CCol xs={12} sm={6}>
+          <CCol xs={12} sm={5}>
             <h4>{plan.plan_name}</h4>
             <h6>{plan.description ? plan.description : null}</h6>
           </CCol>
           {user.role === 'Nhân viên' && compareYear(plan.year) && (
-            <CCol xs={12} sm={6}>
+            <CCol xs={12} sm={7}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
@@ -260,7 +253,7 @@ const PlanDetail = () => {
             </CCol>
           )}
           {user.role === 'Quản lý' && compareYear(plan.year) && (
-            <CCol xs={6} sm={6}>
+            <CCol xs={12} sm={7}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
@@ -282,11 +275,21 @@ const PlanDetail = () => {
                 >
                   Đăng ký KPI
                 </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<BookIcon />}
+                  onClick={() => {
+                    history.push(`/plan/${id}/employeeplan`)
+                  }}
+                >
+                  Kế hoạch nhân viên
+                </Button>
               </div>
             </CCol>
           )}
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
-            <CCol xs={6} sm={6}>
+            <CCol xs={12} sm={7}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
@@ -301,11 +304,12 @@ const PlanDetail = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  startIcon={<BookIcon />}
                   onClick={() => {
-                    history.replace(`/plan/${id}/edit`)
+                    history.push(`/plan/${id}/deptplan`)
                   }}
                 >
-                  Thay đổi trọng số/ KPI
+                  Kế hoạch phòng ban
                 </Button>
               </div>
             </CCol>
@@ -313,7 +317,7 @@ const PlanDetail = () => {
         </CRow>
         <CRow className="mt-4 d-flex justify-content-start">
           {user.role === 'Giám đốc' && (
-            <CCol xs={12} sm={4} xl={2}>
+            <CCol xs={12} sm={4} xl={3}>
               <CInputGroup size="sm">
                 <CInputGroupText>Quý</CInputGroupText>
                 <CFormSelect
