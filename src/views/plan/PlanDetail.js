@@ -262,7 +262,7 @@ const PlanDetail = () => {
           {user.role === 'Quản lý' && compareYear(plan.year) && (
             <CCol xs={6} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
-                <Button
+                {/* <Button
                   variant="contained"
                   color="primary"
                   startIcon={<CheckBoxIcon />}
@@ -271,7 +271,7 @@ const PlanDetail = () => {
                   }}
                 >
                   Duyệt KPI
-                </Button>
+                </Button> */}
                 <Button
                   variant="contained"
                   color="primary"
@@ -288,7 +288,7 @@ const PlanDetail = () => {
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={6} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
-                <Button
+                {/* <Button
                   variant="contained"
                   color="primary"
                   startIcon={<CheckBoxIcon />}
@@ -297,7 +297,7 @@ const PlanDetail = () => {
                   }}
                 >
                   Duyệt KPI
-                </Button>
+                </Button> */}
                 <Button
                   variant="contained"
                   color="primary"
