@@ -18,6 +18,8 @@ import { KpiInfoButton } from './KpiInfoButton'
 import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
 import { formatNumber } from 'src/utils/function'
+import { ApproveQuarterTargetButton } from './ApproveQuarterTargetButton'
+import { RegisterQuarterTargetButton } from './RegisterQuarterTargetButton'
 
 export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
   const { temInPlan, catInPlan, temPage, temTotalPage } = useSelector((state) => state.planDetail)
@@ -143,7 +145,7 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  {user.role === 'Giám đốc' && <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>}
+                  <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>
                   {['Giám đốc', 'Quản lý'].includes(user.role) && (
                     <CTableHeaderCell>CHỈ TIÊU CẢ NĂM</CTableHeaderCell>
                   )}
@@ -161,9 +163,7 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                 {temInPlan.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
                     <CTableDataCell>{item.kpi_template.kpi_template_name}</CTableDataCell>
-                    {user.role === 'Giám đốc' && (
-                      <CTableDataCell>{item.weight ? item.weight : null}</CTableDataCell>
-                    )}
+                    <CTableDataCell>{item.weight ? item.weight : 'Chưa có'}</CTableDataCell>
                     {['Giám đốc', 'Quản lý'].includes(user.role) ? (
                       item.target ? (
                         <CTableDataCell>{formatNumber(item.target)}</CTableDataCell>
@@ -181,7 +181,11 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                     <CTableDataCell className="text-center w-25">
                       <div className="d-flex flex-row justify-content-center">
                         {user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
+                        {user.role === 'Giám đốc' &&
+                          ApproveQuarterTargetButton(item, selectedQuarter)}
                         {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
+                        {user.role === 'Quản lý' &&
+                          RegisterQuarterTargetButton(item, selectedQuarter)}
                         <KpiInfoButton kpiItem={item} />
                       </div>
                     </CTableDataCell>
@@ -190,7 +194,7 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan={user.role === 'Nhân viên' ? '4' : '5'}>
+                  <CTableDataCell colSpan={user.role === 'Quản lý' ? '6' : '5'}>
                     <Pagination
                       page={temPage}
                       count={temTotalPage}

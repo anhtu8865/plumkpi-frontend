@@ -20,9 +20,9 @@ import { frequencyList, directionList, aggList } from 'src/utils/engToViet'
 
 export const KpiInfoButton = (props) => {
   const [modalVisible, setModalVisible] = useState(false)
-  const [kpiList, setKpiList] = useState([])
+  /*const [kpiList, setKpiList] = useState([])
 
-  /*const getKpiTemplates = async () => {
+  const getKpiTemplates = async () => {
     try {
       const response = await api.get(`/kpi-templates`)
       return response.data.items
@@ -103,14 +103,14 @@ export const KpiInfoButton = (props) => {
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol xs={12} sm={6}>
+            {/*<CCol xs={12} sm={6}>
               <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
               <CFormInput
                 id="freq"
                 defaultValue={translate(props.kpiItem.kpi_template.frequency, frequencyList)}
                 disabled
               />
-            </CCol>
+    </CCol>*/}
             <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="direction">Chiều hướng</CFormLabel>
               <CFormInput

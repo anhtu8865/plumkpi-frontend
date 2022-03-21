@@ -28,13 +28,13 @@ import HelpIcon from '@mui/icons-material/Help'
 import cloneDeep from 'lodash/cloneDeep'
 import { weightKpiRule } from 'src/utils/constant'
 
-const EditWeightDept = () => {
-  const { id, deptId } = useParams()
+const EditWeightEmployee = () => {
+  const { id, userId } = useParams()
   const dispatch = useDispatch()
   const history = useHistory()
   const { reload, loading } = useSelector((state) => state.view)
   const [plan, setPlan] = useState({ plan_name: '' })
-  const [dept, setDept] = useState({})
+  const [employee, setEmployee] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
   const entryPerPage = 5
   const [entry, setEntry] = useState([])
@@ -45,44 +45,44 @@ const EditWeightDept = () => {
   }
 
   const getCatPlan = async () => {
-    const response = await api.get(`plans/${id}/kpi-categories/director/dept`, {
-      params: { dept_id: deptId },
+    const response = await api.get(`plans/${id}/kpi-categories/manager/user`, {
+      params: { user_id: userId },
     })
     return response.data
   }
 
   const getTemInOneCatPlan = async (offset, catId) => {
-    const response = await api.get(`plans/${id}/kpis/director/dept`, {
-      params: { offset: offset, limit: entryPerPage, kpi_category_id: catId, dept_id: deptId },
+    const response = await api.get(`plans/${id}/kpis/manager/user`, {
+      params: { offset: offset, limit: entryPerPage, kpi_category_id: catId, user_id: userId },
     })
     return response.data
   }
 
-  const getDept = async () => {
-    const response = await api.get(`/depts/all`)
-    return response.data.find((item) => item.dept_id === Number(deptId))
+  const getUser = async () => {
+    const response = await api.get(`/users/employees/manager`)
+    return response.data.find((item) => item.user_id === Number(userId))
   }
 
   const changeWeightDept = async (catObjectArray, temObjectArray) => {
     await api.put(
-      `plans/${id}/kpi-categories/director/dept`,
+      `plans/${id}/kpi-categories/manager/user`,
       { kpi_categories: catObjectArray },
       {
-        params: { dept_id: deptId },
+        params: { user_id: userId },
       },
     )
     await temObjectArray.map(async (item) => {
       await api.put(
-        `plans/${id}/kpis/director/dept`,
+        `plans/${id}/kpis/manager/user`,
         { kpi_templates: item },
         {
-          params: { dept_id: deptId },
+          params: { user_id: userId },
         },
       )
     })
     dispatch(
       createAlert({
-        message: 'Chỉnh sửa trọng số kế hoạch phòng ban thành công.',
+        message: 'Chỉnh sửa trọng số kế hoạch nhân viên thành công.',
         type: 'success',
       }),
     )
@@ -94,7 +94,7 @@ const EditWeightDept = () => {
       try {
         const result = await getPlan()
         const res = await getCatPlan()
-        const res1 = await getDept()
+        const res1 = await getUser()
         if (res) {
           for (let i = 0; i < res.length; i++) {
             const kpis = await getTemInOneCatPlan(0, res[i].kpi_category.kpi_category_id)
@@ -107,7 +107,7 @@ const EditWeightDept = () => {
           }
           setEntry(res)
         }
-        setDept(res1)
+        setEmployee(res1)
         setPlan(result)
       } catch (error) {
         if (error.response) {
@@ -410,14 +410,14 @@ const EditWeightDept = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>Chỉnh sửa trọng số KPI phòng ban</h4>
+            <h4>Chỉnh sửa trọng số KPI nhân viên</h4>
             <div
               onClick={() => {
-                history.replace(`/plan/${id}/deptplan`)
+                history.replace(`/plan/${id}/employeeplan`)
               }}
               style={{ cursor: 'pointer', color: 'dodgerblue' }}
             >
-              <small>{'<<'} Quay lại trang phòng ban </small>
+              <small>{'<<'} Quay lại trang nhân viên </small>
             </div>
           </CCol>
         </CRow>
@@ -427,21 +427,15 @@ const EditWeightDept = () => {
           </CCol>
         </CRow>
         <CRow className="mt-2">
-          <CCol xs={12} sm={4}>
+          <CCol xs={12} sm={6}>
             Năm thực hiện: {plan ? plan.year : ''}
           </CCol>
-          <CCol xs={12} sm={4}>
-            Phòng ban: {dept ? dept.dept_name : ''}
-          </CCol>
-          <CCol xs={12} sm={4} className="d-flex flex-row">
-            Quản lý:{' '}
-            {dept && dept.manager ? (
+          <CCol xs={12} sm={6} className="d-flex flex-row">
+            Nhân viên:{' '}
+            {employee ? (
               <>
-                <Avatar
-                  src={dept.manager.avatar ? dept.manager.avatar.url : null}
-                  className="ms-2 me-3"
-                />
-                {dept.manager.user_name}
+                <Avatar src={employee.avatar ? employee.avatar.url : null} className="ms-2 me-3" />
+                {employee.user_name}
               </>
             ) : (
               ''
@@ -487,4 +481,4 @@ const EditWeightDept = () => {
   )
 }
 
-export default EditWeightDept
+export default EditWeightEmployee

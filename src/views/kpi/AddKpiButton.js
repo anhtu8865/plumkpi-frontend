@@ -36,26 +36,26 @@ import { setReload, setLoading } from 'src/slices/viewSlice'
 export const AddKpiButton = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
-  const [formulaVisible, setFormulaVisible] = React.useState(false)
+  /*const [formulaVisible, setFormulaVisible] = React.useState(false)
   const [kpiTemList, setKpiTemList] = React.useState([])
   const [cursorStartPosition, setCursorStartPosition] = React.useState(null)
   const [kpiSelectValue, setKpiSelectValue] = React.useState('')
-  const [kpiList, setKpiList] = React.useState([])
+  const [kpiList, setKpiList] = React.useState([])*/
   const { categoryList } = useSelector((state) => state.kpiCategory)
 
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     categoryList.map((catItem) => {
       api
         .get(`/kpi-categories/${catItem.kpi_category_id}`)
         .then((response) => {
           let kpiTemInCat = []
-          /*response.data.kpi_templates.map((temItem) => {
+          response.data.kpi_templates.map((temItem) => {
             kpiTemInCat.push({
               value: temItem.kpi_template_name.replaceAll(' ', '_'),
               label: temItem.kpi_template_name,
             })
             kpiList.push(temItem)
-          })*/
+          })
           kpiTemList.push({
             label: catItem.kpi_category_name,
             options: kpiTemInCat,
@@ -70,7 +70,7 @@ export const AddKpiButton = (props) => {
           )
         })
     })
-  }, [categoryList, dispatch])
+  }, [categoryList, dispatch])*/
 
   const ValidationSchema = yup.object({
     name: yup
@@ -78,7 +78,7 @@ export const AddKpiButton = (props) => {
       .min(6, 'Để đảm bảo tên KPI có ý nghĩa, độ dài tên cần từ 6 kí tự trở lên')
       .required('Đây là trường bắt buộc'),
     unit: yup.string().required('Đây là trường bắt buộc'),
-    formula: yup
+    /*formula: yup
       .string()
       .test('checkformula', 'Xem lại công thức', function (value, { createError }) {
         if (!value) {
@@ -96,7 +96,7 @@ export const AddKpiButton = (props) => {
           }
         }
         return true
-      }),
+      }),*/
   })
 
   const formik = useFormik({
@@ -104,10 +104,10 @@ export const AddKpiButton = (props) => {
     initialValues: {
       name: '',
       description: null,
-      frequency: 'Ngày',
+      //frequency: 'Ngày',
       direction: 'Lên',
       unit: '',
-      formula: '',
+      //formula: '',
       aggregation: 'Tổng',
       category: props.inCat.kpi_category_id,
       red: 0,
@@ -117,13 +117,13 @@ export const AddKpiButton = (props) => {
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
-      let newFormula = ''
+      /*let newFormula = ''
       if (formulaVisible) {
         const newFormulaArray = checkValid(values.formula, kpiList).formulaArray
         newFormulaArray.map((element) => {
           newFormula = newFormula + element + ' '
         })
-      }
+      }*/
       let selectedCat = categoryList.filter(
         (catItem) => catItem.kpi_category_id == values.category,
       )[0]
@@ -131,7 +131,7 @@ export const AddKpiButton = (props) => {
         .post(`/kpi-templates/`, {
           kpi_template_name: values.name,
           description: values.description,
-          frequency: values.frequency,
+          //frequency: values.frequency,
           direction: values.direction,
           unit: values.unit,
           aggregation: values.aggregation,
@@ -188,8 +188,8 @@ export const AddKpiButton = (props) => {
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false)
-          setFormulaVisible(false)
-          formik.setFieldValue('formula', '', false)
+          /*setFormulaVisible(false)
+          formik.setFieldValue('formula', '', false)*/
         }}
       >
         <CModalHeader>
@@ -225,7 +225,7 @@ export const AddKpiButton = (props) => {
               </CCol>
             </CRow>
             <CRow className="mt-3">
-              <CCol xs={12} sm={6}>
+              {/*<CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
                 <CFormSelect
                   id="freq"
@@ -245,6 +245,28 @@ export const AddKpiButton = (props) => {
                   <option value="Năm">Năm</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.frequency}</CFormFeedback>
+                </CCol>*/}
+              <CCol xs={12} sm={6}>
+                <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
+                <CFormSelect
+                  id="aggregation"
+                  {...formik.getFieldProps('aggregation')}
+                  invalid={formik.touched.aggregation && formik.errors.aggregation ? true : false}
+                  valid={
+                    !formik.touched.aggregation ||
+                    (formik.touched.aggregation && formik.errors.aggregation)
+                      ? false
+                      : true
+                  }
+                >
+                  <option value="Tổng">Tổng</option>
+                  <option value="Trung bình">Trung bình</option>
+                  <option value="Trung bình trọng số">Trung bình trọng số</option>
+                  <option value="Lớn nhất">Lớn nhất</option>
+                  <option value="Bé nhất">Bé nhất</option>
+                  <option value="Mới nhất">Mới nhất</option>
+                </CFormSelect>
+                <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
               </CCol>
               <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="direction">Chiều hướng</CFormLabel>
@@ -303,30 +325,6 @@ export const AddKpiButton = (props) => {
                   })}
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.category}</CFormFeedback>
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
-              <CCol xs={12} sm={6}>
-                <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
-                <CFormSelect
-                  id="aggregation"
-                  {...formik.getFieldProps('aggregation')}
-                  invalid={formik.touched.aggregation && formik.errors.aggregation ? true : false}
-                  valid={
-                    !formik.touched.aggregation ||
-                    (formik.touched.aggregation && formik.errors.aggregation)
-                      ? false
-                      : true
-                  }
-                >
-                  <option value="Tổng">Tổng</option>
-                  <option value="Trung bình">Trung bình</option>
-                  <option value="Trung bình trọng số">Trung bình trọng số</option>
-                  <option value="Lớn nhất">Lớn nhất</option>
-                  <option value="Bé nhất">Bé nhất</option>
-                  <option value="Mới nhất">Mới nhất</option>
-                </CFormSelect>
-                <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
               </CCol>
             </CRow>
             <CRow className="mt-3">
@@ -441,7 +439,7 @@ export const AddKpiButton = (props) => {
                 <CFormFeedback invalid>{formik.errors.green}</CFormFeedback>
               </CCol>
             </CRow>
-            <CRow className="mt-3">
+            {/*<CRow className="mt-3">
               <CCol xs>
                 <CFormCheck
                   onClick={() => {
@@ -515,7 +513,7 @@ export const AddKpiButton = (props) => {
                   </CCol>
                 </CRow>
               </>
-            )}
+            )}*/}
           </form>
         </CModalBody>
         <CModalFooter>

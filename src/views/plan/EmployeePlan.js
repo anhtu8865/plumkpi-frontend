@@ -21,7 +21,7 @@ import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
 
-const DeptPlan = () => {
+const EmployeePlan = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const history = useHistory()
@@ -31,8 +31,8 @@ const DeptPlan = () => {
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
 
-  const getDeptList = async (offset) => {
-    const response = await api.get(`depts`, {
+  const getEmployeeList = async (offset) => {
+    const response = await api.get(`users/employees/manager/info`, {
       params: { offset: offset, limit: entryPerPage },
     })
     setTotalPage(Math.ceil(response.data.count / entryPerPage))
@@ -42,7 +42,7 @@ const DeptPlan = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getDeptList((page - 1) * entryPerPage)
+        const result = await getEmployeeList((page - 1) * entryPerPage)
         if (result) {
           setEntry(result)
         }
@@ -71,30 +71,29 @@ const DeptPlan = () => {
             <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-                  <CTableHeaderCell>QUẢN LÝ</CTableHeaderCell>
+                  <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
+                  <CTableHeaderCell>EMAIL</CTableHeaderCell>
+                  <CTableHeaderCell>SĐT</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {entry.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>{item.dept_name}</CTableDataCell>
                     <CTableDataCell className="d-flex flex-row">
-                      <Avatar
-                        src={item.manager.avatar ? item.manager.avatar.url : null}
-                        className="me-3"
-                      />
-                      {item.manager.user_name}
+                      <Avatar src={item.avatar ? item.avatar.url : null} className="me-3" />
+                      {item.user_name}
                     </CTableDataCell>
+                    <CTableDataCell>{item.email}</CTableDataCell>
+                    <CTableDataCell>{item.phone ? item.phone : 'Không có'}</CTableDataCell>
                     <CTableDataCell>
                       <div
                         onClick={() => {
-                          history.replace(`/plan/${id}/deptplan/${item.dept_id}`)
+                          history.replace(`/plan/${id}/employeeplan/${item.user_id}`)
                         }}
                         style={{ cursor: 'pointer', color: 'dodgerblue' }}
                       >
-                        Đi đến kế hoạch phòng ban {'>>'}
+                        Đi đến kế hoạch nhân viên {'>>'}
                       </div>
                     </CTableDataCell>
                   </CTableRow>
@@ -102,7 +101,7 @@ const DeptPlan = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="3">
+                  <CTableDataCell colSpan="4">
                     <Pagination
                       page={page}
                       count={totalPage}
@@ -119,7 +118,7 @@ const DeptPlan = () => {
             </CTable>
           </>
         ) : (
-          <div>Chưa có phòng ban nào.</div>
+          <div>Chưa có nhân viên nào.</div>
         )}
       </>
     )
@@ -130,7 +129,7 @@ const DeptPlan = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>Kế hoạch phòng ban</h4>
+            <h4>Kế hoạch nhân viên</h4>
             <div
               onClick={() => {
                 history.replace(`/plan/${id}`)
@@ -143,7 +142,7 @@ const DeptPlan = () => {
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12} sm={6}>
-            <h6>Danh sách phòng ban</h6>
+            <h6>Danh sách nhân viên</h6>
           </CCol>
         </CRow>
         <CRow className="mt-2">{Table()}</CRow>
@@ -170,4 +169,4 @@ const DeptPlan = () => {
   )
 }
 
-export default DeptPlan
+export default EmployeePlan

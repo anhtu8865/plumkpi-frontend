@@ -312,6 +312,26 @@ const PlanDetail = () => {
           )}
         </CRow>
         <CRow className="mt-4 d-flex justify-content-start">
+          {user.role === 'Giám đốc' && (
+            <CCol xs={12} sm={4} xl={2}>
+              <CInputGroup size="sm">
+                <CInputGroupText>Quý</CInputGroupText>
+                <CFormSelect
+                  className="text-center"
+                  value={selectedQuarter}
+                  onChange={(event) => {
+                    setSelectedQuarter(Number(event.target.value))
+                  }}
+                >
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>Cả năm</option>
+                </CFormSelect>
+              </CInputGroup>
+            </CCol>
+          )}
           {user.role === 'Quản lý' && (
             <CCol xs={12} sm={4} xl={2}>
               <CInputGroup size="sm">

@@ -111,7 +111,6 @@ const KpiTemplate = () => {
                   <CTableHeaderCell>KPI</CTableHeaderCell>
                   <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
                   <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
-                  <CTableHeaderCell>TẦN SUẤT</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
@@ -121,7 +120,6 @@ const KpiTemplate = () => {
                     <CTableDataCell>{temItem.kpi_template_name}</CTableDataCell>
                     <CTableDataCell>{temItem.description}</CTableDataCell>
                     <CTableDataCell>{temItem.unit}</CTableDataCell>
-                    <CTableDataCell>{translate(temItem.frequency, frequencyList)}</CTableDataCell>
                     <CTableDataCell className="text-center">
                       <div className="d-flex flex-row justify-content-center">
                         <EditKpiButton inTem={temItem} />
