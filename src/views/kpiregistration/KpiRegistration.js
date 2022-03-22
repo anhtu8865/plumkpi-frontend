@@ -23,8 +23,9 @@ import {
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckIcon from '@mui/icons-material/Check'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 import SearchIcon from '@mui/icons-material/Search'
-import { Avatar, Button, Grid, Pagination, Checkbox } from '@mui/material'
+import { Avatar, Button, Grid, Pagination, Checkbox, IconButton } from '@mui/material'
 import { Field, FormikProvider, useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -35,6 +36,7 @@ import { createAlert } from 'src/slices/alertSlice'
 import { setKpiRegisLoading, setKpiRegisReload } from 'src/slices/kpiRegisSlice'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 // import AddKpiRegistration from './AddKpiRegistration'
 // import DeleteKpiRegistration from './DeleteKpiRegistration'
@@ -42,6 +44,7 @@ import { useParams } from 'react-router-dom'
 import { InfoKpiRegistration } from './InfoKpiRegistration'
 
 const KpiRegistration = () => {
+  const history = useHistory()
   const { id } = useParams()
   //console.log(id)
   const dispatch = useDispatch()
@@ -304,7 +307,16 @@ const KpiRegistration = () => {
               <CCardBody className="p-4">
                 <CRow>
                   <CCol xs={6}>
-                    <h4>Đăng ký KPI cá nhân</h4>
+                    <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+                      <IconButton
+                        onClick={() => {
+                          history.push(`/plan/${id}`)
+                        }}
+                      >
+                        <ArrowCircleLeftIcon />
+                      </IconButton>
+                      <h4>Đăng ký KPI cá nhân</h4>
+                    </Grid>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">

@@ -10,8 +10,13 @@ import {
   CTableHeaderCell,
   CTableRow,
   CTableFoot,
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
-import { Pagination } from '@mui/material'
+import { Pagination, IconButton } from '@mui/material'
+import SaveIcon from '@mui/icons-material/Save'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTemPage } from 'src/slices/planDetailSlice'
 import { KpiInfoButton } from './KpiInfoButton'
@@ -19,8 +24,13 @@ import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
 import { formatNumber } from 'src/utils/function'
 
+import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
+
 export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
-  const { temInPlan, catInPlan, temPage, temTotalPage } = useSelector((state) => state.planDetail)
+  const { plan, temInPlan, catInPlan, temPage, temTotalPage } = useSelector(
+    (state) => state.planDetail,
+  )
+  //console.log(useSelector((state) => state.planDetail))
   const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
@@ -134,6 +144,109 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
     }
   }
 
+  const handleMonthActualValue = (item) => {
+    switch (selectedMonth) {
+      case 1: {
+        if (item.first_monthly_target) {
+          if (item.first_monthly_target.hasOwnProperty('actual')) {
+            return item.first_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 2: {
+        if (item.second_monthly_target) {
+          if (item.second_monthly_target.hasOwnProperty('actual')) {
+            return item.second_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 3: {
+        if (item.third_monthly_target) {
+          if (item.third_monthly_target.hasOwnProperty('actual')) {
+            return item.third_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 4: {
+        if (item.fourth_monthly_target) {
+          if (item.fourth_monthly_target.hasOwnProperty('actual')) {
+            return item.fourth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 5: {
+        if (item.fifth_monthly_target) {
+          if (item.fifth_monthly_target.hasOwnProperty('actual')) {
+            return item.fifth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 6: {
+        if (item.sixth_monthly_target) {
+          if (item.sixth_monthly_target.hasOwnProperty('actual')) {
+            return item.sixth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 7: {
+        if (item.seventh_monthly_target) {
+          if (item.seventh_monthly_target.hasOwnProperty('actual')) {
+            return item.seventh_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 8: {
+        if (item.eighth_monthly_target) {
+          if (item.eighth_monthly_target.hasOwnProperty('actual')) {
+            return item.eighth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 9: {
+        if (item.ninth_monthly_target) {
+          if (item.ninth_monthly_target.hasOwnProperty('actual')) {
+            return item.ninth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 10: {
+        if (item.tenth_monthly_target) {
+          if (item.tenth_monthly_target.hasOwnProperty('actual')) {
+            return item.tenth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 11: {
+        if (item.eleventh_monthly_target) {
+          if (item.eleventh_monthly_target.hasOwnProperty('actual')) {
+            return item.eleventh_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      case 12: {
+        if (item.twelfth_monthly_target) {
+          if (item.twelfth_monthly_target.hasOwnProperty('actual')) {
+            return item.twelfth_monthly_target.actual.value
+          }
+        }
+        return 'Chưa có'
+      }
+      default:
+        return 'Chưa có'
+    }
+  }
+
   const Table = () => {
     return (
       <>
@@ -152,6 +265,9 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                   )}
                   {user.role === 'Nhân viên' && (
                     <CTableHeaderCell>CHỈ TIÊU THÁNG {selectedMonth}</CTableHeaderCell>
+                  )}
+                  {['Quản lý', 'Nhân viên'].includes(user.role) && (
+                    <CTableHeaderCell>THỰC HIỆN</CTableHeaderCell>
                   )}
                   <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
@@ -176,6 +292,28 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                     )}
                     {user.role === 'Nhân viên' && (
                       <CTableDataCell>{formatNumber(handleMonthTargetValue(item))}</CTableDataCell>
+                    )}
+                    {user.role === 'Quản lý' && (
+                      <CTableDataCell>
+                        <CForm>
+                          <CInputGroup>
+                            <CFormInput />
+                            {/* <IconButton variant="contained" color="primary">
+                              <SaveIcon />
+                            </IconButton> */}
+                          </CInputGroup>
+                        </CForm>
+                      </CTableDataCell>
+                    )}
+                    {user.role === 'Nhân viên' && (
+                      <CTableDataCell>
+                        <EnterDataMonthlyTarget
+                          plan={plan}
+                          item={item}
+                          selectedMonth={selectedMonth}
+                          note=""
+                        />
+                      </CTableDataCell>
                     )}
                     <CTableDataCell>{item.kpi_template.unit}</CTableDataCell>
                     <CTableDataCell className="text-center w-25">

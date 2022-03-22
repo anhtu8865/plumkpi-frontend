@@ -127,6 +127,7 @@ const Department = () => {
             startIcon={<SearchIcon />}
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
+            style={{ marginBottom: '10px' }}
           >
             Tìm
           </Button>
