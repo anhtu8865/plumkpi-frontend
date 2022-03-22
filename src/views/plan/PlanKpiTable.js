@@ -25,6 +25,7 @@ import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
 import { formatNumber } from 'src/utils/function'
 
 import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
+import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
 
 export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
   const { plan, temInPlan, catInPlan, temPage, temTotalPage } = useSelector(
@@ -295,14 +296,12 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                     )}
                     {user.role === 'Quản lý' && (
                       <CTableDataCell>
-                        <CForm>
-                          <CInputGroup>
-                            <CFormInput />
-                            {/* <IconButton variant="contained" color="primary">
-                              <SaveIcon />
-                            </IconButton> */}
-                          </CInputGroup>
-                        </CForm>
+                        <EnterDataQuarterlyTarget
+                          plan={plan}
+                          item={item}
+                          selectedQuarter={selectedQuarter}
+                          note=""
+                        />
                       </CTableDataCell>
                     )}
                     {user.role === 'Nhân viên' && (

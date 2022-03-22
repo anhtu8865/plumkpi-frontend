@@ -7,8 +7,9 @@ import {
   CForm,
   CFormInput,
   CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import FilePresentIcon from '@mui/icons-material/FilePresent'
 import { Button, IconButton } from '@mui/material'
 import PropTypes from 'prop-types'
 import SaveIcon from '@mui/icons-material/Save'
@@ -188,6 +189,9 @@ const EnterDateMonthlyTarget = (props) => {
             defaultValue={formatNumber(handleMonthActualValue(item))}
             {...formik.getFieldProps('value')}
           />
+          <IconButton id="note" color="primary">
+            <FilePresentIcon />
+          </IconButton>
           <IconButton
             variant="contained"
             color="primary"
