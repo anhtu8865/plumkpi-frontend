@@ -20,21 +20,6 @@ import { frequencyList, directionList, aggList } from 'src/utils/engToViet'
 
 export const KpiInfoButton = (props) => {
   const [modalVisible, setModalVisible] = useState(false)
-  /*const [kpiList, setKpiList] = useState([])
-
-  const getKpiTemplates = async () => {
-    try {
-      const response = await api.get(`/kpi-templates`)
-      return response.data.items
-    } catch {}
-  }
-
-  React.useEffect(async () => {
-    const kList = await getKpiTemplates()
-    if (kList) {
-      setKpiList(kList)
-    }
-  }, [])*/
 
   return (
     <>
@@ -104,24 +89,6 @@ export const KpiInfoButton = (props) => {
           </CRow>
           <CRow className="mt-3">
             {/*<CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="freq">Tần suất</CFormLabel>
-              <CFormInput
-                id="freq"
-                defaultValue={translate(props.kpiItem.kpi_template.frequency, frequencyList)}
-                disabled
-              />
-    </CCol>*/}
-            <CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="direction">Chiều hướng</CFormLabel>
-              <CFormInput
-                id="direction"
-                defaultValue={translate(props.kpiItem.kpi_template.direction, directionList)}
-                disabled
-              />
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            {/*<CCol xs={12} sm={6}>
               <CFormLabel htmlFor="category">Danh mục</CFormLabel>
               <CFormInput
                 id="category"
@@ -138,100 +105,6 @@ export const KpiInfoButton = (props) => {
               />
             </CCol>*/}
           </CRow>
-          <CRow className="mt-3">
-            <div>Ngưỡng mức:</div>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol xs={12} sm={4}>
-              <div>Ngưỡng nguy hiểm</div>
-            </CCol>
-            <CCol xs={12} sm={4}>
-              <CFormLabel htmlFor="dangerfrom">Từ</CFormLabel>
-              <CInputGroup>
-                <CFormInput
-                  id="dangerfrom"
-                  defaultValue={props.kpiItem.kpi_template.red_threshold}
-                  disabled
-                />
-                <CInputGroupText>%</CInputGroupText>
-              </CInputGroup>
-            </CCol>
-            <CCol xs={12} sm={4}>
-              <CFormLabel htmlFor="dangerto">Đến</CFormLabel>
-              <CInputGroup>
-                <CFormInput
-                  id="dangerto"
-                  defaultValue={props.kpiItem.kpi_template.red_yellow_threshold}
-                  disabled
-                />
-                <CInputGroupText>%</CInputGroupText>
-              </CInputGroup>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol xs={12} sm={4}>
-              <div>Ngưỡng cần chú ý</div>
-            </CCol>
-            <CCol xs={12} sm={4}>
-              <CFormLabel htmlFor="midfrom">Từ</CFormLabel>
-              <CInputGroup>
-                <CFormInput
-                  id="midfrom"
-                  defaultValue={props.kpiItem.kpi_template.red_yellow_threshold}
-                  disabled
-                />
-                <CInputGroupText>%</CInputGroupText>
-              </CInputGroup>
-            </CCol>
-            <CCol xs={12} sm={4}>
-              <CFormLabel htmlFor="midto">Đến</CFormLabel>
-              <CInputGroup>
-                <CFormInput
-                  id="midto"
-                  defaultValue={props.kpiItem.kpi_template.yellow_green_threshold}
-                  disabled
-                />
-                <CInputGroupText>%</CInputGroupText>
-              </CInputGroup>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol xs={12} sm={4}>
-              <div>Ngưỡng đạt</div>
-            </CCol>
-            <CCol xs={12} sm={4}>
-              <CFormLabel htmlFor="okfrom">Từ</CFormLabel>
-              <CInputGroup>
-                <CFormInput
-                  id="okfrom"
-                  defaultValue={props.kpiItem.kpi_template.yellow_green_threshold}
-                  disabled
-                />
-                <CInputGroupText>%</CInputGroupText>
-              </CInputGroup>
-            </CCol>
-            <CCol xs={12} sm={4}>
-              <CFormLabel htmlFor="okto">Đến</CFormLabel>
-              <CInputGroup>
-                <CFormInput
-                  id="okto"
-                  defaultValue={props.kpiItem.kpi_template.green_threshold}
-                  disabled
-                />
-                <CInputGroupText>%</CInputGroupText>
-              </CInputGroup>
-            </CCol>
-          </CRow>
-          {/*<CRow className="mt-3">
-            <CCol xs>
-              <CFormLabel htmlFor="formula">Công thức</CFormLabel>
-              <CFormInput
-                id="formula"
-                defaultValue={convertFormula(props.kpiItem.kpi_template.formula, kpiList)}
-                disabled
-              />
-            </CCol>
-      </CRow>*/}
         </CModalBody>
       </CModal>
     </>

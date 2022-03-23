@@ -107,15 +107,15 @@ export const EditKpiButton = (props) => {
       name: props.inTem.kpi_template_name,
       description: props.inTem.description,
       //frequency: props.inTem.frequency,
-      direction: props.inTem.direction,
+      //direction: props.inTem.direction,
       unit: props.inTem.unit,
       aggregation: props.inTem.aggregation,
       //formula: finalFormula,
       category: props.inTem.kpi_category.kpi_category_id,
-      red: props.inTem.red_threshold,
+      /*red: props.inTem.red_threshold,
       red_yellow: props.inTem.red_yellow_threshold,
       yellow_green: props.inTem.yellow_green_threshold,
-      green: props.inTem.green_threshold,
+      green: props.inTem.green_threshold,*/
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
@@ -133,15 +133,15 @@ export const EditKpiButton = (props) => {
           kpi_template_name: values.name,
           description: values.description,
           //frequency: values.frequency,
-          direction: values.direction,
+          //direction: values.direction,
           unit: values.unit,
           aggregation: values.aggregation,
           kpi_category: selectedCat,
           //formula: newFormula,
-          red_threshold: values.red,
+          /*red_threshold: values.red,
           red_yellow_threshold: values.red_yellow,
           yellow_green_threshold: values.yellow_green,
-          green_threshold: values.green,
+          green_threshold: values.green,*/
         })
         .then(() => {
           dispatch(
@@ -261,34 +261,12 @@ export const EditKpiButton = (props) => {
                 >
                   <option value="Tổng">Tổng</option>
                   <option value="Trung bình">Trung bình</option>
-                  <option value="Trung bình trọng số">Trung bình trọng số</option>
                   <option value="Lớn nhất">Lớn nhất</option>
                   <option value="Bé nhất">Bé nhất</option>
                   <option value="Mới nhất">Mới nhất</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
               </CCol>
-              <CCol xs={12} sm={6}>
-                <CFormLabel htmlFor="direction">Chiều hướng</CFormLabel>
-                <CFormSelect
-                  id="direction"
-                  {...formik.getFieldProps('direction')}
-                  invalid={formik.touched.direction && formik.errors.direction ? true : false}
-                  valid={
-                    !formik.touched.direction ||
-                    (formik.touched.direction && formik.errors.direction)
-                      ? false
-                      : true
-                  }
-                >
-                  <option value="Lên">Lên</option>
-                  <option value="Xuống">Xuống</option>
-                  <option value="Không">Không</option>
-                </CFormSelect>
-                <CFormFeedback invalid>{formik.errors.direction}</CFormFeedback>
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
               <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
                 <CFormInput
@@ -304,6 +282,8 @@ export const EditKpiButton = (props) => {
                 />
                 <CFormFeedback invalid>{formik.errors.unit}</CFormFeedback>
               </CCol>
+            </CRow>
+            <CRow className="mt-3">
               <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="category">Danh mục</CFormLabel>
                 <CFormSelect
@@ -325,175 +305,6 @@ export const EditKpiButton = (props) => {
                 <CFormFeedback invalid>{formik.errors.category}</CFormFeedback>
               </CCol>
             </CRow>
-            <CRow className="mt-3">
-              <div>Ngưỡng mức:</div>
-            </CRow>
-            <CRow className="mt-3">
-              <CCol xs={12} sm={4}>
-                <div>Ngưỡng nguy hiểm</div>
-              </CCol>
-              <CCol xs={12} sm={4}>
-                <CFormLabel htmlFor="dangerfrom">Từ</CFormLabel>
-                <CInputGroup>
-                  <CFormInput
-                    id="dangerfrom"
-                    type="number"
-                    placeholder="Nhập ngưỡng nguy hiểm dưới"
-                    {...formik.getFieldProps('red')}
-                    invalid={formik.touched.red && formik.errors.red ? true : false}
-                    valid={
-                      !formik.touched.red || (formik.touched.red && formik.errors.red)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CInputGroupText>%</CInputGroupText>
-                </CInputGroup>
-                <CFormFeedback invalid>{formik.errors.red}</CFormFeedback>
-              </CCol>
-              <CCol xs={12} sm={4}>
-                <CFormLabel htmlFor="dangerto">Đến</CFormLabel>
-                <CInputGroup>
-                  <CFormInput
-                    id="dangerto"
-                    type="number"
-                    placeholder="Nhập ngưỡng nguy hiểm trên"
-                    {...formik.getFieldProps('red_yellow')}
-                    invalid={formik.touched.red_yellow && formik.errors.red_yellow ? true : false}
-                    valid={
-                      !formik.touched.red_yellow ||
-                      (formik.touched.red_yellow && formik.errors.red_yellow)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CInputGroupText>%</CInputGroupText>
-                </CInputGroup>
-                <CFormFeedback invalid>{formik.errors.red_yellow}</CFormFeedback>
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
-              <CCol xs={12} sm={4}>
-                <div>Ngưỡng cần chú ý</div>
-              </CCol>
-              <CCol xs={12} sm={4}>
-                <CFormLabel htmlFor="midfrom">Từ</CFormLabel>
-                <CInputGroup>
-                  <CFormInput id="midfrom" {...formik.getFieldProps('red_yellow')} disabled />
-                  <CInputGroupText>%</CInputGroupText>
-                </CInputGroup>
-              </CCol>
-              <CCol xs={12} sm={4}>
-                <CFormLabel htmlFor="midto">Đến</CFormLabel>
-                <CInputGroup>
-                  <CFormInput
-                    id="midto"
-                    type="number"
-                    placeholder="Nhập ngưỡng cần chú ý trên"
-                    {...formik.getFieldProps('yellow_green')}
-                    invalid={
-                      formik.touched.yellow_green && formik.errors.yellow_green ? true : false
-                    }
-                    valid={
-                      !formik.touched.yellow_green ||
-                      (formik.touched.yellow_green && formik.errors.yellow_green)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CInputGroupText>%</CInputGroupText>
-                </CInputGroup>
-                <CFormFeedback invalid>{formik.errors.yellow_green}</CFormFeedback>
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
-              <CCol xs={12} sm={4}>
-                <div>Ngưỡng đạt</div>
-              </CCol>
-              <CCol xs={12} sm={4}>
-                <CFormLabel htmlFor="okfrom">Từ</CFormLabel>
-                <CInputGroup>
-                  <CFormInput id="okfrom" {...formik.getFieldProps('yellow_green')} disabled />
-                  <CInputGroupText>%</CInputGroupText>
-                </CInputGroup>
-              </CCol>
-              <CCol xs={12} sm={4}>
-                <CFormLabel htmlFor="okto">Đến</CFormLabel>
-                <CInputGroup>
-                  <CFormInput
-                    id="okto"
-                    type="number"
-                    placeholder="Nhập ngưỡng đạt trên"
-                    {...formik.getFieldProps('green')}
-                    invalid={formik.touched.green && formik.errors.green ? true : false}
-                    valid={
-                      !formik.touched.green || (formik.touched.green && formik.errors.green)
-                        ? false
-                        : true
-                    }
-                  />
-                  <CInputGroupText>%</CInputGroupText>
-                </CInputGroup>
-                <CFormFeedback invalid>{formik.errors.green}</CFormFeedback>
-              </CCol>
-            </CRow>
-            {/*<CRow className="mt-3">
-              <CCol xs>
-                <div className="d-flex align-items-start flex-row">
-                  <CustomWidthTooltip title={formulaTypingRule} placement="right">
-                    <IconButton color="error" size="small">
-                      <HelpIcon fontSize="inherit" />
-                    </IconButton>
-                  </CustomWidthTooltip>
-                  <div className="ms-1">Quy tắc thiết lập công thức</div>
-                </div>
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
-              <CCol xs={10}>
-                <CFormLabel htmlFor="kpis">KPI thành phần</CFormLabel>
-                <Select
-                  id="kpis"
-                  isSearchable="true"
-                  value={kpiSelectValue}
-                  placeholder="Chọn KPI thành phần của công thức (có thể tìm kiếm)"
-                  menuPlacement="top"
-                  onChange={(e) => {
-                    setKpiSelectValue(e)
-                    formik.setFieldValue(
-                      'formula',
-                      formik.values.formula.slice(0, cursorStartPosition) +
-                        ' ' +
-                        e.value +
-                        ' ' +
-                        formik.values.formula.slice(cursorStartPosition),
-                      false,
-                    )
-                  }}
-                  options={kpiTemList}
-                />
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
-              <CCol xs>
-                <CFormLabel htmlFor="formula">Công thức</CFormLabel>
-                <CFormTextarea
-                  id="formula"
-                  rows="3"
-                  placeholder="Nhập vào các phép tính và chọn KPI thành phần để thiết lập công thức"
-                  value={formik.values.formula}
-                  onChange={(e) => formik.setFieldValue('formula', e.target.value, false)}
-                  onBlur={(e) => setCursorStartPosition(e.target.selectionStart)}
-                  onKeyDown={(e) => {
-                    if (!allowKeyList.includes(e.key)) {
-                      e.preventDefault()
-                    }
-                  }}
-                  invalid={formik.touched.formula && formik.errors.formula ? true : false}
-                />
-                <CFormFeedback invalid>{formik.errors.formula}</CFormFeedback>
-              </CCol>
-                </CRow>*/}
           </form>
         </CModalBody>
         <CModalFooter>

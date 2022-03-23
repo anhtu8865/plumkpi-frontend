@@ -12,14 +12,17 @@ import {
   CTableHeaderCell,
   CTableRow,
   CTableFoot,
+  CFormLabel,
+  CFormInput,
 } from '@coreui/react'
-import { Avatar, Pagination } from '@mui/material'
+import { Avatar, Pagination, Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
+import SearchIcon from '@mui/icons-material/Search'
 
 const DeptPlan = () => {
   const { id } = useParams()
@@ -30,10 +33,16 @@ const DeptPlan = () => {
   const [entry, setEntry] = useState([])
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
+  const [searchVisible, setSearchVisible] = useState(false)
+  const [name, setName] = useState('')
 
-  const getDeptList = async (offset) => {
+  const getDeptList = async (offset, name) => {
+    let paramsObject = { offset: offset, limit: entryPerPage }
+    if (name !== '') {
+      paramsObject.name = name
+    }
     const response = await api.get(`depts`, {
-      params: { offset: offset, limit: entryPerPage },
+      params: paramsObject,
     })
     setTotalPage(Math.ceil(response.data.count / entryPerPage))
     return response.data.items
@@ -42,7 +51,7 @@ const DeptPlan = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getDeptList((page - 1) * entryPerPage)
+        const result = await getDeptList((page - 1) * entryPerPage, name)
         if (result) {
           setEntry(result)
         }
@@ -61,7 +70,7 @@ const DeptPlan = () => {
       }
     }
     fetchData()
-  }, [page])
+  }, [page, name])
 
   const Table = () => {
     return (
@@ -121,9 +130,25 @@ const DeptPlan = () => {
             </CTable>
           </>
         ) : (
-          <div>Chưa có phòng ban nào.</div>
+          <div>Không có phòng ban.</div>
         )}
       </>
+    )
+  }
+
+  const SearchInput = () => {
+    return (
+      <CCol xs={12} sm={6} lg={4}>
+        <CFormLabel htmlFor="search">Phòng ban</CFormLabel>
+        <CFormInput
+          id="search"
+          placeholder="Tìm theo tên phòng ban"
+          value={name}
+          onChange={(event) => {
+            setName(event.target.value)
+          }}
+        />
+      </CCol>
     )
   }
 
@@ -142,7 +167,25 @@ const DeptPlan = () => {
               <small>{'<<'} Quay lại kế hoạch </small>
             </div>
           </CCol>
+          <CCol xs={12} sm={6}>
+            <div className="d-flex flex-row gap-2 justify-content-end">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+                onClick={() => {
+                  if (searchVisible) {
+                    setName('')
+                  }
+                  setSearchVisible(!searchVisible)
+                }}
+              >
+                Tìm kiếm
+              </Button>
+            </div>
+          </CCol>
         </CRow>
+        {searchVisible && <CRow className="mt-2">{SearchInput()}</CRow>}
         <CRow className="mt-4">
           <CCol xs={12} sm={6}>
             <h6>Danh sách phòng ban</h6>

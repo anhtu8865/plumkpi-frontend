@@ -12,14 +12,17 @@ import {
   CTableHeaderCell,
   CTableRow,
   CTableFoot,
+  CFormInput,
+  CFormLabel,
 } from '@coreui/react'
-import { Avatar, Pagination } from '@mui/material'
+import { Avatar, Pagination, Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
+import SearchIcon from '@mui/icons-material/Search'
 
 const EmployeePlan = () => {
   const { id } = useParams()
@@ -30,10 +33,24 @@ const EmployeePlan = () => {
   const [entry, setEntry] = useState([])
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
+  const [searchVisible, setSearchVisible] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
 
-  const getEmployeeList = async (offset) => {
+  const getEmployeeList = async (offset, name, email, phone) => {
+    let paramsObject = { offset: offset, limit: entryPerPage }
+    if (name !== '') {
+      paramsObject.user_name = name
+    }
+    if (email !== '') {
+      paramsObject.email = email
+    }
+    if (phone !== '') {
+      paramsObject.phone = phone
+    }
     const response = await api.get(`users/employees/manager/info`, {
-      params: { offset: offset, limit: entryPerPage },
+      params: paramsObject,
     })
     setTotalPage(Math.ceil(response.data.count / entryPerPage))
     return response.data.items
@@ -42,7 +59,7 @@ const EmployeePlan = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getEmployeeList((page - 1) * entryPerPage)
+        const result = await getEmployeeList((page - 1) * entryPerPage, name, email, phone)
         if (result) {
           setEntry(result)
         }
@@ -61,7 +78,7 @@ const EmployeePlan = () => {
       }
     }
     fetchData()
-  }, [page])
+  }, [page, name, email, phone])
 
   const Table = () => {
     return (
@@ -73,7 +90,7 @@ const EmployeePlan = () => {
                 <CTableRow>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
                   <CTableHeaderCell>EMAIL</CTableHeaderCell>
-                  <CTableHeaderCell>SĐT</CTableHeaderCell>
+                  <CTableHeaderCell>SỐ ĐIỆN THOẠI</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
@@ -120,8 +137,48 @@ const EmployeePlan = () => {
             </CTable>
           </>
         ) : (
-          <div>Chưa có nhân viên nào.</div>
+          <div>Không có nhân viên.</div>
         )}
+      </>
+    )
+  }
+
+  const SearchInput = () => {
+    return (
+      <>
+        <CCol xs={12} sm={6} lg={4}>
+          <CFormLabel htmlFor="search">Nhân viên</CFormLabel>
+          <CFormInput
+            id="search"
+            placeholder="Tìm theo tên nhân viên"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+            }}
+          />
+        </CCol>
+        <CCol xs={12} sm={6} lg={4}>
+          <CFormLabel htmlFor="search1">Email</CFormLabel>
+          <CFormInput
+            id="search1"
+            placeholder="Tìm theo email nhân viên"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value)
+            }}
+          />
+        </CCol>
+        <CCol xs={12} sm={6} lg={4}>
+          <CFormLabel htmlFor="search2">Số điện thoại</CFormLabel>
+          <CFormInput
+            id="search2"
+            placeholder="Tìm theo SĐT nhân viên"
+            value={phone}
+            onChange={(event) => {
+              setPhone(event.target.value)
+            }}
+          />
+        </CCol>
       </>
     )
   }
@@ -141,7 +198,27 @@ const EmployeePlan = () => {
               <small>{'<<'} Quay lại kế hoạch </small>
             </div>
           </CCol>
+          <CCol xs={12} sm={6}>
+            <div className="d-flex flex-row gap-2 justify-content-end">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+                onClick={() => {
+                  if (searchVisible) {
+                    setName('')
+                    setEmail('')
+                    setPhone('')
+                  }
+                  setSearchVisible(!searchVisible)
+                }}
+              >
+                Tìm kiếm
+              </Button>
+            </div>
+          </CCol>
         </CRow>
+        {searchVisible && <CRow className="mt-2">{SearchInput()}</CRow>}
         <CRow className="mt-4">
           <CCol xs={12} sm={6}>
             <h6>Danh sách nhân viên</h6>

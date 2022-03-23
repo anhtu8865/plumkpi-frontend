@@ -105,15 +105,15 @@ export const AddKpiButton = (props) => {
       name: '',
       description: null,
       //frequency: 'Ngày',
-      direction: 'Lên',
+      //direction: 'Lên',
       unit: '',
       //formula: '',
       aggregation: 'Tổng',
       category: props.inCat.kpi_category_id,
-      red: 0,
+      /*red: 0,
       red_yellow: 50,
       yellow_green: 70,
-      green: 100,
+      green: 100,*/
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
@@ -132,15 +132,15 @@ export const AddKpiButton = (props) => {
           kpi_template_name: values.name,
           description: values.description,
           //frequency: values.frequency,
-          direction: values.direction,
+          //direction: values.direction,
           unit: values.unit,
           aggregation: values.aggregation,
           kpi_category: selectedCat,
           //formula: newFormula,
-          red_threshold: values.red,
+          /*red_threshold: values.red,
           red_yellow_threshold: values.red_yellow,
           yellow_green_threshold: values.yellow_green,
-          green_threshold: values.green,
+          green_threshold: values.green,*/
         })
         .then(() => {
           dispatch(
@@ -261,14 +261,13 @@ export const AddKpiButton = (props) => {
                 >
                   <option value="Tổng">Tổng</option>
                   <option value="Trung bình">Trung bình</option>
-                  <option value="Trung bình trọng số">Trung bình trọng số</option>
                   <option value="Lớn nhất">Lớn nhất</option>
                   <option value="Bé nhất">Bé nhất</option>
                   <option value="Mới nhất">Mới nhất</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.aggregation}</CFormFeedback>
               </CCol>
-              <CCol xs={12} sm={6}>
+              {/*<CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="direction">Chiều hướng</CFormLabel>
                 <CFormSelect
                   id="direction"
@@ -286,9 +285,7 @@ export const AddKpiButton = (props) => {
                   <option value="Không">Không</option>
                 </CFormSelect>
                 <CFormFeedback invalid>{formik.errors.direction}</CFormFeedback>
-              </CCol>
-            </CRow>
-            <CRow className="mt-3">
+                </CCol>*/}
               <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
                 <CFormInput
@@ -304,6 +301,8 @@ export const AddKpiButton = (props) => {
                 />
                 <CFormFeedback invalid>{formik.errors.unit}</CFormFeedback>
               </CCol>
+            </CRow>
+            <CRow className="mt-3">
               <CCol xs={12} sm={6}>
                 <CFormLabel htmlFor="category">Danh mục</CFormLabel>
                 <CFormSelect
@@ -327,7 +326,7 @@ export const AddKpiButton = (props) => {
                 <CFormFeedback invalid>{formik.errors.category}</CFormFeedback>
               </CCol>
             </CRow>
-            <CRow className="mt-3">
+            {/*<CRow className="mt-3">
               <div>Ngưỡng mức:</div>
             </CRow>
             <CRow className="mt-3">
@@ -438,7 +437,7 @@ export const AddKpiButton = (props) => {
                 </CInputGroup>
                 <CFormFeedback invalid>{formik.errors.green}</CFormFeedback>
               </CCol>
-            </CRow>
+                  </CRow>*/}
             {/*<CRow className="mt-3">
               <CCol xs>
                 <CFormCheck
