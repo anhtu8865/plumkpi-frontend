@@ -51,8 +51,8 @@ const ResetPwUser = (props) => {
   return (
     <>
       {' '}
-      <IconButton id="delete" color="primary" onClick={() => setModalVisible(true)}>
-        <LockResetIcon />
+      <IconButton id="delete" color="primary" onClick={() => setModalVisible(true)} size="small">
+        <LockResetIcon fontSize="small" />
       </IconButton>
       <CModal
         alignment="center"
@@ -76,6 +76,7 @@ const ResetPwUser = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
+            sx={{ textTransform: 'none' }}
           >
             Khôi phục
           </Button>

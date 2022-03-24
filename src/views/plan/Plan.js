@@ -228,10 +228,12 @@ const Plan = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
                   <CCol xs={12} sm={6}>
-                    <h4>Kế hoạch KPI</h4>
+                    <h3>
+                      <b>Kế hoạch KPI</b>
+                    </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
@@ -239,11 +241,11 @@ const Plan = () => {
                     </div>
                   </CCol>
                 </CRow>
-                <div className="mt-5 px-4">
+                <CRow className="mt-5">
                   <CurrentPlanView />
                   <FuturePlanView />
                   <OldPlanView />
-                </div>
+                </CRow>
                 {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>

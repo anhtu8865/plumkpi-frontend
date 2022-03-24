@@ -180,8 +180,9 @@ export const EditKpiButton = (props) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <EditIcon />
+        <EditIcon fontSize="small" />
       </IconButton>
       <CModal
         alignment="center"
@@ -315,6 +316,7 @@ export const EditKpiButton = (props) => {
             type="submit"
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
+            sx={{ textTransform: 'none' }}
           >
             Xác nhận
           </Button>

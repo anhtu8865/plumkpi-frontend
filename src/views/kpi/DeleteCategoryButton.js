@@ -73,6 +73,7 @@ export const DeleteCategoryButton = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
+            sx={{ textTransform: 'none' }}
           >
             Xóa bỏ
           </Button>

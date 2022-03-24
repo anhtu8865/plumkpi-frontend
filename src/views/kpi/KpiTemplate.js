@@ -132,8 +132,8 @@ const KpiTemplate = () => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
-                  <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+                  <CTableHeaderCell>Mô tả</CTableHeaderCell>
+                  <CTableHeaderCell>Đơn vị</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
@@ -209,7 +209,9 @@ const KpiTemplate = () => {
               <CCardBody className="p-5">
                 <CRow>
                   <CCol xs={12} sm={6}>
-                    <h4>{catItem.kpi_category_name}</h4>
+                    <h3>
+                      <b>{catItem.kpi_category_name}</b>
+                    </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
                     <div className="d-flex flex-row gap-2 justify-content-end">
@@ -223,6 +225,7 @@ const KpiTemplate = () => {
                           }
                           setSearchVisible(!searchVisible)
                         }}
+                        sx={{ textTransform: 'none' }}
                       >
                         Tìm kiếm
                       </Button>

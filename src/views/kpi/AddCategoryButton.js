@@ -75,6 +75,7 @@ export const AddCategoryButton = () => {
         color="primary"
         onClick={() => setModalVisible(true)}
         startIcon={<AddCircleIcon />}
+        sx={{ textTransform: 'none' }}
       >
         Tạo danh mục KPI
       </Button>
@@ -118,6 +119,7 @@ export const AddCategoryButton = () => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none' }}
             >
               Tạo mới
             </Button>

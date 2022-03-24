@@ -1,8 +1,13 @@
 // If you want to override variables do it here
+@import url('https://rsms.me/inter/inter.css');
 @import 'variables';
 
 $enable-ltr: true;
 $enable-rtl: true;
+$font-family-sans-serif: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+  Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  'Segoe UI Symbol', 'Noto Color Emoji' !default;
+$font-size-base: 0.95rem !default;
 
 // Import CoreUI for React components library
 @import '@coreui/coreui/scss/coreui';

@@ -277,15 +277,13 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                     <>
                       <CTableRow key={index}>
                         <CTableDataCell className="text-center">
-                          {handleQuarterTargetStatus(item) === 'Đang xử lý' ? (
-                            <Checkbox
-                              size="small"
-                              checked={selectedDeptApprove.includes(item.dept.dept_id)}
-                              onChange={() => {
-                                handleApproveCheckbox(item)
-                              }}
-                            />
-                          ) : null}
+                          <Checkbox
+                            size="small"
+                            checked={selectedDeptApprove.includes(item.dept.dept_id)}
+                            onChange={() => {
+                              handleApproveCheckbox(item)
+                            }}
+                          />
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">

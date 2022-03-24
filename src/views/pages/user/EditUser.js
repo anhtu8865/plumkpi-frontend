@@ -104,8 +104,9 @@ const EditUser = (props) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <EditIcon />
+        <EditIcon fontSize="small" />
       </IconButton>
 
       <form onSubmit={formik.handleSubmit}>
@@ -250,6 +251,7 @@ const EditUser = (props) => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none' }}
             >
               Xác nhận
             </Button>

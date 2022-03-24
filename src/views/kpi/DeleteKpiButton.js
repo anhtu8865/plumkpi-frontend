@@ -48,8 +48,8 @@ export const DeleteKpiButton = (props) => {
 
   return (
     <>
-      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)}>
-        <DeleteForeverIcon />
+      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)} size="small">
+        <DeleteForeverIcon fontSize="small" />
       </IconButton>
       <CModal
         alignment="center"
@@ -73,6 +73,7 @@ export const DeleteKpiButton = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
+            sx={{ textTransform: 'none' }}
           >
             Xóa bỏ
           </Button>

@@ -13,8 +13,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
-
-import { AppBreadcrumb, AppNavbar } from './index'
+import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import { setSidebarShow } from 'src/slices/sidebarSlice'
@@ -68,8 +67,8 @@ const AppHeader = () => {
       </CContainer>
       {/*<CHeaderDivider />
       <CContainer fluid>
-        <AppNavbar />
-      </CContainer>*/}
+        <AppBreadcrumb />
+        </CContainer>*/}
     </CHeader>
   )
 }

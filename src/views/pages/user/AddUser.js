@@ -112,6 +112,7 @@ const AddUser = () => {
         color="primary"
         startIcon={<AddBoxIcon />}
         onClick={() => setModalVisible(true)}
+        sx={{ textTransform: 'none' }}
       >
         Thêm người dùng
       </Button>
@@ -213,6 +214,7 @@ const AddUser = () => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none' }}
             >
               Thêm
             </Button>

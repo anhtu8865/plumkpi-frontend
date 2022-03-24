@@ -100,6 +100,7 @@ const AddManager = (props) => {
         color="primary"
         startIcon={<AddBoxIcon />}
         onClick={() => setModalVisible(true)}
+        sx={{ textTransform: 'none' }}
       >
         Thêm quản lý
       </Button>
@@ -140,6 +141,7 @@ const AddManager = (props) => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none' }}
             >
               Xác nhận
             </Button>

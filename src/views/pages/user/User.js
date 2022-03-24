@@ -141,7 +141,7 @@ const User = () => {
       },
     })
     return (
-      <CForm className="row g-3">
+      <CForm>
         {/* <CCol md={1}>
           <CFormLabel htmlFor="filterID">ID</CFormLabel>
           <CFormInput
@@ -152,62 +152,66 @@ const User = () => {
             onChange={formik.handleChange}
           />
         </CCol> */}
-        <CCol md={4}>
-          <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
-          <CFormInput
-            type="text"
-            id="filterName"
-            name="filter_name"
-            value={formik.values.filter_name}
-            onChange={formik.handleChange}
-          />
-        </CCol>
-        <CCol md={4}>
-          <CFormLabel htmlFor="filterEmail">Email</CFormLabel>
-          <CFormInput
-            id="filterEmail"
-            type="email"
-            name="filter_email"
-            value={formik.values.filter_email}
-            onChange={formik.handleChange}
-          />
-        </CCol>
-        <CCol md={4}>
-          <CFormLabel htmlFor="filterPhone">Phone</CFormLabel>
-          <CFormInput
-            id="filterPhone"
-            type="number"
-            name="filter_phone"
-            value={formik.values.filter_phone}
-            onChange={formik.handleChange}
-          />
-        </CCol>
-        <CCol md={3}>
-          <CFormLabel htmlFor="filterDept">Phòng ban</CFormLabel>
-          <FormikProvider value={formik}>
-            <Field as="select" name="filter_dept" className="form-select">
-              <option value="" label="Chọn phòng ban" />
-              {deptList.map((row) => (
-                <option value={row.dept_id} key={row.dept_id}>
-                  {row.dept_name}
-                </option>
-              ))}
-            </Field>
-          </FormikProvider>
-        </CCol>
-        <CCol md={3}>
-          <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
-          <FormikProvider value={formik}>
-            <Field as="select" name="filter_role" className="form-select">
-              <option value="" label="Chọn vai trò" />
-              <option value="Admin">Admin</option>
-              <option value="Quản lý">Quản lý</option>
-              <option value="Giám đốc">Giám đốc</option>
-              <option value="Nhân viên">Nhân viên</option>
-            </Field>
-          </FormikProvider>
-        </CCol>
-        <CCol xs={12}>
+        <CRow>
+          <CCol md={4}>
+            <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
+            <CFormInput
+              type="text"
+              id="filterName"
+              name="filter_name"
+              value={formik.values.filter_name}
+              onChange={formik.handleChange}
+            />
+          </CCol>
+          <CCol md={4}>
+            <CFormLabel htmlFor="filterEmail">Email</CFormLabel>
+            <CFormInput
+              id="filterEmail"
+              type="email"
+              name="filter_email"
+              value={formik.values.filter_email}
+              onChange={formik.handleChange}
+            />
+          </CCol>
+          <CCol md={4}>
+            <CFormLabel htmlFor="filterPhone">Số điện thoại</CFormLabel>
+            <CFormInput
+              id="filterPhone"
+              type="number"
+              name="filter_phone"
+              value={formik.values.filter_phone}
+              onChange={formik.handleChange}
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mt-3">
+          <CCol md={4}>
+            <CFormLabel htmlFor="filterDept">Phòng ban</CFormLabel>
+            <FormikProvider value={formik}>
+              <Field as="select" name="filter_dept" className="form-select">
+                <option value="" label="Chọn phòng ban" />
+                {deptList.map((row) => (
+                  <option value={row.dept_id} key={row.dept_id}>
+                    {row.dept_name}
+                  </option>
+                ))}
+              </Field>
+            </FormikProvider>
+          </CCol>
+          <CCol md={4}>
+            <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
+            <FormikProvider value={formik}>
+              <Field as="select" name="filter_role" className="form-select">
+                <option value="" label="Chọn vai trò" />
+                <option value="Admin">Admin</option>
+                <option value="Quản lý">Quản lý</option>
+                <option value="Giám đốc">Giám đốc</option>
+                <option value="Nhân viên">Nhân viên</option>
+              </Field>
+            </FormikProvider>
+          </CCol>
+        </CRow>
+        <CCol className="mt-3" xs={12}>
           <Button
             type="submit"
             variant="contained"
@@ -216,6 +220,7 @@ const User = () => {
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
             style={{ marginBottom: '10px' }}
+            sx={{ textTransform: 'none' }}
           >
             Tìm
           </Button>
@@ -232,10 +237,10 @@ const User = () => {
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
-              <CTableHeaderCell>EMAIL</CTableHeaderCell>
-              <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-              <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
+              <CTableHeaderCell>Họ và tên</CTableHeaderCell>
+              <CTableHeaderCell>Email</CTableHeaderCell>
+              <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+              <CTableHeaderCell>Chức vụ</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               <CTableHeaderCell />
             </CTableRow>
@@ -267,15 +272,17 @@ const User = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="6">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -294,18 +301,21 @@ const User = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
-                  <CCol xs={6}>
-                    <h4>Quản lý người dùng</h4>
+                  <CCol xs={12} sm={6}>
+                    <h3>
+                      <b>Quản lý người dùng</b>
+                    </h3>
                   </CCol>
-                  <CCol xs={6}>
+                  <CCol xs={12} sm={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
                       <Button
                         variant="contained"
                         color="primary"
                         startIcon={<FilterAltIcon />}
                         onClick={() => setShowUserFilter(!showUserFilter)}
+                        sx={{ textTransform: 'none' }}
                       >
                         Tạo bộ lọc
                       </Button>
@@ -314,10 +324,14 @@ const User = () => {
                   </CCol>
                 </CRow>
                 {/*Table*/}
-                <div className="mt-2 p-4">
-                  {showUserFilter ? <UserFilter /> : null}
+                {showUserFilter ? (
+                  <CRow className="mt-4">
+                    <UserFilter />
+                  </CRow>
+                ) : null}
+                <CRow className="mt-5">
                   <UserTable temList={filter.length > 0 ? filter : entry} />
-                </div>
+                </CRow>
               </CCardBody>
             </CCard>
           </CCol>
