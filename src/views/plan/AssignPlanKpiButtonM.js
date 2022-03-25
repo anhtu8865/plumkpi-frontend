@@ -505,8 +505,9 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <GroupAddIcon />
+        <GroupAddIcon fontSize="small" />
       </IconButton>
 
       <CModal
@@ -533,6 +534,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
                 onMonthSubmit()
               }}
               disabled={isSubmit || !compareYear(plan.year) || selectedEmployeeList.length === 0}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

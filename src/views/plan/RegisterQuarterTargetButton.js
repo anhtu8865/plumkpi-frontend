@@ -238,8 +238,9 @@ export const RegisterQuarterTargetButton = (kpiItem, quarter) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <TrackChangesIcon />
+        <TrackChangesIcon fontSize="small" />
       </IconButton>
 
       <CModal
@@ -271,6 +272,7 @@ export const RegisterQuarterTargetButton = (kpiItem, quarter) => {
                 !compareYear(plan.year) ||
                 handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
               }
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Đăng kí
             </Button>

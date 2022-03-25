@@ -48,8 +48,8 @@ export const DeletePlanButton = (props) => {
 
   return (
     <>
-      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)}>
-        <DeleteForeverIcon />
+      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)} size="small">
+        <DeleteForeverIcon fontSize="small" />
       </IconButton>
       <CModal
         alignment="center"
@@ -73,6 +73,7 @@ export const DeletePlanButton = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Xóa bỏ
           </Button>

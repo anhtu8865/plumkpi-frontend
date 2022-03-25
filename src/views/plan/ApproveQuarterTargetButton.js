@@ -352,8 +352,9 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <FactCheckIcon />
+        <FactCheckIcon fontSize="small" />
       </IconButton>
 
       <CModal
@@ -382,6 +383,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                     onDenySubmit()
                   }}
                   disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Từ chối
                 </Button>
@@ -394,6 +396,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                     onApproveSubmit()
                   }}
                   disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Chấp nhận
                 </Button>

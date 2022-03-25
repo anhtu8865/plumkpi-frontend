@@ -29,6 +29,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import HelpIcon from '@mui/icons-material/Help'
 import cloneDeep from 'lodash/cloneDeep'
 import { weightKpiRule } from 'src/utils/constant'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 
 const EditWeightEmployee = () => {
   const { id, userId } = useParams()
@@ -426,28 +427,36 @@ const EditWeightEmployee = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>Chỉnh sửa trọng số KPI nhân viên</h4>
-            <div
+            <Button
+              variant="outlined"
+              startIcon={<KeyboardDoubleArrowLeftIcon />}
               onClick={() => {
                 history.push(`/plan/${id}/employeeplan`)
               }}
-              style={{ cursor: 'pointer', color: 'dodgerblue' }}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
-              <small>{'<<'} Quay lại trang nhân viên </small>
-            </div>
+              Quay lại nhân viên
+            </Button>
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12} sm={6}>
-            <h6>Kế hoạch {plan ? plan.plan_name : ''}</h6>
+            <h4>
+              <b>Trọng số KPI nhân viên</b>
+            </h4>
+          </CCol>
+        </CRow>
+        <CRow className="mt-4">
+          <CCol xs={12} sm={6}>
+            <h5>Kế hoạch {plan ? plan.plan_name : ''}</h5>
           </CCol>
         </CRow>
         <CRow className="mt-2">
           <CCol xs={12} sm={6}>
-            Năm thực hiện: {plan ? plan.year : ''}
+            <b>Năm thực hiện:</b> {plan ? plan.year : ''}
           </CCol>
           <CCol xs={12} sm={6} className="d-flex flex-row">
-            Nhân viên:{' '}
+            <b>Nhân viên:</b>{' '}
             {employee ? (
               <>
                 <Avatar src={employee.avatar ? employee.avatar.url : null} className="ms-2 me-3" />
@@ -469,6 +478,7 @@ const EditWeightEmployee = () => {
                 onSubmit()
               }}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

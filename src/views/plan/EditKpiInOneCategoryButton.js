@@ -320,14 +320,17 @@ export const EditKpiInOneCategoryButton = (catItem) => {
 
   return (
     <>
-      <IconButton
+      <Button
+        variant="contained"
         color="primary"
+        startIcon={<EditIcon />}
         onClick={() => {
           setModalVisible(true)
         }}
+        sx={{ textTransform: 'none', borderRadius: 10 }}
       >
-        <EditIcon />
-      </IconButton>
+        Thay đổi KPI
+      </Button>
 
       <CModal
         alignment="center"
@@ -352,6 +355,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
               onSubmit(event)
             }}
             disabled={isSubmit || selectedKpiList.length === 0}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Xác nhận
           </Button>

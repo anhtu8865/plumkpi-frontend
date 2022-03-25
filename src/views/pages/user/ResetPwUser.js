@@ -76,7 +76,7 @@ const ResetPwUser = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Khôi phục
           </Button>

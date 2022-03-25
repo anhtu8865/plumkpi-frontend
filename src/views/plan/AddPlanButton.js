@@ -101,6 +101,7 @@ export const AddPlanButton = () => {
         color="primary"
         onClick={() => setModalVisible(true)}
         startIcon={<AddCircleIcon />}
+        sx={{ textTransform: 'none', borderRadius: 10 }}
       >
         Tạo kế hoạch
       </Button>
@@ -231,6 +232,7 @@ export const AddPlanButton = () => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Tạo mới
             </Button>

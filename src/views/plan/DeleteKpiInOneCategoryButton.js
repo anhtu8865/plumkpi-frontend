@@ -48,9 +48,17 @@ export const DeleteKpiInOneCategoryButton = (catItem) => {
 
   return (
     <>
-      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)}>
-        <DeleteForeverIcon />
-      </IconButton>
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<DeleteForeverIcon />}
+        onClick={() => {
+          setModalVisible(true)
+        }}
+        sx={{ textTransform: 'none', borderRadius: 10 }}
+      >
+        Xóa KPI
+      </Button>
       <CModal
         alignment="center"
         scrollable
@@ -74,6 +82,7 @@ export const DeleteKpiInOneCategoryButton = (catItem) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Xóa bỏ
           </Button>

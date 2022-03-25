@@ -29,6 +29,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import HelpIcon from '@mui/icons-material/Help'
 import cloneDeep from 'lodash/cloneDeep'
 import { weightKpiRule } from 'src/utils/constant'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 
 const EditWeightDept = () => {
   const { id, deptId } = useParams()
@@ -426,31 +427,39 @@ const EditWeightDept = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>Chỉnh sửa trọng số KPI phòng ban</h4>
-            <div
+            <Button
+              variant="outlined"
+              startIcon={<KeyboardDoubleArrowLeftIcon />}
               onClick={() => {
                 history.push(`/plan/${id}/deptplan`)
               }}
-              style={{ cursor: 'pointer', color: 'dodgerblue' }}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
-              <small>{'<<'} Quay lại trang phòng ban </small>
-            </div>
+              Quay lại phòng ban
+            </Button>
           </CCol>
         </CRow>
         <CRow className="mt-4">
           <CCol xs={12} sm={6}>
-            <h6>Kế hoạch {plan ? plan.plan_name : ''}</h6>
+            <h4>
+              <b>Trọng số KPI phòng ban</b>
+            </h4>
+          </CCol>
+        </CRow>
+        <CRow className="mt-4">
+          <CCol xs={12} sm={6}>
+            <h5>Kế hoạch {plan ? plan.plan_name : ''}</h5>
           </CCol>
         </CRow>
         <CRow className="mt-2">
           <CCol xs={12} sm={4}>
-            Năm thực hiện: {plan ? plan.year : ''}
+            <b>Năm thực hiện:</b> {plan ? plan.year : ''}
           </CCol>
           <CCol xs={12} sm={4}>
-            Phòng ban: {dept ? dept.dept_name : ''}
+            <b>Phòng ban:</b> {dept ? dept.dept_name : ''}
           </CCol>
           <CCol xs={12} sm={4} className="d-flex flex-row">
-            Quản lý:{' '}
+            <b>Quản lý:</b>{' '}
             {dept && dept.manager ? (
               <>
                 <Avatar
@@ -475,6 +484,7 @@ const EditWeightDept = () => {
                 onSubmit()
               }}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

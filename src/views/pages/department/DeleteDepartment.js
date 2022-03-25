@@ -73,7 +73,7 @@ const DeleteDepartment = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Xóa bỏ
           </Button>

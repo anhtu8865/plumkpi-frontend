@@ -273,6 +273,7 @@ export const EditCategoryInPlanButton = () => {
         onClick={() => {
           setModalVisible(true)
         }}
+        sx={{ textTransform: 'none', borderRadius: 10 }}
       >
         {catInPlan.length === 0 ? `Thêm danh mục` : `Thay đổi danh mục`}
       </Button>
@@ -304,6 +305,7 @@ export const EditCategoryInPlanButton = () => {
               onSubmit(event)
             }}
             disabled={isSubmit || selectedCatList.length === 0}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Xác nhận
           </Button>

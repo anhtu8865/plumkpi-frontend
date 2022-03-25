@@ -26,7 +26,7 @@ export const PlanOverview = (props) => {
   return (
     <>
       <CCard className="shadow-sm">
-        <CCardBody>
+        <CCardBody className="p-4">
           <CRow>
             <div className="d-flex flex-row justify-content-end">
               {user.role === 'Giám đốc' && EditCategoryInPlanButton()}

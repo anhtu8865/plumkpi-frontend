@@ -178,21 +178,21 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
       <>
         {catInPlan.length !== 0 && catItem ? (
           <>
-            <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+            <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  <CTableHeaderCell>TRỌNG SỐ (%)</CTableHeaderCell>
+                  <CTableHeaderCell>Trọng số (%)</CTableHeaderCell>
                   {['Giám đốc', 'Quản lý'].includes(user.role) && (
-                    <CTableHeaderCell>CHỈ TIÊU CẢ NĂM</CTableHeaderCell>
+                    <CTableHeaderCell>Chỉ tiêu cả năm</CTableHeaderCell>
                   )}
                   {user.role === 'Quản lý' && (
-                    <CTableHeaderCell>CHỈ TIÊU QUÝ {selectedQuarter}</CTableHeaderCell>
+                    <CTableHeaderCell>Chỉ tiêu quý {selectedQuarter}</CTableHeaderCell>
                   )}
                   {user.role === 'Nhân viên' && (
-                    <CTableHeaderCell>CHỈ TIÊU THÁNG {selectedMonth}</CTableHeaderCell>
+                    <CTableHeaderCell>Chỉ tiêu tháng {selectedMonth}</CTableHeaderCell>
                   )}
-                  <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+                  <CTableHeaderCell>Đơn vị</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
@@ -270,19 +270,21 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
   return (
     <>
       <CCard className="shadow-sm">
-        <CCardBody>
+        <CCardBody className="p-4">
           <CRow>
             <CCol xs={12} sm={6}>
-              <h5>{catItem ? catItem.kpi_category.kpi_category_name : null}</h5>
+              <h5>
+                <b>{catItem ? catItem.kpi_category.kpi_category_name : null}</b>
+              </h5>
             </CCol>
             <CCol xs={12} sm={6}>
-              <div className="d-flex flex-row justify-content-end">
+              <div className="d-flex flex-row gap-1 justify-content-end">
                 {user.role === 'Giám đốc' && EditKpiInOneCategoryButton(catItem)}
                 {user.role === 'Giám đốc' && DeleteKpiInOneCategoryButton(catItem)}
               </div>
             </CCol>
           </CRow>
-          <CRow className="mt-2">
+          <CRow className="mt-3">
             <div>
               <Table />
             </div>

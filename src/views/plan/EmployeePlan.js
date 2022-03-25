@@ -23,6 +23,8 @@ import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 
 const EmployeePlan = () => {
   const { id } = useParams()
@@ -85,7 +87,7 @@ const EmployeePlan = () => {
       <>
         {entry.length > 0 ? (
           <>
-            <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+            <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
@@ -104,14 +106,16 @@ const EmployeePlan = () => {
                     <CTableDataCell>{item.email}</CTableDataCell>
                     <CTableDataCell>{item.phone ? item.phone : 'Không có'}</CTableDataCell>
                     <CTableDataCell>
-                      <div
+                      <Button
+                        variant="contained"
+                        startIcon={<KeyboardDoubleArrowRightIcon />}
                         onClick={() => {
                           history.push(`/plan/${id}/employeeplan/${item.user_id}`)
                         }}
-                        style={{ cursor: 'pointer', color: 'dodgerblue' }}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
                       >
-                        Đi đến kế hoạch nhân viên {'>>'}
-                      </div>
+                        Trọng số kế hoạch
+                      </Button>
                     </CTableDataCell>
                   </CTableRow>
                 ))}
@@ -188,15 +192,23 @@ const EmployeePlan = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>Kế hoạch nhân viên</h4>
-            <div
+            <Button
+              variant="outlined"
+              startIcon={<KeyboardDoubleArrowLeftIcon />}
               onClick={() => {
                 history.push(`/plan/${id}`)
               }}
-              style={{ cursor: 'pointer', color: 'dodgerblue' }}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
-              <small>{'<<'} Quay lại kế hoạch </small>
-            </div>
+              Quay lại kế hoạch
+            </Button>
+          </CCol>
+        </CRow>
+        <CRow className="mt-4">
+          <CCol xs={12} sm={6}>
+            <h3>
+              <b>Kế hoạch nhân viên</b>
+            </h3>
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-flex flex-row gap-2 justify-content-end">
@@ -212,6 +224,7 @@ const EmployeePlan = () => {
                   }
                   setSearchVisible(!searchVisible)
                 }}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
               >
                 Tìm kiếm
               </Button>
@@ -221,7 +234,9 @@ const EmployeePlan = () => {
         {searchVisible && <CRow className="mt-2">{SearchInput()}</CRow>}
         <CRow className="mt-4">
           <CCol xs={12} sm={6}>
-            <h6>Danh sách nhân viên</h6>
+            <h6>
+              <b>Danh sách nhân viên</b>
+            </h6>
           </CCol>
         </CRow>
         <CRow className="mt-2">{Table()}</CRow>

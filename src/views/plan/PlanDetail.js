@@ -210,8 +210,10 @@ const PlanDetail = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>{plan.plan_name}</h4>
-            <h6>{plan.description ? plan.description : null}</h6>
+            <h3>
+              <b>{plan ? plan.plan_name : null}</b>
+            </h3>
+            <h6>{plan && plan.description ? plan.description : null}</h6>
           </CCol>
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={12} sm={6}>
@@ -233,12 +235,14 @@ const PlanDetail = () => {
       <>
         <CRow>
           <CCol xs={12} sm={5}>
-            <h4>{plan.plan_name}</h4>
-            <h6>{plan.description ? plan.description : null}</h6>
+            <h3>
+              <b>{plan ? plan.plan_name : null}</b>
+            </h3>
+            <h6>{plan && plan.description ? plan.description : null}</h6>
           </CCol>
           {user.role === 'Nhân viên' && compareYear(plan.year) && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -246,6 +250,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/kpiregistration/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Đăng ký KPI
                 </Button>
@@ -254,7 +259,7 @@ const PlanDetail = () => {
           )}
           {user.role === 'Quản lý' && compareYear(plan.year) && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -262,6 +267,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/kpiapproving/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Duyệt KPI
                 </Button>
@@ -272,6 +278,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/kpiregistration/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Đăng ký KPI
                 </Button>
@@ -282,6 +289,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/plan/${id}/employeeplan`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Kế hoạch nhân viên
                 </Button>
@@ -290,7 +298,7 @@ const PlanDetail = () => {
           )}
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -298,6 +306,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/kpiapproving/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Duyệt KPI
                 </Button>
@@ -308,6 +317,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/plan/${id}/deptplan`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Kế hoạch phòng ban
                 </Button>

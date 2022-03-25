@@ -10,7 +10,7 @@ import {
   CProgress,
   CProgressBar,
 } from '@coreui/react'
-import { Pagination, IconButton } from '@mui/material'
+import { Pagination, IconButton, Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
@@ -20,6 +20,7 @@ import { setPlanList } from 'src/slices/planSlice'
 import { AddPlanButton } from './AddPlanButton'
 import { useHistory } from 'react-router-dom'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import api from 'src/views/axiosConfig'
 import { sortPlanListByYear, calculateTimeProgress } from 'src/utils/function'
 import { EditPlanButton } from './EditPlanButton'
@@ -68,7 +69,9 @@ const Plan = () => {
     return (
       <>
         <CRow>
-          <h5>KẾ HOẠCH HIỆN TẠI</h5>
+          <h5>
+            <b>Kế hoạch hiện tại</b>
+          </h5>
         </CRow>
         <CRow className="mt-2">
           {entry.currentPlan.length !== 0 ? (
@@ -77,7 +80,17 @@ const Plan = () => {
                 <CCol xs={12} sm={6} lg={4} key={index} className="mb-4">
                   <CCard className="shadow-sm">
                     <CCardBody>
-                      <CCardTitle>{planItem.plan_name}</CCardTitle>
+                      <CRow>
+                        <CCol xs={12} sm={8}>
+                          <CCardTitle>{planItem.plan_name}</CCardTitle>
+                        </CCol>
+                        <CCol xs={12} sm={4}>
+                          <div className="d-flex flex-row justify-content-end">
+                            {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
+                            {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
+                          </div>
+                        </CCol>
+                      </CRow>
                       <CRow className="mt-2">
                         <div>
                           <small>Thời gian</small>
@@ -103,17 +116,19 @@ const Plan = () => {
                           </CProgress>
                         </div>
                       </CRow>
-                      <CRow className="mt-2">
+                      <CRow className="mt-4 mb-2">
                         <div className="d-flex flex-row justify-content-end">
-                          <IconButton
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<KeyboardDoubleArrowRightIcon />}
                             onClick={() => {
                               history.push(`plan/${planItem.plan_id}`)
                             }}
+                            sx={{ textTransform: 'none', borderRadius: 10 }}
                           >
-                            <ArrowCircleRightIcon />
-                          </IconButton>
-                          {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
-                          {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
+                            Chi tiết
+                          </Button>
                         </div>
                       </CRow>
                     </CCardBody>
@@ -133,14 +148,26 @@ const Plan = () => {
     return entry.futurePlan.length !== 0 ? (
       <>
         <CRow className="mt-5">
-          <h5>KẾ HOẠCH SẮP TỚI</h5>
+          <h5>
+            <b>Kế hoạch sắp tới</b>
+          </h5>
         </CRow>
         <CRow className="mt-2">
           {entry.futurePlan.map((planItem, index) => (
             <CCol xs={12} sm={6} lg={4} key={index} className="mb-4">
               <CCard className="shadow-sm">
                 <CCardBody>
-                  <CCardTitle>{planItem.plan_name}</CCardTitle>
+                  <CRow>
+                    <CCol xs={12} sm={8}>
+                      <CCardTitle>{planItem.plan_name}</CCardTitle>
+                    </CCol>
+                    <CCol xs={12} sm={4}>
+                      <div className="d-flex flex-row justify-content-end">
+                        {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
+                        {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
+                      </div>
+                    </CCol>
+                  </CRow>
                   <CRow className="mt-2">
                     <div>
                       <small>Thời gian</small>
@@ -153,17 +180,19 @@ const Plan = () => {
                       </CProgress>
                     </div>
                   </CRow>
-                  <CRow className="mt-2">
+                  <CRow className="mt-4 mb-2">
                     <div className="d-flex flex-row justify-content-end">
-                      <IconButton
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<KeyboardDoubleArrowRightIcon />}
                         onClick={() => {
                           history.push(`plan/${planItem.plan_id}`)
                         }}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
                       >
-                        <ArrowCircleRightIcon />
-                      </IconButton>
-                      {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
-                      {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
+                        Chi tiết
+                      </Button>
                     </div>
                   </CRow>
                 </CCardBody>
@@ -179,14 +208,20 @@ const Plan = () => {
     return entry.oldPlan.length !== 0 ? (
       <>
         <CRow className="mt-5">
-          <h5>KẾ HOẠCH ĐÃ QUA</h5>
+          <h5>
+            <b>Kế hoạch đã qua</b>
+          </h5>
         </CRow>
         <CRow className="mt-2">
           {entry.oldPlan.map((planItem, index) => (
             <CCol xs={12} sm={6} lg={4} key={index} className="mb-4">
               <CCard className="shadow-sm">
                 <CCardBody>
-                  <CCardTitle>{planItem.plan_name}</CCardTitle>
+                  <CRow>
+                    <CCol xs={12} sm={8}>
+                      <CCardTitle>{planItem.plan_name}</CCardTitle>
+                    </CCol>
+                  </CRow>
                   <CRow className="mt-2">
                     <div>
                       <small>Thời gian</small>
@@ -201,16 +236,19 @@ const Plan = () => {
                       </CProgress>
                     </div>
                   </CRow>
-                  <CRow className="mt-2">
+                  <CRow className="mt-4 mb-2">
                     <div className="d-flex flex-row justify-content-end">
-                      <IconButton
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<KeyboardDoubleArrowRightIcon />}
                         onClick={() => {
                           history.push(`plan/${planItem.plan_id}`)
                         }}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
                       >
-                        <ArrowCircleRightIcon />
-                      </IconButton>
-                      {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
+                        Chi tiết
+                      </Button>
                     </div>
                   </CRow>
                 </CCardBody>

@@ -220,7 +220,7 @@ const User = () => {
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
             style={{ marginBottom: '10px' }}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Tìm
           </Button>
@@ -233,7 +233,7 @@ const User = () => {
   const UserTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+        <CTable align="middle" className="mb-0 border" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
@@ -309,13 +309,13 @@ const User = () => {
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                    <div className="d-grid gap-2 d-md-flex justify-content-end">
                       <Button
                         variant="contained"
                         color="primary"
                         startIcon={<FilterAltIcon />}
                         onClick={() => setShowUserFilter(!showUserFilter)}
-                        sx={{ textTransform: 'none' }}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
                       >
                         Tạo bộ lọc
                       </Button>

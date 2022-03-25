@@ -13,7 +13,7 @@ import {
   CTableRow,
   CTableFoot,
 } from '@coreui/react'
-import { Pagination, Avatar, Grid, IconButton } from '@mui/material'
+import { Pagination, Avatar, Grid, IconButton, Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,7 +23,7 @@ import { setUserLoading } from 'src/slices/userSlice'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
-
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 import InfoUserCompany from './InfoUserCompany'
@@ -71,14 +71,14 @@ const CompanyTable = (props) => {
   const UserTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+        <CTable align="middle" className="mb-0 border" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
-              <CTableHeaderCell>EMAIL</CTableHeaderCell>
-              <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-              <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
+              <CTableHeaderCell>Họ và tên</CTableHeaderCell>
+              <CTableHeaderCell>Email</CTableHeaderCell>
+              <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+              <CTableHeaderCell>Chức vụ</CTableHeaderCell>
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
@@ -104,15 +104,17 @@ const CompanyTable = (props) => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="6">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -131,25 +133,25 @@ const CompanyTable = (props) => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
-                  <CCol xs={6}>
-                    <IconButton
+                  <CCol xs={12} sm={6}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<KeyboardDoubleArrowLeftIcon />}
                       onClick={() => {
                         history.push('/companytree')
                       }}
+                      sx={{ textTransform: 'none', borderRadius: 10 }}
                     >
-                      <ArrowCircleLeftIcon />
-                    </IconButton>
-                  </CCol>
-                  <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
+                      Quay lại cây nhân sự
+                    </Button>
                   </CCol>
                 </CRow>
                 {/*Table*/}
-                <div className="mt-2 p-4">
+                <CRow className="mt-4">
                   <UserTable temList={entry} />
-                </div>
+                </CRow>
               </CCardBody>
             </CCard>
           </CCol>

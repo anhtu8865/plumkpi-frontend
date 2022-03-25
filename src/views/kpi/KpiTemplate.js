@@ -23,15 +23,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import { setLoading } from 'src/slices/viewSlice'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { EditKpiButton } from './EditKpiButton'
 import { DeleteKpiButton } from './DeleteKpiButton'
 import { setCategoryList } from 'src/slices/kpiCategorySlice'
 import SearchIcon from '@mui/icons-material/Search'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 
 const KpiTemplate = () => {
   const { id } = useParams()
+  const history = useHistory()
   const [catItem, setCatItem] = useState({ kpi_category_id: null, kpi_category_name: null })
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
@@ -128,7 +130,7 @@ const KpiTemplate = () => {
       <>
         {entry.length !== 0 ? (
           <>
-            <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+            <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
@@ -209,6 +211,20 @@ const KpiTemplate = () => {
               <CCardBody className="p-5">
                 <CRow>
                   <CCol xs={12} sm={6}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<KeyboardDoubleArrowLeftIcon />}
+                      onClick={() => {
+                        history.push(`/kpiadmin`)
+                      }}
+                      sx={{ textTransform: 'none', borderRadius: 10 }}
+                    >
+                      Quay lại danh mục KPI mẫu
+                    </Button>
+                  </CCol>
+                </CRow>
+                <CRow className="mt-4">
+                  <CCol xs={12} sm={6}>
                     <h3>
                       <b>{catItem.kpi_category_name}</b>
                     </h3>
@@ -225,7 +241,7 @@ const KpiTemplate = () => {
                           }
                           setSearchVisible(!searchVisible)
                         }}
-                        sx={{ textTransform: 'none' }}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
                       >
                         Tìm kiếm
                       </Button>

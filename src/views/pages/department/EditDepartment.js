@@ -183,7 +183,7 @@ const EditDepartment = (props) => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
-              sx={{ textTransform: 'none' }}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

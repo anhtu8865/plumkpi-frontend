@@ -178,7 +178,7 @@ export const AddKpiButton = (props) => {
         color="primary"
         onClick={() => setModalVisible(true)}
         startIcon={<AddCircleIcon />}
-        sx={{ textTransform: 'none' }}
+        sx={{ textTransform: 'none', borderRadius: 10 }}
       >
         Tạo KPI
       </Button>
@@ -524,7 +524,7 @@ export const AddKpiButton = (props) => {
             type="submit"
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Tạo mới
           </Button>

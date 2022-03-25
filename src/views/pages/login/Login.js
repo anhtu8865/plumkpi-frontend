@@ -125,7 +125,7 @@ const Login = () => {
                 <CCardBody>
                   <form onSubmit={formik.handleSubmit}>
                     <CImage src={KPIlogo} className="login-logo" alt="logo" />
-                    <h4 className="login-title">Welcome to PlumKPI! 👋🏻</h4>
+                    <h4 className="login-title">Chào mừng bạn đến PlumKPI! 👋🏻</h4>
                     <p className="text-medium-emphasis">Đăng nhập với tài khoản của bạn</p>
                     <div className="mb-3">
                       <CFormLabel className="form-label">Email</CFormLabel>
@@ -145,7 +145,7 @@ const Login = () => {
                       <CFormFeedback invalid>{formik.errors.email}</CFormFeedback>
                     </div>
                     <div className="mb-3">
-                      <CFormLabel className="form-label">Password</CFormLabel>
+                      <CFormLabel className="form-label">Mật khẩu</CFormLabel>
                       <CFormInput
                         name="password"
                         className="form-control"
