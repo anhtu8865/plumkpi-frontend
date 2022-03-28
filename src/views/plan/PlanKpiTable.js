@@ -35,6 +35,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from './ApproveDataMonthlyTarget'
+import RegisterMonthlyTarget from './RegisterMonthlyTarget'
 
 export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
   const { plan, temInPlan, catInPlan, temPage, temTotalPage } = useSelector(
@@ -343,7 +344,14 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                       </CTableDataCell>
                     )}
                     {user.role === 'Nhân viên' && (
-                      <CTableDataCell>{formatNumber(handleMonthTargetValue(item))}</CTableDataCell>
+                      <CTableDataCell>
+                        {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
+                        <RegisterMonthlyTarget
+                          plan={plan}
+                          item={item}
+                          selectedMonth={selectedMonth}
+                        />
+                      </CTableDataCell>
                     )}
                     {user.role === 'Quản lý' && (
                       <CTableDataCell>

@@ -23,115 +23,84 @@ import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-const EnterDateMonthlyTarget = (props) => {
-  //console.log(props)
-  const { plan, item, selectedMonth, note } = props
+const RegisterMonthlyTarget = (props) => {
+  console.log(props)
+  const { plan, item, selectedMonth } = props
   const dispatch = useDispatch()
 
   const [isSubmit, setIsSubmit] = React.useState(false)
 
-  const onClickDelete = () => {
-    setIsSubmit(true)
-  }
-
-  const handleMonthActualValue = (item) => {
-    console.log(item)
+  const handleMonthTargetValue = (item) => {
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
-          if (item.first_monthly_target.hasOwnProperty('actual')) {
-            return item.first_monthly_target.actual.value
-          }
+          return item.first_monthly_target.target
         }
         return 'Chưa có'
       }
       case 2: {
         if (item.second_monthly_target) {
-          if (item.second_monthly_target.hasOwnProperty('actual')) {
-            return item.second_monthly_target.actual.value
-          }
+          return item.second_monthly_target.target
         }
         return 'Chưa có'
       }
       case 3: {
         if (item.third_monthly_target) {
-          if (item.third_monthly_target.hasOwnProperty('actual')) {
-            if (item.third_monthly_target.actual) {
-              return item.third_monthly_target.actual.value
-            }
-          }
+          return item.third_monthly_target.target
         }
         return 'Chưa có'
       }
       case 4: {
         if (item.fourth_monthly_target) {
-          if (item.fourth_monthly_target.hasOwnProperty('actual')) {
-            return item.fourth_monthly_target.actual.value
-          }
+          return item.fourth_monthly_target.target
         }
         return 'Chưa có'
       }
       case 5: {
         if (item.fifth_monthly_target) {
-          if (item.fifth_monthly_target.hasOwnProperty('actual')) {
-            return item.fifth_monthly_target.actual.value
-          }
+          return item.fifth_monthly_target.target
         }
         return 'Chưa có'
       }
       case 6: {
         if (item.sixth_monthly_target) {
-          if (item.sixth_monthly_target.hasOwnProperty('actual')) {
-            return item.sixth_monthly_target.actual.value
-          }
+          return item.sixth_monthly_target.target
         }
         return 'Chưa có'
       }
       case 7: {
         if (item.seventh_monthly_target) {
-          if (item.seventh_monthly_target.hasOwnProperty('actual')) {
-            return item.seventh_monthly_target.actual.value
-          }
+          return item.seventh_monthly_target.target
         }
         return 'Chưa có'
       }
       case 8: {
         if (item.eighth_monthly_target) {
-          if (item.eighth_monthly_target.hasOwnProperty('actual')) {
-            return item.eighth_monthly_target.actual.value
-          }
+          return item.eighth_monthly_target.target
         }
         return 'Chưa có'
       }
       case 9: {
         if (item.ninth_monthly_target) {
-          if (item.ninth_monthly_target.hasOwnProperty('actual')) {
-            return item.ninth_monthly_target.actual.value
-          }
+          return item.ninth_monthly_target.target
         }
         return 'Chưa có'
       }
       case 10: {
         if (item.tenth_monthly_target) {
-          if (item.tenth_monthly_target.hasOwnProperty('actual')) {
-            return item.tenth_monthly_target.actual.value
-          }
+          return item.tenth_monthly_target.target
         }
         return 'Chưa có'
       }
       case 11: {
         if (item.eleventh_monthly_target) {
-          if (item.eleventh_monthly_target.hasOwnProperty('actual')) {
-            return item.eleventh_monthly_target.actual.value
-          }
+          return item.eleventh_monthly_target.target
         }
         return 'Chưa có'
       }
       case 12: {
         if (item.twelfth_monthly_target) {
-          if (item.twelfth_monthly_target.hasOwnProperty('actual')) {
-            return item.twelfth_monthly_target.actual.value
-          }
+          return item.twelfth_monthly_target.target
         }
         return 'Chưa có'
       }
@@ -148,17 +117,17 @@ const EnterDateMonthlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       month: selectedMonth,
-      value: formatNumber(handleMonthActualValue(item)),
+      target: formatNumber(handleMonthTargetValue(item)),
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
       //console.log(values)
       api
-        .put('plans/enter-data-monthly-target/employee', {
+        .put('plans/register-monthly-target/employee', {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           month: values.month,
-          value: values.value,
+          target: values.target,
         })
         .then(() => {
           dispatch(
@@ -189,12 +158,9 @@ const EnterDateMonthlyTarget = (props) => {
         <CInputGroup>
           <CFormInput
             type="number"
-            defaultValue={formatNumber(handleMonthActualValue(item))}
-            {...formik.getFieldProps('value')}
+            defaultValue={formatNumber(handleMonthTargetValue(item))}
+            {...formik.getFieldProps('target')}
           />
-          <IconButton id="note" color="primary">
-            <FilePresentIcon />
-          </IconButton>
           <IconButton
             variant="contained"
             color="primary"
@@ -209,15 +175,12 @@ const EnterDateMonthlyTarget = (props) => {
   )
 }
 
-EnterDateMonthlyTarget.propTypes = {
+RegisterMonthlyTarget.propTypes = {
   plan: PropTypes.object,
   item: PropTypes.object,
   selectedMonth: PropTypes.number,
-  note: PropTypes.string,
 }
 
-EnterDateMonthlyTarget.defaultProps = {
-  note: '',
-}
+RegisterMonthlyTarget.defaultProps = {}
 
-export default EnterDateMonthlyTarget
+export default RegisterMonthlyTarget
