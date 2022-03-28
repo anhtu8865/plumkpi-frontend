@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox, Radio } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -33,8 +33,13 @@ import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
 import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/function'
+import PropTypes from 'prop-types'
 
-export const ApproveDataMonthlyTarget = (kpiItem) => {
+import AutorenewIcon from '@mui/icons-material/Autorenew'
+import DoneIcon from '@mui/icons-material/Done'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+
+export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
   //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
@@ -42,7 +47,7 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
   const [employeeList, setEmployeeList] = useState([])
   const [tempSelectedList, setTempSelectedList] = useState([])
   const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
-  const [selectValue, setSelectValue] = useState('Quarter')
+  const [selectValue, setSelectValue] = useState('Month')
   const [selectedQuarter, setSelectedQuarter] = useState(1)
   const [selectedMonth, setSelectedMonth] = useState(3)
   const { plan } = useSelector((state) => state.planDetail)
@@ -52,6 +57,13 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
   const [sampleTarget, setSampleTarget] = useState('')
   const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const [monthTarget, setMonthTarget] = useState(0)
+
+  const [userID, setUserID] = React.useState(0)
+  const [selectedKpi, setSelectedKpi] = React.useState({})
+  const [smModalVisible1, setSmModalVisible1] = useState(false)
+  const [smModalVisible2, setSmModalVisible2] = useState(false)
+
+  const { reload } = useSelector((state) => state.view)
 
   const getEmployeeList = async () => {
     try {
@@ -166,14 +178,14 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
       const employees = await getEmployeeList()
       //console.log(employees)
       const assignEmployees = await getInfoTargetKpi()
-      console.log(assignEmployees)
+      //console.log(assignEmployees)
       if (assignEmployees) {
         setTempSelectedList(assignEmployees)
       }
       setEmployeeList(employees)
     }
     fetchData()
-  }, [])
+  }, [reload])
 
   React.useEffect(() => {
     setSelectedEmployeeList([])
@@ -316,7 +328,6 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
   }
 
   const handleCheckboxValue = (id) => {
-    //console.log(selectedEmployeeList)
     const find = selectedEmployeeList.find((item) => item.user.user_id === id)
     if (find) {
       return true
@@ -436,6 +447,12 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
       default:
         return ''
     }
+  }
+
+  const handleDataTargetKpiChange = (item) => {
+    setUserID(item.user.user_id)
+
+    setSelectedKpi(item)
   }
 
   const handleMonthTargetValue = (item) => {
@@ -621,6 +638,7 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
   }
 
   const handleMonthlyTargetStatus = (item) => {
+    //console.log(item)
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
@@ -797,18 +815,23 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
                   </CTableHeaderCell>
                 </CTableRow> */}
                 {employeeList.map((item, index) => {
+                  console.log(item)
                   return (
                     <>
                       <CTableRow
                         key={index}
-                        color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
+                        // color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
                       >
                         <CTableDataCell>
                           <Checkbox
                             size="small"
-                            checked={handleCheckboxValue(item.user.id)}
+                            // checked={handleCheckboxValue(item.user.id)}
+                            // onChange={() => {
+                            //   handleCheckbox(item.user)
+                            // }}
+                            checked={item == selectedKpi}
                             onChange={() => {
-                              handleCheckbox(item.user)
+                              handleDataTargetKpiChange(item)
                             }}
                           />
                         </CTableDataCell>
@@ -834,8 +857,8 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
                             <CFormInput
                               type="number"
                               value={handleMonthActualValue(item)}
-                              invalid={handleMonthlyTargetStatus(kpiItem) === 'Từ chối'}
-                              valid={handleMonthlyTargetStatus(kpiItem) === 'Chấp nhận'}
+                              invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
+                              valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                               disabled
                             />
                             <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
@@ -950,7 +973,6 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
                 setSelectValue(event.target.value)
               }}
             >
-              <option value="Quarter">Quý</option>
               <option value="Month">Tháng</option>
             </CFormSelect>
           </CCol>
@@ -959,6 +981,189 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
         {selectValue === 'Month' && MonthTargetView()}
       </>
     )
+  }
+
+  const AcceptActualButton = (props) => {
+    const { plan_id, kpi_template_id, user_id, month } = props
+
+    const onClickAccept = () => {
+      setIsSubmit(true)
+
+      api
+        .put(`plans/approve-data-monthly-target/manager`, {
+          plan_id: plan_id,
+          kpi_template_id: kpi_template_id,
+          user_id: user_id,
+          month: month,
+          approve: 'Chấp nhận',
+        })
+        .then(() => {
+          //console.log(acceptList)
+          dispatch(
+            createAlert({
+              message: 'Chấp nhận KPI thành công.',
+              type: 'success',
+            }),
+          )
+          // dispatch(
+          //   setKpiApprovingLoading({
+          //     value: true,
+          //   }),
+          // )
+          dispatch(setReload())
+          setSmModalVisible1(false)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          setIsSubmit(false)
+        })
+    }
+    return (
+      <>
+        <Button
+          variant="contained"
+          color="success"
+          startIcon={<CheckIcon />}
+          onClick={() => setSmModalVisible1(true)}
+        >
+          Chấp nhận
+        </Button>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={smModalVisible1}
+          onClose={() => {
+            setSmModalVisible1(false)
+          }}
+        >
+          <CModalHeader>
+            <CModalTitle>Duyệt KPI</CModalTitle>
+          </CModalHeader>
+          <CModalBody className="mx-4 mb-3">
+            Bạn có chắc chắn muốn chấp nhận dữ liệu của KPI đã chọn ?
+          </CModalBody>
+          <CModalFooter>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              onClick={() => onClickAccept()}
+              disabled={isSubmit}
+            >
+              Xác nhận
+            </Button>
+            {isSubmit && <LoadingCircle />}
+          </CModalFooter>
+        </CModal>
+      </>
+    )
+  }
+
+  AcceptActualButton.propTypes = {
+    plan_id: PropTypes.number,
+    kpi_template_id: PropTypes.number,
+    user_id: PropTypes.number,
+    month: PropTypes.number,
+  }
+
+  const DenyActualButton = (props) => {
+    const { plan_id, kpi_template_id, user_id, month } = props
+
+    const onClickDeny = () => {
+      setIsSubmit(true)
+
+      api
+        .put(`plans/approve-data-monthly-target/manager`, {
+          plan_id: plan_id,
+          kpi_template_id: kpi_template_id,
+          user_id: user_id,
+          month: month,
+          approve: 'Từ chối',
+        })
+        .then(() => {
+          //console.log(acceptList)
+          dispatch(
+            createAlert({
+              message: 'Từ chối KPI thành công.',
+              type: 'success',
+            }),
+          )
+          // dispatch(
+          //   setKpiApprovingLoading({
+          //     value: true,
+          //   }),
+          // )
+          dispatch(setReload())
+          setSmModalVisible2(false)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          setIsSubmit(false)
+        })
+    }
+    return (
+      <>
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<DoDisturbIcon />}
+          type="submit"
+          onClick={() => setSmModalVisible2(true)}
+        >
+          Từ chối
+        </Button>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={smModalVisible2}
+          onClose={() => {
+            setSmModalVisible2(false)
+          }}
+        >
+          <CModalHeader>
+            <CModalTitle>Duyệt KPI</CModalTitle>
+          </CModalHeader>
+          <CModalBody className="mx-4 mb-3">
+            Bạn có chắc chắn muốn từ chối dữ liệu của KPI đã chọn ?
+          </CModalBody>
+          <CModalFooter>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              onClick={() => onClickDeny()}
+              disabled={isSubmit}
+            >
+              Xác nhận
+            </Button>
+            {isSubmit && <LoadingCircle />}
+          </CModalFooter>
+        </CModal>
+      </>
+    )
+  }
+
+  DenyActualButton.propTypes = {
+    plan_id: PropTypes.number,
+    kpi_template_id: PropTypes.number,
+    user_id: PropTypes.number,
+    month: PropTypes.number,
   }
 
   return (
@@ -982,8 +1187,7 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
         }}
       >
         <CModalHeader>
-          {selectValue === 'Quarter' && <CModalTitle>Đăng ký chỉ tiêu KPI</CModalTitle>}
-          {selectValue === 'Month' && <CModalTitle>Duyệt KPI theo tháng</CModalTitle>}
+          {selectValue === 'Month' && <CModalTitle>Duyệt tiến độ KPI theo tháng</CModalTitle>}
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
@@ -1020,30 +1224,18 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
             //   Xác nhận
             // </Button>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<DoDisturbIcon />}
-                type="submit"
-                // onClick={() => {
-                //   onDenySubmit()
-                // }}
-                // disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
-              >
-                Từ chối
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<CheckIcon />}
-                type="submit"
-                // onClick={() => {
-                //   onApproveSubmit()
-                // }}
-                // disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
-              >
-                Chấp nhận
-              </Button>
+              <DenyActualButton
+                plan_id={plan_id}
+                kpi_template_id={kpiItem.kpi_template.kpi_template_id}
+                user_id={userID}
+                month={selectedMonth}
+              />
+              <AcceptActualButton
+                plan_id={plan_id}
+                kpi_template_id={kpiItem.kpi_template.kpi_template_id}
+                user_id={userID}
+                month={selectedMonth}
+              />
             </div>
           )}
           {isSubmit && <LoadingCircle />}

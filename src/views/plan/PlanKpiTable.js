@@ -41,7 +41,7 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
   const { plan, temInPlan, catInPlan, temPage, temTotalPage } = useSelector(
     (state) => state.planDetail,
   )
-  //console.log(useSelector((state) => state.planDetail))
+  //console.log(plan)
   const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
@@ -380,7 +380,7 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
                         {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
-                        {user.role === 'Quản lý' && ApproveDataMonthlyTarget(item)}
+                        {user.role === 'Quản lý' && ApproveDataMonthlyTarget(plan.plan_id, item)}
                         {user.role === 'Quản lý' &&
                           RegisterQuarterTargetButton(item, selectedQuarter)}
                         <KpiInfoButton kpiItem={item} />
