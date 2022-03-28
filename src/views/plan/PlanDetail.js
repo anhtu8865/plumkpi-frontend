@@ -10,7 +10,7 @@ import {
   CInputGroupText,
   CFormSelect,
 } from '@coreui/react'
-import { Button } from '@mui/material'
+import { Button, Checkbox } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
@@ -23,6 +23,11 @@ import {
   setPlan,
   setTemPage,
   setTemTotalPage,
+  setSelectedMonth,
+  setSelectedQuarter,
+  setPerformResult,
+  setCheckedQuarter,
+  setCheckedMonth,
 } from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
@@ -30,7 +35,7 @@ import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { formatDate, compareToToday, compareYear } from 'src/utils/function'
-import { monthArray } from 'src/utils/constant'
+import { monthArray, quarterArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
@@ -41,92 +46,118 @@ const PlanDetail = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
-  const { catInPlan, currentCat, plan, temPage } = useSelector((state) => state.planDetail)
+  const {
+    catInPlan,
+    currentCat,
+    plan,
+    temPage,
+    selectedMonth,
+    selectedQuarter,
+    checkedQuarter,
+    checkedMonth,
+  } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
-  const [selectedQuarter, setSelectedQuarter] = useState(1)
-  const [selectedMonth, setSelectedMonth] = useState(3)
   const [newResult, setNewResult] = useState([])
   const entryPerPage = 10
 
   const getPlan = async () => {
-    try {
-      const response = await api.get(`plans/${id}`)
-      return response.data
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
+    const response = await api.get(`plans/${id}`)
+    return response.data
+  }
+
+  const getPerformResult = async () => {
+    switch (user.role) {
+      case 'Giám đốc':
+        if (checkedMonth) {
+          const response = await api.get(`plans/${id}/performance/director/month`, {
+            params: { month: selectedMonth },
+          })
+          return response.data
+        } else if (checkedQuarter) {
+          const response = await api.get(`plans/${id}/performance/director/quarter`, {
+            params: { quarter: selectedQuarter },
+          })
+          return response.data
+        } else {
+          const response = await api.get(`plans/${id}/performance/director/year`)
+          return response.data
+        }
+      case 'Quản lý':
+        if (checkedMonth) {
+          const response = await api.get(`plans/${id}/performance/manager/month`, {
+            params: { month: selectedMonth },
+          })
+          return response.data
+        } else if (checkedQuarter) {
+          const response = await api.get(`plans/${id}/performance/manager/quarter`, {
+            params: { quarter: selectedQuarter },
+          })
+          return response.data
+        } else {
+          const response = await api.get(`plans/${id}/performance/manager/year`)
+          return response.data
+        }
+      case 'Nhân viên':
+        if (checkedMonth) {
+          const response = await api.get(`plans/${id}/performance/employee/month`, {
+            params: { month: selectedMonth },
+          })
+          return response.data
+        } else if (checkedQuarter) {
+          const response = await api.get(`plans/${id}/performance/employee/quarter`, {
+            params: { quarter: selectedQuarter },
+          })
+          return response.data
+        } else {
+          const response = await api.get(`plans/${id}/performance/employee/year`)
+          return response.data
+        }
+      default:
+        return {}
     }
   }
 
   const getCatPlan = async () => {
-    try {
-      if (user.role === 'Giám đốc') {
-        const response = await api.get(`plans/${id}/kpi-categories/director`)
-        return response.data
-      } else if (user.role === 'Quản lý') {
-        const response = await api.get(`plans/${id}/kpi-categories/manager`)
-        return response.data
-      } else if (user.role === 'Nhân viên') {
-        const response = await api.get(`plans/${id}/kpi-categories/employee`)
-        return response.data
-      }
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
+    if (user.role === 'Giám đốc') {
+      const response = await api.get(`plans/${id}/kpi-categories/director`)
+      return response.data
+    } else if (user.role === 'Quản lý') {
+      const response = await api.get(`plans/${id}/kpi-categories/manager`)
+      return response.data
+    } else if (user.role === 'Nhân viên') {
+      const response = await api.get(`plans/${id}/kpi-categories/employee`)
+      return response.data
     }
   }
 
   const getTemInOneCatPlan = async (offset, catId) => {
-    try {
-      if (user.role === 'Giám đốc') {
-        const response = await api.get(`plans/${id}/kpis/director`, {
-          params: { offset: offset, limit: 10, kpi_category_id: catId },
-        })
-        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
-        return response.data.items
-      } else if (user.role === 'Quản lý') {
-        const response = await api.get(`plans/${id}/kpis/manager`, {
-          params: { offset: offset, limit: 10, kpi_category_id: catId },
-        })
-        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
-        return response.data.items
-      } else if (user.role === 'Nhân viên') {
-        const response = await api.get(`plans/${id}/kpis/employee`, {
-          params: { offset: offset, limit: 10, kpi_category_id: catId },
-        })
-        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
-        return response.data.items
-      }
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
+    if (user.role === 'Giám đốc') {
+      const response = await api.get(`plans/${id}/kpis/director`, {
+        params: { offset: offset, limit: 10, kpi_category_id: catId },
+      })
+      dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
+      return response.data.items
+    } else if (user.role === 'Quản lý') {
+      const response = await api.get(`plans/${id}/kpis/manager`, {
+        params: { offset: offset, limit: 10, kpi_category_id: catId },
+      })
+      dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
+      return response.data.items
+    } else if (user.role === 'Nhân viên') {
+      const response = await api.get(`plans/${id}/kpis/employee`, {
+        params: { offset: offset, limit: 10, kpi_category_id: catId },
+      })
+      dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
+      return response.data.items
     }
   }
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const result = await getPlan()
-      const res = await getCatPlan()
-      if (res) {
-        {
+      try {
+        const result = await getPlan()
+        const res = await getCatPlan()
+        if (res) {
           dispatch(
             setCatInPlan({
               value: res,
@@ -138,6 +169,7 @@ const PlanDetail = () => {
                 value: res[0],
               }),
             )
+            setCheckFirstOpen()
           } else {
             dispatch(
               setCurrentCat({
@@ -146,17 +178,26 @@ const PlanDetail = () => {
             )
           }
         }
+        dispatch(
+          setPlan({
+            value: result,
+          }),
+        )
+        dispatch(
+          setLoading({
+            value: false,
+          }),
+        )
+      } catch (error) {
+        if (error.response) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
       }
-      dispatch(
-        setPlan({
-          value: result,
-        }),
-      )
-      dispatch(
-        setLoading({
-          value: false,
-        }),
-      )
     }
     fetchData()
   }, [reload, dispatch])
@@ -176,22 +217,33 @@ const PlanDetail = () => {
   React.useEffect(() => {
     let isCalled = true
     const fetchData = async () => {
-      if (newResult.length === 0) {
-        if (currentCat.kpi_category.kpi_category_id) {
-          const result = await getTemInOneCatPlan(
-            (temPage - 1) * entryPerPage,
-            currentCat.kpi_category.kpi_category_id,
-          )
-          if (result && isCalled) {
-            if (user.role === 'Giám đốc') {
-              dispatch(setTemInPlan({ value: result }))
-            } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
-              result.map((item) => {
-                item.kpi_template = item.plan_kpi_template.kpi_template
-                setNewResult((newResult) => [...newResult, item])
-              })
+      try {
+        if (newResult.length === 0) {
+          if (currentCat.kpi_category.kpi_category_id) {
+            const result = await getTemInOneCatPlan(
+              (temPage - 1) * entryPerPage,
+              currentCat.kpi_category.kpi_category_id,
+            )
+            if (result && isCalled) {
+              if (user.role === 'Giám đốc') {
+                dispatch(setTemInPlan({ value: result }))
+              } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
+                result.map((item) => {
+                  item.kpi_template = item.plan_kpi_template.kpi_template
+                  setNewResult((newResult) => [...newResult, item])
+                })
+              }
             }
           }
+        }
+      } catch (error) {
+        if (error.response) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
         }
       }
     }
@@ -204,6 +256,141 @@ const PlanDetail = () => {
       dispatch(setTemInPlan({ value: newResult }))
     }
   }, [newResult])
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getPerformResult()
+        dispatch(
+          setPerformResult({
+            value: res,
+          }),
+        )
+      } catch (error) {
+        if (error.response) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
+      }
+    }
+    fetchData()
+  }, [checkedMonth, checkedQuarter, selectedMonth, selectedQuarter])
+
+  const setCheckFirstOpen = () => {
+    if (user.role === 'Quản lý') {
+      if (checkedMonth) {
+        dispatch(setCheckedMonth({ value: false }))
+      }
+      dispatch(setCheckedQuarter({ value: true }))
+    } else if (user.role === 'Nhân viên') {
+      if (checkedQuarter) {
+        dispatch(setCheckedQuarter({ value: false }))
+      }
+      dispatch(setCheckedMonth({ value: true }))
+    } else {
+      if (checkedMonth) {
+        dispatch(setCheckedMonth({ value: false }))
+      }
+      if (checkedQuarter) {
+        dispatch(setCheckedQuarter({ value: false }))
+      }
+      /*const res1 = await getPerformResult()
+      dispatch(
+        setPerformResult({
+          value: res1,
+        }),
+      )*/
+    }
+  }
+
+  const handleCheck = (flag) => {
+    if (flag === 'Month') {
+      if (checkedQuarter && !checkedMonth) {
+        dispatch(setCheckedQuarter({ value: false }))
+      }
+      dispatch(setCheckedMonth({ value: !checkedMonth }))
+    } else if (flag === 'Quarter') {
+      if (checkedMonth && !checkedQuarter) {
+        dispatch(setCheckedMonth({ value: false }))
+      }
+      dispatch(setCheckedQuarter({ value: !checkedQuarter }))
+    }
+  }
+
+  const SelectedTimeRangeView = () => {
+    return (
+      <>
+        <CRow className="mt-4 d-flex justify-content-start">
+          <CCol xs={12} sm={4} xl={3} className="d-flex flex-row">
+            <Checkbox
+              size="small"
+              checked={checkedMonth}
+              onChange={() => {
+                handleCheck('Month')
+              }}
+            />{' '}
+            <CInputGroup size="sm">
+              <CInputGroupText>Tháng</CInputGroupText>
+              <CFormSelect
+                className="text-center"
+                value={selectedMonth}
+                onChange={(event) => {
+                  dispatch(setSelectedMonth({ value: Number(event.target.value) }))
+                }}
+                disabled={!checkedMonth}
+              >
+                {checkedMonth
+                  ? monthArray.map((item) => (
+                      <option value={item} key={item}>
+                        {item}
+                      </option>
+                    ))
+                  : null}
+              </CFormSelect>
+            </CInputGroup>
+          </CCol>
+          <CCol xs={12} sm={4} xl={3} className="d-flex flex-row">
+            <Checkbox
+              size="small"
+              checked={checkedQuarter}
+              onChange={() => {
+                handleCheck('Quarter')
+              }}
+            />{' '}
+            <CInputGroup size="sm">
+              <CInputGroupText>Quý</CInputGroupText>
+              <CFormSelect
+                className="text-center"
+                value={selectedQuarter}
+                onChange={(event) => {
+                  dispatch(setSelectedQuarter({ value: Number(event.target.value) }))
+                }}
+                disabled={!checkedQuarter}
+              >
+                {checkedQuarter
+                  ? quarterArray.map((item) => (
+                      <option value={item} key={item}>
+                        {item}
+                      </option>
+                    ))
+                  : null}
+              </CFormSelect>
+            </CInputGroup>
+          </CCol>
+          <CCol xs={12} sm={4} xl={3} className="d-flex align-items-stretch">
+            <CInputGroup size="sm">
+              <CInputGroupText>Năm</CInputGroupText>
+              <CFormInput className="text-center" defaultValue={plan.year} disabled />
+            </CInputGroup>
+          </CCol>
+        </CRow>
+      </>
+    )
+  }
 
   const NoTemView = () => {
     return (
@@ -325,73 +512,7 @@ const PlanDetail = () => {
             </CCol>
           )}
         </CRow>
-        <CRow className="mt-4 d-flex justify-content-start">
-          {user.role === 'Giám đốc' && (
-            <CCol xs={12} sm={4} xl={3}>
-              <CInputGroup size="sm">
-                <CInputGroupText>Quý</CInputGroupText>
-                <CFormSelect
-                  className="text-center"
-                  value={selectedQuarter}
-                  onChange={(event) => {
-                    setSelectedQuarter(Number(event.target.value))
-                  }}
-                >
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                  <option value={4}>4</option>
-                  <option value={5}>Cả năm</option>
-                </CFormSelect>
-              </CInputGroup>
-            </CCol>
-          )}
-          {user.role === 'Quản lý' && (
-            <CCol xs={12} sm={4} xl={2}>
-              <CInputGroup size="sm">
-                <CInputGroupText>Quý</CInputGroupText>
-                <CFormSelect
-                  className="text-center"
-                  value={selectedQuarter}
-                  onChange={(event) => {
-                    setSelectedQuarter(Number(event.target.value))
-                  }}
-                >
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                  <option value={4}>4</option>
-                </CFormSelect>
-              </CInputGroup>
-            </CCol>
-          )}
-          {user.role === 'Nhân viên' && (
-            <CCol xs={12} sm={4} xl={2}>
-              <CInputGroup size="sm">
-                <CInputGroupText>Tháng</CInputGroupText>
-                <CFormSelect
-                  className="text-center"
-                  value={selectedMonth}
-                  onChange={(event) => {
-                    setSelectedMonth(Number(event.target.value))
-                  }}
-                >
-                  {monthArray.map((item) => (
-                    <option value={item} key={item}>
-                      {item}
-                    </option>
-                  ))}
-                </CFormSelect>
-              </CInputGroup>
-            </CCol>
-          )}
-          <CCol xs={12} sm={4} xl={2}>
-            <CInputGroup size="sm">
-              <CInputGroupText>Năm</CInputGroupText>
-              <CFormInput className="text-center" defaultValue={plan.year} disabled />
-            </CInputGroup>
-          </CCol>
-        </CRow>
+        <SelectedTimeRangeView />
         <CRow className="mt-4">
           <PlanOverview plan_id={id} />
         </CRow>

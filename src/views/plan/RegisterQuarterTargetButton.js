@@ -199,20 +199,16 @@ export const RegisterQuarterTargetButton = (kpiItem, quarter) => {
     return (
       <>
         <CRow className="mt-2">
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="kpiname">KPI</CFormLabel>
-            <CFormInput
-              id="kpiname"
-              defaultValue={kpiItem.kpi_template.kpi_template_name}
-              disabled
-            />
-          </CCol>
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="dept">Phòng ban</CFormLabel>
-            <CFormInput id="dept" defaultValue={user.manage.dept_name} disabled />
+          <CCol xs={12}>
+            <b>KPI:</b> {kpiItem.kpi_template.kpi_template_name}
           </CCol>
         </CRow>
         <CRow className="mt-2">
+          <CCol xs={12}>
+            <b>Phòng ban:</b> {user.manage.dept_name}
+          </CCol>
+        </CRow>
+        {/*<CRow className="mt-2">
           <CCol xs={12} sm={6}>
             <CFormLabel htmlFor="freq">Theo</CFormLabel>
             <CFormSelect
@@ -225,7 +221,7 @@ export const RegisterQuarterTargetButton = (kpiItem, quarter) => {
               <option value="Quarter">Quý</option>
             </CFormSelect>
           </CCol>
-        </CRow>
+            </CRow>*/}
         {selectValue === 'Quarter' && QuarterTargetView()}
       </>
     )
