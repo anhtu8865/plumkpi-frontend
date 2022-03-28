@@ -4,7 +4,7 @@ const viewSlice = createSlice({
   name: 'plan',
   initialState: {
     reload: false,
-    loading: false,
+    loading: true,
   },
   reducers: {
     setReload: (state) => {

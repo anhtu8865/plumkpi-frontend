@@ -120,6 +120,7 @@ export const EditCategoryButton = (props) => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

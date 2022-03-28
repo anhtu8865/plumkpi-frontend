@@ -1,7 +1,6 @@
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-
 const UserInfo = React.lazy(() => import('./views/userinfo/UserInfo'))
 const KpiAdmin = React.lazy(() => import('./views/kpi/KpiAdmin'))
 const KpiTemplate = React.lazy(() => import('./views/kpi/KpiTemplate'))
@@ -12,33 +11,62 @@ const UserDepartment = React.lazy(() => import('./views/pages/department/UserDep
 const PlanDetail = React.lazy(() => import('./views/plan/PlanDetail'))
 const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTree'))
 const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
-const EditKpiAndWeightView = React.lazy(() => import('./views/plan/EditKpiAndWeightView'))
 const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
 const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
 const DataInput = React.lazy(() => import('./views/data/Data'))
+const EditWeightDept = React.lazy(() => import('./views/plan/EditWeightDept'))
+const DeptPlan = React.lazy(() => import('./views/plan/DeptPlan'))
+const EditWeightEmployee = React.lazy(() => import('./views/plan/EditWeightEmployee'))
+const EmployeePlan = React.lazy(() => import('./views/plan/EmployeePlan'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/info', name: 'Info', component: UserInfo },
-  { path: '/kpiadmin', exact: true, name: 'KPI Category', component: KpiAdmin },
-  { path: '/kpiadmin/:id', name: 'KPI Template', component: KpiTemplate },
-  { path: '/plan', exact: true, name: 'Plan', component: Plan },
-  { path: '/plan/:id', exact: true, name: 'Plan Detail', component: PlanDetail },
-  { path: '/plan/:id/edit', name: 'Edit KPI & Weight in Plan', component: EditKpiAndWeightView },
-  { path: '/users', name: 'User', component: UserPage },
-  { path: '/depts', exact: true, name: 'Department', component: Department },
-  { path: '/depts/:id', name: 'User In Department', component: UserDepartment },
-  { path: '/companytree', exact: true, name: 'Company', component: CompanyTree },
-  { path: '/companytree/:id', exact: true, name: 'Company Table', component: CompanyTable },
+  { path: '/info', name: 'Thông tin cá nhân', component: UserInfo },
+  { path: '/kpiadmin', exact: true, name: 'Danh mục KPI mẫu', component: KpiAdmin },
+  { path: '/kpiadmin/:id', name: 'KPI mẫu', component: KpiTemplate },
+  { path: '/plan', exact: true, name: 'Kế hoạch', component: Plan },
+  { path: '/plan/:id', exact: true, name: 'Chi tiết kế hoạch', component: PlanDetail },
+  { path: '/users', name: 'Người dùng', component: UserPage },
+  { path: '/depts', exact: true, name: 'Phòng ban', component: Department },
+  { path: '/depts/:id', name: 'Nhân sự trong phòng ban', component: UserDepartment },
+  { path: '/companytree', exact: true, name: 'Cây nhân sự', component: CompanyTree },
+  { path: '/companytree/:id', exact: true, name: 'Nhân sự', component: CompanyTable },
   {
     path: '/kpiregistration/:id',
     exact: true,
-    name: 'KPI Registration',
+    name: 'Đăng ký KPI cá nhân',
     component: KpiRegistration,
   },
-  { path: '/kpiapproving/:id', exact: true, name: 'KPI Approving', component: KpiApproving },
-  { path: '/data', name: 'Data', component: DataInput },
+  {
+    path: '/kpiapproving/:id',
+    exact: true,
+    name: 'Xét duyệt KPI cá nhân',
+    component: KpiApproving,
+  },
+  { path: '/data', name: 'Kết quả KPI', component: DataInput },
+  {
+    path: '/plan/:id/deptplan/:deptId',
+    name: 'Trọng số kế hoạch phòng ban',
+    component: EditWeightDept,
+  },
+  {
+    path: '/plan/:id/deptplan',
+    exact: true,
+    name: 'Kế hoạch phòng ban',
+    component: DeptPlan,
+  },
+  {
+    path: '/plan/:id/employeeplan/:userId',
+    name: 'Trọng số kế hoạch nhân viên',
+    component: EditWeightEmployee,
+  },
+  {
+    path: '/plan/:id/employeeplan',
+    exact: true,
+    name: 'Kế hoạch nhân viên',
+    component: EmployeePlan,
+  },
 ]
 
 export default routes

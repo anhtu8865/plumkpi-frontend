@@ -16,16 +16,23 @@ import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetail
 import api from 'src/views/axiosConfig'
 import GaugeChart from 'react-gauge-chart'
 import PropTypes from 'prop-types'
+import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
 
 export const PlanOverview = (props) => {
   const dispatch = useDispatch()
   const { catInPlan, temInPlan, currentCat } = useSelector((state) => state.planDetail)
+  const { user } = useSelector((state) => state.user)
 
   return (
     <>
       <CCard className="shadow-sm">
-        <CCardBody>
+        <CCardBody className="p-4">
           <CRow>
+            <div className="d-flex flex-row justify-content-end">
+              {user.role === 'Giám đốc' && EditCategoryInPlanButton()}
+            </div>
+          </CRow>
+          <CRow className="mt-2">
             <CCol xs={12} sm={6}>
               <GaugeChart id="gauge-chart1" percent={0} />
             </CCol>

@@ -49,8 +49,8 @@ const DeleteUser = (props) => {
   return (
     <>
       {' '}
-      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)}>
-        <DeleteForeverIcon />
+      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)} size="small">
+        <DeleteForeverIcon fontSize="small" />
       </IconButton>
       <CModal
         alignment="center"
@@ -61,7 +61,7 @@ const DeleteUser = (props) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Xóa phòng ban</CModalTitle>
+          <CModalTitle>Xóa người dùng</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
           Bạn có chắc chắn muốn xóa người dùng: {props.inCat.user_name} ?
@@ -74,6 +74,7 @@ const DeleteUser = (props) => {
             type="submit"
             onClick={() => onClickDelete()}
             disabled={isSubmit}
+            sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Xóa bỏ
           </Button>

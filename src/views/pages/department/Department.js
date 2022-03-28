@@ -108,7 +108,7 @@ const Department = () => {
     })
 
     return (
-      <CForm className="row g-3">
+      <CForm>
         <CCol md={4}>
           <CFormLabel htmlFor="filterDepartment">Phòng ban</CFormLabel>
           <CFormInput
@@ -119,7 +119,7 @@ const Department = () => {
             onChange={formik.handleChange}
           />
         </CCol>
-        <CCol xs={12}>
+        <CCol className="mt-3" xs={12}>
           <Button
             type="submit"
             variant="contained"
@@ -127,7 +127,11 @@ const Department = () => {
             startIcon={<SearchIcon />}
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
+<<<<<<< HEAD
             style={{ marginBottom: '10px' }}
+=======
+            sx={{ textTransform: 'none', borderRadius: 10 }}
+>>>>>>> master
           >
             Tìm
           </Button>
@@ -140,13 +144,13 @@ const Department = () => {
   const DeptTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+        <CTable align="middle" className="mb-0 border" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
-              <CTableHeaderCell>QUẢN LÝ</CTableHeaderCell>
+              <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+              <CTableHeaderCell>Mô tả</CTableHeaderCell>
+              <CTableHeaderCell>Quản lý</CTableHeaderCell>
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
@@ -171,8 +175,9 @@ const Department = () => {
                       onClick={() => {
                         history.push(`depts/${catItem.dept_id}`)
                       }}
+                      size="small"
                     >
-                      <ArrowCircleRightIcon />
+                      <ArrowCircleRightIcon fontSize="small" />
                     </IconButton>
                     <EditDepartment inCat={catItem} />
                     <DeleteDepartment inCat={catItem} />
@@ -183,15 +188,17 @@ const Department = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="5">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -210,18 +217,21 @@ const Department = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
-                  <CCol xs={6}>
-                    <h4>Quản lý phòng ban</h4>
+                  <CCol xs={12} sm={6}>
+                    <h3>
+                      <b>Quản lý phòng ban</b>
+                    </h3>
                   </CCol>
-                  <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                  <CCol xs={12} sm={6}>
+                    <div className="d-grid gap-2 d-md-flex justify-content-end">
                       <Button
                         variant="contained"
                         color="primary"
                         startIcon={<FilterAltIcon />}
                         onClick={() => setShowDepartmentFilter(!showDepartmentFilter)}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
                       >
                         Tạo bộ lọc
                       </Button>
@@ -229,10 +239,14 @@ const Department = () => {
                     </div>
                   </CCol>
                 </CRow>
-                <div className="mt-2 p-4">
-                  {showDepartmentFilter ? <DepartmentFilter /> : null}
+                {showDepartmentFilter ? (
+                  <CRow className="mt-4">
+                    <DepartmentFilter />
+                  </CRow>
+                ) : null}
+                <CRow className="mt-5">
                   <DeptTable temList={filter.length > 0 ? filter : entry} />
-                </div>
+                </CRow>
               </CCardBody>
             </CCard>
           </CCol>

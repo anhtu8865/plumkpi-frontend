@@ -33,6 +33,8 @@ import { formatDate, compareToToday, compareYear } from 'src/utils/function'
 import { monthArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
+import BookIcon from '@mui/icons-material/Book'
 
 const PlanDetail = () => {
   const { id } = useParams()
@@ -208,22 +210,15 @@ const PlanDetail = () => {
       <>
         <CRow>
           <CCol xs={12} sm={6}>
-            <h4>{plan.plan_name}</h4>
-            <h6>{plan.description ? plan.description : null}</h6>
+            <h3>
+              <b>{plan ? plan.plan_name : null}</b>
+            </h3>
+            <h6>{plan && plan.description ? plan.description : null}</h6>
           </CCol>
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    history.replace(`/plan/${id}/edit`)
-                  }}
-                  startIcon={<AddCircleIcon />}
-                >
-                  Thêm KPI
-                </Button>
+                {EditCategoryInPlanButton()}
               </div>
             </CCol>
           )}
@@ -239,13 +234,15 @@ const PlanDetail = () => {
     return (
       <>
         <CRow>
-          <CCol xs={12} sm={6}>
-            <h4>{plan.plan_name}</h4>
-            <h6>{plan.description ? plan.description : null}</h6>
+          <CCol xs={12} sm={5}>
+            <h3>
+              <b>{plan ? plan.plan_name : null}</b>
+            </h3>
+            <h6>{plan && plan.description ? plan.description : null}</h6>
           </CCol>
           {user.role === 'Nhân viên' && compareYear(plan.year) && (
-            <CCol xs={12} sm={6}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
+            <CCol xs={12} sm={7}>
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -253,6 +250,7 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/kpiregistration/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Đăng ký KPI
                 </Button>
@@ -260,15 +258,22 @@ const PlanDetail = () => {
             </CCol>
           )}
           {user.role === 'Quản lý' && compareYear(plan.year) && (
+<<<<<<< HEAD
             <CCol xs={6} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 {/* <Button
+=======
+            <CCol xs={12} sm={7}>
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
+                <Button
+>>>>>>> master
                   variant="contained"
                   color="primary"
                   startIcon={<CheckBoxIcon />}
                   onClick={() => {
                     history.push(`/kpiapproving/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Duyệt KPI
                 </Button> */}
@@ -279,39 +284,80 @@ const PlanDetail = () => {
                   onClick={() => {
                     history.push(`/kpiregistration/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Đăng ký KPI
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<BookIcon />}
+                  onClick={() => {
+                    history.push(`/plan/${id}/employeeplan`)
+                  }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
+                >
+                  Kế hoạch nhân viên
                 </Button>
               </div>
             </CCol>
           )}
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
+<<<<<<< HEAD
             <CCol xs={6} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 {/* <Button
+=======
+            <CCol xs={12} sm={7}>
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
+                <Button
+>>>>>>> master
                   variant="contained"
                   color="primary"
                   startIcon={<CheckBoxIcon />}
                   onClick={() => {
                     history.push(`/kpiapproving/${id}`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Duyệt KPI
                 </Button> */}
                 <Button
                   variant="contained"
                   color="primary"
+                  startIcon={<BookIcon />}
                   onClick={() => {
-                    history.replace(`/plan/${id}/edit`)
+                    history.push(`/plan/${id}/deptplan`)
                   }}
+                  sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
-                  Thay đổi trọng số/ KPI
+                  Kế hoạch phòng ban
                 </Button>
               </div>
             </CCol>
           )}
         </CRow>
         <CRow className="mt-4 d-flex justify-content-start">
+          {user.role === 'Giám đốc' && (
+            <CCol xs={12} sm={4} xl={3}>
+              <CInputGroup size="sm">
+                <CInputGroupText>Quý</CInputGroupText>
+                <CFormSelect
+                  className="text-center"
+                  value={selectedQuarter}
+                  onChange={(event) => {
+                    setSelectedQuarter(Number(event.target.value))
+                  }}
+                >
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>Cả năm</option>
+                </CFormSelect>
+              </CInputGroup>
+            </CCol>
+          )}
           {user.role === 'Quản lý' && (
             <CCol xs={12} sm={4} xl={2}>
               <CInputGroup size="sm">

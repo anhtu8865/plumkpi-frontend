@@ -72,6 +72,7 @@ const AddDepartment = () => {
         color="primary"
         startIcon={<AddBoxIcon />}
         onClick={() => setModalVisible(true)}
+        sx={{ textTransform: 'none', borderRadius: 10 }}
       >
         Thêm phòng ban
       </Button>
@@ -134,6 +135,7 @@ const AddDepartment = () => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Thêm
             </Button>

@@ -1,49 +1,48 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, IconButton } from '@mui/material'
 import { CModal, CModalBody, CModalFooter, CModalTitle, CModalHeader } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
+import { setReload } from 'src/slices/viewSlice'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import { useParams } from 'react-router-dom'
 
-export const DeletePlanButton = (props) => {
+export const DeleteCategoryInPlanButton = () => {
   const dispatch = useDispatch()
-  const [modalVisible, setModalVisible] = React.useState(false)
-  const [isSubmit, setIsSubmit] = React.useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [isSubmit, setIsSubmit] = useState(false)
+  const { id } = useParams()
 
-  const onClickDelete = () => {
+  const deleteKpiPlan = async () => {
+    try {
+      await api.post(`/plans/register-kpi-categories`, {
+        plan_id: Number(id),
+        kpi_categories: [],
+      })
+      dispatch(
+        createAlert({
+          message: 'Xóa danh mục trong kế hoạch thành công',
+          type: 'success',
+        }),
+      )
+      setModalVisible(false)
+      dispatch(setReload())
+    } catch (error) {
+      dispatch(
+        createAlert({
+          message: error.response.data.message,
+          type: 'error',
+        }),
+      )
+    }
+  }
+
+  const onClickDelete = async () => {
     setIsSubmit(true)
-    api
-      .delete(`/plans/${props.inPlan.plan_id}`)
-      .then(() => {
-        dispatch(
-          createAlert({
-            message: 'Xóa kế hoạch thành công.',
-            type: 'success',
-          }),
-        )
-        dispatch(
-          setLoading({
-            value: true,
-          }),
-        )
-        dispatch(setReload())
-        setModalVisible(false)
-      })
-      .catch((error) => {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      })
-      .finally(() => {
-        setIsSubmit(false)
-      })
+    await deleteKpiPlan()
+    setIsSubmit(false)
   }
 
   return (
@@ -60,10 +59,10 @@ export const DeletePlanButton = (props) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Xóa kế hoạch</CModalTitle>
+          <CModalTitle>Xóa tất cả danh mục</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
-          Bạn có chắc chắn muốn xóa kế hoạch: {props.inPlan.plan_name} ?
+          Bạn có chắc chắn muốn xóa tất cả danh mục trong kế hoạch?
         </CModalBody>
         <CModalFooter>
           <Button
@@ -82,8 +81,4 @@ export const DeletePlanButton = (props) => {
       </CModal>
     </>
   )
-}
-
-DeletePlanButton.propTypes = {
-  inPlan: PropTypes.object,
 }

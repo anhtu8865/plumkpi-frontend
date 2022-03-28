@@ -94,20 +94,22 @@ const KpiAdmin = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
-                  <CCol xs={6}>
-                    <h4>Danh mục KPI mẫu</h4>
+                  <CCol xs={12} sm={6}>
+                    <h3>
+                      <b>Danh mục KPI mẫu</b>
+                    </h3>
                   </CCol>
-                  <CCol xs={6}>
+                  <CCol xs={12} sm={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
                       <AddCategoryButton />
                     </div>
                   </CCol>
                 </CRow>
-                <div className="mt-5 px-4">
+                <CRow className="mt-5">
                   <ViewTabs />
-                </div>
+                </CRow>
                 {loading && <LoadingCircle />}
               </CCardBody>
             </CCard>

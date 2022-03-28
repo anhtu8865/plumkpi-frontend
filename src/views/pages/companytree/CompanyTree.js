@@ -62,10 +62,12 @@ const CompanyTree = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
                   <CCol>
-                    <h4>Sơ đồ cơ cấu tổ chức và nhân sự</h4>
+                    <h3>
+                      <b>Sơ đồ cơ cấu tổ chức và nhân sự</b>
+                    </h3>
                   </CCol>
                 </CRow>
                 <div id="wrapper">

@@ -118,7 +118,7 @@ const UserInfo = () => {
     }
 
     return (
-      <CRow>
+      <CRow className="mt-2">
         <CCol xs={1}>
           <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 68, height: 68 }} />
         </CCol>
@@ -130,10 +130,18 @@ const UserInfo = () => {
                 type="file"
                 onChange={changeHandle}
               />
-              <Button onClick={submitHandle} variant="contained">
+              <Button
+                onClick={submitHandle}
+                variant="contained"
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
                 Tải lên
               </Button>
-              <Button variant="outlined" onClick={() => deleteHandle()}>
+              <Button
+                variant="outlined"
+                onClick={() => deleteHandle()}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
                 Xóa Avatar
               </Button>
             </div>
@@ -198,7 +206,7 @@ const UserInfo = () => {
     return (
       <>
         <form onSubmit={formik.handleSubmit}>
-          <CRow className="mt-2">
+          <CRow className="mt-3">
             <CCol xs>
               <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
               <CFormInput
@@ -329,6 +337,7 @@ const UserInfo = () => {
               type="submit"
               onClick={formik.submitForm}
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -465,6 +474,7 @@ const UserInfo = () => {
               startIcon={<CheckIcon />}
               type="submit"
               disabled={formik.isSubmitting}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -487,9 +497,16 @@ const UserInfo = () => {
             label="Thông tin cá nhân"
             icon={<ArticleIcon />}
             iconPosition="start"
+            sx={{ textTransform: 'none' }}
             {...a11yProps(0)}
           />
-          <Tab label="Mật khẩu" icon={<LockIcon />} iconPosition="start" {...a11yProps(1)} />
+          <Tab
+            label="Mật khẩu"
+            icon={<LockIcon />}
+            iconPosition="start"
+            sx={{ textTransform: 'none' }}
+            {...a11yProps(1)}
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
           <InfoTab />
@@ -505,10 +522,12 @@ const UserInfo = () => {
     <div className="bg-light min-vh-100 d-flex flex-col">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol xs={10}>
+          <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
-                <h4>Tài khoản</h4>
+              <CCardBody className="p-5">
+                <h3>
+                  <b>Tài khoản</b>
+                </h3>
                 <ViewTabs />
                 {loading && <LoadingCircle />}
               </CCardBody>
