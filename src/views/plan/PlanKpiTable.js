@@ -307,14 +307,10 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                   {user.role === 'Nhân viên' && (
                     <CTableHeaderCell>Chỉ tiêu tháng {selectedMonth}</CTableHeaderCell>
                   )}
-<<<<<<< HEAD
                   {['Quản lý', 'Nhân viên'].includes(user.role) && (
-                    <CTableHeaderCell>THỰC HIỆN</CTableHeaderCell>
+                    <CTableHeaderCell>Thực hiện</CTableHeaderCell>
                   )}
-                  <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
-=======
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
->>>>>>> master
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
@@ -376,12 +372,9 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
                         {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
-<<<<<<< HEAD
                         {user.role === 'Quản lý' && ApproveDataMonthlyTarget(item)}
-=======
                         {user.role === 'Quản lý' &&
                           RegisterQuarterTargetButton(item, selectedQuarter)}
->>>>>>> master
                         <KpiInfoButton kpiItem={item} />
                       </div>
                     </CTableDataCell>

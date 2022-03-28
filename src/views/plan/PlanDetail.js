@@ -258,15 +258,9 @@ const PlanDetail = () => {
             </CCol>
           )}
           {user.role === 'Quản lý' && compareYear(plan.year) && (
-<<<<<<< HEAD
-            <CCol xs={6} sm={6}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
-                {/* <Button
-=======
             <CCol xs={12} sm={7}>
               <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
->>>>>>> master
                   variant="contained"
                   color="primary"
                   startIcon={<CheckBoxIcon />}
@@ -276,7 +270,7 @@ const PlanDetail = () => {
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Duyệt KPI
-                </Button> */}
+                </Button>{' '}
                 <Button
                   variant="contained"
                   color="primary"
@@ -303,15 +297,9 @@ const PlanDetail = () => {
             </CCol>
           )}
           {user.role === 'Giám đốc' && compareYear(plan.year) && (
-<<<<<<< HEAD
-            <CCol xs={6} sm={6}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
-                {/* <Button
-=======
             <CCol xs={12} sm={7}>
               <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
->>>>>>> master
                   variant="contained"
                   color="primary"
                   startIcon={<CheckBoxIcon />}
@@ -321,7 +309,7 @@ const PlanDetail = () => {
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Duyệt KPI
-                </Button> */}
+                </Button>{' '}
                 <Button
                   variant="contained"
                   color="primary"

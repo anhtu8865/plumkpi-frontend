@@ -316,7 +316,7 @@ export const ApproveDataMonthlyTarget = (kpiItem) => {
   }
 
   const handleCheckboxValue = (id) => {
-    console.log(selectedEmployeeList)
+    //console.log(selectedEmployeeList)
     const find = selectedEmployeeList.find((item) => item.user.user_id === id)
     if (find) {
       return true
