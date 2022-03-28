@@ -24,7 +24,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 const EnterDateMonthlyTarget = (props) => {
-  console.log(props)
+  //console.log(props)
   const { plan, item, selectedMonth, note } = props
   const dispatch = useDispatch()
 

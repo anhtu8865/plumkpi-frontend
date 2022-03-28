@@ -26,6 +26,7 @@ import { formatNumber } from 'src/utils/function'
 
 import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
+import { ApproveDataMonthlyTarget } from './ApproveDataMonthlyTarget'
 
 export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
   const { plan, temInPlan, catInPlan, temPage, temTotalPage } = useSelector(
@@ -319,6 +320,7 @@ export const PlanKpiTable = (catItem, selectedQuarter, selectedMonth) => {
                       <div className="d-flex flex-row justify-content-center">
                         {user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
                         {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
+                        {user.role === 'Quản lý' && ApproveDataMonthlyTarget(item)}
                         <KpiInfoButton kpiItem={item} />
                       </div>
                     </CTableDataCell>
