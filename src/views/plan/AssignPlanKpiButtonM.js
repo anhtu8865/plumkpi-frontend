@@ -255,11 +255,29 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
   }, [selectedMonth, tempSelectedList])
 
   React.useEffect(() => {
-    let sumTarget = 0
+    let target = 0
+    const targetArray = []
     selectedEmployeeList.map((item) => {
-      sumTarget = sumTarget + Number(item.target)
+      targetArray.push(Number(item.target))
     })
-    setSum(sumTarget)
+    switch (kpiItem.kpi_template.aggregation) {
+      case 'Tổng':
+        targetArray.map((item) => (target = target + item))
+        break
+      case 'Trung bình':
+        targetArray.map((item) => (target = target + item))
+        target = (target / targetArray.length).toFixed(0)
+        break
+      case 'Lớn nhất':
+        target = Math.max(...targetArray)
+        break
+      case 'Bé nhất':
+        target = Math.min(...targetArray)
+        break
+      default:
+        target = 0
+    }
+    setSum(target)
   }, [selectedEmployeeList])
 
   const handleCheckbox = (userItem) => {
@@ -444,12 +462,18 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               <CTableFoot>
                 <CTableRow>
                   <CTableDataCell />
-                  <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {kpiItem.kpi_template.aggregation !== 'Mới nhất'
+                      ? kpiItem.kpi_template.aggregation
+                      : null}
+                  </CTableHeaderCell>
                   <CTableDataCell>
-                    <CInputGroup size="sm">
-                      <CFormInput size="sm" disabled value={formatNumber(sum)} />
-                      <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                    </CInputGroup>
+                    {kpiItem.kpi_template.aggregation !== 'Mới nhất' ? (
+                      <CInputGroup size="sm">
+                        <CFormInput size="sm" disabled value={formatNumber(sum)} />
+                        <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                      </CInputGroup>
+                    ) : null}
                   </CTableDataCell>
                 </CTableRow>
               </CTableFoot>
@@ -466,20 +490,16 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
     return (
       <>
         <CRow className="mt-2">
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="kpiname">KPI</CFormLabel>
-            <CFormInput
-              id="kpiname"
-              defaultValue={kpiItem.kpi_template.kpi_template_name}
-              disabled
-            />
-          </CCol>
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="dept">Phòng ban</CFormLabel>
-            <CFormInput id="dept" defaultValue={user.manage.dept_name} disabled />
+          <CCol xs={12}>
+            <b>KPI:</b> {kpiItem.kpi_template.kpi_template_name}
           </CCol>
         </CRow>
         <CRow className="mt-2">
+          <CCol xs={12}>
+            <b>Phòng ban:</b> {user.manage.dept_name}
+          </CCol>
+        </CRow>
+        {/*<CRow className="mt-2">
           <CCol xs={12} sm={6}>
             <CFormLabel htmlFor="freq">Theo</CFormLabel>
             <CFormSelect
@@ -492,7 +512,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               <option value="Month">Tháng</option>
             </CFormSelect>
           </CCol>
-        </CRow>
+            </CRow>*/}
         {selectValue === 'Month' && MonthTargetView()}
       </>
     )

@@ -319,15 +319,10 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     return (
       <>
         <CRow className="mt-2">
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="kpiname">KPI</CFormLabel>
-            <CFormInput
-              id="kpiname"
-              defaultValue={kpiItem.kpi_template.kpi_template_name}
-              disabled
-            />
+          <CCol xs={12}>
+            <b>KPI:</b> {kpiItem.kpi_template.kpi_template_name}
           </CCol>
-          <CCol xs={12} sm={6}>
+          {/*<CCol xs={12} sm={6}>
             <CFormLabel htmlFor="freq">Theo</CFormLabel>
             <CFormSelect
               id="freq"
@@ -338,7 +333,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
             >
               <option value="Quarter">Quý</option>
             </CFormSelect>
-          </CCol>
+            </CCol>*/}
         </CRow>
         {selectValue === 'Quarter' && QuarterTargetView()}
       </>
