@@ -175,7 +175,7 @@ const UserDepartment = (props) => {
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddManager dept_id={id} />
+                      {/* <AddManager dept_id={id} /> */}
                     </div>
                   </CCol>
                 </CRow>

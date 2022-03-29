@@ -557,6 +557,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
           color="success"
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Chấp nhận
         </Button>
@@ -582,6 +583,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
               type="submit"
               onClick={() => onClickAccept()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -649,6 +651,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
           startIcon={<DoDisturbIcon />}
           type="submit"
           onClick={() => setSmModalVisible2(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Từ chối
         </Button>
@@ -674,6 +677,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
               type="submit"
               onClick={() => onClickDeny()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

@@ -392,21 +392,6 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                             'Chưa đăng ký'
                           )}
                         </CTableDataCell>
-                        <CTableDataCell className="w-25">
-                          {handleQuarterDataValue(item) !== 'Chưa đăng ký' ? (
-                            <CInputGroup size="sm">
-                              <CFormInput
-                                value={formatNumber(handleQuarterDataValue(item))}
-                                valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
-                                invalid={handleQuarterDataStatus(item) === 'Từ chối'}
-                                disabled
-                              />
-                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                            </CInputGroup>
-                          ) : (
-                            'Chưa đăng ký'
-                          )}
-                        </CTableDataCell>
                       </CTableRow>
                     </>
                   )
@@ -495,6 +480,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
           color="success"
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Chấp nhận
         </Button>
@@ -520,6 +506,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
               type="submit"
               onClick={() => onClickAccept()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -587,6 +574,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
           startIcon={<DoDisturbIcon />}
           type="submit"
           onClick={() => setSmModalVisible2(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Từ chối
         </Button>
@@ -612,6 +600,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
               type="submit"
               onClick={() => onClickDeny()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

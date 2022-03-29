@@ -495,6 +495,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
           color="success"
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Chấp nhận
         </Button>
@@ -520,6 +521,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
               type="submit"
               onClick={() => onClickAccept()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -587,6 +589,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
           startIcon={<DoDisturbIcon />}
           type="submit"
           onClick={() => setSmModalVisible2(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Từ chối
         </Button>
@@ -612,6 +615,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
               type="submit"
               onClick={() => onClickDeny()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>

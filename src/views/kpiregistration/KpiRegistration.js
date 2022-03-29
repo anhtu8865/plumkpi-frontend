@@ -202,6 +202,7 @@ const KpiRegistration = () => {
           color="primary"
           startIcon={<AddBoxIcon />}
           onClick={() => setModalVisible(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Đăng ký
         </Button>
@@ -225,6 +226,7 @@ const KpiRegistration = () => {
               type="submit"
               onClick={() => onClickRegis()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
