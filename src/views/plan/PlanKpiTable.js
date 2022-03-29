@@ -39,9 +39,11 @@ import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from './ApproveDataMonthlyTarget'
 import RegisterMonthlyTarget from './RegisterMonthlyTarget'
+import RegisterQuarterTarget from './RegisterQuarterTarget'
 import { ApproveDataQuarterTarget } from './ApproveDataQuarterTarget'
 
 export const PlanKpiTable = (catItem) => {
+  console.log(catItem)
   const {
     plan,
     temInPlan,
@@ -91,7 +93,7 @@ export const PlanKpiTable = (catItem) => {
       default:
         return 'Chưa có'
     }
-  }
+  }*/
 
   const handleMonthTargetValue = (item) => {
     switch (selectedMonth) {
@@ -170,7 +172,7 @@ export const PlanKpiTable = (catItem) => {
       default:
         return 'Chưa có'
     }
-  }*/
+  }
 
   const handleQuarterTargetStatus = (item) => {
     switch (selectedQuarter) {
@@ -400,7 +402,7 @@ export const PlanKpiTable = (catItem) => {
                         {handleTargetValue(item.kpi_template.kpi_template_id)}
                       </CTableDataCell>
                     ) : null}
-                    {checkedQuarter && (
+                    {checkedQuarter && catItem.kpi_category.kpi_category_id !== 1 ? (
                       <CTableDataCell>
                         <div className="d-flex flex-row">
                           {handleTargetValue(item.kpi_template.kpi_template_id)}
@@ -418,7 +420,15 @@ export const PlanKpiTable = (catItem) => {
                           ) : null}
                         </div>
                       </CTableDataCell>
-                    )}
+                    ) : checkedQuarter && catItem.kpi_category.kpi_category_id === 1 ? (
+                      <CTableDataCell>
+                        <RegisterQuarterTarget
+                          plan={plan}
+                          item={item}
+                          selectedQuarter={selectedQuarter}
+                        />
+                      </CTableDataCell>
+                    ) : null}
                     {user.role === 'Giám đốc' && (
                       <CTableDataCell>
                         {handleActualValue(item.kpi_template.kpi_template_id)}
@@ -461,7 +471,9 @@ export const PlanKpiTable = (catItem) => {
                     )}
 
                     {/*Nhân viên đăng ký target, data cá nhân*/}
-                    {checkedMonth && user.role === 'Nhân viên' && (
+                    {checkedMonth &&
+                    user.role === 'Nhân viên' &&
+                    catItem.kpi_category.kpi_category_id === 1 ? (
                       <CTableDataCell>
                         {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
                         <RegisterMonthlyTarget
@@ -470,7 +482,11 @@ export const PlanKpiTable = (catItem) => {
                           selectedMonth={selectedMonth}
                         />
                       </CTableDataCell>
-                    )}
+                    ) : checkedMonth &&
+                      user.role === 'Nhân viên' &&
+                      catItem.kpi_category.kpi_category_id !== 1 ? (
+                      <CTableDataCell>{formatNumber(handleMonthTargetValue(item))}</CTableDataCell>
+                    ) : null}
                     {checkedMonth && user.role === 'Nhân viên' && (
                       <CTableDataCell>
                         <EnterDataMonthlyTarget
