@@ -421,6 +421,86 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
+          return item.first_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 2: {
+        if (item.second_monthly_target) {
+          return item.second_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 3: {
+        if (item.third_monthly_target) {
+          return item.third_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 4: {
+        if (item.fourth_monthly_target) {
+          return item.fourth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 5: {
+        if (item.fifth_monthly_target) {
+          return item.fifth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 6: {
+        if (item.sixth_monthly_target) {
+          return item.sixth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 7: {
+        if (item.seventh_monthly_target) {
+          return item.seventh_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 8: {
+        if (item.eighth_monthly_target) {
+          return item.eighth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 9: {
+        if (item.ninth_monthly_target) {
+          return item.ninth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 10: {
+        if (item.tenth_monthly_target) {
+          return item.tenth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 11: {
+        if (item.eleventh_monthly_target) {
+          return item.eleventh_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      case 12: {
+        if (item.twelfth_monthly_target) {
+          return item.twelfth_monthly_target.approve
+        }
+        return 'Chưa có'
+      }
+      default:
+        return 'Chưa có'
+    }
+  }
+
+  const handleMonthlyDataStatus = (item) => {
+    //console.log(item)
+    switch (selectedMonth) {
+      case 1: {
+        if (item.first_monthly_target) {
           if (item.first_monthly_target.hasOwnProperty('actual')) {
             return item.first_monthly_target.actual.approve
           }
@@ -626,6 +706,8 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
                             <CFormInput
                               type="number"
                               value={handleMonthTargetValue(item)}
+                              invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
+                              valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                               disabled
                             />
                             <CInputGroupText>{kpiItem.unit}</CInputGroupText>
@@ -636,8 +718,8 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
                             <CFormInput
                               type="number"
                               value={handleMonthActualValue(item)}
-                              invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
-                              valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
+                              invalid={handleMonthlyDataStatus(item) === 'Từ chối'}
+                              valid={handleMonthlyDataStatus(item) === 'Chấp nhận'}
                               disabled
                             />
                             <CInputGroupText>{kpiItem.unit}</CInputGroupText>
