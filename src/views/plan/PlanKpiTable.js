@@ -40,9 +40,11 @@ import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from './ApproveDataMonthlyTarget'
 import RegisterMonthlyTarget from './RegisterMonthlyTarget'
+import RegisterQuarterTarget from './RegisterQuarterTarget'
 import { ApproveDataQuarterTarget } from './ApproveDataQuarterTarget'
 
 export const PlanKpiTable = (catItem) => {
+  console.log(catItem)
   const {
     plan,
     temInPlan,
@@ -92,7 +94,7 @@ export const PlanKpiTable = (catItem) => {
       default:
         return 'Chưa có'
     }
-  }
+  }*/
 
   const handleMonthTargetValue = (item) => {
     switch (selectedMonth) {
@@ -171,7 +173,7 @@ export const PlanKpiTable = (catItem) => {
       default:
         return 'Chưa có'
     }
-  }*/
+  }
 
   const handleQuarterTargetStatus = (item) => {
     switch (selectedQuarter) {
@@ -432,25 +434,35 @@ export const PlanKpiTable = (catItem) => {
                         {handleTargetValue(item.kpi_template.kpi_template_id)}
                       </CTableDataCell>
                     ) : null}
-                    {checkedQuarter && (
-                      <CTableDataCell>
-                        <div className="d-flex flex-row">
-                          {handleTargetValue(item.kpi_template.kpi_template_id)}
-                          {user.role === 'Quản lý' &&
-                          handleQuarterTargetStatus(item) === 'Đang xử lý' ? (
-                            <AutorenewIcon className="ms-2" fontSize="small" />
-                          ) : null}
-                          {user.role === 'Quản lý' &&
-                          handleQuarterTargetStatus(item) === 'Chấp nhận' ? (
-                            <DoneIcon className="ms-2" color="success" fontSize="small" />
-                          ) : null}
-                          {user.role === 'Quản lý' &&
-                          handleQuarterTargetStatus(item) === 'Từ chối' ? (
-                            <ErrorOutlineIcon className="ms-2" color="error" fontSize="small" />
-                          ) : null}
-                        </div>
-                      </CTableDataCell>
-                    )}
+                    {checkedQuarter ? (
+                      user.role === 'Quản lý' ? (
+                        <CTableDataCell>
+                          <RegisterQuarterTarget
+                            plan={plan}
+                            item={item}
+                            selectedQuarter={selectedQuarter}
+                          />
+                        </CTableDataCell>
+                      ) : (
+                        <CTableDataCell>
+                          <div className="d-flex flex-row">
+                            {handleTargetValue(item.kpi_template.kpi_template_id)}
+                            {/*{user.role === 'Quản lý' &&
+                            handleQuarterTargetStatus(item) === 'Đang xử lý' ? (
+                              <AutorenewIcon className="ms-2" fontSize="small" />
+                            ) : null}
+                            {user.role === 'Quản lý' &&
+                            handleQuarterTargetStatus(item) === 'Chấp nhận' ? (
+                              <DoneIcon className="ms-2" color="success" fontSize="small" />
+                            ) : null}
+                            {user.role === 'Quản lý' &&
+                            handleQuarterTargetStatus(item) === 'Từ chối' ? (
+                              <ErrorOutlineIcon className="ms-2" color="error" fontSize="small" />
+                            ) : null}*/}
+                          </div>
+                        </CTableDataCell>
+                      )
+                    ) : null}
                     {checkedMonth && ['Giám đốc', 'Quản lý'].includes(user.role) && (
                       <CTableDataCell>
                         {handleTargetValue(item.kpi_template.kpi_template_id)}
