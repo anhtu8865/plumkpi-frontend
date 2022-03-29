@@ -39,21 +39,18 @@ import { useParams, useHistory } from 'react-router-dom'
 
 import { ApproveDataMonthlyPersonal } from './ApproveDataMonthlyPersonal'
 import { ApproveTargetMonthlyPersonal } from './ApproveTargetMonthlyPersonal'
+import { ApproveTargetQuarterPersonal } from './ApproveTargetQuarterPersonal'
 //import AcceptedKpi from './AcceptedKpiApproving'
-
-function colorStatus(status) {
-  if (status == 'Đang xử lý') return 'text-warning'
-  else if (status == 'Chấp nhận') return 'text-success'
-  else if (status == 'Từ chối') return 'text-danger'
-}
 
 const KpiApproving = () => {
   const { id } = useParams()
   const history = useHistory()
-  //console.log(id)
+
   const dispatch = useDispatch()
 
   const { kpiApprovingReload, kpiApprovingLoading } = useSelector((state) => state.kpiApproving)
+
+  const { user } = useSelector((state) => state.user)
 
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)
@@ -62,19 +59,19 @@ const KpiApproving = () => {
 
   const [selectedKpi, setSelectedKpi] = React.useState([])
 
-  const handleKpiChange = (item) => {
-    if (!selectedKpi.includes(item)) {
-      setSelectedKpi([...selectedKpi, item])
-    } else if (selectedKpi.includes(item)) {
-      setSelectedKpi(
-        selectedKpi.filter((tmp) => {
-          if (tmp !== item) {
-            return tmp
-          }
-        }),
-      )
-    }
-  }
+  // const handleKpiChange = (item) => {
+  //   if (!selectedKpi.includes(item)) {
+  //     setSelectedKpi([...selectedKpi, item])
+  //   } else if (selectedKpi.includes(item)) {
+  //     setSelectedKpi(
+  //       selectedKpi.filter((tmp) => {
+  //         if (tmp !== item) {
+  //           return tmp
+  //         }
+  //       }),
+  //     )
+  //   }
+  // }
 
   React.useEffect(() => {
     async function fetchKPIList() {
@@ -96,7 +93,29 @@ const KpiApproving = () => {
         })
     }
 
-    fetchKPIList()
+    async function fetchDeptKPIList() {
+      api
+        .get(`plans/${id}/kpis/director`, {
+          params: { kpi_category_id: 1, offset: (page - 1) * entryPerPage, limit: entryPerPage },
+        })
+        .then((response) => {
+          setTotalPage(Math.ceil(response.data.count / entryPerPage))
+          setEntry(response.data.items)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
+    if (user.role === 'Quản lý') {
+      fetchKPIList()
+    } else if (user.role === 'Giám đốc') {
+      fetchDeptKPIList()
+    }
   }, [kpiApprovingReload, dispatch])
 
   const KpiApprovingTable = (props) => {
@@ -123,8 +142,8 @@ const KpiApproving = () => {
                 <CTableDataCell className="text-center">
                   {/* <InfoKpiApproving kpiItem={row} /> */}
                   <div className="d-flex flex-row justify-content-center">
-                    {true && ApproveTargetMonthlyPersonal(4, row)}
-                    {true && ApproveDataMonthlyPersonal(4, row)}
+                    {true && ApproveTargetMonthlyPersonal(id, row)}
+                    {true && ApproveDataMonthlyPersonal(id, row)}
                   </div>
                 </CTableDataCell>
               </CTableRow>
@@ -150,6 +169,59 @@ const KpiApproving = () => {
   }
 
   KpiApprovingTable.propTypes = {
+    temList: PropTypes.array,
+  }
+
+  const DeptKpiApprovingTable = (props) => {
+    return (
+      <>
+        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+          <CTableHead color="light">
+            <CTableRow>
+              <CTableHeaderCell>ID</CTableHeaderCell>
+              <CTableHeaderCell>KPI</CTableHeaderCell>
+              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
+              <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+              {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
+              <CTableHeaderCell />
+            </CTableRow>
+          </CTableHead>
+          <CTableBody>
+            {props.temList.map((row, index) => (
+              <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>{row.kpi_template_id}</CTableDataCell>
+                <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
+                <CTableDataCell>{row.description}</CTableDataCell>
+                <CTableDataCell>{row.unit}</CTableDataCell>
+                <CTableDataCell className="text-center">
+                  {/* <InfoKpiApproving kpiItem={row} /> */}
+                  <div className="d-flex flex-row justify-content-center">
+                    {true && ApproveTargetQuarterPersonal(id, row)}
+                  </div>
+                </CTableDataCell>
+              </CTableRow>
+            ))}
+          </CTableBody>
+          <CTableFoot>
+            <CTableRow>
+              <CTableDataCell colSpan="4">
+                <Pagination
+                  page={page}
+                  count={totalPage}
+                  showFirstButton
+                  showLastButton
+                  size="small"
+                  onChange={(event, page) => setPage(page)}
+                />
+              </CTableDataCell>
+            </CTableRow>
+          </CTableFoot>
+        </CTable>
+      </>
+    )
+  }
+
+  DeptKpiApprovingTable.propTypes = {
     temList: PropTypes.array,
   }
 
@@ -184,7 +256,11 @@ const KpiApproving = () => {
                 </CRow>
                 {/*Table*/}
                 <div className="mt-2 p-4">
-                  <KpiApprovingTable temList={entry} />
+                  {user.role === 'Quản lý' ? (
+                    <KpiApprovingTable temList={entry} />
+                  ) : user.role === 'Giám đốc' ? (
+                    <DeptKpiApprovingTable temList={entry} />
+                  ) : null}
                 </div>
               </CCardBody>
             </CCard>

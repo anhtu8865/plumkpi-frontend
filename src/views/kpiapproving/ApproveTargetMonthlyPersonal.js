@@ -516,7 +516,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
 
       api
         .put(`plans/approve-monthly-target/manager`, {
-          plan_id: plan_id,
+          plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
           user_id: user_id,
           month: month,
@@ -607,7 +607,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
 
       api
         .put(`plans/approve-monthly-target/manager`, {
-          plan_id: plan_id,
+          plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
           user_id: user_id,
           month: month,
