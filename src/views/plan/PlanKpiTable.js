@@ -505,8 +505,8 @@ export const PlanKpiTable = (catItem) => {
                       </CTableDataCell>
                     )} */}
                     {/*Nhân viên đăng ký target, data cá nhân*/}
-                    {user.role === 'Nhân viên' ? (
-                      checkedMonth && catItem.kpi_category.kpi_category_name === 'Cá nhân' ? (
+                    {checkedMonth && user.role === 'Nhân viên' ? (
+                      catItem.kpi_category.kpi_category_name === 'Cá nhân' ? (
                         <CTableDataCell>
                           {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
                           <RegisterMonthlyTarget
@@ -533,7 +533,7 @@ export const PlanKpiTable = (catItem) => {
                         </CTableDataCell>
                       ) : (
                         <CTableDataCell>
-                          {handleTargetValue(item.kpi_template.kpi_template_id)}
+                          {handleActualValue(item.kpi_template.kpi_template_id)}
                         </CTableDataCell>
                       )
                     ) : null}
@@ -559,8 +559,8 @@ export const PlanKpiTable = (catItem) => {
                           ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
                         {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
                         {user.role === 'Quản lý' && ApproveDataMonthlyTarget(plan.plan_id, item)}
-                        {user.role === 'Quản lý' &&
-                          RegisterQuarterTargetButton(item, selectedQuarter)}
+                        {/*{user.role === 'Quản lý' &&
+                          RegisterQuarterTargetButton(item, selectedQuarter)}*/}
                         <KpiInfoButton kpiItem={item} />
                       </div>
                     </CTableDataCell>
