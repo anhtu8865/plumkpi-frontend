@@ -40,7 +40,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { ApproveDataMonthlyPersonal } from './ApproveDataMonthlyPersonal'
 import { ApproveTargetMonthlyPersonal } from './ApproveTargetMonthlyPersonal'
 import { ApproveTargetQuarterPersonal } from './ApproveTargetQuarterPersonal'
-//import AcceptedKpi from './AcceptedKpiApproving'
+import { ApproveDataQuarterPersonal } from './ApproveDataQuarterPersonal'
 
 const KpiApproving = () => {
   const { id } = useParams()
@@ -197,6 +197,7 @@ const KpiApproving = () => {
                   {/* <InfoKpiApproving kpiItem={row} /> */}
                   <div className="d-flex flex-row justify-content-center">
                     {true && ApproveTargetQuarterPersonal(id, row)}
+                    {true && ApproveDataQuarterPersonal(id, row)}
                   </div>
                 </CTableDataCell>
               </CTableRow>

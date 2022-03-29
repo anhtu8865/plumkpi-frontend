@@ -31,10 +31,11 @@ import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import { compareYear, formatNumber } from 'src/utils/function'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
-import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle'
 import PropTypes from 'prop-types'
 
-export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
+export const ApproveDataQuarterPersonal = (plan_id, kpiItem) => {
+  //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -146,7 +147,6 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
       setIsSubmit(true)
       const deptList = []
       const assignDepts = await getInfoTargetKpi()
-
       if (assignDepts) {
         assignDepts.map((item) => {
           deptList.push(item)
@@ -163,6 +163,37 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
   React.useEffect(() => {
     setSelectedDeptApprove([])
   }, [selectedQuarter])
+
+  const handleQuarterTargetValue = (item) => {
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          return item.first_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      case 2: {
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      case 3: {
+        if (item.third_quarterly_target) {
+          return item.third_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          return item.fourth_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      default:
+        return 'Chưa đăng ký'
+    }
+  }
 
   const handleQuarterDataValue = (item) => {
     switch (selectedQuarter) {
@@ -196,6 +227,37 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
       }
       default:
         return 0
+    }
+  }
+
+  const handleQuarterTargetStatus = (item) => {
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          return item.first_quarterly_target.approve
+        }
+        return ''
+      }
+      case 2: {
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.approve
+        }
+        return ''
+      }
+      case 3: {
+        if (item.third_quarterly_target) {
+          return item.third_quarterly_target.approve
+        }
+        return ''
+      }
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          return item.fourth_quarterly_target.approve
+        }
+        return ''
+      }
+      default:
+        return ''
     }
   }
 
@@ -236,68 +298,6 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
     }
   }
 
-  const handleQuarterTargetValue = (item) => {
-    switch (selectedQuarter) {
-      case 1: {
-        if (item.first_quarterly_target) {
-          return item.first_quarterly_target.target
-        }
-        return 'Chưa đăng ký'
-      }
-      case 2: {
-        if (item.second_quarterly_target) {
-          return item.second_quarterly_target.target
-        }
-        return 'Chưa đăng ký'
-      }
-      case 3: {
-        if (item.third_quarterly_target) {
-          return item.third_quarterly_target.target
-        }
-        return 'Chưa đăng ký'
-      }
-      case 4: {
-        if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.target
-        }
-        return 'Chưa đăng ký'
-      }
-      default:
-        return 'Chưa đăng ký'
-    }
-  }
-
-  const handleQuarterTargetStatus = (item) => {
-    switch (selectedQuarter) {
-      case 1: {
-        if (item.first_quarterly_target) {
-          return item.first_quarterly_target.approve
-        }
-        return ''
-      }
-      case 2: {
-        if (item.second_quarterly_target) {
-          return item.second_quarterly_target.approve
-        }
-        return ''
-      }
-      case 3: {
-        if (item.third_quarterly_target) {
-          return item.third_quarterly_target.approve
-        }
-        return ''
-      }
-      case 4: {
-        if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.approve
-        }
-        return ''
-      }
-      default:
-        return ''
-    }
-  }
-
   const handleApproveCheckbox = (item) => {
     if (selectedDeptApprove.includes(item.dept.dept_id)) {
       setSelectedDeptApprove(selectedDeptApprove.filter((i) => i !== item.dept.dept_id))
@@ -318,7 +318,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
     setIsSubmit(false)
   }
 
-  const handleTargetKpiCheckboxChange = (item) => {
+  const handleDataTargetKpiChange = (item) => {
     setDeptID(item.dept.dept_id)
     setSelectedDept(item)
   }
@@ -355,11 +355,13 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                 <CTableRow>
                   <CTableHeaderCell />
                   <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU ĐĂNG KÝ</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">TIẾN ĐỘ</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {selectedDeptList.map((item, index) => {
+                  //console.log(item)
                   return (
                     <>
                       <CTableRow key={index}>
@@ -372,25 +374,21 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                             // }}
                             checked={item == selectedDept}
                             onChange={() => {
-                              handleTargetKpiCheckboxChange(item)
+                              handleDataTargetKpiChange(item)
                             }}
                           />
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
-                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
-                            <CInputGroup size="sm">
-                              <CFormInput
-                                value={formatNumber(handleQuarterTargetValue(item))}
-                                valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
-                                invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
-                                disabled
-                              />
-                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
-                            </CInputGroup>
-                          ) : (
-                            'Chưa đăng ký'
-                          )}
+                          <CInputGroup size="sm">
+                            <CFormInput
+                              value={formatNumber(handleQuarterTargetValue(item))}
+                              valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
+                              invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
+                              disabled
+                            />
+                            <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                          </CInputGroup>
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
                           {handleQuarterDataValue(item) !== 'Chưa đăng ký' ? (
@@ -401,7 +399,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                                 invalid={handleQuarterDataStatus(item) === 'Từ chối'}
                                 disabled
                               />
-                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
                             </CInputGroup>
                           ) : (
                             'Chưa đăng ký'
@@ -446,14 +444,14 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
     )
   }
 
-  const AcceptTargetButton = (props) => {
+  const AcceptActualButton = (props) => {
     const { plan_id, kpi_template_id, dept_id, quarter } = props
 
     const onClickAccept = () => {
       setIsSubmit(true)
 
       api
-        .put(`plans/approve-quarterly-target/director`, {
+        .put(`plans/approve-data-quarterly-target/director`, {
           plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
           dept_id: dept_id,
@@ -530,21 +528,21 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
     )
   }
 
-  AcceptTargetButton.propTypes = {
+  AcceptActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
     dept_id: PropTypes.number,
     quarter: PropTypes.number,
   }
 
-  const DenyTargetButton = (props) => {
+  const DenyActualButton = (props) => {
     const { plan_id, kpi_template_id, dept_id, quarter } = props
 
     const onClickDeny = () => {
       setIsSubmit(true)
 
       api
-        .put(`plans/approve-quarterly-target/director`, {
+        .put(`plans/approve-data-quarterly-target/director`, {
           plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
           dept_id: dept_id,
@@ -622,7 +620,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
     )
   }
 
-  DenyTargetButton.propTypes = {
+  DenyActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
     dept_id: PropTypes.number,
@@ -638,7 +636,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
         }}
         size="small"
       >
-        <GroupAddIcon fontSize="small" />
+        <PlaylistAddCheckCircleIcon fontSize="small" />
       </IconButton>
 
       <CModal
@@ -651,7 +649,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Xét duyệt chỉ tiêu KPI</CModalTitle>
+          <CModalTitle>Xét duyệt tiến độ KPI</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
@@ -684,13 +682,13 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                 >
                   Chấp nhận
                 </Button> */}
-                <DenyTargetButton
+                <DenyActualButton
                   plan_id={plan_id}
                   kpi_template_id={kpiItem.kpi_template_id}
                   dept_id={deptID}
                   quarter={selectedQuarter}
                 />
-                <AcceptTargetButton
+                <AcceptActualButton
                   plan_id={plan_id}
                   kpi_template_id={kpiItem.kpi_template_id}
                   dept_id={deptID}
