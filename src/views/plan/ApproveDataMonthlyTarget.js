@@ -40,7 +40,7 @@ import DoneIcon from '@mui/icons-material/Done'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 
 export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
-  console.log(kpiItem)
+  //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)

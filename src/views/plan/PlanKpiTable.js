@@ -34,6 +34,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 import DoneIcon from '@mui/icons-material/Done'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 
+import api from 'src/views/axiosConfig'
 import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from './ApproveDataMonthlyTarget'
@@ -54,6 +55,10 @@ export const PlanKpiTable = (catItem) => {
   } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
+
+  const [monthlyData, setMonthlyData] = React.useState([])
+
+  //console.log(useSelector((state) => state.planDetail))
 
   /*const handleQuarterTargetValue = (item) => {
     switch (selectedQuarter) {
@@ -233,6 +238,43 @@ export const PlanKpiTable = (catItem) => {
     return 0
   }
 
+  const getEmployeeData = async (temID) => {
+    api
+      .get(`plans/plan/target-kpi-of-employees?`, {
+        params: { plan_id: plan.plan_id, kpi_template_id: temID },
+      })
+      .then((response) => {
+        setMonthlyData(response.data)
+      })
+      .catch((error) => {
+        // dispatch(
+        //   createAlert({
+        //     message: error.response.data.message,
+        //     type: 'error',
+        //   }),
+        // )
+      })
+  }
+
+  const handleMonthlyDataValue = (temId) => {
+    //console.log(temID)
+    if (performResult && performResult.kpi_categories) {
+      //console.log(performResult)
+      const result = performResult.kpi_categories.find(
+        (item) => item.kpi_category_id === catItem.kpi_category.kpi_category_id,
+      )
+      if (result) {
+        const find = result.kpi_templates.find((item) => item.kpi_template_id === temId)
+        if (find) {
+          return Number(find.actual)
+        }
+        return 0
+      }
+      return 0
+    }
+    return 0
+  }
+
   const handleMonthActualValue = (item) => {
     switch (selectedMonth) {
       case 1: {
@@ -241,7 +283,7 @@ export const PlanKpiTable = (catItem) => {
             return item.first_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 2: {
         if (item.second_monthly_target) {
@@ -249,15 +291,16 @@ export const PlanKpiTable = (catItem) => {
             return item.second_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 3: {
         if (item.third_monthly_target) {
           if (item.third_monthly_target.hasOwnProperty('actual')) {
-            return item.third_monthly_target.actual.value
+            if (item.third_monthly_target.actual.approve === 'Chấp nhận')
+              return item.third_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 4: {
         if (item.fourth_monthly_target) {
@@ -265,7 +308,7 @@ export const PlanKpiTable = (catItem) => {
             return item.fourth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 5: {
         if (item.fifth_monthly_target) {
@@ -273,7 +316,7 @@ export const PlanKpiTable = (catItem) => {
             return item.fifth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 6: {
         if (item.sixth_monthly_target) {
@@ -281,7 +324,7 @@ export const PlanKpiTable = (catItem) => {
             return item.sixth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 7: {
         if (item.seventh_monthly_target) {
@@ -289,7 +332,7 @@ export const PlanKpiTable = (catItem) => {
             return item.seventh_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 8: {
         if (item.eighth_monthly_target) {
@@ -297,7 +340,7 @@ export const PlanKpiTable = (catItem) => {
             return item.eighth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 9: {
         if (item.ninth_monthly_target) {
@@ -305,7 +348,7 @@ export const PlanKpiTable = (catItem) => {
             return item.ninth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 10: {
         if (item.tenth_monthly_target) {
@@ -313,7 +356,7 @@ export const PlanKpiTable = (catItem) => {
             return item.tenth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 11: {
         if (item.eleventh_monthly_target) {
@@ -321,7 +364,7 @@ export const PlanKpiTable = (catItem) => {
             return item.eleventh_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       case 12: {
         if (item.twelfth_monthly_target) {
@@ -329,10 +372,10 @@ export const PlanKpiTable = (catItem) => {
             return item.twelfth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return 0
       }
       default:
-        return 'Chưa có'
+        return 0
     }
   }
 
@@ -392,17 +435,7 @@ export const PlanKpiTable = (catItem) => {
                         </div>
                       </CTableDataCell>
                     )}
-                    {user.role === 'Nhân viên' && (
-                      <CTableDataCell>
-                        {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
-                        <RegisterMonthlyTarget
-                          plan={plan}
-                          item={item}
-                          selectedMonth={selectedMonth}
-                        />
-                      </CTableDataCell>
-                    )}
-                    {user.role === 'Quản lý' && (
+                    {/* {checkedQuarter && user.role === 'Quản lý' && (
                       <CTableDataCell>
                         <EnterDataQuarterlyTarget
                           plan={plan}
@@ -412,7 +445,39 @@ export const PlanKpiTable = (catItem) => {
                         />
                       </CTableDataCell>
                     )}
-                    {user.role === 'Nhân viên' && (
+                    {checkedMonth && user.role === 'Quản lý' && (
+                      <CTableDataCell>
+                        <EnterDataQuarterlyTarget
+                          plan={plan}
+                          item={item}
+                          selectedQuarter={selectedQuarter}
+                          note=""
+                        />
+                      </CTableDataCell>
+                    )} */}
+                    {checkedMonth && user.role === 'Quản lý' && (
+                      <CTableDataCell>
+                        {handleTargetValue(item.kpi_template.kpi_template_id)}
+                      </CTableDataCell>
+                    )}
+                    {checkedMonth && user.role === 'Quản lý' && (
+                      <CTableDataCell>
+                        {handleMonthlyDataValue(item.kpi_template.kpi_template_id)}
+                      </CTableDataCell>
+                    )}
+
+                    {/*Nhân viên đăng ký target, data cá nhân*/}
+                    {checkedMonth && user.role === 'Nhân viên' && (
+                      <CTableDataCell>
+                        {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
+                        <RegisterMonthlyTarget
+                          plan={plan}
+                          item={item}
+                          selectedMonth={selectedMonth}
+                        />
+                      </CTableDataCell>
+                    )}
+                    {checkedMonth && user.role === 'Nhân viên' && (
                       <CTableDataCell>
                         <EnterDataMonthlyTarget
                           plan={plan}
@@ -420,11 +485,9 @@ export const PlanKpiTable = (catItem) => {
                           selectedMonth={selectedMonth}
                           note=""
                         />
-                        {/* {checkedMonth && (
-                      <CTableDataCell>
-                        {handleTargetValue(item.kpi_template.kpi_template_id)} */}
                       </CTableDataCell>
                     )}
+                    {/*Nhân viên đăng ký target, data cá nhân*/}
                     <CTableDataCell>{item.kpi_template.unit}</CTableDataCell>
                     <CTableDataCell>
                       <CProgress>
