@@ -275,3 +275,48 @@ export const formatNumber = (num) => {
 export const convertPercent = (num) => {
   return num / 100
 }
+
+export const convertColor = (colorHex) => {
+  switch (colorHex) {
+    case '#b80000':
+      return 'Đỏ'
+    case '#fccb00':
+      return 'Vàng'
+    case '#008b02':
+      return 'Xanh'
+    default:
+      return 'Tím' //kbh xảy ra
+  }
+}
+
+export const reverseConvertColor = (color) => {
+  switch (color) {
+    case 'Đỏ':
+      return '#b80000'
+    case 'Vàng':
+      return '#fccb00'
+    case 'Xanh':
+      return '#008b02'
+    default:
+      return '#008b02' //kbh xảy ra
+  }
+}
+
+export const convertComparison = (comp) => {
+  switch (comp) {
+    case 'Greater than':
+      return '>'
+    case 'Greater than or equal':
+      return '>='
+    case 'Less than':
+      return '<'
+    case 'Less than or equal':
+      return '<='
+    case 'Equal to':
+      return '='
+    case 'Not equal to':
+      return '!='
+    default:
+      return ''
+  }
+}

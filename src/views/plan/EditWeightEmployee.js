@@ -99,16 +99,17 @@ const EditWeightEmployee = () => {
         const res = await getCatPlan()
         const res1 = await getUser()
         if (res) {
-          for (let i = 0; i < res.length; i++) {
-            const kpis = await getTemInOneCatPlan(0, res[i].kpi_category.kpi_category_id)
-            Object.assign(res[i], {
+          const newRes = res.filter((item) => item.kpi_category.kpi_category_name !== 'Cá nhân')
+          for (let i = 0; i < newRes.length; i++) {
+            const kpis = await getTemInOneCatPlan(0, newRes[i].kpi_category.kpi_category_id)
+            Object.assign(newRes[i], {
               page: 1,
               totalPage: Math.ceil(kpis.count / entryPerPage),
               displayKpis: kpis.rows,
               toBeSentKpis: kpis.rows,
             })
           }
-          setEntry(res)
+          setEntry(newRes)
         }
         setEmployee(res1)
         setPlan(result)

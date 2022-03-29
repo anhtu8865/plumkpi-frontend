@@ -15,8 +15,7 @@ import PropTypes from 'prop-types'
 import { IconButton } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 import api from 'src/views/axiosConfig'
-import { convertFormula, translate } from 'src/utils/function'
-import { frequencyList, directionList, aggList } from 'src/utils/engToViet'
+import { convertComparison } from 'src/utils/function'
 
 export const KpiInfoButton = (props) => {
   const [modalVisible, setModalVisible] = useState(false)
@@ -47,64 +46,44 @@ export const KpiInfoButton = (props) => {
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
           <CRow>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Tên KPI</CFormLabel>
-              <CFormInput
-                id="kpiname"
-                defaultValue={props.kpiItem.kpi_template.kpi_template_name}
-                disabled
-              />
+            <CCol xs={12}>
+              <b>Tên KPI:</b> {props.kpiItem.kpi_template.kpi_template_name}
             </CCol>
           </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CFormLabel htmlFor="kpides">Mô tả KPI</CFormLabel>
-              <CFormInput
-                id="kpides"
-                defaultValue={props.kpiItem.kpi_template.description}
-                disabled
-              />
+          <CRow className="mt-2">
+            <CCol xs={12}>
+              <b>Mô tả KPI:</b>{' '}
+              {props.kpiItem.kpi_template.description
+                ? props.kpiItem.kpi_template.description
+                : 'Không có'}
             </CCol>
           </CRow>
-          <CRow className="mt-3">
-            {/*<CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="target">Chỉ tiêu</CFormLabel>
-              <CFormInput
-                id="target"
-                defaultValue={props.kpiItem.target ? props.kpiItem.target : 'Chưa có'}
-                disabled
-              />
-      </CCol>*/}
-            <CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
-              <CFormInput
-                id="aggregation"
-                defaultValue={translate(props.kpiItem.kpi_template.aggregation, aggList)}
-                disabled
-              />
-            </CCol>
-            <CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
-              <CFormInput id="unit" defaultValue={props.kpiItem.kpi_template.unit} disabled />
+          <CRow className="mt-2">
+            <CCol xs={12}>
+              <b>Công thức tổng hợp: </b> {props.kpiItem.kpi_template.aggregation}
             </CCol>
           </CRow>
-          <CRow className="mt-3">
-            {/*<CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="category">Danh mục</CFormLabel>
-              <CFormInput
-                id="category"
-                defaultValue={props.kpiItem.kpi_template.kpi_category.kpi_category_name}
-                disabled
-              />
-      </CCol>
-            <CCol xs={12} sm={6}>
-              <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
-              <CFormInput
-                id="aggregation"
-                defaultValue={translate(props.kpiItem.kpi_template.aggregation, aggList)}
-                disabled
-              />
-            </CCol>*/}
+          <CRow className="mt-2">
+            <CCol xs={12}>
+              <b>Đơn vị: </b> {props.kpiItem.kpi_template.unit}
+            </CCol>
+          </CRow>
+          <CRow className="mt-2">
+            <CCol xs={12}>
+              <b>Cách đo lường: </b>
+              <br />
+              {props.kpiItem.kpi_template.measures.items.length > 0
+                ? props.kpiItem.kpi_template.measures.items.map((item, index) => {
+                    return (
+                      <div key={index}>
+                        Kết quả {convertComparison(item.comparison)} {item.percentOfTarget}% Chỉ
+                        tiêu: Đạt được {item.percentOfKpi}% KPI.
+                        <br />
+                      </div>
+                    )
+                  })
+                : 'Không có'}
+            </CCol>
           </CRow>
         </CModalBody>
       </CModal>

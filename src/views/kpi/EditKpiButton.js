@@ -29,8 +29,35 @@ import { setReload, setLoading } from 'src/slices/viewSlice'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
+import { GithubPicker } from 'react-color'
+import { convertColor, reverseConvertColor } from 'src/utils/function'
+import reactCSS from 'reactcss'
 
 export const EditKpiButton = (props) => {
+  const styles = reactCSS({
+    default: {
+      swatch: {
+        padding: '5px',
+        background: '#fff',
+        borderRadius: '1px',
+        boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+        display: 'inline-block',
+        cursor: 'pointer',
+      },
+      popover: {
+        position: 'absolute',
+        zIndex: '2',
+      },
+      cover: {
+        position: 'fixed',
+        top: '0px',
+        right: '0px',
+        bottom: '0px',
+        left: '0px',
+      },
+    },
+  })
+
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
   const { categoryList } = useSelector((state) => state.kpiCategory)
@@ -44,12 +71,26 @@ export const EditKpiButton = (props) => {
     { value: 'Not equal to', label: '!=' },
   ]
 
+  const newMeasures = () => {
+    const convertMeasures = []
+    props.inTem.measures.items.map((item) => {
+      convertMeasures.push({
+        comparison: item.comparison,
+        percentOfKpi: item.percentOfKpi,
+        percentOfTarget: item.percentOfTarget,
+        color: reverseConvertColor(item.color),
+        visiblePicker: false,
+      })
+    })
+    return convertMeasures
+  }
+
   const initialValues = {
     kpi_template_name: props.inTem.kpi_template_name,
     description: props.inTem.description,
     unit: props.inTem.unit,
     aggregation: props.inTem.aggregation,
-    measures: props.inTem.measures.items,
+    measures: newMeasures(),
     category: props.inTem.kpi_category.kpi_category_id,
   }
 
@@ -88,6 +129,7 @@ export const EditKpiButton = (props) => {
         comparison: item.comparison,
         percentOfKpi: Number(item.percentOfKpi),
         percentOfTarget: Number(item.percentOfTarget),
+        color: convertColor(item.color),
       })
     })
 
@@ -140,7 +182,16 @@ export const EditKpiButton = (props) => {
           }
         }}
       >
-        {({ values, touched, errors, handleChange, handleBlur, isSubmitting, submitForm }) => (
+        {({
+          values,
+          touched,
+          errors,
+          handleChange,
+          handleBlur,
+          isSubmitting,
+          submitForm,
+          setFieldValue,
+        }) => (
           <>
             <CModal
               alignment="center"
@@ -159,7 +210,9 @@ export const EditKpiButton = (props) => {
                   {isSubmitting && <LoadingCircle />}
                   <CRow>
                     <CCol>
-                      <CFormLabel htmlFor="kpiname">Tên KPI</CFormLabel>
+                      <CFormLabel htmlFor="kpiname">
+                        <b>Tên KPI</b>
+                      </CFormLabel>
                       <CFormInput
                         name="kpi_template_name"
                         id="kpiname"
@@ -182,7 +235,9 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol>
-                      <CFormLabel htmlFor="kpides">Mô tả KPI</CFormLabel>
+                      <CFormLabel htmlFor="kpides">
+                        <b>Mô tả KPI</b>
+                      </CFormLabel>
                       <CFormInput
                         id="kpides"
                         placeholder="Nhập mô tả KPI"
@@ -194,7 +249,9 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
+                      <CFormLabel htmlFor="aggregation">
+                        <b>Công thức tổng hợp</b>
+                      </CFormLabel>
                       <CFormSelect
                         id="aggregation"
                         value={values.aggregation}
@@ -210,7 +267,9 @@ export const EditKpiButton = (props) => {
                       <CFormFeedback invalid>{errors.aggregation}</CFormFeedback>
                     </CCol>
                     <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
+                      <CFormLabel htmlFor="unit">
+                        <b>Đơn vị tính</b>
+                      </CFormLabel>
                       <CFormInput
                         id="unit"
                         placeholder="Nhập đơn vị tính"
@@ -225,7 +284,9 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="category">Danh mục</CFormLabel>
+                      <CFormLabel htmlFor="category">
+                        <b>Danh mục</b>
+                      </CFormLabel>
                       <CFormSelect
                         id="category"
                         value={values.category}
@@ -245,7 +306,9 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol xs={12} sm={6}>
-                      <div>Cách đo lường:</div>
+                      <div>
+                        <b>Cách đo lường:</b>
+                      </div>
                     </CCol>
                   </CRow>
                   <FieldArray name="measures">
@@ -253,6 +316,7 @@ export const EditKpiButton = (props) => {
                       <>
                         {values.measures.map((item, index) => {
                           const comparison = `measures[${index}].comparison`
+
                           const percentOfTarget = `measures[${index}].percentOfTarget`
                           const touchedTarget = getIn(touched, percentOfTarget)
                           const errorTarget = getIn(errors, percentOfTarget)
@@ -261,10 +325,14 @@ export const EditKpiButton = (props) => {
                           const touchedKpi = getIn(touched, percentOfKpi)
                           const errorKpi = getIn(errors, percentOfKpi)
 
+                          const colorName = `measures[${index}].color`
+
+                          const visiblePicker = `measures[${index}].visiblePicker`
+
                           return (
                             <CRow className="mt-2" key={index}>
-                              <CCol xs={12} sm={4}>
-                                <CFormLabel htmlFor="com">Phép so sánh kết quả</CFormLabel>
+                              <CCol xs={12} sm={2}>
+                                <CFormLabel htmlFor="com">Phép so sánh</CFormLabel>
                                 <CFormSelect
                                   id="com"
                                   value={item.comparison}
@@ -281,7 +349,7 @@ export const EditKpiButton = (props) => {
                                   })}
                                 </CFormSelect>
                               </CCol>
-                              <CCol xs={12} sm={4}>
+                              <CCol xs={12} sm={3}>
                                 <CFormLabel htmlFor="percentOfTarget">So với chỉ tiêu</CFormLabel>
                                 <CInputGroup id="percentOfTarget">
                                   <CFormInput
@@ -300,34 +368,70 @@ export const EditKpiButton = (props) => {
                                 </CInputGroup>
                                 <CFormFeedback invalid>{errorTarget}</CFormFeedback>
                               </CCol>
-                              <CCol xs={12} sm={4}>
-                                <div className="d-flex flex-row">
-                                  <CInputGroup className="me-3">
-                                    <CFormLabel htmlFor="percentOfKpi">
-                                      Mức độ hoàn thành KPI
-                                    </CFormLabel>
-                                    <CFormInput
-                                      id="percentOfKpi"
-                                      value={item.percentOfKpi}
-                                      name={percentOfKpi}
-                                      onChange={handleChange}
-                                      onBlur={handleBlur}
-                                      invalid={touchedKpi && errorKpi ? true : false}
-                                      valid={!touchedKpi || (touchedKpi && errorKpi) ? false : true}
-                                    />
-                                    <CInputGroupText>%</CInputGroupText>
-                                  </CInputGroup>
-                                  <CFormFeedback invalid>{errorKpi}</CFormFeedback>
-                                  <IconButton
-                                    color="error"
+                              <CCol xs={12} sm={3}>
+                                <CFormLabel htmlFor="percentOfKpi">Tiến độ KPI</CFormLabel>
+                                <CInputGroup id="percentOfKpi">
+                                  <CFormInput
+                                    value={item.percentOfKpi}
+                                    name={percentOfKpi}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    invalid={touchedKpi && errorKpi ? true : false}
+                                    valid={!touchedKpi || (touchedKpi && errorKpi) ? false : true}
+                                  />
+                                  <CInputGroupText>%</CInputGroupText>
+                                </CInputGroup>
+                                <CFormFeedback invalid>{errorKpi}</CFormFeedback>
+                              </CCol>
+                              <CCol xs={12} sm={3}>
+                                <CFormLabel htmlFor="colorOfKpi">Màu sắc</CFormLabel>
+                                <div id="colorOfKpi">
+                                  <div
+                                    style={styles.swatch}
                                     onClick={() => {
-                                      remove(index)
+                                      setFieldValue(visiblePicker, !item.visiblePicker)
                                     }}
-                                    size="small"
                                   >
-                                    <HighlightOffIcon fontSize="inherit" />
-                                  </IconButton>
+                                    <div
+                                      style={{
+                                        width: '20px',
+                                        height: '20px',
+                                        borderRadius: '2px',
+                                        background: `${item.color}`,
+                                      }}
+                                    />
+                                  </div>
+                                  {item.visiblePicker ? (
+                                    <div style={styles.popover}>
+                                      <div
+                                        style={styles.cover}
+                                        onClick={() => {
+                                          setFieldValue(visiblePicker, !item.visiblePicker)
+                                        }}
+                                      />
+                                      <GithubPicker
+                                        width="100px"
+                                        triangle="hide"
+                                        color={item.color}
+                                        colors={['#b80000', '#fccb00', '#008b02']}
+                                        onChange={(color) => {
+                                          setFieldValue(colorName, color.hex)
+                                        }}
+                                      />
+                                    </div>
+                                  ) : null}
                                 </div>
+                              </CCol>
+                              <CCol xs={12} sm={1}>
+                                <IconButton
+                                  color="error"
+                                  onClick={() => {
+                                    remove(index)
+                                  }}
+                                  size="small"
+                                >
+                                  <HighlightOffIcon fontSize="inherit" />
+                                </IconButton>
                               </CCol>
                             </CRow>
                           )
@@ -343,6 +447,8 @@ export const EditKpiButton = (props) => {
                                   comparison: 'Less than',
                                   percentOfTarget: 0,
                                   percentOfKpi: 0,
+                                  color: '#b80000',
+                                  visiblePicker: false,
                                 })
                               }
                             >
