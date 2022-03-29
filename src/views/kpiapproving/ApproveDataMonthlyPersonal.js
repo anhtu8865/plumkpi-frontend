@@ -39,8 +39,8 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 import DoneIcon from '@mui/icons-material/Done'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 
-export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
-  console.log(kpiItem)
+export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
+  //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -48,13 +48,11 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
   const [tempSelectedList, setTempSelectedList] = useState([])
   const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
   const [selectValue, setSelectValue] = useState('Month')
-  const [selectedQuarter, setSelectedQuarter] = useState(1)
+
   const [selectedMonth, setSelectedMonth] = useState(3)
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
-  const [target, setTarget] = useState(0)
   const [sum, setSum] = useState(0)
-  const [sampleTarget, setSampleTarget] = useState('')
   const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const [monthTarget, setMonthTarget] = useState(0)
 
@@ -68,7 +66,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
   const getEmployeeList = async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
-        params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template.kpi_template_id },
+        params: { plan_id: plan_id, kpi_template_id: kpiItem.kpi_template_id },
       })
       return response.data
     } catch (error) {
@@ -86,83 +84,11 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
   const getInfoTargetKpi = async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
-        params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template.kpi_template_id },
+        params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template_id },
       })
       return response.data
     } catch (error) {
       if (error.response && plan.plan_id) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }
-
-  const assignKpi = async (listToReturn, listUser) => {
-    try {
-      await api.post(`/plans/assign-kpi-employees`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        users: listUser,
-      })
-      await api.put(`/plans/register-monthly-target/manager`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        target: Number(monthTarget),
-        month: Number(selectedMonth),
-        users: listToReturn,
-      })
-      dispatch(
-        createAlert({
-          message: 'Gán KPI cho nhân viên thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }
-
-  const registerQuarterTarget = async (target) => {
-    try {
-      await api.put(`/plans/register-quarterly-target/manager`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        target: Number(target),
-        quarter: Number(selectedQuarter),
-      })
-      dispatch(
-        createAlert({
-          message: 'Đăng ký chỉ tiêu KPI thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
         dispatch(
           createAlert({
             message: error.response.data.message,
@@ -189,7 +115,6 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
 
   React.useEffect(() => {
     setSelectedEmployeeList([])
-    setSampleTarget('')
     if (tempSelectedList.length > 0) {
       switch (selectedMonth) {
         case 1: {
@@ -304,154 +229,8 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
     }
   }, [selectedMonth, tempSelectedList])
 
-  React.useEffect(() => {
-    let sumTarget = 0
-    selectedEmployeeList.map((item) => {
-      sumTarget = sumTarget + Number(item.target)
-    })
-    setSum(sumTarget)
-  }, [selectedEmployeeList])
-
-  React.useEffect(() => {
-    setTarget(handleQuarterTargetValue(kpiItem))
-  }, [selectedQuarter])
-
-  const handleCheckbox = (userItem) => {
-    const result = handleCheckboxValue(userItem.user_id)
-    if (result) {
-      setSelectedEmployeeList(
-        selectedEmployeeList.filter((item) => item.user_id !== userItem.user_id),
-      )
-    } else {
-      setSelectedEmployeeList([...selectedEmployeeList, { user: userItem, target: 0 }])
-    }
-  }
-
-  const handleCheckboxValue = (id) => {
-    const find = selectedEmployeeList.find((item) => item.user.user_id === id)
-    if (find) {
-      return true
-    }
-    return false
-  }
-
-  const handleTargetValue = (id) => {
-    const find = selectedEmployeeList.find((item) => item.user.user_id === id)
-    if (find) {
-      return find.target
-    }
-    return ''
-  }
-
-  const handleTargetOnChange = (event, id) => {
-    const copyselectedEmployeeList = cloneDeep(selectedEmployeeList)
-    const selectedDept = copyselectedEmployeeList.find((item) => item.user.user_id === id)
-    if (selectedDept) {
-      selectedDept.target = event.target.value
-    }
-    setSelectedEmployeeList(copyselectedEmployeeList)
-  }
-
-  const handleSampleTargetOnChange = (event) => {
-    setSampleTarget(event.target.value)
-    const copyselectedEmployeeList = cloneDeep(selectedEmployeeList)
-    copyselectedEmployeeList.map((item) => {
-      item.target = event.target.value
-    })
-    setSelectedEmployeeList(copyselectedEmployeeList)
-  }
-
-  const onMonthSubmit = async () => {
-    setIsSubmit(true)
-    if (selectValue === 'Month') {
-      const listToReturn = []
-      const listUser = []
-      let valid = true
-      selectedEmployeeList.map((item) => {
-        if (item.target === '') {
-          valid = false
-        }
-        listToReturn.push({ user_id: item.user.user_id, target: Number(item.target) })
-        listUser.push({ user_id: item.user.user_id })
-      })
-      if (valid) {
-        await assignKpi(listToReturn, listUser)
-      }
-    }
-    setIsSubmit(false)
-  }
-
-  const onQuarterSubmit = async (event, target) => {
-    setIsSubmit(true)
-    await registerQuarterTarget(target)
-    setIsSubmit(false)
-  }
-
-  const handleQuarterTargetValue = (item) => {
-    switch (selectedQuarter) {
-      case 1: {
-        if (item.first_quarterly_target) {
-          return item.first_quarterly_target.target
-        }
-        return 0
-      }
-      case 2: {
-        if (item.second_quarterly_target) {
-          return item.second_quarterly_target.target
-        }
-        return 0
-      }
-      case 3: {
-        if (item.third_quarterly_target) {
-          return item.third_quarterly_target.target
-        }
-        return 0
-      }
-      case 4: {
-        if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.target
-        }
-        return 0
-      }
-      default:
-        return 0
-    }
-  }
-
-  const handleQuarterTargetStatus = (item) => {
-    switch (selectedQuarter) {
-      case 1: {
-        if (item.first_quarterly_target) {
-          return item.first_quarterly_target.approve
-        }
-        return ''
-      }
-      case 2: {
-        if (item.second_quarterly_target) {
-          return item.second_quarterly_target.approve
-        }
-        return ''
-      }
-      case 3: {
-        if (item.third_quarterly_target) {
-          return item.third_quarterly_target.approve
-        }
-        return ''
-      }
-      case 4: {
-        if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.approve
-        }
-        return ''
-      }
-      default:
-        return ''
-    }
-  }
-
   const handleDataTargetKpiChange = (item) => {
     setUserID(item.user.user_id)
-
     setSelectedKpi(item)
   }
 
@@ -849,7 +628,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                               value={handleMonthTargetValue(item)}
                               disabled
                             />
-                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                            <CInputGroupText>{kpiItem.unit}</CInputGroupText>
                           </CInputGroup>
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
@@ -861,7 +640,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                               valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                               disabled
                             />
-                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                            <CInputGroupText>{kpiItem.unit}</CInputGroupText>
                           </CInputGroup>
                         </CTableDataCell>
                       </CTableRow>
@@ -890,79 +669,19 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
     )
   }
 
-  const QuarterTargetView = () => {
-    return (
-      <>
-        <CRow className="mt-2">
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="freq">Chọn quý</CFormLabel>
-            <CFormSelect
-              id="freq"
-              value={selectedQuarter}
-              onChange={(event) => {
-                setSelectedQuarter(Number(event.target.value))
-              }}
-            >
-              <option value={1}>Quý 1</option>
-              <option value={2}>Quý 2</option>
-              <option value={3}>Quý 3</option>
-              <option value={4}>Quý 4</option>
-            </CFormSelect>
-          </CCol>
-        </CRow>
-        <CRow className="mt-4">
-          <CCol xs={12}>
-            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI quý {selectedQuarter}</CFormLabel>
-            <CInputGroup>
-              <CFormInput
-                id="parenttarget"
-                placeholder="Nhập chỉ tiêu KPI"
-                type="number"
-                value={target}
-                onChange={(event) => {
-                  setTarget(event.target.value)
-                }}
-                invalid={handleQuarterTargetStatus(kpiItem) === 'Từ chối'}
-                valid={handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'}
-                disabled={handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'}
-              />
-              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-              <CFormFeedback invalid>
-                Chỉ tiêu không được Ban giám đốc chấp nhận. Bạn nhập lại chỉ tiêu khác nhé.
-              </CFormFeedback>
-              <CFormFeedback valid>Chỉ tiêu đã được duyệt bởi Ban giám đốc.</CFormFeedback>
-              {handleQuarterTargetStatus(kpiItem) === 'Đang xử lý' && (
-                <CRow className="mt-1">
-                  <div>
-                    <small>Chỉ tiêu đang chờ Ban giám đốc xét duyệt...</small>
-                  </div>
-                </CRow>
-              )}
-            </CInputGroup>
-            <CFormFeedback invalid></CFormFeedback>
-          </CCol>
-        </CRow>
-      </>
-    )
-  }
-
   const HasTargetView = () => {
     return (
       <>
-        <CRow className="mt-2">
+        {/* <CRow className="mt-2">
           <CCol xs={12} sm={6}>
             <CFormLabel htmlFor="kpiname">KPI</CFormLabel>
-            <CFormInput
-              id="kpiname"
-              defaultValue={kpiItem.kpi_template.kpi_template_name}
-              disabled
-            />
+            <CFormInput id="kpiname" defaultValue={kpiItem.kpi_template_name} disabled />
           </CCol>
           <CCol xs={12} sm={6}>
             <CFormLabel htmlFor="dept">Phòng ban</CFormLabel>
             <CFormInput id="dept" defaultValue={user.manage.dept_name} disabled />
           </CCol>
-        </CRow>
+        </CRow> */}
         <CRow className="mt-2">
           <CCol xs={12} sm={6}>
             <CFormLabel htmlFor="freq">Theo</CFormLabel>
@@ -977,7 +696,6 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
             </CFormSelect>
           </CCol>
         </CRow>
-        {selectValue === 'Quarter' && QuarterTargetView()}
         {selectValue === 'Month' && MonthTargetView()}
       </>
     )
@@ -1191,40 +909,9 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
-          {selectValue === 'Quarter' && (
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<CheckIcon />}
-              type="submit"
-              onClick={(event) => {
-                onQuarterSubmit(event, target)
-              }}
-              disabled={
-                isSubmit ||
-                target === '' ||
-                !compareYear(plan.year) ||
-                handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
-              }
-            >
-              Đăng kí
-            </Button>
-          )}
           {selectValue === 'Month' && (
-            // <Button
-            //   variant="contained"
-            //   color="success"
-            //   startIcon={<CheckIcon />}
-            //   type="submit"
-            //   onClick={() => {
-            //     onMonthSubmit()
-            //   }}
-            //   disabled={isSubmit || !compareYear(plan.year) || selectedEmployeeList.length === 0}
-            // >
-            //   Xác nhận
-            // </Button>
             <div className="d-grid gap-3 d-md-flex justify-content-end">
-              <DenyActualButton
+              {/* <DenyActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template.kpi_template_id}
                 user_id={userID}
@@ -1235,7 +922,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                 kpi_template_id={kpiItem.kpi_template.kpi_template_id}
                 user_id={userID}
                 month={selectedMonth}
-              />
+              /> */}
             </div>
           )}
           {isSubmit && <LoadingCircle />}
