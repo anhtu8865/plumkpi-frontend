@@ -26,6 +26,7 @@ import * as yup from 'yup'
 const EnterDateMonthlyTarget = (props) => {
   //console.log(props)
   const { plan, item, selectedMonth, note } = props
+
   const dispatch = useDispatch()
 
   const [isSubmit, setIsSubmit] = React.useState(false)
@@ -35,7 +36,7 @@ const EnterDateMonthlyTarget = (props) => {
   }
 
   const handleMonthActualValue = (item) => {
-    console.log(item)
+    //console.log(item)
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
@@ -140,6 +141,111 @@ const EnterDateMonthlyTarget = (props) => {
     }
   }
 
+  const handleMonthActualStatus = (item) => {
+    switch (selectedMonth) {
+      case 1: {
+        if (item.first_monthly_target) {
+          if (item.first_monthly_target.hasOwnProperty('actual')) {
+            return item.first_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 2: {
+        if (item.second_monthly_target) {
+          if (item.second_monthly_target.hasOwnProperty('actual')) {
+            return item.second_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 3: {
+        if (item.third_monthly_target) {
+          if (item.third_monthly_target.hasOwnProperty('actual')) {
+            if (item.third_monthly_target.actual) {
+              return item.third_monthly_target.actual.approve
+            }
+          }
+        }
+        return 'Chưa có'
+      }
+      case 4: {
+        if (item.fourth_monthly_target) {
+          if (item.fourth_monthly_target.hasOwnProperty('actual')) {
+            return item.fourth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 5: {
+        if (item.fifth_monthly_target) {
+          if (item.fifth_monthly_target.hasOwnProperty('actual')) {
+            return item.fifth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 6: {
+        if (item.sixth_monthly_target) {
+          if (item.sixth_monthly_target.hasOwnProperty('actual')) {
+            return item.sixth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 7: {
+        if (item.seventh_monthly_target) {
+          if (item.seventh_monthly_target.hasOwnProperty('actual')) {
+            return item.seventh_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 8: {
+        if (item.eighth_monthly_target) {
+          if (item.eighth_monthly_target.hasOwnProperty('actual')) {
+            return item.eighth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 9: {
+        if (item.ninth_monthly_target) {
+          if (item.ninth_monthly_target.hasOwnProperty('actual')) {
+            return item.ninth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 10: {
+        if (item.tenth_monthly_target) {
+          if (item.tenth_monthly_target.hasOwnProperty('actual')) {
+            return item.tenth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 11: {
+        if (item.eleventh_monthly_target) {
+          if (item.eleventh_monthly_target.hasOwnProperty('actual')) {
+            return item.eleventh_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      case 12: {
+        if (item.twelfth_monthly_target) {
+          if (item.twelfth_monthly_target.hasOwnProperty('actual')) {
+            return item.twelfth_monthly_target.actual.approve
+          }
+        }
+        return 'Chưa có'
+      }
+      default:
+        return 'Chưa có'
+    }
+  }
+
   const validationSchema = yup.object({})
 
   const formik = useFormik({
@@ -190,6 +296,8 @@ const EnterDateMonthlyTarget = (props) => {
           <CFormInput
             type="number"
             defaultValue={formatNumber(handleMonthActualValue(item))}
+            valid={handleMonthActualStatus(item) === 'Chấp nhận'}
+            invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}
           />
           <IconButton id="note" color="primary">

@@ -238,25 +238,7 @@ export const PlanKpiTable = (catItem) => {
     return 0
   }
 
-  const getEmployeeData = async (temID) => {
-    api
-      .get(`plans/plan/target-kpi-of-employees?`, {
-        params: { plan_id: plan.plan_id, kpi_template_id: temID },
-      })
-      .then((response) => {
-        setMonthlyData(response.data)
-      })
-      .catch((error) => {
-        // dispatch(
-        //   createAlert({
-        //     message: error.response.data.message,
-        //     type: 'error',
-        //   }),
-        // )
-      })
-  }
-
-  const handleMonthlyDataValue = (temId) => {
+  const handleActualValue = (temId) => {
     //console.log(temID)
     if (performResult && performResult.kpi_categories) {
       //console.log(performResult)
@@ -265,6 +247,7 @@ export const PlanKpiTable = (catItem) => {
       )
       if (result) {
         const find = result.kpi_templates.find((item) => item.kpi_template_id === temId)
+        console.log(find)
         if (find) {
           return Number(find.actual)
         }
@@ -435,6 +418,11 @@ export const PlanKpiTable = (catItem) => {
                         </div>
                       </CTableDataCell>
                     )}
+                    {checkedQuarter && user.role === 'Quản lý' && (
+                      <CTableDataCell>
+                        {handleActualValue(item.kpi_template.kpi_template_id)}
+                      </CTableDataCell>
+                    )}
                     {/* {checkedQuarter && user.role === 'Quản lý' && (
                       <CTableDataCell>
                         <EnterDataQuarterlyTarget
@@ -462,7 +450,7 @@ export const PlanKpiTable = (catItem) => {
                     )}
                     {checkedMonth && user.role === 'Quản lý' && (
                       <CTableDataCell>
-                        {handleMonthlyDataValue(item.kpi_template.kpi_template_id)}
+                        {handleActualValue(item.kpi_template.kpi_template_id)}
                       </CTableDataCell>
                     )}
 

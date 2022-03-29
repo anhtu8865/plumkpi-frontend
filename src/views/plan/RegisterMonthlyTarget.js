@@ -24,7 +24,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 const RegisterMonthlyTarget = (props) => {
-  console.log(props)
+  //console.log(props)
   const { plan, item, selectedMonth } = props
   const dispatch = useDispatch()
 
