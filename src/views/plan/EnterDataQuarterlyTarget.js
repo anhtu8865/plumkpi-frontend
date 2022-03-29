@@ -25,7 +25,8 @@ import * as yup from 'yup'
 
 const EnterDataQuarterlyTarget = (props) => {
   //console.log(props)
-  const { plan, item, selectedQuarter, note } = props
+  const { plan, item, selectedQuarter, value, note } = props
+
   const dispatch = useDispatch()
 
   const [isSubmit, setIsSubmit] = React.useState(false)
@@ -89,7 +90,7 @@ const EnterDataQuarterlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       quarter: selectedQuarter,
-      value: formatNumber(handleQuarterActualValue(item)),
+      value: value,
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
@@ -128,11 +129,7 @@ const EnterDataQuarterlyTarget = (props) => {
     <>
       <CForm onSubmit={formik.handleSubmit}>
         <CInputGroup>
-          <CFormInput
-            type="number"
-            defaultValue={formatNumber(handleQuarterActualValue(item))}
-            {...formik.getFieldProps('value')}
-          />
+          <CFormInput type="number" defaultValue={value} {...formik.getFieldProps('value')} />
           <IconButton id="note" color="primary">
             <FilePresentIcon />
           </IconButton>
@@ -154,11 +151,13 @@ EnterDataQuarterlyTarget.propTypes = {
   plan: PropTypes.object,
   item: PropTypes.object,
   selectedQuarter: PropTypes.number,
+  value: PropTypes.number,
   note: PropTypes.string,
 }
 
 EnterDataQuarterlyTarget.defaultProps = {
   note: '',
+  value: 0,
 }
 
 export default EnterDataQuarterlyTarget

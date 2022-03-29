@@ -39,6 +39,7 @@ import EnterDataMonthlyTarget from './EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from './EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from './ApproveDataMonthlyTarget'
 import RegisterMonthlyTarget from './RegisterMonthlyTarget'
+import { ApproveDataQuarterTarget } from './ApproveDataQuarterTarget'
 
 export const PlanKpiTable = (catItem) => {
   const {
@@ -53,6 +54,7 @@ export const PlanKpiTable = (catItem) => {
     checkedMonth,
     checkedQuarter,
   } = useSelector((state) => state.planDetail)
+  //console.log(useSelector((state) => state.planDetail))
   const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
@@ -239,7 +241,6 @@ export const PlanKpiTable = (catItem) => {
   }
 
   const handleActualValue = (temId) => {
-    //console.log(temID)
     if (performResult && performResult.kpi_categories) {
       //console.log(performResult)
       const result = performResult.kpi_categories.find(
@@ -247,7 +248,7 @@ export const PlanKpiTable = (catItem) => {
       )
       if (result) {
         const find = result.kpi_templates.find((item) => item.kpi_template_id === temId)
-        console.log(find)
+
         if (find) {
           return Number(find.actual)
         }
@@ -381,7 +382,7 @@ export const PlanKpiTable = (catItem) => {
                   {checkedMonth && (
                     <CTableHeaderCell>Chỉ tiêu tháng {selectedMonth}</CTableHeaderCell>
                   )}
-                  {['Quản lý', 'Nhân viên'].includes(user.role) && (
+                  {['Quản lý', 'Nhân viên', 'Giám đốc'].includes(user.role) && (
                     <CTableHeaderCell>Thực hiện</CTableHeaderCell>
                   )}
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
@@ -418,21 +419,26 @@ export const PlanKpiTable = (catItem) => {
                         </div>
                       </CTableDataCell>
                     )}
-                    {checkedQuarter && user.role === 'Quản lý' && (
+                    {user.role === 'Giám đốc' && (
                       <CTableDataCell>
                         {handleActualValue(item.kpi_template.kpi_template_id)}
                       </CTableDataCell>
                     )}
-                    {/* {checkedQuarter && user.role === 'Quản lý' && (
+                    {checkedQuarter && user.role === 'Quản lý' && (
+                      // <CTableDataCell>
+                      //   {handleActualValue(item.kpi_template.kpi_template_id)}
+                      // </CTableDataCell>
                       <CTableDataCell>
                         <EnterDataQuarterlyTarget
                           plan={plan}
                           item={item}
                           selectedQuarter={selectedQuarter}
+                          value={handleActualValue(item.kpi_template.kpi_template_id)}
                           note=""
                         />
                       </CTableDataCell>
                     )}
+                    {/*
                     {checkedMonth && user.role === 'Quản lý' && (
                       <CTableDataCell>
                         <EnterDataQuarterlyTarget
@@ -493,6 +499,8 @@ export const PlanKpiTable = (catItem) => {
                         {user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
+                        {user.role === 'Giám đốc' &&
+                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
                         {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
                         {user.role === 'Quản lý' && ApproveDataMonthlyTarget(plan.plan_id, item)}
                         {user.role === 'Quản lý' &&
