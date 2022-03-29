@@ -911,18 +911,18 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
         <CModalFooter>
           {selectValue === 'Month' && (
             <div className="d-grid gap-3 d-md-flex justify-content-end">
-              {/* <DenyActualButton
+              <DenyActualButton
                 plan_id={plan_id}
-                kpi_template_id={kpiItem.kpi_template.kpi_template_id}
+                kpi_template_id={kpiItem.kpi_template_id}
                 user_id={userID}
                 month={selectedMonth}
               />
               <AcceptActualButton
                 plan_id={plan_id}
-                kpi_template_id={kpiItem.kpi_template.kpi_template_id}
+                kpi_template_id={kpiItem.kpi_template_id}
                 user_id={userID}
                 month={selectedMonth}
-              /> */}
+              />
             </div>
           )}
           {isSubmit && <LoadingCircle />}
