@@ -120,7 +120,10 @@ const PlanDetail = () => {
   const getCatPlan = async () => {
     if (user.role === 'Giám đốc') {
       const response = await api.get(`plans/${id}/kpi-categories/director`)
-      return response.data
+      const newResponse = response.data.filter(
+        (item) => item.kpi_category.kpi_category_name !== 'Cá nhân',
+      )
+      return newResponse
     } else if (user.role === 'Quản lý') {
       const response = await api.get(`plans/${id}/kpi-categories/manager`)
       return response.data
@@ -324,7 +327,7 @@ const PlanDetail = () => {
   const SelectedTimeRangeView = () => {
     return (
       <>
-        <CRow className="mt-4 d-flex justify-content-start">
+        <CRow className="mt-5">
           <CCol xs={12} sm={4} xl={3} className="d-flex flex-row">
             <Checkbox
               size="small"

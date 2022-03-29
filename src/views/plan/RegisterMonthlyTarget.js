@@ -248,8 +248,9 @@ const RegisterMonthlyTarget = (props) => {
             color="primary"
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
+            size="small"
           >
-            <SaveIcon />
+            <SaveIcon fontSize="small" />
           </IconButton>
         </CInputGroup>
       </CForm>

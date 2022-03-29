@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -635,15 +635,17 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <PlaylistAddCheckCircleIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Duyệt số liệu phòng ban">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <PlaylistAddCheckCircleIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"

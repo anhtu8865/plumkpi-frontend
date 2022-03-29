@@ -159,9 +159,10 @@ const RegisterQuarterTarget = (props) => {
             variant="contained"
             color="primary"
             onClick={formik.submitForm}
-            disabled={formik.isSubmitting}
+            disabled={formik.isSubmitting || handleQuarterTargetStatus(item) === 'Chấp nhận'}
+            size="small"
           >
-            <SaveIcon />
+            <SaveIcon fontSize="small" />
           </IconButton>
         </CInputGroup>
       </CForm>

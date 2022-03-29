@@ -417,7 +417,7 @@ export const PlanKpiTable = (catItem) => {
                   )}
                   <CTableHeaderCell>Thực hiện</CTableHeaderCell>
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
-                  <CTableHeaderCell>Tiến độ</CTableHeaderCell>
+                  <CTableHeaderCell>Đạt được</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
@@ -552,13 +552,19 @@ export const PlanKpiTable = (catItem) => {
                     </CTableDataCell>
                     <CTableDataCell className="text-center w-25">
                       <div className="d-flex flex-row justify-content-center">
-                        {user.role === 'Giám đốc' && AssignPlanKpiButton(item)}
+                        {user.role === 'Giám đốc' &&
+                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
+                          AssignPlanKpiButton(item)}
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
                         {user.role === 'Giám đốc' &&
                           ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
-                        {user.role === 'Quản lý' && AssignPlanKpiButtonM(item)}
-                        {user.role === 'Quản lý' && ApproveDataMonthlyTarget(plan.plan_id, item)}
+                        {user.role === 'Quản lý' &&
+                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
+                          AssignPlanKpiButtonM(item)}
+                        {user.role === 'Quản lý' &&
+                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
+                          ApproveDataMonthlyTarget(plan.plan_id, item)}
                         {/*{user.role === 'Quản lý' &&
                           RegisterQuarterTargetButton(item, selectedQuarter)}*/}
                         <KpiInfoButton kpiItem={item} />

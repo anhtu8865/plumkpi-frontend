@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -395,8 +395,8 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
-                  <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
+                  <CTableHeaderCell>Nhân viên</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -520,15 +520,17 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <GroupAddIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Gán KPI cho nhân viên">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <GroupAddIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"

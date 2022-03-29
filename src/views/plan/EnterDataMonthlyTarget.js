@@ -300,16 +300,17 @@ const EnterDateMonthlyTarget = (props) => {
             invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}
           />
-          <IconButton id="note" color="primary">
-            <FilePresentIcon />
+          <IconButton id="note" color="primary" size="small">
+            <FilePresentIcon fontSize="small" />
           </IconButton>
           <IconButton
             variant="contained"
             color="primary"
             onClick={formik.submitForm}
             disabled={formik.isSubmitting}
+            size="small"
           >
-            <SaveIcon />
+            <SaveIcon fontSize="small" />
           </IconButton>
         </CInputGroup>
       </CForm>

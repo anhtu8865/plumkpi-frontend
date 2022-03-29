@@ -37,6 +37,7 @@ import { setKpiRegisLoading, setKpiRegisReload } from 'src/slices/kpiRegisSlice'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 
 // import AddKpiRegistration from './AddKpiRegistration'
 // import DeleteKpiRegistration from './DeleteKpiRegistration'
@@ -249,9 +250,9 @@ const KpiRegistration = () => {
             <CTableRow>
               <CTableHeaderCell />
               <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>TÊN</CTableHeaderCell>
-              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
-              <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+              <CTableHeaderCell>KPI</CTableHeaderCell>
+              <CTableHeaderCell>Mô tả</CTableHeaderCell>
+              <CTableHeaderCell>Đơn vị</CTableHeaderCell>
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
@@ -279,15 +280,17 @@ const KpiRegistration = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="6">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -306,28 +309,35 @@ const KpiRegistration = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
+                  <CCol xs={12} sm={6}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<KeyboardDoubleArrowLeftIcon />}
+                      onClick={() => {
+                        history.push(`/plan/${id}`)
+                      }}
+                      sx={{ textTransform: 'none', borderRadius: 10 }}
+                    >
+                      Quay lại kế hoạch
+                    </Button>
+                  </CCol>
+                </CRow>
+                <CRow className="mt-4">
                   <CCol xs={6}>
-                    <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                      <IconButton
-                        onClick={() => {
-                          history.push(`/plan/${id}`)
-                        }}
-                      >
-                        <ArrowCircleLeftIcon />
-                      </IconButton>
-                      <h4>Đăng ký KPI cá nhân</h4>
-                    </Grid>
+                    <h3>
+                      <b>Đăng ký KPI cá nhân</b>
+                    </h3>
                   </CCol>
                   <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                    <div className="d-grid d-md-flex justify-content-end">
                       <AddKpiRegistration plan_id={id} selectedKpi={selectedKpi} />
                     </div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
-                <div className="mt-2 p-4">
+                <div className="mt-4">
                   <KpiRegistrationTable temList={entry} />
                 </div>
               </CCardBody>

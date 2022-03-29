@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Radio } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox, Radio, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -1053,6 +1053,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
               type="submit"
               onClick={() => onClickAccept()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -1120,6 +1121,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
           startIcon={<DoDisturbIcon />}
           type="submit"
           onClick={() => setSmModalVisible2(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Từ chối
         </Button>
@@ -1145,6 +1147,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
               type="submit"
               onClick={() => onClickDeny()}
               disabled={isSubmit}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận
             </Button>
@@ -1164,14 +1167,17 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-      >
-        <FactCheckIcon />
-      </IconButton>
+      <Tooltip title="Duyệt số liệu nhân viên">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <FactCheckIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"
@@ -1219,7 +1225,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
             // >
             //   Xác nhận
             // </Button>
-            <div className="d-grid gap-3 d-md-flex justify-content-end">
+            <div className="d-grid gap-2 d-md-flex justify-content-end">
               <DenyActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template.kpi_template_id}

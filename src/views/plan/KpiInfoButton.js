@@ -12,7 +12,7 @@ import {
   CInputGroupText,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
-import { IconButton } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 import api from 'src/views/axiosConfig'
 import { convertComparison } from 'src/utils/function'
@@ -22,15 +22,17 @@ export const KpiInfoButton = (props) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <InfoIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Thông tin KPI">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <InfoIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"

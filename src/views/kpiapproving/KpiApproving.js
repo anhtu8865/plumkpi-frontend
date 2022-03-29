@@ -126,8 +126,8 @@ const KpiApproving = () => {
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>
-              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
-              <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+              <CTableHeaderCell>Mô tả</CTableHeaderCell>
+              <CTableHeaderCell>Đơn vị</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               <CTableHeaderCell />
             </CTableRow>
@@ -151,15 +151,17 @@ const KpiApproving = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="5">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -180,8 +182,8 @@ const KpiApproving = () => {
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>
-              <CTableHeaderCell>MÔ TẢ</CTableHeaderCell>
-              <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+              <CTableHeaderCell>Mô tả</CTableHeaderCell>
+              <CTableHeaderCell>Đơn vị</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               <CTableHeaderCell />
             </CTableRow>
@@ -205,15 +207,17 @@ const KpiApproving = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="5">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -232,7 +236,7 @@ const KpiApproving = () => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-4">
+              <CCardBody className="p-5">
                 <CRow>
                   <CCol xs={12} sm={6}>
                     <Button
@@ -249,14 +253,16 @@ const KpiApproving = () => {
                 </CRow>
                 <CRow className="mt-4">
                   <CCol xs={6}>
-                    <h3>Duyệt KPI cá nhân</h3>
+                    <h3>
+                      <b>Duyệt KPI cá nhân</b>
+                    </h3>
                   </CCol>
                   <CCol xs={6}>
                     <div className="d-grid gap-3 d-md-flex justify-content-end"></div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
-                <div className="mt-2 p-4">
+                <div className="mt-4">
                   {user.role === 'Quản lý' ? (
                     <KpiApprovingTable temList={entry} />
                   ) : user.role === 'Giám đốc' ? (
