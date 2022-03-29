@@ -247,7 +247,9 @@ export const AssignPlanKpiButton = (kpiItem) => {
       })
       if (valid) {
         await setTargetKpi(target)
-        await assignKpi(listToReturn)
+        if (listToReturn.length > 0) {
+          await assignKpi(listToReturn)
+        }
       }
     }
     setIsSubmit(false)
@@ -444,12 +446,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
               onClick={(event) => {
                 onSubmit(event, target)
               }}
-              disabled={
-                isSubmit ||
-                target === '' ||
-                selectedDeptList.length === 0 ||
-                !compareYear(plan.year)
-              }
+              disabled={isSubmit || target === '' || !compareYear(plan.year)}
               sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận

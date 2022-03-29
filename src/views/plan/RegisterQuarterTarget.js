@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
 import { formatNumber } from 'src/utils/function'
-
+import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -117,10 +117,16 @@ const RegisterQuarterTarget = (props) => {
         .then(() => {
           dispatch(
             createAlert({
-              message: 'Cập nhật thành công.',
+              message: 'Đăng ký chỉ tiêu KPI thành công.',
               type: 'success',
             }),
           )
+          dispatch(
+            setLoading({
+              value: true,
+            }),
+          )
+          dispatch(setReload())
         })
         .catch((error) => {
           dispatch(
@@ -146,6 +152,7 @@ const RegisterQuarterTarget = (props) => {
             defaultValue={formatNumber(handleQuarterTargetValue(item))}
             valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
+            disabled={handleQuarterTargetStatus(item) === 'Chấp nhận'}
             {...formik.getFieldProps('target')}
           />
           <IconButton
