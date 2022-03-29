@@ -14,11 +14,11 @@ const _nav = [
         name: 'Kế hoạch KPI',
         to: '/plan',
       },
-      {
-        component: CNavItem,
-        name: 'Đăng ký KPI cá nhân',
-        to: '/kpiregistration/1',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'Đăng ký KPI cá nhân',
+      //   to: '/kpiregistration/1',
+      // },
     ],
   },
 
@@ -28,23 +28,23 @@ const _nav = [
   //   to: '/',
   //   icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
   // },
-  {
-    component: CNavGroup,
-    name: 'Số liệu',
-    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Nhập số liệu',
-        to: '/data',
-      },
-      {
-        component: CNavItem,
-        name: 'Duyệt số liệu',
-        to: '/',
-      },
-    ],
-  },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Số liệu',
+  //   icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  //   items: [
+  //     {
+  //       component: CNavItem,
+  //       name: 'Nhập số liệu',
+  //       to: '/data',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: 'Duyệt số liệu',
+  //       to: '/',
+  //     },
+  //   ],
+  // },
   {
     component: CNavItem,
     name: 'Bảng điều khiển',

@@ -13,7 +13,6 @@ const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTr
 const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
 const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
 const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
-const DataInput = React.lazy(() => import('./views/data/Data'))
 const EditWeightDept = React.lazy(() => import('./views/plan/EditWeightDept'))
 const DeptPlan = React.lazy(() => import('./views/plan/DeptPlan'))
 const EditWeightEmployee = React.lazy(() => import('./views/plan/EditWeightEmployee'))
@@ -44,7 +43,7 @@ const routes = [
     name: 'Xét duyệt KPI cá nhân',
     component: KpiApproving,
   },
-  { path: '/data', name: 'Kết quả KPI', component: DataInput },
+
   {
     path: '/plan/:id/deptplan/:deptId',
     name: 'Trọng số kế hoạch phòng ban',
