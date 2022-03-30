@@ -44,7 +44,7 @@ import RegisterQuarterTarget from './RegisterQuarterTarget'
 import { ApproveDataQuarterTarget } from './ApproveDataQuarterTarget'
 
 export const PlanKpiTable = (catItem) => {
-  console.log(catItem)
+  //console.log(catItem)
   const {
     plan,
     temInPlan,
@@ -528,7 +528,6 @@ export const PlanKpiTable = (catItem) => {
                             plan={plan}
                             item={item}
                             selectedMonth={selectedMonth}
-                            note=""
                           />
                         </CTableDataCell>
                       ) : (

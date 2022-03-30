@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Radio, Tooltip } from '@mui/material'
+import {
+  Button,
+  IconButton,
+  Avatar,
+  Checkbox,
+  Radio,
+  Tooltip,
+  TextareaAutosize,
+} from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -35,9 +43,8 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/function'
 import PropTypes from 'prop-types'
 
-import AutorenewIcon from '@mui/icons-material/Autorenew'
-import DoneIcon from '@mui/icons-material/Done'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import FilePresentIcon from '@mui/icons-material/FilePresent'
+import NoteDataMonthlyApprove from './NoteDataMonthlyApprove'
 
 export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
   //console.log(kpiItem)
@@ -60,8 +67,9 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
 
   const [userID, setUserID] = React.useState(0)
   const [selectedKpi, setSelectedKpi] = React.useState({})
-  const [smModalVisible1, setSmModalVisible1] = useState(false)
-  const [smModalVisible2, setSmModalVisible2] = useState(false)
+  const [smModalVisible1, setSmModalVisible1] = useState(false) //accept modal
+  const [smModalVisible2, setSmModalVisible2] = useState(false) //deny modal
+  const [smModalVisible3, setSmModalVisible3] = useState(false) //note modal
 
   const { reload } = useSelector((state) => state.view)
 
@@ -844,24 +852,20 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
                           <CInputGroup size="sm">
-                            <CFormInput
-                              type="number"
-                              value={handleMonthTargetValue(item)}
-                              disabled
-                            />
+                            <CFormInput value={handleMonthTargetValue(item)} disabled />
                             <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                           </CInputGroup>
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
                           <CInputGroup size="sm">
                             <CFormInput
-                              type="number"
                               value={handleMonthActualValue(item)}
                               invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
                               valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                               disabled
                             />
                             <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                            <NoteDataMonthlyApprove item={item} selectedMonth={selectedMonth} />
                           </CInputGroup>
                         </CTableDataCell>
                       </CTableRow>

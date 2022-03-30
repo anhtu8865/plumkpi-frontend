@@ -31,7 +31,7 @@ const RegisterQuarterTarget = (props) => {
   const [isSubmit, setIsSubmit] = React.useState(false)
 
   const handleQuarterTargetStatus = (item) => {
-    console.log(item)
+    //console.log(item)
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {
@@ -63,7 +63,7 @@ const RegisterQuarterTarget = (props) => {
   }
 
   const handleQuarterTargetValue = (item) => {
-    console.log(item)
+    //console.log(item)
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {

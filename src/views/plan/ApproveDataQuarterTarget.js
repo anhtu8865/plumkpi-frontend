@@ -168,28 +168,28 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         if (item.first_quarterly_target) {
           return item.first_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       case 2: {
         if (item.second_quarterly_target) {
           return item.second_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       case 3: {
         if (item.third_quarterly_target) {
           return item.third_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       case 4: {
         if (item.fourth_quarterly_target) {
           return item.fourth_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       default:
-        return 'Chưa đăng ký'
+        return 'Chưa có'
     }
   }
 
@@ -200,31 +200,31 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
           if (item.first_quarterly_target.hasOwnProperty('actual'))
             return item.first_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       case 2: {
         if (item.second_quarterly_target) {
           if (item.second_quarterly_target.hasOwnProperty('actual'))
             return item.second_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       case 3: {
         if (item.third_quarterly_target) {
           if (item.third_quarterly_target.hasOwnProperty('actual'))
             return item.third_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       case 4: {
         if (item.fourth_quarterly_target) {
           if (item.fourth_quarterly_target.hasOwnProperty('actual'))
             return item.fourth_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       default:
-        return 0
+        return 'Chưa có'
     }
   }
 
@@ -378,7 +378,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
-                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
+                          {handleQuarterTargetValue(item) !== 'Chưa có' ? (
                             <CInputGroup size="sm">
                               <CFormInput
                                 value={formatNumber(handleQuarterTargetValue(item))}
@@ -389,11 +389,11 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                               <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                             </CInputGroup>
                           ) : (
-                            'Chưa đăng ký'
+                            'Chưa có'
                           )}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          {handleQuarterDataValue(item) !== 'Chưa đăng ký' ? (
+                          {handleQuarterDataValue(item) !== 'Chưa có' ? (
                             <CInputGroup size="sm">
                               <CFormInput
                                 value={formatNumber(handleQuarterDataValue(item))}
@@ -404,7 +404,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                               <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                             </CInputGroup>
                           ) : (
-                            'Chưa đăng ký'
+                            'Chưa có'
                           )}
                         </CTableDataCell>
                       </CTableRow>
