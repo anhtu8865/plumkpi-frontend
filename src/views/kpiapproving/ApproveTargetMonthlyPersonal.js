@@ -428,23 +428,19 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem) => {
                           {item.user.user_name}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <CFormInput
-                              type="number"
-                              value={handleTargetValue(item.user.user_id)}
-                              invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
-                              valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
-                              //   invalid={
-                              //     handleTargetValue(item.user_id) === '' &&
-                              //     handleCheckboxValue(item.user_id)
-                              //   }
-                              //   onChange={(event) => {
-                              //     handleTargetOnChange(event, item.user_id)
-                              //   }}
-                              //   disabled={!handleCheckboxValue(item.user_id)}
-                            />
-                            <CInputGroupText>{kpiItem.unit}</CInputGroupText>
-                          </CInputGroup>
+                          {handleTargetValue(item.user.user_id) !== '' ? (
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                value={handleTargetValue(item.user.user_id)}
+                                invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
+                                valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
+                                disabled
+                              />
+                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                            </CInputGroup>
+                          ) : (
+                            'Chưa có'
+                          )}
                         </CTableDataCell>
                       </CTableRow>
                     </>

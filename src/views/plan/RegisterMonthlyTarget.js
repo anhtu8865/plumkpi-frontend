@@ -31,7 +31,7 @@ const RegisterMonthlyTarget = (props) => {
   const [isSubmit, setIsSubmit] = React.useState(false)
 
   const handleMonthTargetValue = (item) => {
-    console.log(item)
+    //console.log(item)
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {

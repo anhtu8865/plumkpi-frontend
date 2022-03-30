@@ -851,22 +851,30 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                           {item.user.user_name}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <CFormInput value={handleMonthTargetValue(item)} disabled />
-                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                          </CInputGroup>
+                          {handleMonthTargetValue(item) !== 'Chưa có' ? (
+                            <CInputGroup size="sm">
+                              <CFormInput value={handleMonthTargetValue(item)} disabled />
+                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                            </CInputGroup>
+                          ) : (
+                            'Chưa có'
+                          )}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <CFormInput
-                              value={handleMonthActualValue(item)}
-                              invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
-                              valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
-                              disabled
-                            />
-                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                            <NoteDataMonthlyApprove item={item} selectedMonth={selectedMonth} />
-                          </CInputGroup>
+                          {handleMonthActualValue(item) !== 'Chưa có' ? (
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                value={handleMonthActualValue(item)}
+                                invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
+                                valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
+                                disabled
+                              />
+                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                              <NoteDataMonthlyApprove item={item} selectedMonth={selectedMonth} />
+                            </CInputGroup>
+                          ) : (
+                            'Chưa có'
+                          )}
                         </CTableDataCell>
                       </CTableRow>
                     </>

@@ -35,9 +35,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/function'
 import PropTypes from 'prop-types'
 
-import AutorenewIcon from '@mui/icons-material/Autorenew'
-import DoneIcon from '@mui/icons-material/Done'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import NoteDataMonthlyApprove from '../plan/NoteDataMonthlyApprove'
 
 export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
   //console.log(kpiItem)
@@ -702,28 +700,37 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
                           {item.user.user_name}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <CFormInput
-                              type="number"
-                              value={handleMonthTargetValue(item)}
-                              invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
-                              valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
-                              disabled
-                            />
-                            <CInputGroupText>{kpiItem.unit}</CInputGroupText>
-                          </CInputGroup>
+                          {handleMonthTargetValue(item) !== 'Chưa có' ? (
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                type="number"
+                                value={handleMonthTargetValue(item)}
+                                invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
+                                valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
+                                disabled
+                              />
+                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                            </CInputGroup>
+                          ) : (
+                            'Chưa có'
+                          )}
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <CFormInput
-                              type="number"
-                              value={handleMonthActualValue(item)}
-                              invalid={handleMonthlyDataStatus(item) === 'Từ chối'}
-                              valid={handleMonthlyDataStatus(item) === 'Chấp nhận'}
-                              disabled
-                            />
-                            <CInputGroupText>{kpiItem.unit}</CInputGroupText>
-                          </CInputGroup>
+                          {handleMonthActualValue(item) !== 'Chưa có' ? (
+                            <CInputGroup size="sm">
+                              <CFormInput
+                                type="number"
+                                value={handleMonthActualValue(item)}
+                                invalid={handleMonthlyDataStatus(item) === 'Từ chối'}
+                                valid={handleMonthlyDataStatus(item) === 'Chấp nhận'}
+                                disabled
+                              />
+                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                              <NoteDataMonthlyApprove item={item} selectedMonth={selectedMonth} />
+                            </CInputGroup>
+                          ) : (
+                            'Chưa có'
+                          )}
                         </CTableDataCell>
                       </CTableRow>
                     </>
