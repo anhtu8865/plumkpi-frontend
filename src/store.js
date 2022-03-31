@@ -9,6 +9,7 @@ import departmentSlice from './slices/departmentSlice'
 import planDetailSlice from './slices/planDetailSlice'
 import kpiRegisSlice from './slices/kpiRegisSlice'
 import kpiApprovingSlice from './slices/kpiApprovingSlice'
+import dashboardSlice from './slices/dashboardSlice'
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     department: departmentSlice.reducer,
     kpiRegis: kpiRegisSlice.reducer,
     kpiApproving: kpiApprovingSlice.reducer,
+    dashboard: dashboardSlice.reducer,
   },
 })
 
