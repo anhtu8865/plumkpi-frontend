@@ -12,7 +12,7 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
-import { Button, IconButton } from '@mui/material'
+import { Button, IconButton, Tooltip } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
@@ -98,16 +98,18 @@ const EditUser = (props) => {
 
   return (
     <>
-      <IconButton
-        id="edit"
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <EditIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Chỉnh sửa người dùng">
+        <IconButton
+          id="edit"
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <form onSubmit={formik.handleSubmit}>
         <CModal

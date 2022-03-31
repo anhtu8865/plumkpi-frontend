@@ -1,6 +1,6 @@
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import LockResetIcon from '@mui/icons-material/LockReset'
-import { Button, IconButton } from '@mui/material'
+import { Button, IconButton, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -50,10 +50,11 @@ const ResetPwUser = (props) => {
 
   return (
     <>
-      {' '}
-      <IconButton id="delete" color="primary" onClick={() => setModalVisible(true)} size="small">
-        <LockResetIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Khôi phục mật khẩu">
+        <IconButton id="delete" color="primary" onClick={() => setModalVisible(true)} size="small">
+          <LockResetIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <CModal
         alignment="center"
         scrollable

@@ -1,18 +1,8 @@
-import React, { useState } from 'react'
-import {
-  CCol,
-  CFormLabel,
-  CFormInput,
-  CRow,
-  CModal,
-  CModalBody,
-  CModalTitle,
-  CModalHeader,
-} from '@coreui/react'
-import PropTypes from 'prop-types'
-import { IconButton } from '@mui/material'
+import { CCol, CModal, CModalBody, CModalHeader, CModalTitle, CRow } from '@coreui/react'
 import InfoIcon from '@mui/icons-material/Info'
-import api from 'src/views/axiosConfig'
+import { IconButton, Tooltip } from '@mui/material'
+import PropTypes from 'prop-types'
+import React, { useState } from 'react'
 
 const InfoUser = (props) => {
   const { userItem } = props
@@ -20,19 +10,20 @@ const InfoUser = (props) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <InfoIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Thông tin người dùng">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <InfoIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"
-        size="lg"
         scrollable
         visible={modalVisible}
         onClose={() => {
@@ -44,48 +35,44 @@ const InfoUser = (props) => {
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">
           <CRow>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Họ tên</CFormLabel>
-              <CFormInput defaultValue={userItem.user_name} disabled />
-            </CCol>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Email</CFormLabel>
-              <CFormInput defaultValue={userItem.email} disabled />
+            <CCol xs={12}>
+              <b>ID:</b> {userItem.user_id}
             </CCol>
           </CRow>
           <CRow>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Ngày sinh</CFormLabel>
-              <CFormInput defaultValue={userItem.dob} disabled />
+            <CCol xs={12}>
+              <b>Họ và tên:</b> {userItem.user_name}
             </CCol>
           </CRow>
           <CRow>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Giới tính</CFormLabel>
-              <CFormInput defaultValue={userItem.gender} disabled />
-            </CCol>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Số điện thoại</CFormLabel>
-              <CFormInput defaultValue={userItem.phone} disabled />
+            <CCol xs={12}>
+              <b>Email:</b> {userItem.email}
             </CCol>
           </CRow>
           <CRow>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Địa chỉ</CFormLabel>
-              <CFormInput defaultValue={userItem.address} disabled />
+            <CCol xs={12}>
+              <b>Chức vụ:</b> {userItem.role}
             </CCol>
           </CRow>
           <CRow>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Phòng ban</CFormLabel>
-              <CFormInput
-                defaultValue={userItem.dept != null ? userItem.dept.dept_name : null}
-                disabled
-              />
+            <CCol xs={12}>
+              <b>Phone:</b> {userItem.phone}
             </CCol>
-            <CCol>
-              <CFormLabel htmlFor="kpiname">Chức vụ</CFormLabel>
-              <CFormInput defaultValue={userItem.role} disabled />
+          </CRow>
+          <CRow>
+            <CCol xs={12}>
+              <b>Giới tính:</b> {userItem.gender}
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12}>
+              <b>Địa chỉ:</b> {userItem.address}
+            </CCol>
+          </CRow>
+
+          <CRow>
+            <CCol xs={12}>
+              <b>Phòng ban:</b> {userItem.dept ? userItem.dept.dept_name : null}
             </CCol>
           </CRow>
         </CModalBody>

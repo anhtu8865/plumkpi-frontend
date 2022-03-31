@@ -1,6 +1,6 @@
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { Button, IconButton } from '@mui/material'
+import { Button, IconButton, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -48,10 +48,12 @@ const DeleteUser = (props) => {
 
   return (
     <>
-      {' '}
-      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)} size="small">
-        <DeleteForeverIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Xóa người dùng">
+        <IconButton id="delete" color="error" onClick={() => setModalVisible(true)} size="small">
+          <DeleteForeverIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+
       <CModal
         alignment="center"
         scrollable
