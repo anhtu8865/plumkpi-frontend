@@ -96,113 +96,287 @@ export const PlanKpiTable = (catItem) => {
     }
   }*/
 
-  const handleMonthTargetValue = (item) => {
+  // const handleMonthTargetValue = (item) => {
+  //   switch (selectedMonth) {
+  //     case 1: {
+  //       if (item.first_monthly_target) {
+  //         return item.first_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 2: {
+  //       if (item.second_monthly_target) {
+  //         return item.second_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 3: {
+  //       if (item.third_monthly_target) {
+  //         return item.third_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 4: {
+  //       if (item.fourth_monthly_target) {
+  //         return item.fourth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 5: {
+  //       if (item.fifth_monthly_target) {
+  //         return item.fifth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 6: {
+  //       if (item.sixth_monthly_target) {
+  //         return item.sixth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 7: {
+  //       if (item.seventh_monthly_target) {
+  //         return item.seventh_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 8: {
+  //       if (item.eighth_monthly_target) {
+  //         return item.eighth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 9: {
+  //       if (item.ninth_monthly_target) {
+  //         return item.ninth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 10: {
+  //       if (item.tenth_monthly_target) {
+  //         return item.tenth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 11: {
+  //       if (item.eleventh_monthly_target) {
+  //         return item.eleventh_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     case 12: {
+  //       if (item.twelfth_monthly_target) {
+  //         return item.twelfth_monthly_target.target
+  //       }
+  //       return 'Chưa có'
+  //     }
+  //     default:
+  //       return 'Chưa có'
+  //   }
+  // }
+
+  // const handleQuarterTargetStatus = (item) => {
+  //   switch (selectedQuarter) {
+  //     case 1: {
+  //       if (item.first_quarterly_target) {
+  //         return item.first_quarterly_target.approve
+  //       }
+  //       return ''
+  //     }
+  //     case 2: {
+  //       if (item.second_quarterly_target) {
+  //         return item.second_quarterly_target.approve
+  //       }
+  //       return ''
+  //     }
+  //     case 3: {
+  //       if (item.third_quarterly_target) {
+  //         return item.third_quarterly_target.approve
+  //       }
+  //       return ''
+  //     }
+  //     case 4: {
+  //       if (item.fourth_quarterly_target) {
+  //         return item.fourth_quarterly_target.approve
+  //       }
+  //       return ''
+  //     }
+  //     default:
+  //       return ''
+  //   }
+  // }
+
+  const handleMonthPersonalBarStatus = (item) => {
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
-          return item.first_monthly_target.target
+          if (item.first_monthly_target.hasOwnProperty('actual')) {
+            if (item.first_monthly_target.actual) {
+              if (item.first_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 2: {
         if (item.second_monthly_target) {
-          return item.second_monthly_target.target
+          if (item.second_monthly_target.hasOwnProperty('actual')) {
+            if (item.second_monthly_target.actual) {
+              if (item.second_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 3: {
         if (item.third_monthly_target) {
-          return item.third_monthly_target.target
+          if (item.third_monthly_target.hasOwnProperty('actual')) {
+            if (item.third_monthly_target.actual) {
+              if (item.third_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 4: {
         if (item.fourth_monthly_target) {
-          return item.fourth_monthly_target.target
+          if (item.fourth_monthly_target.hasOwnProperty('actual')) {
+            if (item.fourth_monthly_target.actual) {
+              if (item.fourth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 5: {
         if (item.fifth_monthly_target) {
-          return item.fifth_monthly_target.target
+          if (item.fifth_monthly_target.hasOwnProperty('actual')) {
+            if (item.fifth_monthly_target.actual) {
+              if (item.fifth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 6: {
         if (item.sixth_monthly_target) {
-          return item.sixth_monthly_target.target
+          if (item.sixth_monthly_target.hasOwnProperty('actual')) {
+            if (item.sixth_monthly_target.actual) {
+              if (item.sixth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 7: {
         if (item.seventh_monthly_target) {
-          return item.seventh_monthly_target.target
+          if (item.seventh_monthly_target.hasOwnProperty('actual')) {
+            if (item.seventh_monthly_target.actual) {
+              if (item.seventh_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 8: {
         if (item.eighth_monthly_target) {
-          return item.eighth_monthly_target.target
+          if (item.eighth_monthly_target.hasOwnProperty('actual')) {
+            if (item.eighth_monthly_target.actual) {
+              if (item.eighth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 9: {
         if (item.ninth_monthly_target) {
-          return item.ninth_monthly_target.target
+          if (item.ninth_monthly_target.hasOwnProperty('actual')) {
+            if (item.ninth_monthly_target.actual) {
+              if (item.ninth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 10: {
         if (item.tenth_monthly_target) {
-          return item.tenth_monthly_target.target
+          if (item.tenth_monthly_target.hasOwnProperty('actual')) {
+            if (item.tenth_monthly_target.actual) {
+              if (item.tenth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 11: {
         if (item.eleventh_monthly_target) {
-          return item.eleventh_monthly_target.target
+          if (item.eleventh_monthly_target.hasOwnProperty('actual')) {
+            if (item.eleventh_monthly_target.actual) {
+              if (item.eleventh_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       case 12: {
         if (item.twelfth_monthly_target) {
-          return item.twelfth_monthly_target.target
+          if (item.twelfth_monthly_target.hasOwnProperty('actual')) {
+            if (item.twelfth_monthly_target.actual) {
+              if (item.twelfth_monthly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return 'Chưa có'
+        return false
       }
       default:
-        return 'Chưa có'
+        return false
     }
   }
 
-  const handleQuarterTargetStatus = (item) => {
+  const handleQuarterPersonalBarStatus = (item) => {
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {
-          return item.first_quarterly_target.approve
+          if (item.first_quarterly_target.hasOwnProperty('actual')) {
+            if (item.first_quarterly_target.actual) {
+              if (item.first_quarterly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return ''
+        return false
       }
       case 2: {
         if (item.second_quarterly_target) {
-          return item.second_quarterly_target.approve
+          if (item.second_quarterly_target.hasOwnProperty('actual')) {
+            if (item.second_quarterly_target.actual) {
+              if (item.second_quarterly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return ''
+        return false
       }
       case 3: {
         if (item.third_quarterly_target) {
-          return item.third_quarterly_target.approve
+          if (item.third_quarterly_target.hasOwnProperty('actual')) {
+            if (item.third_quarterly_target.actual) {
+              if (item.third_quarterly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return ''
+        return false
       }
       case 4: {
         if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.approve
+          if (item.fourth_quarterly_target.hasOwnProperty('actual')) {
+            if (item.fourth_quarterly_target.actual) {
+              if (item.fourth_quarterly_target.actual.approve === 'Chấp nhận') return true
+            }
+          }
         }
-        return ''
+        return false
       }
       default:
-        return ''
+        return false
     }
   }
 
@@ -537,17 +711,49 @@ export const PlanKpiTable = (catItem) => {
                     ) : null}
                     {/*Nhân viên đăng ký target, data cá nhân*/}
                     <CTableDataCell>{item.kpi_template.unit}</CTableDataCell>
-                    <CTableDataCell>
-                      <CProgress>
-                        <CProgressBar
-                          color={handleProgressBarColor(item.kpi_template.kpi_template_id)}
-                          variant="striped"
-                          value={handleResultValue(item.kpi_template.kpi_template_id)}
-                        >
-                          {handleResultValue(item.kpi_template.kpi_template_id)}%
-                        </CProgressBar>
-                      </CProgress>
-                    </CTableDataCell>
+                    {catItem.kpi_category.kpi_category_name === 'Cá nhân' &&
+                    checkedMonth &&
+                    user.role === 'Nhân viên' ? (
+                      <CTableDataCell>
+                        <CProgress>
+                          <CProgressBar
+                            color="success"
+                            variant="striped"
+                            value={handleMonthPersonalBarStatus(item) ? 100 : 0}
+                          >
+                            {/* {handleResultValue(item.kpi_template.kpi_template_id)}% */}
+                            {handleMonthPersonalBarStatus(item) ? '100%' : '0%'}
+                          </CProgressBar>
+                        </CProgress>
+                      </CTableDataCell>
+                    ) : catItem.kpi_category.kpi_category_name === 'Cá nhân' &&
+                      checkedQuarter &&
+                      user.role === 'Quản lý' ? (
+                      <CTableDataCell>
+                        <CProgress>
+                          <CProgressBar
+                            color="success"
+                            variant="striped"
+                            value={handleQuarterPersonalBarStatus(item) ? 100 : 0}
+                          >
+                            {/* {handleResultValue(item.kpi_template.kpi_template_id)}% */}
+                            {handleQuarterPersonalBarStatus(item) ? '100%' : '0%'}
+                          </CProgressBar>
+                        </CProgress>
+                      </CTableDataCell>
+                    ) : (
+                      <CTableDataCell>
+                        <CProgress>
+                          <CProgressBar
+                            color={handleProgressBarColor(item.kpi_template.kpi_template_id)}
+                            variant="striped"
+                            value={handleResultValue(item.kpi_template.kpi_template_id)}
+                          >
+                            {handleResultValue(item.kpi_template.kpi_template_id)}%
+                          </CProgressBar>
+                        </CProgress>
+                      </CTableDataCell>
+                    )}
                     <CTableDataCell className="text-center w-25">
                       <div className="d-flex flex-row justify-content-center">
                         {user.role === 'Giám đốc' &&
