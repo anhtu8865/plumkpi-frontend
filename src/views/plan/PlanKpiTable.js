@@ -483,8 +483,7 @@ export const PlanKpiTable = (catItem) => {
                             plan={plan}
                             item={item}
                             selectedQuarter={selectedQuarter}
-                            value={handleActualValue(item.kpi_template.kpi_template_id)}
-                            note=""
+                            // value={handleActualValue(item.kpi_template.kpi_template_id)}
                           />
                         </CTableDataCell>
                       ) : (

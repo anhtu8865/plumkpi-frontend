@@ -34,6 +34,8 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle'
 import PropTypes from 'prop-types'
 
+import NoteDataQuarterApprove from '../plan/NoteDataQuarterApprove'
+
 export const ApproveDataQuarterPersonal = (plan_id, kpiItem) => {
   //console.log(kpiItem)
   const dispatch = useDispatch()
@@ -400,6 +402,10 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem) => {
                                 disabled
                               />
                               <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                              <NoteDataQuarterApprove
+                                item={item}
+                                selectedQuarter={selectedQuarter}
+                              />
                             </CInputGroup>
                           ) : (
                             'Chưa đăng ký'
