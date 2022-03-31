@@ -242,28 +242,28 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
         if (item.first_quarterly_target) {
           return item.first_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       case 2: {
         if (item.second_quarterly_target) {
           return item.second_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       case 3: {
         if (item.third_quarterly_target) {
           return item.third_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       case 4: {
         if (item.fourth_quarterly_target) {
           return item.fourth_quarterly_target.target
         }
-        return 'Chưa đăng ký'
+        return 'Chưa có'
       }
       default:
-        return 'Chưa đăng ký'
+        return 'Chưa có'
     }
   }
 
@@ -378,7 +378,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
-                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
+                          {handleQuarterTargetValue(item) !== 'Chưa có' ? (
                             <CInputGroup size="sm">
                               <CFormInput
                                 value={formatNumber(handleQuarterTargetValue(item))}
@@ -389,7 +389,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                               <CInputGroupText>{kpiItem.unit}</CInputGroupText>
                             </CInputGroup>
                           ) : (
-                            'Chưa đăng ký'
+                            'Chưa có'
                           )}
                         </CTableDataCell>
                       </CTableRow>
