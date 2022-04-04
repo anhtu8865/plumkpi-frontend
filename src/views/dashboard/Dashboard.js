@@ -30,16 +30,22 @@ import { useHistory } from 'react-router-dom'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import AddIcon from '@mui/icons-material/Add'
+import { setDashboard, setSelectedDashboard } from 'src/slices/dashboardDetailSlice'
 import api from 'src/views/axiosConfig'
 import PropTypes from 'prop-types'
 
+import AddDashboardButton from './AddDashboardButton'
+import DashboardDetail from './DashboardDetail'
+import EditDashboardButton from './EditDashboardButton'
+import DeleteDashboardButton from './DeleteDashboardButton'
+
 const Dashboard = () => {
-  const history = useHistory()
   const dispatch = useDispatch()
 
   const { reload, loading } = useSelector((state) => state.view)
   const { dashboardList } = useSelector((state) => state.dashboard)
+
+  const { selectedDashboard } = useSelector((state) => state.dashboardDetail)
 
   const [entry, setEntry] = React.useState([])
 
@@ -72,92 +78,59 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     setEntry(dashboardList)
+    function getDashBoardId(dashboardList) {
+      if (dashboardList.length > 0) {
+        dispatch(setSelectedDashboard({ value: Number(dashboardList[0].dashboard_id) }))
+      } else {
+        return
+      }
+    }
+    getDashBoardId(dashboardList)
   }, [dashboardList])
 
-  const NoDashBoardView = () => {
+  const DashBoardViewNav = (props) => {
     return (
       <>
-        <CCard>
-          <CCardBody className="p-5">
-            <CRow className="mt-5">
-              <CCol xs={12} className="text-center">
-                <h2 style={{ marginBottom: '20px' }}>
-                  <>Người dùng chưa có số liệu để tạo dashboard</>
-                </h2>
-                <Button
+        <CRow className="d-flex justify-content-between">
+          <CCol xs={12} sm={4} className="d-flex flex-row">
+            <CInputGroup size="sm">
+              <CInputGroupText>Dashboard</CInputGroupText>
+              <CFormSelect
+                value={selectedDashboard}
+                onChange={(event) => {
+                  dispatch(setSelectedDashboard({ value: Number(event.target.value) }))
+                }}
+              >
+                {/* <option value={null}>---Chọn---</option> */}
+                {props.dashboardList.map((item) => (
+                  <option value={item.dashboard_id} key={item.dashboard_id}>
+                    {item.dashboard_name}
+                  </option>
+                ))}
+              </CFormSelect>
+              <AddDashboardButton />
+            </CInputGroup>
+          </CCol>
+          <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-center">
+            {/* <Button
                   variant="contained"
                   color="primary"
-                  startIcon={<KeyboardDoubleArrowLeftIcon />}
-                  onClick={() => {
-                    history.push(`plan`)
-                  }}
+                  startIcon={<AddBoxIcon />}
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
-                  Nhập số liệu
-                </Button>
-              </CCol>
-            </CRow>
-          </CCardBody>
-        </CCard>
+                  Thêm
+                </Button> */}
+          </CCol>
+          <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-end">
+            <EditDashboardButton />
+            <DeleteDashboardButton />
+          </CCol>
+        </CRow>
       </>
     )
   }
 
-  const HasDashBoardView = (props) => {
-    return (
-      <>
-        <CCard>
-          <CCardBody className="p-5">
-            <CRow className="d-flex justify-content-between">
-              <CCol xs={12} sm={4} xl={3} className="d-flex flex-row">
-                <CInputGroup size="sm">
-                  <CInputGroupText>Dashboard</CInputGroupText>
-                  <CFormSelect
-                  // value={selectedMonth}
-                  // onChange={(event) => {
-                  //   dispatch(setSelectedMonth({ value: Number(event.target.value) }))
-                  // }}
-                  >
-                    {entry.map((item) => (
-                      <option value={item.dashboard_id} key={item.dashboard_id}>
-                        {item.dashboard_name}
-                      </option>
-                    ))}
-                  </CFormSelect>
-                  <IconButton id="edit" color="primary" size="small">
-                    <AddIcon fontSize="small" />
-                  </IconButton>
-                </CInputGroup>
-              </CCol>
-              <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ textTransform: 'none', borderRadius: 10 }}
-                >
-                  Thêm biểu đồ
-                </Button>
-              </CCol>
-              <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-end">
-                <Tooltip title="Chỉnh sửa dashboard">
-                  <IconButton id="edit" color="primary" size="small">
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Xóa dashboard">
-                  <IconButton id="delete" color="error" size="small">
-                    <DeleteForeverIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </CCol>
-            </CRow>
-          </CCardBody>
-        </CCard>
-      </>
-    )
-  }
-
-  HasDashBoardView.propTypes = {
+  DashBoardViewNav.propTypes = {
     dashboardList: PropTypes.array,
   }
 
@@ -166,7 +139,12 @@ const Dashboard = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol xs={12}>
-            <HasDashBoardView dashboardList={entry} />
+            <CCard>
+              <CCardBody className="p-5">
+                <DashBoardViewNav dashboardList={entry} />
+                <DashboardDetail />
+              </CCardBody>
+            </CCard>
           </CCol>
         </CRow>
       </CContainer>

@@ -163,7 +163,7 @@ const AddUser = () => {
                     }
                   />
 
-                  <CFormFeedback invalid>{formik.errors.email1}</CFormFeedback>
+                  <CFormFeedback invalid>{formik.errors.email}</CFormFeedback>
                 </CCol>
               </CRow>
               {/* <CRow className="mt-4">
