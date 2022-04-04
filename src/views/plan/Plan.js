@@ -36,11 +36,11 @@ const Plan = () => {
 
   React.useEffect(() => {
     api
-      .get('/plans', { params: { offset: 0, limit: 10 } })
+      .get('/plans/all')
       .then((response) => {
         dispatch(
           setPlanList({
-            value: response.data.items,
+            value: response.data,
           }),
         )
       })

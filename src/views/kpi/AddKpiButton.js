@@ -226,11 +226,11 @@ export const AddKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol>
-                      <CFormLabel htmlFor="kpides">
+                      <CFormLabel htmlFor="description">
                         <b>Mô tả KPI</b>
                       </CFormLabel>
                       <CFormInput
-                        id="kpides"
+                        id="description"
                         placeholder="Nhập mô tả KPI"
                         value={values.description}
                         onChange={handleChange}

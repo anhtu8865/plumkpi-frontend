@@ -34,6 +34,7 @@ import AddIcon from '@mui/icons-material/Add'
 import api from 'src/views/axiosConfig'
 import PropTypes from 'prop-types'
 import AddDashboardButton from './AddDashboardButton'
+import { CreateChartButton } from './CreateChartButton'
 
 const DashboardDetail = () => {
   const history = useHistory()
@@ -44,7 +45,21 @@ const DashboardDetail = () => {
 
   return (
     <>
-      <h1>{selectedDashboard}</h1>
+      <CRow className="mt-4">
+        <CCol xs={12} sm={6}>
+          <h3>{selectedDashboard}</h3>
+        </CCol>
+        <CCol xs={12} sm={6} className="d-flex flex-row gap-1 justify-content-end">
+          <CreateChartButton />
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ textTransform: 'none', borderRadius: 10 }}
+          >
+            Tạo báo cáo
+          </Button>
+        </CCol>
+      </CRow>
     </>
   )
 }
