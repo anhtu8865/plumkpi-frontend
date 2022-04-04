@@ -166,7 +166,7 @@ const Dashboard = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol xs={12}>
-            {entry.length > 0 ? <HasDashBoardView dashboardList={entry} /> : <NoDashBoardView />}
+            <HasDashBoardView dashboardList={entry} />
           </CCol>
         </CRow>
       </CContainer>
