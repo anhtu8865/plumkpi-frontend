@@ -71,3 +71,16 @@ export const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 export const quarterArray = [1, 2, 3, 4]
 
 export const dateTypeOption = ['Năm', 'Quý', 'Tháng']
+
+export const colorArray = [
+  '#f44336',
+  '#673ab7',
+  '#03a9f4',
+  '#4caf50',
+  '#ffeb3b',
+  '#ff5722',
+  '#607d8b',
+  '#e91e63',
+  '#cddc39',
+  '#795548',
+]

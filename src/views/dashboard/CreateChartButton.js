@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Button, IconButton, Slider } from '@mui/material'
-import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import {
@@ -27,12 +26,10 @@ import { FieldArray, Form, Formik, getIn, useFormikContext } from 'formik'
 import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import AddIcon from '@mui/icons-material/Add'
-import { GithubPicker } from 'react-color'
-import { dateTypeOption, quarterArray, monthArray } from 'src/utils/constant'
-import reactCSS from 'reactcss'
+import { dateTypeOption, colorArray } from 'src/utils/constant'
 import Select from 'react-select'
+import cloneDeep from 'lodash/cloneDeep'
+import { CChart } from '@coreui/react-chartjs'
 
 export const CreateChartButton = () => {
   const dispatch = useDispatch()
@@ -82,15 +79,32 @@ export const CreateChartButton = () => {
     }
   }
 
+  const getData = async (planId, kpis, dateType, period, filter) => {
+    const response = await api.get(`charts/data`, {
+      params: {
+        chart_name: 'abc',
+        description: '',
+        plan_id: planId,
+        kpis: kpis,
+        dateType: dateType,
+        period: period,
+        filter: filter,
+      },
+    })
+    return response.data
+  }
+
   const handleKpis = (kpisList) => {
     const array = []
     kpisList.map((item) => {
+      const arr = []
       item.kpi_templates.map((i) => {
-        array.push({
+        arr.push({
           label: i.kpi_template_name,
           value: i.kpi_template_id,
         })
       })
+      array.push({ label: item.kpi_category_name, options: arr })
     })
     return array
   }
@@ -178,14 +192,109 @@ export const CreateChartButton = () => {
 
   const ChartPreview = () => {
     const { values } = useFormikContext()
+    const [result, setResult] = useState({})
+    const newKpis = convertKpisOrFilter(values.kpis)
+    const newFilter = convertKpisOrFilter(values.filter)
+    const newPeriod = convertPeriod(values.period)
+    const samplePieResult = {
+      labels: ['Quý 1'],
+      datasets: [
+        {
+          label: 'Nhân viên 1',
+          data: [
+            {
+              target: 600,
+              actual: 520,
+              resultOfKpi: {
+                result: 80,
+                color: '#fccb00',
+              },
+              unit: 'VND',
+            },
+          ],
+        },
+        {
+          label: 'Nhân viên 2',
+          data: [
+            {
+              target: 250,
+              resultOfKpi: {
+                result: 0,
+                color: 'Tím',
+              },
+              unit: 'VND',
+            },
+          ],
+        },
+      ],
+    }
+
     useEffect(() => {
-      //cần convert lại để gọi api getData
-      const newKpis = convertKpisOrFilter(values.kpis)
-      const newFilter = convertKpisOrFilter(values.filter)
-      const newPeriod = convertPeriod(values.period)
+      const fetchData = async () => {
+        try {
+          if (values.kpis.length > 0) {
+            /*const res = await getData(
+              values.plan_id,
+              newKpis,
+              values.dateType,
+              newPeriod,
+              newFilter,
+            )*/
+            setResult(samplePieResult)
+          }
+        } catch (error) {
+          if (error.response) {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          }
+        }
+      }
+
+      fetchData()
     }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
 
-    return null
+    if (values.kpis.length === 0 || !result) {
+      return <div>Hãy chọn KPI để vẽ biểu đồ</div>
+    } else {
+      if (result.datasets) {
+        if (
+          (values.kpis.length === 1 && newPeriod.length < 2 && values.filter.length >= 2) ||
+          (values.kpis.length > 1 && newPeriod.length < 2)
+        ) {
+          //vẽ biểu đồ tròn
+          const labels = []
+          const data = []
+          result.datasets.map((item) => {
+            labels.push(item.label)
+            data.push(item.data[0])
+          })
+          return (
+            <CChart
+              style={{ height: '200px' }}
+              type="pie"
+              data={{
+                labels: labels,
+                datasets: [{ data: data, backgroundColor: colorArray.slice(0, data.length) }],
+              }}
+              options={{
+                parsing: {
+                  key: 'resultOfKpi.result',
+                },
+                maintainAspectRatio: false,
+              }}
+            />
+          )
+        } else {
+          return null
+        }
+      } else {
+        return null
+      }
+    }
   }
 
   return (
@@ -254,10 +363,10 @@ export const CreateChartButton = () => {
                           setFieldValue('plan_id', event.target.value)
                           const result = await getAllKpisInPlan(event.target.value)
                           setKpisOption(handleKpis(result))
+                          setFieldValue('kpis', [])
                           setFieldValue('dateType', 'Năm')
                           setFieldValue('period', [])
                           setFieldValue('filter', [])
-                          setFieldValue('kpis', [])
                         }}
                       >
                         {plansOption.map((item) => {
