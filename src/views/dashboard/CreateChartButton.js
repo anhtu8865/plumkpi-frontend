@@ -27,9 +27,11 @@ import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import { dateTypeOption, colorArray } from 'src/utils/constant'
+import { handleColor } from 'src/utils/function'
 import Select from 'react-select'
 import cloneDeep from 'lodash/cloneDeep'
 import { CChart } from '@coreui/react-chartjs'
+import GaugeChart from 'react-gauge-chart'
 
 export const CreateChartButton = () => {
   const dispatch = useDispatch()
@@ -80,18 +82,20 @@ export const CreateChartButton = () => {
   }
 
   const getData = async (planId, kpis, dateType, period, filter) => {
-    const response = await api.get(`charts/data`, {
-      params: {
-        chart_name: 'abc',
-        description: '',
-        plan_id: planId,
-        kpis: kpis,
-        dateType: dateType,
-        period: period,
-        filter: filter,
-      },
+    const response = await api.post(`charts/data`, {
+      chart_name: 'abc',
+      description: '',
+      plan_id: planId,
+      kpis: kpis,
+      dateType: dateType,
+      period: period,
+      filter: filter,
     })
     return response.data
+  }
+
+  const createChart = async (obj) => {
+    await api.post(`charts`, obj)
   }
 
   const handleKpis = (kpisList) => {
@@ -196,51 +200,20 @@ export const CreateChartButton = () => {
     const newKpis = convertKpisOrFilter(values.kpis)
     const newFilter = convertKpisOrFilter(values.filter)
     const newPeriod = convertPeriod(values.period)
-    const samplePieResult = {
-      labels: ['Quý 1'],
-      datasets: [
-        {
-          label: 'Nhân viên 1',
-          data: [
-            {
-              target: 600,
-              actual: 520,
-              resultOfKpi: {
-                result: 80,
-                color: '#fccb00',
-              },
-              unit: 'VND',
-            },
-          ],
-        },
-        {
-          label: 'Nhân viên 2',
-          data: [
-            {
-              target: 250,
-              resultOfKpi: {
-                result: 0,
-                color: 'Tím',
-              },
-              unit: 'VND',
-            },
-          ],
-        },
-      ],
-    }
 
     useEffect(() => {
       const fetchData = async () => {
         try {
+          setResult({})
           if (values.kpis.length > 0) {
-            /*const res = await getData(
+            const res = await getData(
               values.plan_id,
               newKpis,
               values.dateType,
               newPeriod,
               newFilter,
-            )*/
-            setResult(samplePieResult)
+            )
+            setResult(res)
           }
         } catch (error) {
           if (error.response) {
@@ -261,10 +234,7 @@ export const CreateChartButton = () => {
       return <div>Hãy chọn KPI để vẽ biểu đồ</div>
     } else {
       if (result.datasets) {
-        if (
-          (values.kpis.length === 1 && newPeriod.length < 2 && values.filter.length >= 2) ||
-          (values.kpis.length > 1 && newPeriod.length < 2)
-        ) {
+        if (result.labels.length === 1 && result.datasets.length > 1) {
           //vẽ biểu đồ tròn
           const labels = []
           const data = []
@@ -286,6 +256,71 @@ export const CreateChartButton = () => {
                 },
                 maintainAspectRatio: false,
               }}
+            />
+          )
+        } else if (result.labels.length > 1 && result.datasets.length > 1) {
+          //vẽ biểu đồ đường
+          let copyResult = cloneDeep(result)
+          copyResult.datasets.map((item, index) => {
+            item.borderColor = colorArray[index]
+            item.data.map((i, id) => {
+              i.x = copyResult.labels[id]
+            })
+          })
+          return (
+            <CChart
+              style={{ width: '400px' }}
+              type="line"
+              data={copyResult}
+              options={{
+                parsing: {
+                  xAxisKey: 'x',
+                  yAxisKey: 'resultOfKpi.result',
+                },
+                maintainAspectRatio: false,
+              }}
+            />
+          )
+        } else if (result.labels.length > 1 && result.datasets.length === 1) {
+          //vẽ biểu đồ cột
+          let copyResult = cloneDeep(result)
+          const backgroundColor = []
+          if (copyResult.datasets[0].data) {
+            copyResult.datasets[0].data.map((item, index) => {
+              backgroundColor.push(handleColor(item.resultOfKpi.color))
+              item.x = copyResult.labels[index]
+            })
+          }
+          copyResult.datasets[0].backgroundColor = backgroundColor
+          return (
+            <CChart
+              style={{ width: '400px' }}
+              type="bar"
+              data={copyResult}
+              options={{
+                parsing: {
+                  xAxisKey: 'x',
+                  yAxisKey: 'resultOfKpi.result',
+                },
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  },
+                },
+              }}
+            />
+          )
+        } else if (result.labels.length === 1 && result.datasets.length === 1) {
+          //vẽ biểu đồ gauge
+          return (
+            <GaugeChart
+              id="gauge-chart1"
+              nrOfLevels={1}
+              percent={result.datasets[0].data[0].resultOfKpi.result / 100}
+              style={{ width: '50%' }}
+              colors={[handleColor(result.datasets[0].data[0].resultOfKpi.color)]}
+              textColor="#000000"
             />
           )
         } else {
@@ -315,6 +350,24 @@ export const CreateChartButton = () => {
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
+            await createChart({
+              dashboard_id: selectedDashboard,
+              chart_name: values.chart_name,
+              description: values.description,
+              plan_id: values.plan_id,
+              kpis: convertKpisOrFilter(values.kpis),
+              dateType: values.dateType,
+              period: convertPeriod(values.period),
+              filter: convertKpisOrFilter(values.filter),
+              chart_type: 'Biểu đồ',
+            })
+            dispatch(
+              createAlert({
+                message: 'Tạo biểu đồ mới thành công.',
+                type: 'success',
+              }),
+            )
+            setModalVisible(false)
           } catch (error) {
             if (error.response) {
               dispatch(
@@ -350,7 +403,7 @@ export const CreateChartButton = () => {
               <CModalHeader>
                 <CModalTitle>Tạo biểu đồ</CModalTitle>
               </CModalHeader>
-              <CModalBody className="mx-4 mb-3">
+              <CModalBody style={{ minHeight: '400px' }} className="mx-4 mb-3">
                 <Form>
                   {isSubmitting && <LoadingCircle />}
                   <CRow className="mt-3">
@@ -493,41 +546,45 @@ export const CreateChartButton = () => {
                       )}
                     </>
                   )}
-                  <CRow className="mt-5">
-                    <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="chartname">Tên biểu đồ</CFormLabel>
-                      <CFormInput
-                        name="chart_name"
-                        id="chartname"
-                        placeholder="Nhập tên biểu đồ"
-                        value={values.chart_name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        invalid={touched.chart_name && errors.chart_name ? true : false}
-                        valid={
-                          !touched.chart_name || (touched.chart_name && errors.chart_name)
-                            ? false
-                            : true
-                        }
-                      />
-                      <CFormFeedback invalid>{errors.chart_name}</CFormFeedback>
-                    </CCol>
-                    <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="description">Mô tả KPI</CFormLabel>
-                      <CFormInput
-                        id="description"
-                        placeholder="Nhập mô tả biểu đồ"
-                        value={values.description}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                    </CCol>
-                  </CRow>
                   <CRow className="mt-3">
-                    <CCol xs={12}>
+                    <CCol xs={12} className="mt-3 d-flex flex-row justify-content-center">
                       <ChartPreview />
                     </CCol>
                   </CRow>
+                  {values.kpis.length > 0 && (
+                    <>
+                      <CRow className="mt-2">
+                        <CCol xs={12} sm={6}>
+                          <CFormLabel htmlFor="chartname">Tên biểu đồ</CFormLabel>
+                          <CFormInput
+                            name="chart_name"
+                            id="chartname"
+                            placeholder="Nhập tên biểu đồ"
+                            value={values.chart_name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            invalid={touched.chart_name && errors.chart_name ? true : false}
+                            valid={
+                              !touched.chart_name || (touched.chart_name && errors.chart_name)
+                                ? false
+                                : true
+                            }
+                          />
+                          <CFormFeedback invalid>{errors.chart_name}</CFormFeedback>
+                        </CCol>
+                        <CCol xs={12} sm={6}>
+                          <CFormLabel htmlFor="description">Mô tả KPI</CFormLabel>
+                          <CFormInput
+                            id="description"
+                            placeholder="Nhập mô tả biểu đồ"
+                            value={values.description}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                        </CCol>
+                      </CRow>
+                    </>
+                  )}
                 </Form>
               </CModalBody>
               <CModalFooter>
@@ -537,7 +594,7 @@ export const CreateChartButton = () => {
                   startIcon={<CheckIcon />}
                   type="submit"
                   onClick={submitForm}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || values.kpis.length === 0}
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Tạo mới

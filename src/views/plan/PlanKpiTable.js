@@ -26,7 +26,7 @@ import { setTemPage } from 'src/slices/planDetailSlice'
 import { KpiInfoButton } from './KpiInfoButton'
 import { AssignPlanKpiButton } from './AssignPlanKpiButton'
 import { AssignPlanKpiButtonM } from './AssignPlanKpiButtonM'
-import { formatNumber } from 'src/utils/function'
+import { formatNumber, handleColor } from 'src/utils/function'
 import { ApproveQuarterTargetButton } from './ApproveQuarterTargetButton'
 import { RegisterQuarterTargetButton } from './RegisterQuarterTargetButton'
 import { EditKpiInOneCategoryButton } from './EditKpiInOneCategoryButton'
@@ -436,16 +436,7 @@ export const PlanKpiTable = (catItem) => {
 
   const handleProgressBarColor = (temId) => {
     const result = handleResultColorValue(temId)
-    switch (result) {
-      case 'Đỏ':
-        return 'danger'
-      case 'Vàng':
-        return 'warning'
-      case 'Xanh':
-        return 'success'
-      default:
-        return 'info'
-    }
+    return handleColor(result)
   }
 
   const handleActualValue = (temId) => {
@@ -745,7 +736,12 @@ export const PlanKpiTable = (catItem) => {
                       <CTableDataCell>
                         <CProgress>
                           <CProgressBar
-                            color={handleProgressBarColor(item.kpi_template.kpi_template_id)}
+                            style={{
+                              backgroundColor: handleProgressBarColor(
+                                item.kpi_template.kpi_template_id,
+                              ),
+                            }}
+                            //color={handleProgressBarColor(item.kpi_template.kpi_template_id)}
                             variant="striped"
                             value={handleResultValue(item.kpi_template.kpi_template_id)}
                           >

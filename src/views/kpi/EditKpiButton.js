@@ -78,7 +78,7 @@ export const EditKpiButton = (props) => {
         comparison: item.comparison,
         percentOfKpi: item.percentOfKpi,
         percentOfTarget: item.percentOfTarget,
-        color: reverseConvertColor(item.color),
+        color: item.color,
         visiblePicker: false,
       })
     })
@@ -129,7 +129,7 @@ export const EditKpiButton = (props) => {
         comparison: item.comparison,
         percentOfKpi: Number(item.percentOfKpi),
         percentOfTarget: Number(item.percentOfTarget),
-        color: convertColor(item.color),
+        color: item.color,
       })
     })
 
@@ -413,7 +413,21 @@ export const EditKpiButton = (props) => {
                                         width="100px"
                                         triangle="hide"
                                         color={item.color}
-                                        colors={['#b80000', '#fccb00', '#008b02']}
+                                        colors={[
+                                          '#b80000',
+                                          '#fccb00',
+                                          '#008b02',
+                                          '#8b572a',
+                                          '#7ed321',
+                                          '#417505',
+                                          '#bd10e0',
+                                          '#9013fe',
+                                          '#50e3c2',
+                                          '#b8e986',
+                                          '#000000',
+                                          '#4a4a4a',
+                                          '#9b9b9b',
+                                        ]}
                                         onChange={(color) => {
                                           setFieldValue(colorName, color.hex)
                                         }}

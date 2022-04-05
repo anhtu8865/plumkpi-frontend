@@ -320,3 +320,10 @@ export const convertComparison = (comp) => {
       return ''
   }
 }
+
+export const handleColor = (color) => {
+  if (color.charAt(0) === '#') {
+    return color
+  }
+  return '#0d6efd'
+}
