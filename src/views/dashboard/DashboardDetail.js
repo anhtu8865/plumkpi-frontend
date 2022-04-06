@@ -35,6 +35,7 @@ import api from 'src/views/axiosConfig'
 import PropTypes from 'prop-types'
 import AddDashboardButton from './AddDashboardButton'
 import { CreateChartButton } from './CreateChartButton'
+import { CreateReportButton } from './CreateReportButton'
 
 const DashboardDetail = () => {
   const history = useHistory()
@@ -49,13 +50,14 @@ const DashboardDetail = () => {
         <CCol xs={12} sm={6}></CCol>
         <CCol xs={12} sm={6} className="d-flex flex-row gap-1 justify-content-end">
           <CreateChartButton />
-          <Button
+          {/* <Button
             variant="contained"
             color="primary"
             sx={{ textTransform: 'none', borderRadius: 10 }}
           >
             Tạo báo cáo
-          </Button>
+          </Button> */}
+          <CreateReportButton />
         </CCol>
       </CRow>
     </>
