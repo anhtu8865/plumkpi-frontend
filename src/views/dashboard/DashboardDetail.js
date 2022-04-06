@@ -46,9 +46,7 @@ const DashboardDetail = () => {
   return (
     <>
       <CRow className="mt-4">
-        <CCol xs={12} sm={6}>
-          <h3>{selectedDashboard}</h3>
-        </CCol>
+        <CCol xs={12} sm={6}></CCol>
         <CCol xs={12} sm={6} className="d-flex flex-row gap-1 justify-content-end">
           <CreateChartButton />
           <Button

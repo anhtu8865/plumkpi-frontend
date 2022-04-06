@@ -111,16 +111,6 @@ const Dashboard = () => {
               <AddDashboardButton />
             </CInputGroup>
           </CCol>
-          <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-center">
-            {/* <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddBoxIcon />}
-                  sx={{ textTransform: 'none', borderRadius: 10 }}
-                >
-                  Thêm
-                </Button> */}
-          </CCol>
           <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-end">
             <EditDashboardButton />
             <DeleteDashboardButton />
