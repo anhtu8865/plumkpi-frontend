@@ -582,7 +582,7 @@ export const PlanKpiTable = (catItem) => {
                   )}
                   <CTableHeaderCell>Thực hiện</CTableHeaderCell>
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
-                  <CTableHeaderCell>Đạt được</CTableHeaderCell>
+                  <CTableHeaderCell>Tiến độ</CTableHeaderCell>
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
@@ -736,11 +736,7 @@ export const PlanKpiTable = (catItem) => {
                       <CTableDataCell>
                         <CProgress>
                           <CProgressBar
-                            style={{
-                              backgroundColor: handleProgressBarColor(
-                                item.kpi_template.kpi_template_id,
-                              ),
-                            }}
+                            color="info"
                             //color={handleProgressBarColor(item.kpi_template.kpi_template_id)}
                             variant="striped"
                             value={handleResultValue(item.kpi_template.kpi_template_id)}
