@@ -102,7 +102,11 @@ const Login = () => {
           setSuccessMessage('Đăng nhập thành công')
           setSuccess(true)
           setLoading(true)
-          history.push('/dashboard')
+          if (res.data.role === 'Admin') {
+            history.push('/kpiadmin')
+          } else {
+            history.push('/plan')
+          }
           //console.log(res.data)
         })
         .catch((error) => {

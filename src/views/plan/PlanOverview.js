@@ -11,6 +11,7 @@ import {
   CBadge,
 } from '@coreui/react'
 import { Button } from '@mui/material'
+import ProgressBar from '@ramonak/react-progress-bar'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetailSlice'
 import api from 'src/views/axiosConfig'
@@ -100,7 +101,23 @@ export const PlanOverview = (props) => {
                   </CRow>
                   <CRow className="mt-1">
                     <div>
-                      <CProgress>
+                      <ProgressBar
+                        completed={handleCategoryResult(
+                          performResult,
+                          item.kpi_category.kpi_category_id,
+                        )}
+                        bgColor="#0d6efd"
+                        height="10px"
+                        labelSize="10px"
+                        labelAlignment="center"
+                        isLabelVisible={
+                          handleCategoryResult(performResult, item.kpi_category.kpi_category_id) ===
+                          0
+                            ? false
+                            : true
+                        }
+                      />
+                      {/*<CProgress>
                         <CProgressBar
                           color="info"
                           variant="striped"
@@ -111,7 +128,7 @@ export const PlanOverview = (props) => {
                         >
                           {handleCategoryResult(performResult, item.kpi_category.kpi_category_id)}%
                         </CProgressBar>
-                      </CProgress>
+                          </CProgress>*/}
                     </div>
                   </CRow>
                 </>

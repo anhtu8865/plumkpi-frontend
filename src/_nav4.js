@@ -43,7 +43,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Bảng điều khiển',
-    to: '/',
+    to: '/dashboard',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
   {

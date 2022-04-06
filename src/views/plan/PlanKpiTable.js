@@ -20,6 +20,7 @@ import {
   CBadge,
 } from '@coreui/react'
 import { Pagination, IconButton } from '@mui/material'
+import ProgressBar from '@ramonak/react-progress-bar'
 import SaveIcon from '@mui/icons-material/Save'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTemPage } from 'src/slices/planDetailSlice'
@@ -706,35 +707,63 @@ export const PlanKpiTable = (catItem) => {
                     checkedMonth &&
                     user.role === 'Nhân viên' ? (
                       <CTableDataCell>
-                        <CProgress>
+                        <ProgressBar
+                          completed={handleMonthPersonalBarStatus(item) ? 100 : 0}
+                          bgColor="#008b02"
+                          height="10px"
+                          labelSize="10px"
+                          labelAlignment="center"
+                          isLabelVisible={handleMonthPersonalBarStatus(item) ? true : false}
+                        />
+                        {/*<CProgress>
                           <CProgressBar
                             color="success"
                             variant="striped"
                             value={handleMonthPersonalBarStatus(item) ? 100 : 0}
                           >
-                            {/* {handleResultValue(item.kpi_template.kpi_template_id)}% */}
+                            {/* {handleResultValue(item.kpi_template.kpi_template_id)}% 
                             {handleMonthPersonalBarStatus(item) ? '100%' : '0%'}
                           </CProgressBar>
-                        </CProgress>
+                        </CProgress>*/}
                       </CTableDataCell>
                     ) : catItem.kpi_category.kpi_category_name === 'Cá nhân' &&
                       checkedQuarter &&
                       user.role === 'Quản lý' ? (
                       <CTableDataCell>
-                        <CProgress>
+                        <ProgressBar
+                          completed={handleQuarterPersonalBarStatus(item) ? 100 : 0}
+                          bgColor="#008b02"
+                          height="10px"
+                          labelSize="10px"
+                          labelAlignment="center"
+                          isLabelVisible={handleQuarterPersonalBarStatus(item) ? true : false}
+                        />
+                        {/*<CProgress>
                           <CProgressBar
                             color="success"
                             variant="striped"
                             value={handleQuarterPersonalBarStatus(item) ? 100 : 0}
                           >
-                            {/* {handleResultValue(item.kpi_template.kpi_template_id)}% */}
+                            {/* {handleResultValue(item.kpi_template.kpi_template_id)}%
                             {handleQuarterPersonalBarStatus(item) ? '100%' : '0%'}
                           </CProgressBar>
-                        </CProgress>
+                        </CProgress>*/}
                       </CTableDataCell>
                     ) : (
                       <CTableDataCell>
-                        <CProgress>
+                        <ProgressBar
+                          completed={handleResultValue(item.kpi_template.kpi_template_id)}
+                          bgColor={handleProgressBarColor(item.kpi_template.kpi_template_id)}
+                          height="10px"
+                          labelSize="10px"
+                          labelAlignment="center"
+                          isLabelVisible={
+                            handleResultValue(item.kpi_template.kpi_template_id) === 0
+                              ? false
+                              : true
+                          }
+                        />
+                        {/*<CProgress>
                           <CProgressBar
                             color="info"
                             //color={handleProgressBarColor(item.kpi_template.kpi_template_id)}
@@ -743,7 +772,7 @@ export const PlanKpiTable = (catItem) => {
                           >
                             {handleResultValue(item.kpi_template.kpi_template_id)}%
                           </CProgressBar>
-                        </CProgress>
+                    </CProgress>*/}
                       </CTableDataCell>
                     )}
                     <CTableDataCell className="text-center w-25">
