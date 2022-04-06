@@ -27,11 +27,13 @@ import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import { dateTypeOption, colorArray } from 'src/utils/constant'
-import { handleColor } from 'src/utils/function'
+import { handleColor, formatNumber } from 'src/utils/function'
 import Select from 'react-select'
 import cloneDeep from 'lodash/cloneDeep'
 import { CChart } from '@coreui/react-chartjs'
 import GaugeChart from 'react-gauge-chart'
+import { Bar, Line, Pie } from 'react-chartjs-2'
+import 'chart.js/auto'
 
 export const CreateChartButton = () => {
   const dispatch = useDispatch()
@@ -58,7 +60,7 @@ export const CreateChartButton = () => {
   }
 
   const getAllKpisInPlan = async (planId) => {
-    const response = await api.get(`plans/${planId}/kpis/user`)
+    const response = await api.get(`plans/${Number(planId)}/kpis/user`)
     return response.data
   }
 
@@ -66,13 +68,13 @@ export const CreateChartButton = () => {
     switch (user.role) {
       case 'Giám đốc': {
         const response = await api.get('/plans/plan/depts-assigned-kpi', {
-          params: { plan_id: planId, kpi_template_id: kpiId },
+          params: { plan_id: Number(planId), kpi_template_id: kpiId },
         })
         return response.data
       }
       case 'Quản lý': {
         const response = await api.get('/plans/plan/employees-assigned-kpi', {
-          params: { plan_id: planId, kpi_template_id: kpiId },
+          params: { plan_id: Number(planId), kpi_template_id: kpiId },
         })
         return response.data
       }
@@ -85,7 +87,7 @@ export const CreateChartButton = () => {
     const response = await api.post(`charts/data`, {
       chart_name: 'abc',
       description: '',
-      plan_id: planId,
+      plan_id: Number(planId),
       kpis: kpis,
       dateType: dateType,
       period: period,
@@ -202,6 +204,7 @@ export const CreateChartButton = () => {
     const newPeriod = convertPeriod(values.period)
 
     useEffect(() => {
+      let isCalled = true
       const fetchData = async () => {
         try {
           setResult({})
@@ -213,7 +216,9 @@ export const CreateChartButton = () => {
               newPeriod,
               newFilter,
             )
-            setResult(res)
+            if (isCalled) {
+              setResult(res)
+            }
           }
         } catch (error) {
           if (error.response) {
@@ -228,10 +233,13 @@ export const CreateChartButton = () => {
       }
 
       fetchData()
+      return () => (isCalled = false)
     }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
 
-    if (values.kpis.length === 0 || !result) {
+    if (values.kpis.length === 0) {
       return <div>Hãy chọn KPI để vẽ biểu đồ</div>
+    } else if (!result) {
+      return null
     } else {
       if (result.datasets) {
         if (result.labels.length === 1 && result.datasets.length > 1) {
@@ -243,9 +251,8 @@ export const CreateChartButton = () => {
             data.push(item.data[0])
           })
           return (
-            <CChart
+            <Pie
               style={{ height: '200px' }}
-              type="pie"
               data={{
                 labels: labels,
                 datasets: [{ data: data, backgroundColor: colorArray.slice(0, data.length) }],
@@ -255,6 +262,27 @@ export const CreateChartButton = () => {
                   key: 'resultOfKpi.result',
                 },
                 maintainAspectRatio: false,
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      afterLabel: function (tooltipItem) {
+                        const dataItem = tooltipItem.dataset.data[tooltipItem.dataIndex]
+                        const array = []
+                        if (dataItem.target !== undefined) {
+                          array.push(`Chỉ tiêu: ${formatNumber(dataItem.target)} ${dataItem.unit}`)
+                        } else {
+                          array.push(`Chỉ tiêu: Chưa có`)
+                        }
+                        if (dataItem.actual !== undefined) {
+                          array.push(`Thực hiện: ${formatNumber(dataItem.actual)} ${dataItem.unit}`)
+                        } else {
+                          array.push(`Thực hiện: Chưa có`)
+                        }
+                        return array
+                      },
+                    },
+                  },
+                },
               }}
             />
           )
@@ -262,15 +290,15 @@ export const CreateChartButton = () => {
           //vẽ biểu đồ đường
           let copyResult = cloneDeep(result)
           copyResult.datasets.map((item, index) => {
+            item.backgroundColor = colorArray[index]
             item.borderColor = colorArray[index]
             item.data.map((i, id) => {
               i.x = copyResult.labels[id]
             })
           })
           return (
-            <CChart
+            <Line
               style={{ width: '400px' }}
-              type="line"
               data={copyResult}
               options={{
                 parsing: {
@@ -293,9 +321,8 @@ export const CreateChartButton = () => {
           }
           copyResult.datasets[0].backgroundColor = backgroundColor
           return (
-            <CChart
+            <Bar
               style={{ width: '400px' }}
-              type="bar"
               data={copyResult}
               options={{
                 parsing: {
@@ -308,20 +335,65 @@ export const CreateChartButton = () => {
                     beginAtZero: true,
                   },
                 },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        return `Tiến độ: ${tooltipItem.parsed.y}%`
+                      },
+                      afterLabel: function (tooltipItem) {
+                        const dataItem = tooltipItem.dataset.data[tooltipItem.dataIndex]
+                        const array = []
+                        if (dataItem.target !== undefined) {
+                          array.push(`Chỉ tiêu: ${formatNumber(dataItem.target)} ${dataItem.unit}`)
+                        } else {
+                          array.push(`Chỉ tiêu: Chưa có`)
+                        }
+                        if (dataItem.actual !== undefined) {
+                          array.push(`Thực hiện: ${formatNumber(dataItem.actual)} ${dataItem.unit}`)
+                        } else {
+                          array.push(`Thực hiện: Chưa có`)
+                        }
+                        return array
+                      },
+                    },
+                  },
+                },
               }}
             />
           )
         } else if (result.labels.length === 1 && result.datasets.length === 1) {
+          const dataItem = result.datasets[0].data[0]
           //vẽ biểu đồ gauge
           return (
-            <GaugeChart
-              id="gauge-chart1"
-              nrOfLevels={1}
-              percent={result.datasets[0].data[0].resultOfKpi.result / 100}
-              style={{ width: '50%' }}
-              colors={[handleColor(result.datasets[0].data[0].resultOfKpi.color)]}
-              textColor="#000000"
-            />
+            <>
+              <CRow>
+                <CCol xs={12} sm={6}>
+                  <GaugeChart
+                    id="gauge-chart1"
+                    nrOfLevels={1}
+                    percent={dataItem.resultOfKpi.result / 100}
+                    style={{ width: '100%' }}
+                    colors={[handleColor(dataItem.resultOfKpi.color)]}
+                    textColor="#000000"
+                  />
+                </CCol>
+                <CCol xs={12} sm={6}>
+                  <div>
+                    <b>Chỉ tiêu:</b>{' '}
+                    {dataItem.target
+                      ? formatNumber(dataItem.target) + ` ${dataItem.unit}`
+                      : `Chưa có`}
+                  </div>
+                  <div>
+                    <b>Thực hiện:</b>{' '}
+                    {dataItem.actual
+                      ? formatNumber(dataItem.actual) + ` ${dataItem.unit}`
+                      : `Chưa có`}
+                  </div>
+                </CCol>
+              </CRow>
+            </>
           )
         } else {
           return null
@@ -392,7 +464,7 @@ export const CreateChartButton = () => {
         }) => (
           <>
             <CModal
-              alignment="center"
+              alignment="top"
               size="lg"
               scrollable
               visible={modalVisible}
@@ -403,10 +475,10 @@ export const CreateChartButton = () => {
               <CModalHeader>
                 <CModalTitle>Tạo biểu đồ</CModalTitle>
               </CModalHeader>
-              <CModalBody style={{ minHeight: '400px' }} className="mx-4 mb-3">
+              <CModalBody style={{ minHeight: '450px' }} className="mx-4 mb-3">
                 <Form>
                   {isSubmitting && <LoadingCircle />}
-                  <CRow className="mt-3">
+                  <CRow>
                     <CCol xs={12} sm={3}>
                       <CFormLabel htmlFor="plann">Kế hoạch</CFormLabel>
                       <CFormSelect
@@ -547,7 +619,7 @@ export const CreateChartButton = () => {
                     </>
                   )}
                   <CRow className="mt-3">
-                    <CCol xs={12} className="mt-3 d-flex flex-row justify-content-center">
+                    <CCol xs={12} className="d-flex flex-row justify-content-center">
                       <ChartPreview />
                     </CCol>
                   </CRow>
