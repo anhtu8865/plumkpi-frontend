@@ -48,8 +48,8 @@ export const DeleteCategoryButton = (props) => {
 
   return (
     <>
-      <IconButton id="delete" color="error" onClick={() => setModalVisible(true)}>
-        <DeleteForeverIcon />
+      <IconButton id="delete" color="error" size="small" onClick={() => setModalVisible(true)}>
+        <DeleteForeverIcon fontSize="small" />
       </IconButton>
       <CModal
         alignment="center"

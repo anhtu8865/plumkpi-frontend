@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { CCard, CCardBody, CCol, CContainer, CRow, CCardTitle, CCardText } from '@coreui/react'
-import { Pagination, IconButton } from '@mui/material'
+import { Pagination, IconButton, Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ import { EditCategoryButton } from './EditCategoryButton'
 import { DeleteCategoryButton } from './DeleteCategoryButton'
 import { useHistory } from 'react-router-dom'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 
 const KpiAdmin = () => {
   const entryPerPage = 6
@@ -55,18 +56,26 @@ const KpiAdmin = () => {
             <CCol xs={12} sm={6} lg={4} key={index} className="mb-4">
               <CCard className="text-center shadow-sm">
                 <CCardBody>
-                  <CCardTitle>{catItem.kpi_category_name}</CCardTitle>
                   <CRow>
+                    <div className="d-flex flex-row justify-content-end">
+                      <EditCategoryButton inCat={catItem} />
+                      <DeleteCategoryButton inCat={catItem} />
+                    </div>
+                  </CRow>
+                  <CCardTitle>
+                    <h4>{catItem.kpi_category_name}</h4>
+                  </CCardTitle>
+                  <CRow className="mb-2">
                     <div className="d-flex flex-row justify-content-center">
                       <IconButton
+                        color="primary"
                         onClick={() => {
                           history.push(`kpiadmin/${catItem.kpi_category_id}`)
                         }}
+                        size="small"
                       >
-                        <ArrowCircleRightIcon />
+                        <KeyboardDoubleArrowRightIcon fontSize="small" />
                       </IconButton>
-                      <EditCategoryButton inCat={catItem} />
-                      <DeleteCategoryButton inCat={catItem} />
                     </div>
                   </CRow>
                 </CCardBody>

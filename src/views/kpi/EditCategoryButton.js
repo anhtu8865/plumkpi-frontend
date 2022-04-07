@@ -77,8 +77,9 @@ export const EditCategoryButton = (props) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <EditIcon />
+        <EditIcon fontSize="small" />
       </IconButton>
 
       <form onSubmit={formik.handleSubmit}>

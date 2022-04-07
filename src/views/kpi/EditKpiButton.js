@@ -410,7 +410,7 @@ export const EditKpiButton = (props) => {
                                         }}
                                       />
                                       <GithubPicker
-                                        width="100px"
+                                        width="200px"
                                         triangle="hide"
                                         color={item.color}
                                         colors={[
@@ -420,13 +420,12 @@ export const EditKpiButton = (props) => {
                                           '#8b572a',
                                           '#7ed321',
                                           '#417505',
-                                          '#bd10e0',
-                                          '#9013fe',
                                           '#50e3c2',
                                           '#b8e986',
                                           '#000000',
                                           '#4a4a4a',
                                           '#9b9b9b',
+                                          '#4a90e2',
                                         ]}
                                         onChange={(color) => {
                                           setFieldValue(colorName, color.hex)

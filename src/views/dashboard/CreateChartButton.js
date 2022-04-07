@@ -27,7 +27,7 @@ import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import { dateTypeOption, colorArray } from 'src/utils/constant'
-import { handleColor, formatNumber } from 'src/utils/function'
+import { handleColor, formatNumber, transparentColor } from 'src/utils/function'
 import Select from 'react-select'
 import cloneDeep from 'lodash/cloneDeep'
 import { CChart } from '@coreui/react-chartjs'
@@ -298,6 +298,7 @@ export const CreateChartButton = () => {
           copyResult.datasets.map((item, index) => {
             item.backgroundColor = colorArray[index]
             item.borderColor = colorArray[index]
+            item.borderWidth = 2
             item.data.map((i, id) => {
               i.x = copyResult.labels[id]
             })
@@ -326,10 +327,28 @@ export const CreateChartButton = () => {
                   tooltip: {
                     callbacks: {
                       label: function (tooltipItem) {
-                        return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y}%`
+                        const dataItem = tooltipItem.dataset.data[tooltipItem.dataIndex]
+                        let str = `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y}% `
+                        if (dataItem.target !== undefined) {
+                          str =
+                            str + `(Chỉ tiêu: ${formatNumber(dataItem.target)} ${dataItem.unit}, `
+                        } else {
+                          str = str + `(Chỉ tiêu: Chưa có, `
+                        }
+                        if (dataItem.actual !== undefined) {
+                          str =
+                            str + `Thực hiện: ${formatNumber(dataItem.actual)} ${dataItem.unit})`
+                        } else {
+                          str = str + `Thực hiện: Chưa có)`
+                        }
+                        return str
                       },
                     },
                   },
+                },
+                interaction: {
+                  intersect: false,
+                  mode: 'index',
                 },
               }}
             />
@@ -338,13 +357,17 @@ export const CreateChartButton = () => {
           //vẽ biểu đồ cột
           let copyResult = cloneDeep(result)
           const backgroundColor = []
+          const borderColor = []
           if (copyResult.datasets[0].data) {
             copyResult.datasets[0].data.map((item, index) => {
-              backgroundColor.push(handleColor(item.resultOfKpi.color))
+              borderColor.push(handleColor(item.resultOfKpi.color))
+              backgroundColor.push(transparentColor(handleColor(item.resultOfKpi.color)))
               item.x = copyResult.labels[index]
             })
           }
           copyResult.datasets[0].backgroundColor = backgroundColor
+          copyResult.datasets[0].borderColor = borderColor
+          copyResult.datasets[0].borderWidth = 1
           return (
             <Bar
               style={{ width: '400px' }}
@@ -460,7 +483,7 @@ export const CreateChartButton = () => {
               dashboard_id: selectedDashboard,
               chart_name: values.chart_name,
               description: values.description,
-              plan_id: values.plan_id,
+              plan_id: Number(values.plan_id),
               kpis: convertKpisOrFilter(values.kpis),
               dateType: values.dateType,
               period: convertPeriod(values.period),
@@ -543,6 +566,8 @@ export const CreateChartButton = () => {
                         value={values.kpis}
                         placeholder="Chọn một hoặc nhiều KPI"
                         isMulti
+                        isSearchable
+                        maxMenuHeight={300}
                         id="kkpis"
                         options={kpisOption}
                         onChange={async (value) => {
@@ -592,7 +617,7 @@ export const CreateChartButton = () => {
                         </CFormSelect>
                       </CCol>
                       {values.dateType !== 'Năm' && (
-                        <CCol xs={12} sm={8}>
+                        <CCol xs={12} sm={8} className="ms-4">
                           <CFormLabel htmlFor="pperiod">Khoảng thời gian</CFormLabel>
                           <Slider
                             value={values.period}
@@ -640,6 +665,8 @@ export const CreateChartButton = () => {
                                   : 'Chọn một hoặc nhiều nhân viên'
                               }
                               isMulti
+                              isSearchable
+                              maxMenuHeight={300}
                               id="de"
                               options={filterOption}
                               onChange={(value) => {
