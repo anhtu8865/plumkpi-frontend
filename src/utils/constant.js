@@ -74,7 +74,6 @@ export const dateTypeOption = ['Năm', 'Quý', 'Tháng']
 
 export const colorArray = [
   '#f44336',
-  '#673ab7',
   '#03a9f4',
   '#4caf50',
   '#ffeb3b',
@@ -83,4 +82,5 @@ export const colorArray = [
   '#e91e63',
   '#cddc39',
   '#795548',
+  '#009688',
 ]

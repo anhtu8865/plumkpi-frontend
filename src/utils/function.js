@@ -325,5 +325,9 @@ export const handleColor = (color) => {
   if (color.charAt(0) === '#') {
     return color
   }
-  return '#0d6efd'
+  return '#673ab7' //Tím
+}
+
+export const transparentColor = (color) => {
+  return color + '33'
 }
