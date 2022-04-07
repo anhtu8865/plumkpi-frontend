@@ -51,13 +51,6 @@ const DashboardDetail = () => {
         <CCol xs={12} sm={6} className="d-flex flex-row gap-1 justify-content-end">
           <h5>{selectedDashboard}</h5>
           <CreateChartButton />
-          {/* <Button
-            variant="contained"
-            color="primary"
-            sx={{ textTransform: 'none', borderRadius: 10 }}
-          >
-            Tạo báo cáo
-          </Button> */}
           <CreateReportButton />
         </CCol>
       </CRow>

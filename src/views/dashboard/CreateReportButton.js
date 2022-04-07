@@ -17,6 +17,13 @@ import {
   CInputGroup,
   CInputGroupText,
   CFormCheck,
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableFoot,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -461,6 +468,87 @@ export const CreateReportButton = () => {
     }
   }
 
+  const ReportPreview = () => {
+    const { values } = useFormikContext()
+    const [result, setResult] = useState({})
+    const newKpis = convertKpisOrFilter(values.kpis)
+    const newFilter = convertKpisOrFilter(values.filter)
+    const newPeriod = convertPeriod(values.period)
+
+    useEffect(() => {
+      let isCalled = true
+      const fetchData = async () => {
+        try {
+          setResult({})
+          if (values.kpis.length > 0) {
+            const res = await getData(
+              values.plan_id,
+              newKpis,
+              values.dateType,
+              newPeriod,
+              newFilter,
+            )
+            if (isCalled) {
+              setResult(res)
+            }
+          }
+        } catch (error) {
+          if (error.response) {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          }
+        }
+      }
+
+      fetchData()
+      return () => (isCalled = false)
+    }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
+
+    console.log(result)
+
+    if (values.kpis.length === 0) {
+      return <div>Hãy chọn KPI để tạo báo cáo</div>
+    } else if (!result) {
+      return null
+    } else {
+      if (result.datasets) {
+        return (
+          <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+            <CTableHead color="light">
+              <CTableRow>
+                <CTableHeaderCell>KPI</CTableHeaderCell>
+                <CTableHeaderCell>THỰC HIỆN</CTableHeaderCell>
+                <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
+                <CTableHeaderCell>KÊT QUẢ</CTableHeaderCell>
+                <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {result.datasets.map((item) =>
+                item.data.map((row, index) => (
+                  <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{result.datasets[0].label}</CTableDataCell>
+                    <CTableDataCell>{row.actual}</CTableDataCell>
+                    <CTableDataCell>{row.target}</CTableDataCell>
+                    <CTableDataCell>{row.resultOfKpi.result}</CTableDataCell>
+                    <CTableDataCell>{row.unit}</CTableDataCell>
+                  </CTableRow>
+                )),
+              )}
+            </CTableBody>
+            <CTableFoot></CTableFoot>
+          </CTable>
+        )
+      } else {
+        return null
+      }
+    }
+  }
+
   return (
     <>
       <Button
@@ -488,7 +576,7 @@ export const CreateReportButton = () => {
               dateType: values.dateType,
               period: convertPeriod(values.period),
               filter: convertKpisOrFilter(values.filter),
-              chart_type: 'Biểu đồ',
+              chart_type: 'Báo cáo',
             })
             dispatch(
               createAlert({
@@ -681,7 +769,7 @@ export const CreateReportButton = () => {
                   )}
                   <CRow className="mt-5">
                     <CCol xs={12} className="d-flex flex-row justify-content-center">
-                      <ChartPreview />
+                      <ReportPreview />
                     </CCol>
                   </CRow>
                   {values.kpis.length > 0 && (

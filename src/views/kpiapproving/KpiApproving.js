@@ -96,7 +96,7 @@ const KpiApproving = () => {
     async function fetchDeptKPIList() {
       api
         .get(`plans/${id}/kpis/director/personal-kpis-of-depts`, {
-          params: { kpi_category_id: 1, offset: (page - 1) * entryPerPage, limit: entryPerPage },
+          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
         })
         .then((response) => {
           setTotalPage(Math.ceil(response.data.count / entryPerPage))
