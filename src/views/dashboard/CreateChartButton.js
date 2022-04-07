@@ -265,6 +265,12 @@ export const CreateChartButton = () => {
                 plugins: {
                   tooltip: {
                     callbacks: {
+                      beforeLabel: function (tooltipItem) {
+                        return `${labels[tooltipItem.dataIndex]}:`
+                      },
+                      label: function (tooltipItem) {
+                        return `Tiến độ: ${tooltipItem.parsed}%`
+                      },
                       afterLabel: function (tooltipItem) {
                         const dataItem = tooltipItem.dataset.data[tooltipItem.dataIndex]
                         const array = []
@@ -306,6 +312,25 @@ export const CreateChartButton = () => {
                   yAxisKey: 'resultOfKpi.result',
                 },
                 maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      callback: function (value, index, ticks) {
+                        return value + '%'
+                      },
+                    },
+                  },
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y}%`
+                      },
+                    },
+                  },
+                },
               }}
             />
           )
@@ -333,6 +358,11 @@ export const CreateChartButton = () => {
                 scales: {
                   y: {
                     beginAtZero: true,
+                    ticks: {
+                      callback: function (value, index, ticks) {
+                        return value + '%'
+                      },
+                    },
                   },
                 },
                 plugins: {
@@ -380,16 +410,20 @@ export const CreateChartButton = () => {
                 </CCol>
                 <CCol xs={12} sm={6}>
                   <div>
-                    <b>Chỉ tiêu:</b>{' '}
-                    {dataItem.target
-                      ? formatNumber(dataItem.target) + ` ${dataItem.unit}`
-                      : `Chưa có`}
+                    <small>
+                      <b>Chỉ tiêu:</b>{' '}
+                      {dataItem.target
+                        ? formatNumber(dataItem.target) + ` ${dataItem.unit}`
+                        : `Chưa có`}
+                    </small>
                   </div>
                   <div>
-                    <b>Thực hiện:</b>{' '}
-                    {dataItem.actual
-                      ? formatNumber(dataItem.actual) + ` ${dataItem.unit}`
-                      : `Chưa có`}
+                    <small>
+                      <b>Thực hiện:</b>{' '}
+                      {dataItem.actual
+                        ? formatNumber(dataItem.actual) + ` ${dataItem.unit}`
+                        : `Chưa có`}
+                    </small>
                   </div>
                 </CCol>
               </CRow>
@@ -526,7 +560,7 @@ export const CreateChartButton = () => {
                     </CCol>
                   </CRow>
                   {values.kpis.length > 0 && (
-                    <CRow className="mt-3">
+                    <CRow className="mt-2">
                       <CCol xs={12} sm={3}>
                         <CFormLabel htmlFor="time">Thời gian theo</CFormLabel>
                         <CFormSelect
@@ -593,11 +627,11 @@ export const CreateChartButton = () => {
                         </CCol>
                       </CRow>
                       {isFilter && (
-                        <CRow className="mt-3">
+                        <CRow className="mt-1">
                           <CCol xs={12}>
-                            <CFormLabel htmlFor="de">
+                            {/*<CFormLabel htmlFor="de">
                               {user.role === 'Giám đốc' ? 'Phòng ban' : 'Nhân viên'}
-                            </CFormLabel>
+                      </CFormLabel>*/}
                             <Select
                               value={values.filter}
                               placeholder={
@@ -618,7 +652,7 @@ export const CreateChartButton = () => {
                       )}
                     </>
                   )}
-                  <CRow className="mt-3">
+                  <CRow className="mt-5">
                     <CCol xs={12} className="d-flex flex-row justify-content-center">
                       <ChartPreview />
                     </CCol>
