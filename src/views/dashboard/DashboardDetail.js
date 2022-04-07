@@ -49,6 +49,7 @@ const DashboardDetail = () => {
       <CRow className="mt-4">
         <CCol xs={12} sm={6}></CCol>
         <CCol xs={12} sm={6} className="d-flex flex-row gap-1 justify-content-end">
+          <h5>{selectedDashboard}</h5>
           <CreateChartButton />
           {/* <Button
             variant="contained"

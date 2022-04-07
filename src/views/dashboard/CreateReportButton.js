@@ -27,7 +27,7 @@ import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import { dateTypeOption, colorArray } from 'src/utils/constant'
-import { handleColor, formatNumber } from 'src/utils/function'
+import { handleColor, formatNumber, transparentColor } from 'src/utils/function'
 import Select from 'react-select'
 import cloneDeep from 'lodash/cloneDeep'
 import { CChart } from '@coreui/react-chartjs'
@@ -265,6 +265,12 @@ export const CreateReportButton = () => {
                 plugins: {
                   tooltip: {
                     callbacks: {
+                      beforeLabel: function (tooltipItem) {
+                        return `${labels[tooltipItem.dataIndex]}:`
+                      },
+                      label: function (tooltipItem) {
+                        return `Tiến độ: ${tooltipItem.parsed}%`
+                      },
                       afterLabel: function (tooltipItem) {
                         const dataItem = tooltipItem.dataset.data[tooltipItem.dataIndex]
                         const array = []
@@ -292,6 +298,7 @@ export const CreateReportButton = () => {
           copyResult.datasets.map((item, index) => {
             item.backgroundColor = colorArray[index]
             item.borderColor = colorArray[index]
+            item.borderWidth = 2
             item.data.map((i, id) => {
               i.x = copyResult.labels[id]
             })
@@ -306,6 +313,43 @@ export const CreateReportButton = () => {
                   yAxisKey: 'resultOfKpi.result',
                 },
                 maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      callback: function (value, index, ticks) {
+                        return value + '%'
+                      },
+                    },
+                  },
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        const dataItem = tooltipItem.dataset.data[tooltipItem.dataIndex]
+                        let str = `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y}% `
+                        if (dataItem.target !== undefined) {
+                          str =
+                            str + `(Chỉ tiêu: ${formatNumber(dataItem.target)} ${dataItem.unit}, `
+                        } else {
+                          str = str + `(Chỉ tiêu: Chưa có, `
+                        }
+                        if (dataItem.actual !== undefined) {
+                          str =
+                            str + `Thực hiện: ${formatNumber(dataItem.actual)} ${dataItem.unit})`
+                        } else {
+                          str = str + `Thực hiện: Chưa có)`
+                        }
+                        return str
+                      },
+                    },
+                  },
+                },
+                interaction: {
+                  intersect: false,
+                  mode: 'index',
+                },
               }}
             />
           )
@@ -313,13 +357,17 @@ export const CreateReportButton = () => {
           //vẽ biểu đồ cột
           let copyResult = cloneDeep(result)
           const backgroundColor = []
+          const borderColor = []
           if (copyResult.datasets[0].data) {
             copyResult.datasets[0].data.map((item, index) => {
-              backgroundColor.push(handleColor(item.resultOfKpi.color))
+              borderColor.push(handleColor(item.resultOfKpi.color))
+              backgroundColor.push(transparentColor(handleColor(item.resultOfKpi.color)))
               item.x = copyResult.labels[index]
             })
           }
           copyResult.datasets[0].backgroundColor = backgroundColor
+          copyResult.datasets[0].borderColor = borderColor
+          copyResult.datasets[0].borderWidth = 1
           return (
             <Bar
               style={{ width: '400px' }}
@@ -333,6 +381,11 @@ export const CreateReportButton = () => {
                 scales: {
                   y: {
                     beginAtZero: true,
+                    ticks: {
+                      callback: function (value, index, ticks) {
+                        return value + '%'
+                      },
+                    },
                   },
                 },
                 plugins: {
@@ -380,16 +433,20 @@ export const CreateReportButton = () => {
                 </CCol>
                 <CCol xs={12} sm={6}>
                   <div>
-                    <b>Chỉ tiêu:</b>{' '}
-                    {dataItem.target
-                      ? formatNumber(dataItem.target) + ` ${dataItem.unit}`
-                      : `Chưa có`}
+                    <small>
+                      <b>Chỉ tiêu:</b>{' '}
+                      {dataItem.target
+                        ? formatNumber(dataItem.target) + ` ${dataItem.unit}`
+                        : `Chưa có`}
+                    </small>
                   </div>
                   <div>
-                    <b>Thực hiện:</b>{' '}
-                    {dataItem.actual
-                      ? formatNumber(dataItem.actual) + ` ${dataItem.unit}`
-                      : `Chưa có`}
+                    <small>
+                      <b>Thực hiện:</b>{' '}
+                      {dataItem.actual
+                        ? formatNumber(dataItem.actual) + ` ${dataItem.unit}`
+                        : `Chưa có`}
+                    </small>
                   </div>
                 </CCol>
               </CRow>
@@ -426,7 +483,7 @@ export const CreateReportButton = () => {
               dashboard_id: selectedDashboard,
               chart_name: values.chart_name,
               description: values.description,
-              plan_id: values.plan_id,
+              plan_id: Number(values.plan_id),
               kpis: convertKpisOrFilter(values.kpis),
               dateType: values.dateType,
               period: convertPeriod(values.period),
@@ -509,6 +566,8 @@ export const CreateReportButton = () => {
                         value={values.kpis}
                         placeholder="Chọn một hoặc nhiều KPI"
                         isMulti
+                        isSearchable
+                        maxMenuHeight={300}
                         id="kkpis"
                         options={kpisOption}
                         onChange={async (value) => {
@@ -526,7 +585,7 @@ export const CreateReportButton = () => {
                     </CCol>
                   </CRow>
                   {values.kpis.length > 0 && (
-                    <CRow className="mt-3">
+                    <CRow className="mt-2">
                       <CCol xs={12} sm={3}>
                         <CFormLabel htmlFor="time">Thời gian theo</CFormLabel>
                         <CFormSelect
@@ -558,7 +617,7 @@ export const CreateReportButton = () => {
                         </CFormSelect>
                       </CCol>
                       {values.dateType !== 'Năm' && (
-                        <CCol xs={12} sm={8}>
+                        <CCol xs={12} sm={8} className="ms-4">
                           <CFormLabel htmlFor="pperiod">Khoảng thời gian</CFormLabel>
                           <Slider
                             value={values.period}
@@ -593,11 +652,11 @@ export const CreateReportButton = () => {
                         </CCol>
                       </CRow>
                       {isFilter && (
-                        <CRow className="mt-3">
+                        <CRow className="mt-1">
                           <CCol xs={12}>
-                            <CFormLabel htmlFor="de">
+                            {/*<CFormLabel htmlFor="de">
                               {user.role === 'Giám đốc' ? 'Phòng ban' : 'Nhân viên'}
-                            </CFormLabel>
+                      </CFormLabel>*/}
                             <Select
                               value={values.filter}
                               placeholder={
@@ -606,6 +665,8 @@ export const CreateReportButton = () => {
                                   : 'Chọn một hoặc nhiều nhân viên'
                               }
                               isMulti
+                              isSearchable
+                              maxMenuHeight={300}
                               id="de"
                               options={filterOption}
                               onChange={(value) => {
@@ -618,7 +679,7 @@ export const CreateReportButton = () => {
                       )}
                     </>
                   )}
-                  <CRow className="mt-3">
+                  <CRow className="mt-5">
                     <CCol xs={12} className="d-flex flex-row justify-content-center">
                       <ChartPreview />
                     </CCol>

@@ -1,43 +1,26 @@
-import React from 'react'
 import {
   CCard,
   CCardBody,
   CCol,
   CContainer,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableFoot,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
   CInputGroup,
   CInputGroupText,
-  CFormSelect,
+  CRow,
 } from '@coreui/react'
-import { Avatar, Button, Grid, Pagination, IconButton, Tooltip } from '@mui/material'
-import { setDashboardList } from 'src/slices/dashboardSlice'
-import SystemAlert from 'src/components/SystemAlert'
-import { LoadingCircle } from 'src/components/LoadingCircle'
-import { createAlert } from 'src/slices/alertSlice'
-import { setLoading, setReload } from 'src/slices/viewSlice'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { setDashboard, setSelectedDashboard } from 'src/slices/dashboardDetailSlice'
-import api from 'src/views/axiosConfig'
 import PropTypes from 'prop-types'
-
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import Select from 'react-select'
+import SystemAlert from 'src/components/SystemAlert'
+import { createAlert } from 'src/slices/alertSlice'
+import { setSelectedDashboard } from 'src/slices/dashboardDetailSlice'
+import { setDashboardList } from 'src/slices/dashboardSlice'
+import { setLoading } from 'src/slices/viewSlice'
+import api from 'src/views/axiosConfig'
 import AddDashboardButton from './AddDashboardButton'
 import DashboardDetail from './DashboardDetail'
-import EditDashboardButton from './EditDashboardButton'
 import DeleteDashboardButton from './DeleteDashboardButton'
+import EditDashboardButton from './EditDashboardButton'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -48,6 +31,24 @@ const Dashboard = () => {
   const { selectedDashboard } = useSelector((state) => state.dashboardDetail)
 
   const [entry, setEntry] = React.useState([])
+
+  const [options, setOptions] = React.useState([])
+  const [dashboard, setDashboard] = React.useState(null)
+
+  const getDashBoardOptions = (dashboardList) => {
+    const array = []
+    if (dashboardList.length > 0) {
+      for (let i = 0; i < dashboardList.length; i++) {
+        let optionTmp = {}
+        optionTmp.value = dashboardList[i].dashboard_id
+        optionTmp.label = dashboardList[i].dashboard_name
+        array.push(optionTmp)
+      }
+      return array
+    } else {
+      return
+    }
+  }
 
   React.useEffect(() => {
     api
@@ -78,40 +79,39 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     setEntry(dashboardList)
-    function getDashBoardId(dashboardList) {
-      if (dashboardList.length > 0) {
-        dispatch(setSelectedDashboard({ value: Number(dashboardList[0].dashboard_id) }))
+
+    setOptions(getDashBoardOptions(dashboardList))
+  }, [dashboardList])
+
+  React.useEffect(() => {
+    function getDashBoardId(dashboard) {
+      if (dashboard) {
+        dispatch(setSelectedDashboard({ value: Number(dashboard.value) }))
       } else {
         return
       }
     }
-    getDashBoardId(dashboardList)
-  }, [dashboardList])
+    getDashBoardId(dashboard)
+  }, [dashboard])
 
   const DashBoardViewNav = (props) => {
     return (
       <>
         <CRow className="d-flex justify-content-between">
-          <CCol xs={12} sm={4} className="d-flex flex-row">
+          <CCol xs={12} sm={6} className="d-flex flex-row">
             <CInputGroup size="sm">
               <CInputGroupText>Dashboard</CInputGroupText>
-              <CFormSelect
-                value={selectedDashboard}
-                onChange={(event) => {
-                  dispatch(setSelectedDashboard({ value: Number(event.target.value) }))
-                }}
-              >
-                {/* <option value={null}>---Chọn---</option> */}
-                {props.dashboardList.map((item) => (
-                  <option value={item.dashboard_id} key={item.dashboard_id}>
-                    {item.dashboard_name}
-                  </option>
-                ))}
-              </CFormSelect>
+              <Select
+                options={options}
+                defaultValue={dashboard}
+                onChange={setDashboard}
+                isSearchable
+                placeholder="Chọn dashboard..."
+              />
               <AddDashboardButton />
             </CInputGroup>
           </CCol>
-          <CCol xs={12} sm={4} xl={3} className="d-flex flex-row justify-content-end">
+          <CCol xs={12} sm={6} className="d-flex flex-row justify-content-end">
             <EditDashboardButton />
             <DeleteDashboardButton />
           </CCol>
