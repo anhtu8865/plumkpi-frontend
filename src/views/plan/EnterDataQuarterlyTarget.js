@@ -16,6 +16,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
+import CheckIcon from '@mui/icons-material/Check'
 import { createAlert } from 'src/slices/alertSlice'
 import { formatNumber } from 'src/utils/function'
 
@@ -88,41 +89,25 @@ const EnterDataQuarterlyTarget = (props) => {
   const handleQuarterActualValue = (item) => {
     switch (selectedQuarter) {
       case 1: {
-        if (
-          item.first_quarterly_target &&
-          item.first_quarterly_target.approve === 'Chấp nhận' &&
-          item.first_quarterly_target.hasOwnProperty('actual')
-        ) {
+        if (item.first_quarterly_target && item.first_quarterly_target.hasOwnProperty('actual')) {
           return item.first_quarterly_target.actual.value
         }
         return 0
       }
       case 2: {
-        if (
-          item.second_quarterly_target &&
-          item.second_quarterly_target.approve === 'Chấp nhận' &&
-          item.second_quarterly_target.hasOwnProperty('actual')
-        ) {
+        if (item.second_quarterly_target && item.second_quarterly_target.hasOwnProperty('actual')) {
           return item.second_quarterly_target.actual.value
         }
         return 0
       }
       case 3: {
-        if (
-          item.third_quarterly_target &&
-          item.third_quarterly_target.approve === 'Chấp nhận' &&
-          item.third_quarterly_target.hasOwnProperty('actual')
-        ) {
+        if (item.third_quarterly_target && item.third_quarterly_target.hasOwnProperty('actual')) {
           return item.third_quarterly_target.actual.value
         }
         return 0
       }
       case 4: {
-        if (
-          item.fourth_quarterly_target &&
-          item.fourth_quarterly_target.approve === 'Chấp nhận' &&
-          item.fourth_quarterly_target.hasOwnProperty('actual')
-        ) {
+        if (item.fourth_quarterly_target && item.fourth_quarterly_target.hasOwnProperty('actual')) {
           return item.fourth_quarterly_target.actual.value
         }
         return 0
@@ -212,8 +197,7 @@ const EnterDataQuarterlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       quarter: selectedQuarter,
-      value: handleQuarterActualValue(item),
-      note: handleQuarterDataNote(item),
+      value: formatNumber(handleQuarterActualValue(item)),
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
@@ -224,7 +208,6 @@ const EnterDataQuarterlyTarget = (props) => {
           kpi_template_id: values.kpi_template_id,
           quarter: values.quarter,
           value: values.value,
-          note: values.note,
         })
         .then(() => {
           dispatch(
@@ -249,27 +232,51 @@ const EnterDataQuarterlyTarget = (props) => {
     validationSchema: validationSchema,
   })
 
-  return (
-    <>
-      <CForm onSubmit={formik.handleSubmit}>
-        <CInputGroup>
-          <CFormInput
-            type="number"
-            defaultValue={formatNumber(handleQuarterActualValue(item))}
-            valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
-            invalid={handleQuarterDataStatus(item) === 'Từ chối'}
-            {...formik.getFieldProps('value')}
-          />
-          <IconButton
-            id="note"
-            color="primary"
-            onClick={() => {
-              setModalVisible(true)
-            }}
-            size="small"
-          >
-            <FilePresentIcon fontSize="small" />
-          </IconButton>
+  const EnterNoteData = () => {
+    const [inputNote, setInputNote] = React.useState('')
+
+    const onClickNote = () => {
+      api
+        .put('plans/enter-data-quarterly-target/manager', {
+          plan_id: plan.plan_id,
+          kpi_template_id: item.kpi_template.kpi_template_id,
+          quarter: selectedQuarter,
+          note: inputNote,
+        })
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Cập nhật thành công.',
+              type: 'success',
+            }),
+          )
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          formik.setSubmitting(false)
+        })
+    }
+
+    return (
+      <>
+        <IconButton
+          id="note"
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <FilePresentIcon fontSize="small" />
+        </IconButton>
+        <CForm>
           <CModal
             alignment="center"
             scrollable
@@ -286,12 +293,44 @@ const EnterDataQuarterlyTarget = (props) => {
                   minRows={4}
                   defaultValue={handleQuarterDataNote(item)}
                   style={{ width: '100%' }}
-                  {...formik.getFieldProps('note')}
+                  onChange={(event) => {
+                    setTimeout(() => {
+                      setInputNote(event.target.value)
+                    }, 500)
+                  }}
                 />
               </div>
             </CModalBody>
-            <CModalFooter></CModalFooter>
+            <CModalFooter>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<CheckIcon />}
+                type="submit"
+                onClick={() => onClickNote()}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
+                Xác nhận
+              </Button>
+            </CModalFooter>
           </CModal>
+        </CForm>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <CForm onSubmit={formik.handleSubmit}>
+        <CInputGroup>
+          <CFormInput
+            type="number"
+            defaultValue={formatNumber(handleQuarterActualValue(item))}
+            valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
+            invalid={handleQuarterDataStatus(item) === 'Từ chối'}
+            {...formik.getFieldProps('value')}
+          />
+          <EnterNoteData />
           <IconButton
             variant="contained"
             color="primary"

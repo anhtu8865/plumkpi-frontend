@@ -77,7 +77,7 @@ const KpiRegistration = () => {
     async function fetchKPIList() {
       api
         .get(`kpi-templates/personal-kpis`, {
-          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
+          params: { plan_id: id, offset: (page - 1) * entryPerPage, limit: entryPerPage },
         })
         .then((response) => {
           setTotalPage(Math.ceil(response.data.count / entryPerPage))

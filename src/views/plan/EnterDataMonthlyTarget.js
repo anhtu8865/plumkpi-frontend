@@ -16,6 +16,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
+import CheckIcon from '@mui/icons-material/Check'
 import { createAlert } from 'src/slices/alertSlice'
 import { formatNumber } from 'src/utils/function'
 
@@ -30,13 +31,7 @@ const EnterDateMonthlyTarget = (props) => {
 
   const dispatch = useDispatch()
 
-  const [isSubmit, setIsSubmit] = React.useState(false)
-
   const [modalVisible, setModalVisible] = React.useState(false)
-
-  const onClickDelete = () => {
-    setIsSubmit(true)
-  }
 
   const handleMonthActualValue = (item) => {
     //console.log(item)
@@ -363,8 +358,7 @@ const EnterDateMonthlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       month: selectedMonth,
-      value: handleMonthActualValue(item),
-      note: handleMonthActualNote(item),
+      value: formatNumber(handleMonthActualValue(item)),
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
@@ -375,7 +369,6 @@ const EnterDateMonthlyTarget = (props) => {
           kpi_template_id: values.kpi_template_id,
           month: values.month,
           value: values.value,
-          note: values.note,
         })
         .then(() => {
           dispatch(
@@ -400,27 +393,51 @@ const EnterDateMonthlyTarget = (props) => {
     validationSchema: validationSchema,
   })
 
-  return (
-    <>
-      <CForm onSubmit={formik.handleSubmit}>
-        <CInputGroup>
-          <CFormInput
-            type="number"
-            defaultValue={formatNumber(handleMonthActualValue(item))}
-            valid={handleMonthActualStatus(item) === 'Chấp nhận'}
-            invalid={handleMonthActualStatus(item) === 'Từ chối'}
-            {...formik.getFieldProps('value')}
-          />
-          <IconButton
-            id="note"
-            color="primary"
-            onClick={() => {
-              setModalVisible(true)
-            }}
-            size="small"
-          >
-            <FilePresentIcon fontSize="small" />
-          </IconButton>
+  const EnterNoteData = () => {
+    const [inputNote, setInputNote] = React.useState('')
+
+    const onClickNote = () => {
+      api
+        .put('plans/enter-data-monthly-target/employee', {
+          plan_id: plan.plan_id,
+          kpi_template_id: item.kpi_template.kpi_template_id,
+          month: selectedMonth,
+          note: inputNote,
+        })
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Cập nhật thành công.',
+              type: 'success',
+            }),
+          )
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+        .finally(() => {
+          formik.setSubmitting(false)
+        })
+    }
+
+    return (
+      <>
+        <IconButton
+          id="note"
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <FilePresentIcon fontSize="small" />
+        </IconButton>
+        <CForm>
           <CModal
             alignment="center"
             scrollable
@@ -437,12 +454,44 @@ const EnterDateMonthlyTarget = (props) => {
                   minRows={4}
                   defaultValue={handleMonthActualNote(item)}
                   style={{ width: '100%' }}
-                  {...formik.getFieldProps('note')}
+                  onChange={(event) => {
+                    setTimeout(() => {
+                      setInputNote(event.target.value)
+                    }, 500)
+                  }}
                 />
               </div>
             </CModalBody>
-            <CModalFooter></CModalFooter>
+            <CModalFooter>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<CheckIcon />}
+                type="submit"
+                onClick={() => onClickNote()}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
+                Xác nhận
+              </Button>
+            </CModalFooter>
           </CModal>
+        </CForm>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <CForm onSubmit={formik.handleSubmit}>
+        <CInputGroup>
+          <CFormInput
+            type="number"
+            defaultValue={formatNumber(handleMonthActualValue(item))}
+            valid={handleMonthActualStatus(item) === 'Chấp nhận'}
+            invalid={handleMonthActualStatus(item) === 'Từ chối'}
+            {...formik.getFieldProps('value')}
+          />
+          <EnterNoteData />
           {/* <NoteDataMonthly
             plan={plan}
             item={item}

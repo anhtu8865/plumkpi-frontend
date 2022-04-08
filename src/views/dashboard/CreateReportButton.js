@@ -259,7 +259,7 @@ export const CreateReportButton = () => {
           <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
             <CTableHead color="light">
               <CTableRow>
-                <CTableHeaderCell>KPI</CTableHeaderCell>
+                <CTableHeaderCell>TÊN</CTableHeaderCell>
                 <CTableHeaderCell>THỰC HIỆN</CTableHeaderCell>
                 <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
                 <CTableHeaderCell>KÊT QUẢ</CTableHeaderCell>

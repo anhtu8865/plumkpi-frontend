@@ -782,8 +782,8 @@ export const PlanKpiTable = (catItem) => {
                           AssignPlanKpiButton(item)}
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
-                        {user.role === 'Giám đốc' &&
-                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
+                        {/* {user.role === 'Giám đốc' &&
+                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)} */}
                         {user.role === 'Quản lý' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
                           AssignPlanKpiButtonM(item)}
