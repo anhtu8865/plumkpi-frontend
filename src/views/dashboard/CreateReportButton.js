@@ -152,15 +152,16 @@ export const CreateReportButton = () => {
   }
 
   const convertPeriod = (periodList) => {
-    if (periodList[0] === periodList[1]) {
-      return periodList.slice(1)
-    } else {
-      const array = []
-      for (let i = periodList[0]; i <= periodList[1]; i++) {
-        array.push(i)
-      }
-      return array
-    }
+    // if (periodList[0] === periodList[1]) {
+    //   return periodList.slice(1)
+    // } else {
+    //   const array = []
+    //   for (let i = periodList[0]; i <= periodList[1]; i++) {
+    //     array.push(i)
+    //   }
+    //   return array
+    // }
+    return periodList
   }
 
   useEffect(() => {
@@ -470,6 +471,9 @@ export const CreateReportButton = () => {
 
   const ReportPreview = () => {
     const { values } = useFormikContext()
+
+    console.log(values)
+
     const [result, setResult] = useState({})
     const newKpis = convertKpisOrFilter(values.kpis)
     const newFilter = convertKpisOrFilter(values.filter)
@@ -508,7 +512,7 @@ export const CreateReportButton = () => {
       return () => (isCalled = false)
     }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
 
-    console.log(result)
+    //console.log(result)
 
     if (values.kpis.length === 0) {
       return <div>Hãy chọn KPI để tạo báo cáo</div>
@@ -531,7 +535,7 @@ export const CreateReportButton = () => {
               {result.datasets.map((item) =>
                 item.data.map((row, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>{result.datasets[0].label}</CTableDataCell>
+                    <CTableDataCell>{item.label}</CTableDataCell>
                     <CTableDataCell>{row.actual}</CTableDataCell>
                     <CTableDataCell>{row.target}</CTableDataCell>
                     <CTableDataCell>{row.resultOfKpi.result}</CTableDataCell>
@@ -580,7 +584,7 @@ export const CreateReportButton = () => {
             })
             dispatch(
               createAlert({
-                message: 'Tạo biểu đồ mới thành công.',
+                message: 'Tạo báo cáo mới thành công.',
                 type: 'success',
               }),
             )
@@ -618,7 +622,7 @@ export const CreateReportButton = () => {
               }}
             >
               <CModalHeader>
-                <CModalTitle>Tạo biểu đồ</CModalTitle>
+                <CModalTitle>Tạo báo cáo</CModalTitle>
               </CModalHeader>
               <CModalBody style={{ minHeight: '450px' }} className="mx-4 mb-3">
                 <Form>
@@ -683,10 +687,10 @@ export const CreateReportButton = () => {
                             setFieldValue('dateType', event.target.value)
                             switch (event.target.value) {
                               case 'Quý':
-                                setFieldValue('period', [1, 4])
+                                setFieldValue('period', [1])
                                 break
                               case 'Tháng':
-                                setFieldValue('period', [1, 12])
+                                setFieldValue('period', [1])
                                 break
                               default:
                                 setFieldValue('period', [])
@@ -706,11 +710,11 @@ export const CreateReportButton = () => {
                       </CCol>
                       {values.dateType !== 'Năm' && (
                         <CCol xs={12} sm={8} className="ms-4">
-                          <CFormLabel htmlFor="pperiod">Khoảng thời gian</CFormLabel>
+                          <CFormLabel htmlFor="pperiod">Mốc thời gian</CFormLabel>
                           <Slider
                             value={values.period}
-                            onChange={(event, newValue) => {
-                              setFieldValue('period', newValue)
+                            onChange={(event) => {
+                              setFieldValue('period', event.target.value)
                             }}
                             valueLabelDisplay="on"
                             marks
@@ -776,11 +780,11 @@ export const CreateReportButton = () => {
                     <>
                       <CRow className="mt-2">
                         <CCol xs={12} sm={6}>
-                          <CFormLabel htmlFor="chartname">Tên biểu đồ</CFormLabel>
+                          <CFormLabel htmlFor="chartname">Tên báo cáo</CFormLabel>
                           <CFormInput
                             name="chart_name"
                             id="chartname"
-                            placeholder="Nhập tên biểu đồ"
+                            placeholder="Nhập tên báo cáo"
                             value={values.chart_name}
                             onChange={handleChange}
                             onBlur={handleBlur}
