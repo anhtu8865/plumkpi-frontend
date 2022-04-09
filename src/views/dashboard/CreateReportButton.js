@@ -52,7 +52,7 @@ export const CreateReportButton = () => {
   const { user } = useSelector((state) => state.user)
   const [initialValues, setInitialValues] = useState({
     chart_name: '',
-    description: null,
+    description: '',
     plan_id: 1,
     kpis: [],
     dateType: 'Năm',
@@ -104,6 +104,7 @@ export const CreateReportButton = () => {
   }
 
   const createChart = async (obj) => {
+    console.log(obj)
     await api.post(`charts`, obj)
   }
 
@@ -207,8 +208,6 @@ export const CreateReportButton = () => {
   const ReportPreview = () => {
     const { values } = useFormikContext()
 
-    console.log(values)
-
     const [result, setResult] = useState({})
     const newKpis = convertKpisOrFilter(values.kpis)
     const newFilter = convertKpisOrFilter(values.filter)
@@ -271,9 +270,9 @@ export const CreateReportButton = () => {
                 item.data.map((row, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
                     <CTableDataCell>{item.label}</CTableDataCell>
-                    <CTableDataCell>{row.actual}</CTableDataCell>
-                    <CTableDataCell>{row.target}</CTableDataCell>
-                    <CTableDataCell>{row.resultOfKpi.result}</CTableDataCell>
+                    <CTableDataCell>{row.actual ? row.actual : 'Chưa có'}</CTableDataCell>
+                    <CTableDataCell>{row.target ? row.target : 'Chưa có'}</CTableDataCell>
+                    <CTableDataCell>{row.resultOfKpi.result}%</CTableDataCell>
                     <CTableDataCell>{row.unit}</CTableDataCell>
                   </CTableRow>
                 )),
