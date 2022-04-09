@@ -1,5 +1,6 @@
 //chứa những hàm để xử lý dữ liệu
 
+import React from 'react'
 import { formulaOperators, checkValidError } from 'src/utils/constant'
 import { format, parse } from 'date-fns'
 
@@ -330,4 +331,54 @@ export const handleColor = (color) => {
 
 export const transparentColor = (color) => {
   return color + '33'
+}
+
+export const planTooltip = (planItem) => {
+  return (
+    <div>
+      Tên kế hoạch: {planItem.plan_name}
+      <br />
+      Mô tả: {planItem.description}
+      <br />
+      Năm thực hiện: {planItem.year}
+      <br />
+    </div>
+  )
+}
+
+export const kpiTooltip = (kpiItem) => {
+  return (
+    <div>
+      Tên KPI: {kpiItem.kpi_template_name}
+      <br />
+      Mô tả: {kpiItem.description ? kpiItem.description : 'Không có'}
+      <br />
+      Công thức tổng hợp: {kpiItem.aggregation}
+      <br />
+      Đơn vị: {kpiItem.unit}
+      <br />
+      Cách đo lường:
+      <br />
+      {kpiItem.measures.items.length > 0
+        ? kpiItem.measures.items.map((item, index) => {
+            return (
+              <div key={index} className="d-flex flex-row">
+                Kết quả {convertComparison(item.comparison)} {item.percentOfTarget}% Chỉ tiêu: Đạt
+                được {item.percentOfKpi}% KPI.{' '}
+                <div
+                  className="ms-2"
+                  style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '2px',
+                    background: `${item.color}`,
+                  }}
+                />
+                <br />
+              </div>
+            )
+          })
+        : 'Không có'}
+    </div>
+  )
 }

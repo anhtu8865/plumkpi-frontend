@@ -112,8 +112,12 @@ const Dashboard = () => {
             </CInputGroup>
           </CCol>
           <CCol xs={12} sm={6} className="d-flex flex-row justify-content-end">
-            <EditDashboardButton />
-            <DeleteDashboardButton />
+            {selectedDashboard && (
+              <>
+                <EditDashboardButton />
+                <DeleteDashboardButton />
+              </>
+            )}
           </CCol>
         </CRow>
       </>

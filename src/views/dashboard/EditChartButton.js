@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, IconButton, Slider } from '@mui/material'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
+import EditIcon from '@mui/icons-material/Edit'
 import {
   CCol,
   CFormLabel,
@@ -17,32 +17,20 @@ import {
   CInputGroup,
   CInputGroupText,
   CFormCheck,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableFoot,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
-import { FieldArray, Form, Formik, getIn, useFormikContext } from 'formik'
+import { Form, Formik, useFormikContext } from 'formik'
 import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
-import { dateTypeOption, colorArray } from 'src/utils/constant'
-import { handleColor, formatNumber, transparentColor } from 'src/utils/function'
+import { dateTypeOption } from 'src/utils/constant'
 import Select from 'react-select'
-import cloneDeep from 'lodash/cloneDeep'
-import { CChart } from '@coreui/react-chartjs'
-import GaugeChart from 'react-gauge-chart'
-import { Bar, Line, Pie } from 'react-chartjs-2'
-import 'chart.js/auto'
+import { Chart } from './Chart'
 
-export const CreateReportButton = () => {
+export const EditChartButton = (props) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [plansOption, setPlansOption] = useState([])
@@ -103,8 +91,8 @@ export const CreateReportButton = () => {
     return response.data
   }
 
-  const createChart = async (obj) => {
-    await api.post(`charts`, obj)
+  const editChart = async (chartId, dashboardId, obj) => {
+    await api.put(`charts/chart`, obj, { params: { chart_id: chartId, dashboard_id: dashboardId } })
   }
 
   const handleKpis = (kpisList) => {
@@ -152,16 +140,62 @@ export const CreateReportButton = () => {
   }
 
   const convertPeriod = (periodList) => {
-    // if (periodList[0] === periodList[1]) {
-    //   return periodList.slice(1)
-    // } else {
-    //   const array = []
-    //   for (let i = periodList[0]; i <= periodList[1]; i++) {
-    //     array.push(i)
-    //   }
-    //   return array
-    // }
-    return periodList
+    if (periodList[0] === periodList[1]) {
+      return periodList.slice(1)
+    } else {
+      const array = []
+      for (let i = periodList[0]; i <= periodList[1]; i++) {
+        array.push(i)
+      }
+      return array
+    }
+  }
+
+  const reverseConvertKpis = (kpisList, kpis) => {
+    const array = []
+    kpisList.map((item) => {
+      item.kpi_templates.map((i) => {
+        if (kpis.includes(i.kpi_template_id)) {
+          array.push({ label: i.kpi_template_name, value: i.kpi_template_id })
+        }
+      })
+    })
+    return array
+  }
+
+  const reverseConvertPeriod = (period) => {
+    if (period.length === 0) {
+      return period
+    } else if (period.length === 1) {
+      return [period[0], period[0]]
+    } else {
+      return [period[0], period[period.length - 1]]
+    }
+  }
+
+  const reverseConvertFilter = (resultList, filter) => {
+    switch (user.role) {
+      case 'Giám đốc': {
+        const array = []
+        resultList.map((item) => {
+          if (filter.includes(item.dept_id)) {
+            array.push({ label: item.dept_name, value: item.dept_id })
+          }
+        })
+        return array
+      }
+      case 'Quản lý': {
+        const array = []
+        resultList.map((item) => {
+          if (filter.includes(item.user_id)) {
+            array.push({ label: item.user_name, value: item.user_id })
+          }
+        })
+        return array
+      }
+      default:
+        return []
+    }
   }
 
   useEffect(() => {
@@ -169,17 +203,42 @@ export const CreateReportButton = () => {
       try {
         const result = await getAllPlans()
         setPlansOption(result)
-        setInitialValues({
-          chart_name: '',
-          description: null,
-          plan_id: result[0].plan_id,
-          kpis: [],
-          dateType: 'Năm',
-          period: [],
-          filter: [],
-        })
         const result1 = await getAllKpisInPlan(result[0].plan_id)
         setKpisOption(handleKpis(result1))
+        if (props.chart.properties.filter.length === 0) {
+          if (props.chart.properties.kpis.length === 1) {
+            const res = await getDeptsOrEmployees(
+              props.chart.properties.plan_id,
+              props.chart.properties.kpis[0],
+            )
+            setFilterOption(handleDeptsOrEmployees(res))
+          }
+          setInitialValues({
+            chart_name: props.chart.properties.chart_name,
+            description: props.chart.properties.description,
+            plan_id: props.chart.properties.plan_id,
+            kpis: reverseConvertKpis(result1, props.chart.properties.kpis),
+            dateType: props.chart.properties.dateType,
+            period: reverseConvertPeriod(props.chart.properties.period),
+            filter: [],
+          })
+        } else {
+          const res = await getDeptsOrEmployees(
+            props.chart.properties.plan_id,
+            props.chart.properties.kpis[0],
+          )
+          setFilterOption(handleDeptsOrEmployees(res))
+          setIsFilter(true)
+          setInitialValues({
+            chart_name: props.chart.properties.chart_name,
+            description: props.chart.properties.description,
+            plan_id: props.chart.properties.plan_id,
+            kpis: reverseConvertKpis(result1, props.chart.properties.kpis),
+            dateType: props.chart.properties.dateType,
+            period: reverseConvertPeriod(props.chart.properties.period),
+            filter: reverseConvertFilter(res, props.chart.properties.filter),
+          })
+        }
       } catch (error) {
         if (error.response) {
           dispatch(
@@ -204,11 +263,8 @@ export const CreateReportButton = () => {
       .required('Đây là trường bắt buộc'),
   })
 
-  const ReportPreview = () => {
+  const ChartPreview = () => {
     const { values } = useFormikContext()
-
-    console.log(values)
-
     const [result, setResult] = useState({})
     const newKpis = convertKpisOrFilter(values.kpis)
     const newFilter = convertKpisOrFilter(values.filter)
@@ -247,58 +303,20 @@ export const CreateReportButton = () => {
       return () => (isCalled = false)
     }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
 
-    //console.log(result)
-
     if (values.kpis.length === 0) {
-      return <div>Hãy chọn KPI để tạo báo cáo</div>
+      return <div>Hãy chọn KPI để vẽ biểu đồ</div>
     } else if (!result) {
       return null
     } else {
-      if (result.datasets) {
-        return (
-          <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
-            <CTableHead color="light">
-              <CTableRow>
-                <CTableHeaderCell>TÊN</CTableHeaderCell>
-                <CTableHeaderCell>THỰC HIỆN</CTableHeaderCell>
-                <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
-                <CTableHeaderCell>KÊT QUẢ</CTableHeaderCell>
-                <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {result.datasets.map((item) =>
-                item.data.map((row, index) => (
-                  <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>{item.label}</CTableDataCell>
-                    <CTableDataCell>{row.actual}</CTableDataCell>
-                    <CTableDataCell>{row.target}</CTableDataCell>
-                    <CTableDataCell>{row.resultOfKpi.result}</CTableDataCell>
-                    <CTableDataCell>{row.unit}</CTableDataCell>
-                  </CTableRow>
-                )),
-              )}
-            </CTableBody>
-            <CTableFoot></CTableFoot>
-          </CTable>
-        )
-      } else {
-        return null
-      }
+      return <Chart result={result} />
     }
   }
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setModalVisible(true)}
-        startIcon={<AddCircleIcon />}
-        sx={{ textTransform: 'none', borderRadius: 10 }}
-      >
-        Tạo báo cáo
-      </Button>
+      <IconButton color="primary" onClick={() => setModalVisible(true)} size="small">
+        <EditIcon fontSize="small" />
+      </IconButton>
 
       <Formik
         enableReinitialize={true}
@@ -306,8 +324,7 @@ export const CreateReportButton = () => {
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
-            await createChart({
-              dashboard_id: selectedDashboard,
+            await editChart(props.chart.chart_id, selectedDashboard, {
               chart_name: values.chart_name,
               description: values.description,
               plan_id: Number(values.plan_id),
@@ -315,14 +332,19 @@ export const CreateReportButton = () => {
               dateType: values.dateType,
               period: convertPeriod(values.period),
               filter: convertKpisOrFilter(values.filter),
-              chart_type: 'Báo cáo',
             })
             dispatch(
               createAlert({
-                message: 'Tạo báo cáo mới thành công.',
+                message: 'Chỉnh sửa biểu đồ thành công.',
                 type: 'success',
               }),
             )
+            dispatch(
+              setLoading({
+                value: true,
+              }),
+            )
+            dispatch(setReload())
             setModalVisible(false)
           } catch (error) {
             if (error.response) {
@@ -357,11 +379,10 @@ export const CreateReportButton = () => {
               }}
             >
               <CModalHeader>
-                <CModalTitle>Tạo báo cáo</CModalTitle>
+                <CModalTitle>Chỉnh sửa biểu đồ</CModalTitle>
               </CModalHeader>
               <CModalBody style={{ minHeight: '450px' }} className="mx-4 mb-3">
                 <Form>
-                  {isSubmitting && <LoadingCircle />}
                   <CRow>
                     <CCol xs={12} sm={3}>
                       <CFormLabel htmlFor="plann">Kế hoạch</CFormLabel>
@@ -422,10 +443,10 @@ export const CreateReportButton = () => {
                             setFieldValue('dateType', event.target.value)
                             switch (event.target.value) {
                               case 'Quý':
-                                setFieldValue('period', [1])
+                                setFieldValue('period', [1, 4])
                                 break
                               case 'Tháng':
-                                setFieldValue('period', [1])
+                                setFieldValue('period', [1, 12])
                                 break
                               default:
                                 setFieldValue('period', [])
@@ -445,11 +466,11 @@ export const CreateReportButton = () => {
                       </CCol>
                       {values.dateType !== 'Năm' && (
                         <CCol xs={12} sm={8} className="ms-4">
-                          <CFormLabel htmlFor="pperiod">Mốc thời gian</CFormLabel>
+                          <CFormLabel htmlFor="pperiod">Khoảng thời gian</CFormLabel>
                           <Slider
                             value={values.period}
-                            onChange={(event) => {
-                              setFieldValue('period', event.target.value)
+                            onChange={(event, newValue) => {
+                              setFieldValue('period', newValue)
                             }}
                             valueLabelDisplay="on"
                             marks
@@ -466,6 +487,7 @@ export const CreateReportButton = () => {
                       <CRow className="mt-3">
                         <CCol xs={12} sm={6}>
                           <CFormCheck
+                            checked={isFilter}
                             label={
                               user.role === 'Giám đốc'
                                 ? 'Biểu diễn theo phòng ban'
@@ -507,19 +529,19 @@ export const CreateReportButton = () => {
                     </>
                   )}
                   <CRow className="mt-5">
-                    <CCol xs={12} className="d-flex flex-row justify-content-center">
-                      <ReportPreview />
+                    <CCol xs={12}>
+                      <ChartPreview />
                     </CCol>
                   </CRow>
                   {values.kpis.length > 0 && (
                     <>
                       <CRow className="mt-2">
                         <CCol xs={12} sm={6}>
-                          <CFormLabel htmlFor="chartname">Tên báo cáo</CFormLabel>
+                          <CFormLabel htmlFor="chartname">Tên biểu đồ</CFormLabel>
                           <CFormInput
                             name="chart_name"
                             id="chartname"
-                            placeholder="Nhập tên báo cáo"
+                            placeholder="Nhập tên biểu đồ"
                             value={values.chart_name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -546,6 +568,7 @@ export const CreateReportButton = () => {
                     </>
                   )}
                 </Form>
+                {isSubmitting && <LoadingCircle />}
               </CModalBody>
               <CModalFooter>
                 <Button
@@ -557,7 +580,7 @@ export const CreateReportButton = () => {
                   disabled={isSubmitting || values.kpis.length === 0}
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
-                  Tạo mới
+                  Xác nhận
                 </Button>
               </CModalFooter>
             </CModal>
@@ -566,4 +589,8 @@ export const CreateReportButton = () => {
       </Formik>
     </>
   )
+}
+
+EditChartButton.propTypes = {
+  chart: PropTypes.object,
 }

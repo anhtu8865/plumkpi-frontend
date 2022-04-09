@@ -43,6 +43,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 // import DeleteKpiRegistration from './DeleteKpiRegistration'
 // import EditKpiRegistration from './EditKpiRegistration'
 import { InfoKpiRegistration } from './InfoKpiRegistration'
+import { KpiInfoButton } from 'src/views/plan/KpiInfoButton'
 
 const KpiRegistration = () => {
   const history = useHistory()
@@ -273,7 +274,7 @@ const KpiRegistration = () => {
                 <CTableDataCell>{row.description}</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
                 <CTableDataCell className="text-center">
-                  <InfoKpiRegistration kpiItem={row} />
+                  <KpiInfoButton kpiItem={{ kpi_template: row }} />
                 </CTableDataCell>
               </CTableRow>
             ))}

@@ -77,9 +77,18 @@ export const KpiInfoButton = (props) => {
               {props.kpiItem.kpi_template.measures.items.length > 0
                 ? props.kpiItem.kpi_template.measures.items.map((item, index) => {
                     return (
-                      <div key={index}>
+                      <div key={index} className="d-flex flex-row">
                         Kết quả {convertComparison(item.comparison)} {item.percentOfTarget}% Chỉ
                         tiêu: Đạt được {item.percentOfKpi}% KPI.
+                        <div
+                          className="ms-3"
+                          style={{
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '2px',
+                            background: `${item.color}`,
+                          }}
+                        />
                         <br />
                       </div>
                     )
