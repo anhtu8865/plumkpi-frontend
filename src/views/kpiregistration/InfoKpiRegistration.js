@@ -36,7 +36,6 @@ export const InfoKpiRegistration = (props) => {
 
       <CModal
         alignment="center"
-        size="lg"
         scrollable
         visible={modalVisible}
         onClose={() => {

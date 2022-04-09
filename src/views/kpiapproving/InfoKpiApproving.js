@@ -36,7 +36,6 @@ export const InfoKpiApproving = (props) => {
 
       <CModal
         alignment="center"
-        size="lg"
         scrollable
         visible={modalVisible}
         onClose={() => {
