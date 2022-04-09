@@ -646,7 +646,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem) => {
         }}
         size="small"
       >
-        <PlaylistAddCheckCircleIcon fontSize="small" />
+        <FactCheckIcon fontSize="small" />
       </IconButton>
 
       <CModal

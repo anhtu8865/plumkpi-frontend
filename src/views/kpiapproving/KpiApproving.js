@@ -41,6 +41,7 @@ import { ApproveDataMonthlyPersonal } from './ApproveDataMonthlyPersonal'
 import { ApproveTargetMonthlyPersonal } from './ApproveTargetMonthlyPersonal'
 import { ApproveTargetQuarterPersonal } from './ApproveTargetQuarterPersonal'
 import { ApproveDataQuarterPersonal } from './ApproveDataQuarterPersonal'
+import { InfoKpiApproving } from './InfoKpiApproving'
 
 const KpiApproving = () => {
   const { id } = useParams()
@@ -144,6 +145,7 @@ const KpiApproving = () => {
                   <div className="d-flex flex-row justify-content-center">
                     {true && ApproveTargetMonthlyPersonal(id, row)}
                     {true && ApproveDataMonthlyPersonal(id, row)}
+                    <InfoKpiApproving kpiItem={row} />
                   </div>
                 </CTableDataCell>
               </CTableRow>
@@ -196,10 +198,10 @@ const KpiApproving = () => {
                 <CTableDataCell>{row.description}</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
                 <CTableDataCell className="text-center">
-                  {/* <InfoKpiApproving kpiItem={row} /> */}
                   <div className="d-flex flex-row justify-content-center">
                     {true && ApproveTargetQuarterPersonal(id, row)}
                     {true && ApproveDataQuarterPersonal(id, row)}
+                    <InfoKpiApproving kpiItem={row} />
                   </div>
                 </CTableDataCell>
               </CTableRow>
