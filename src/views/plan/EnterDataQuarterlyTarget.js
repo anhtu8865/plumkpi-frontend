@@ -11,11 +11,21 @@ import {
   CModalTitle,
 } from '@coreui/react'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
+import AttachmentIcon from '@mui/icons-material/Attachment'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import FilePresentIcon from '@mui/icons-material/FilePresent'
 import SaveIcon from '@mui/icons-material/Save'
-import { Button, IconButton, TextareaAutosize } from '@mui/material'
+import {
+  Button,
+  IconButton,
+  Link,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  TextareaAutosize,
+} from '@mui/material'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -458,18 +468,24 @@ const EnterDataQuarterlyTarget = (props) => {
             <CModalBody>
               <div className="mb-3">
                 {handleQuarterActualFile(item).length === 0 ? null : (
-                  <CListGroup>
+                  <List>
                     {handleQuarterActualFile(item).map((row, index) => (
-                      <div className="d-flex justify-content-between" key={index}>
-                        <CListGroupItem component="a" href={row.url}>
-                          {row.key}
-                        </CListGroupItem>
+                      <ListItem key={index}>
+                        <ListItemIcon>
+                          <AttachmentIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Link href={row.url} target="_blank">
+                            {row.key}
+                          </Link>
+                        </ListItemText>
                         <DeleteFile fileId={row.id} />
-                      </div>
+                      </ListItem>
                     ))}
-                  </CListGroup>
+                  </List>
                 )}
               </div>
+              <hr />
               <div className="mb-3">
                 <CFormInput
                   type="file"

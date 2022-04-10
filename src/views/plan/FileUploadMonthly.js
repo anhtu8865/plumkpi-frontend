@@ -1,40 +1,129 @@
-import {
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CFormTextarea,
-} from '@coreui/react'
+import { CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
-import { Button, IconButton, TextareaAutosize } from '@mui/material'
+import AttachmentIcon from '@mui/icons-material/Attachment'
+import { IconButton, Link, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import PropTypes from 'prop-types'
-import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { LoadingCircle } from 'src/components/LoadingCircle'
-import { createAlert } from 'src/slices/alertSlice'
-import { formatNumber } from 'src/utils/function'
-import CheckIcon from '@mui/icons-material/Check'
-import api from 'src/views/axiosConfig'
-import { useFormik } from 'formik'
-import * as yup from 'yup'
 
 const FileUploadMonthly = (props) => {
-  //console.log(props)
-  const { item, selectedMonth } = props
-
-  const dispatch = useDispatch()
-
-  const [isSubmit, setIsSubmit] = React.useState(false)
+  const { plan_id, item, selectedMonth } = props
   const [modalVisible, setModalVisible] = React.useState(false)
+  const [selectedFile, setSelectedFile] = React.useState(null)
 
-  const onClickDelete = () => {
-    setIsSubmit(true)
+  const handleMonthActualFile = (item) => {
+    //console.log(item)
+    switch (selectedMonth) {
+      case 1: {
+        if (item.first_monthly_target) {
+          if (item.first_monthly_target.hasOwnProperty('actual')) {
+            if (item.first_monthly_target.actual.hasOwnProperty('files'))
+              return item.first_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 2: {
+        if (item.second_monthly_target) {
+          if (item.second_monthly_target.hasOwnProperty('actual')) {
+            if (item.second_monthly_target.actual.hasOwnProperty('files'))
+              return item.second_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 3: {
+        if (item.third_monthly_target) {
+          if (item.third_monthly_target.hasOwnProperty('actual')) {
+            if (item.third_monthly_target.actual.hasOwnProperty('files'))
+              return item.third_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 4: {
+        if (item.fourth_monthly_target) {
+          if (item.fourth_monthly_target.hasOwnProperty('actual')) {
+            if (item.fourth_monthly_target.actual.hasOwnProperty('files'))
+              return item.fourth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 5: {
+        if (item.fifth_monthly_target) {
+          if (item.fifth_monthly_target.hasOwnProperty('actual')) {
+            if (item.fifth_monthly_target.actual.hasOwnProperty('files'))
+              return item.fifth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 6: {
+        if (item.sixth_monthly_target) {
+          if (item.sixth_monthly_target.hasOwnProperty('actual')) {
+            if (item.sixth_monthly_target.actual.hasOwnProperty('files'))
+              return item.sixth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 7: {
+        if (item.seventh_monthly_target) {
+          if (item.seventh_monthly_target.hasOwnProperty('actual')) {
+            if (item.seventh_monthly_target.actual.hasOwnProperty('files'))
+              return item.seventh_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 8: {
+        if (item.eighth_monthly_target) {
+          if (item.eighth_monthly_target.hasOwnProperty('actual')) {
+            if (item.eighth_monthly_target.actual.hasOwnProperty('files'))
+              return item.eighth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 9: {
+        if (item.ninth_monthly_target) {
+          if (item.ninth_monthly_target.hasOwnProperty('actual')) {
+            if (item.ninth_monthly_target.actual.hasOwnProperty('files'))
+              return item.ninth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 10: {
+        if (item.tenth_monthly_target) {
+          if (item.tenth_monthly_target.hasOwnProperty('actual')) {
+            if (item.tenth_monthly_target.actual.hasOwnProperty('files'))
+              return item.tenth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 11: {
+        if (item.eleventh_monthly_target) {
+          if (item.eleventh_monthly_target.hasOwnProperty('actual')) {
+            if (item.eleventh_monthly_target.actual.hasOwnProperty('files'))
+              return item.eleventh_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 12: {
+        if (item.twelfth_monthly_target) {
+          if (item.twelfth_monthly_target.hasOwnProperty('actual')) {
+            if (item.twelfth_monthly_target.actual.hasOwnProperty('files'))
+              return item.twelfth_monthly_target.actual.files
+          }
+        }
+        return []
+      }
+      default:
+        return []
+    }
   }
 
   return (
@@ -60,26 +149,34 @@ const FileUploadMonthly = (props) => {
           <CModalHeader>
             <CModalTitle>File đính kèm</CModalTitle>
           </CModalHeader>
-          <CModalBody></CModalBody>
-          <CModalFooter>
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<CheckIcon />}
-              type="submit"
-              onClick={() => onClickDelete()}
-              sx={{ textTransform: 'none', borderRadius: 10 }}
-            >
-              Xác nhận
-            </Button>
-          </CModalFooter>
+          <CModalBody>
+            <div className="mb-3">
+              {handleMonthActualFile(item).length === 0 ? null : (
+                <List>
+                  {handleMonthActualFile(item).map((row, index) => (
+                    <ListItem key={index}>
+                      <ListItemIcon>
+                        <AttachmentIcon />
+                      </ListItemIcon>
+                      <ListItemText>
+                        <Link href={row.url} target="_blank">
+                          {row.key}
+                        </Link>
+                      </ListItemText>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </div>
+          </CModalBody>
+          <CModalFooter></CModalFooter>
         </CModal>
       </CForm>
     </>
   )
 }
-
 FileUploadMonthly.propTypes = {
+  plan_id: PropTypes.number,
   item: PropTypes.object,
   selectedMonth: PropTypes.number,
 }

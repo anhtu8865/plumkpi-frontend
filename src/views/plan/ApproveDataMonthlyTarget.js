@@ -43,7 +43,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/function'
 import PropTypes from 'prop-types'
 
-import FilePresentIcon from '@mui/icons-material/FilePresent'
+import FileUploadMonthly from './FileUploadMonthly'
 import NoteDataMonthlyApprove from './NoteDataMonthlyApprove'
 
 export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
@@ -869,8 +869,13 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                                 valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                                 disabled
                               />
-                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                              {/* <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText> */}
                               <NoteDataMonthlyApprove item={item} selectedMonth={selectedMonth} />
+                              <FileUploadMonthly
+                                plan_id={plan_id}
+                                item={item}
+                                selectedMonth={selectedMonth}
+                              />
                             </CInputGroup>
                           ) : (
                             'Chưa có'

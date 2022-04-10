@@ -35,6 +35,7 @@ import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCirc
 import PropTypes from 'prop-types'
 
 import NoteDataQuarterApprove from '../plan/NoteDataQuarterApprove'
+import FileUploadQuarterly from '../plan/FileUploadQuarterly'
 
 export const ApproveDataQuarterPersonal = (plan_id, kpiItem) => {
   //console.log(kpiItem)
@@ -401,8 +402,13 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem) => {
                                 invalid={handleQuarterDataStatus(item) === 'Từ chối'}
                                 disabled
                               />
-                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                              {/* <CInputGroupText>{kpiItem.unit}</CInputGroupText> */}
                               <NoteDataQuarterApprove
+                                item={item}
+                                selectedQuarter={selectedQuarter}
+                              />
+                              <FileUploadQuarterly
+                                plan_id={plan_id}
                                 item={item}
                                 selectedQuarter={selectedQuarter}
                               />

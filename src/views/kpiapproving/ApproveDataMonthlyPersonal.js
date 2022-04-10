@@ -36,6 +36,7 @@ import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/
 import PropTypes from 'prop-types'
 
 import NoteDataMonthlyApprove from '../plan/NoteDataMonthlyApprove'
+import FileUploadMonthly from '../plan/FileUploadMonthly'
 
 export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
   //console.log(kpiItem)
@@ -725,8 +726,13 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
                                 valid={handleMonthlyDataStatus(item) === 'Chấp nhận'}
                                 disabled
                               />
-                              <CInputGroupText>{kpiItem.unit}</CInputGroupText>
+                              {/* <CInputGroupText>{kpiItem.unit}</CInputGroupText> */}
                               <NoteDataMonthlyApprove item={item} selectedMonth={selectedMonth} />
+                              <FileUploadMonthly
+                                plan_id={plan_id}
+                                item={item}
+                                selectedMonth={selectedMonth}
+                              />
                             </CInputGroup>
                           ) : (
                             'Chưa có'
