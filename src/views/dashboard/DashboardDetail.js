@@ -44,6 +44,8 @@ import { DeleteChartButton } from './DeleteChartButton'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 import { planTooltip, kpiTooltip } from 'src/utils/function'
 
+import { Report } from './Report'
+
 const DashboardDetail = () => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -186,6 +188,98 @@ const DashboardDetail = () => {
     chartItem: PropTypes.object,
   }
 
+  const ReportInDashboard = (props) => {
+    const [result, setResult] = useState({})
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const res = await getData(props.chartItem.properties)
+          if (res) {
+            setResult(res)
+          }
+        } catch (error) {
+          if (error.response) {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          }
+        }
+      }
+
+      fetchData()
+    }, [])
+
+    if (result) {
+      return (
+        <>
+          <CCol xs={12} lg={6} className="mb-4">
+            <CCard className="shadow-sm" style={{ minHeight: '350px' }}>
+              <CCardBody>
+                <CRow>
+                  <CCol xs={12} sm={8}>
+                    <CCardTitle>{props.chartItem.properties.chart_name}</CCardTitle>
+                  </CCol>
+                  <CCol xs={12} sm={4}>
+                    <div className="d-flex flex-row justify-content-end">
+                      {/* <EditChartButton chart={props.chartItem} /> */}
+                      <DeleteChartButton chart={props.chartItem} />
+                    </div>
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <small>
+                    {props.chartItem.properties.description
+                      ? props.chartItem.properties.description
+                      : null}
+                  </small>
+                </CRow>
+                <CRow className="mt-2">
+                  <small>
+                    Kế hoạch:{' '}
+                    <CustomWidthTooltip
+                      title={planTooltip(props.chartItem.plan)}
+                      placement="right-start"
+                    >
+                      <CBadge color="dark">{props.chartItem.plan.plan_name}</CBadge>
+                    </CustomWidthTooltip>
+                  </small>
+                </CRow>
+                <CRow className="mt-2">
+                  <small>
+                    KPI:{' '}
+                    {props.chartItem.kpi_templates.map((item, index) => (
+                      <CustomWidthTooltip
+                        key={index}
+                        title={kpiTooltip(item)}
+                        placement="right-start"
+                      >
+                        <CBadge key={index} color="dark" className="me-1">
+                          {item.kpi_template_name}
+                        </CBadge>
+                      </CustomWidthTooltip>
+                    ))}
+                  </small>
+                </CRow>
+                <CRow className="mt-4">
+                  <Report result={result} />
+                </CRow>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </>
+      )
+    } else {
+      return null
+    }
+  }
+
+  ReportInDashboard.propTypes = {
+    chartItem: PropTypes.object,
+  }
+
   return (
     <>
       {loading && <LoadingCircle />}
@@ -207,7 +301,7 @@ const DashboardDetail = () => {
                 return <ChartInDashboard chartItem={item} key={index} />
               } else if (item.chart_type === 'Báo cáo') {
                 //return báo cáo
-                return null
+                return <ReportInDashboard chartItem={item} key={index} />
               } else {
                 return null
               }

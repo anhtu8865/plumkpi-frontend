@@ -172,7 +172,7 @@ export const CreateReportButton = () => {
         setPlansOption(result)
         setInitialValues({
           chart_name: '',
-          description: null,
+          description: '',
           plan_id: result[0].plan_id,
           kpis: [],
           dateType: 'Năm',
