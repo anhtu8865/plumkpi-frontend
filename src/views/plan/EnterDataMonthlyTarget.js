@@ -1,41 +1,32 @@
 import {
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CListGroup,
+  CListGroupItem,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CFormLabel,
-  CListGroup,
-  CListGroupItem,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableFoot,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
-import FilePresentIcon from '@mui/icons-material/FilePresent'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { Button, IconButton, TextareaAutosize } from '@mui/material'
-import PropTypes from 'prop-types'
-import SaveIcon from '@mui/icons-material/Save'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
+import CheckIcon from '@mui/icons-material/Check'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import FilePresentIcon from '@mui/icons-material/FilePresent'
+import SaveIcon from '@mui/icons-material/Save'
+import { Button, IconButton, TextareaAutosize } from '@mui/material'
+import { useFormik } from 'formik'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import CheckIcon from '@mui/icons-material/Check'
 import { createAlert } from 'src/slices/alertSlice'
+import { setLoading, setReload } from 'src/slices/viewSlice'
 import { formatNumber } from 'src/utils/function'
-
 import api from 'src/views/axiosConfig'
-import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { setReload, setLoading } from 'src/slices/viewSlice'
+
 //import FileUploadMonthly from './FileUploadMonthly'
 
 const EnterDateMonthlyTarget = (props) => {
@@ -371,7 +362,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.first_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 2: {
         if (item.second_monthly_target) {
@@ -380,7 +371,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.second_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 3: {
         if (item.third_monthly_target) {
@@ -407,7 +398,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.fifth_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 6: {
         if (item.sixth_monthly_target) {
@@ -416,7 +407,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.sixth_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 7: {
         if (item.seventh_monthly_target) {
@@ -425,7 +416,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.seventh_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 8: {
         if (item.eighth_monthly_target) {
@@ -434,7 +425,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.eighth_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 9: {
         if (item.ninth_monthly_target) {
@@ -443,7 +434,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.ninth_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 10: {
         if (item.tenth_monthly_target) {
@@ -452,7 +443,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.tenth_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 11: {
         if (item.eleventh_monthly_target) {
@@ -461,7 +452,7 @@ const EnterDateMonthlyTarget = (props) => {
               return item.eleventh_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       case 12: {
         if (item.twelfth_monthly_target) {
@@ -470,10 +461,10 @@ const EnterDateMonthlyTarget = (props) => {
               return item.twelfth_monthly_target.actual.files
           }
         }
-        return null
+        return []
       }
       default:
-        return null
+        return []
     }
   }
 
@@ -613,7 +604,6 @@ const EnterDateMonthlyTarget = (props) => {
     const [selectedFile, setSelectedFile] = React.useState(null)
 
     const onClickUpload = () => {
-      console.log(plan.plan_id, item.kpi_template.kpi_template_id, selectedMonth, selectedFile)
       const formData = new FormData()
 
       formData.append('plan_id', plan.plan_id)

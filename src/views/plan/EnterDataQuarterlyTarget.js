@@ -1,27 +1,30 @@
 import {
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CListGroup,
+  CListGroupItem,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
 } from '@coreui/react'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
+import CheckIcon from '@mui/icons-material/Check'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import FilePresentIcon from '@mui/icons-material/FilePresent'
-import { Button, IconButton, TextareaAutosize } from '@mui/material'
-import PropTypes from 'prop-types'
 import SaveIcon from '@mui/icons-material/Save'
+import { Button, IconButton, TextareaAutosize } from '@mui/material'
+import { useFormik } from 'formik'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import CheckIcon from '@mui/icons-material/Check'
 import { createAlert } from 'src/slices/alertSlice'
+import { setLoading, setReload } from 'src/slices/viewSlice'
 import { formatNumber } from 'src/utils/function'
-
 import api from 'src/views/axiosConfig'
-import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 const EnterDataQuarterlyTarget = (props) => {
@@ -38,53 +41,6 @@ const EnterDataQuarterlyTarget = (props) => {
   const onClickDelete = () => {
     setIsSubmit(true)
   }
-
-  // const handleQuarterActualValue = (item) => {
-  //   switch (selectedQuarter) {
-  //     case 1: {
-  //       if (
-  //         item.first_quarterly_target &&
-  //         item.first_quarterly_target.approve === 'Chấp nhận' &&
-  //         item.first_quarterly_target.hasOwnProperty('actual')
-  //       ) {
-  //         return formatNumber(item.first_quarterly_target.actual.value)
-  //       }
-  //       return 'Chưa có'
-  //     }
-  //     case 2: {
-  //       if (
-  //         item.second_quarterly_target &&
-  //         item.second_quarterly_target.approve === 'Chấp nhận' &&
-  //         item.second_quarterly_target.hasOwnProperty('actual')
-  //       ) {
-  //         return formatNumber(item.second_quarterly_target.actual.value)
-  //       }
-  //       return 'Chưa có'
-  //     }
-  //     case 3: {
-  //       if (
-  //         item.third_quarterly_target &&
-  //         item.third_quarterly_target.approve === 'Chấp nhận' &&
-  //         item.third_quarterly_target.hasOwnProperty('actual')
-  //       ) {
-  //         return formatNumber(item.third_quarterly_target.actual.value)
-  //       }
-  //       return 'Chưa có'
-  //     }
-  //     case 4: {
-  //       if (
-  //         item.fourth_quarterly_target &&
-  //         item.fourth_quarterly_target.approve === 'Chấp nhận' &&
-  //         item.fourth_quarterly_target.hasOwnProperty('actual')
-  //       ) {
-  //         return formatNumber(item.fourth_quarterly_target.actual.value)
-  //       }
-  //       return 'Chưa có'
-  //     }
-  //     default:
-  //       return 'Chưa có'
-  //   }
-  // }
 
   const handleQuarterActualValue = (item) => {
     switch (selectedQuarter) {
@@ -186,6 +142,50 @@ const EnterDataQuarterlyTarget = (props) => {
       }
       default:
         return ''
+    }
+  }
+
+  const handleQuarterActualFile = (item) => {
+    //console.log(item)
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          if (item.first_quarterly_target.hasOwnProperty('actual')) {
+            if (item.first_quarterly_target.actual.hasOwnProperty('files'))
+              return item.first_quarterly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 2: {
+        if (item.second_quarterly_target) {
+          if (item.second_quarterly_target.hasOwnProperty('actual')) {
+            if (item.second_quarterly_target.actual.hasOwnProperty('files'))
+              return item.second_quarterly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 3: {
+        if (item.third_quarterly_target) {
+          if (item.third_quarterly_target.hasOwnProperty('actual')) {
+            if (item.third_quarterly_target.actual.hasOwnProperty('files'))
+              return item.third_quarterly_target.actual.files
+          }
+        }
+        return []
+      }
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          if (item.fourth_quarterly_target.hasOwnProperty('actual')) {
+            if (item.fourth_quarterly_target.actual.hasOwnProperty('files'))
+              return item.fourth_quarterly_target.actual.files
+          }
+        }
+        return []
+      }
+      default:
+        return []
     }
   }
 
@@ -319,6 +319,184 @@ const EnterDataQuarterlyTarget = (props) => {
     )
   }
 
+  const FileUploadQuarterly = () => {
+    const [modalVisible, setModalVisible] = React.useState(false)
+    const [selectedFile, setSelectedFile] = React.useState(null)
+
+    const onClickUpload = () => {
+      const formData = new FormData()
+
+      formData.append('plan_id', plan.plan_id)
+      formData.append('kpi_template_id', item.kpi_template.kpi_template_id)
+      formData.append('quarter', selectedQuarter)
+      formData.append('file', selectedFile)
+      api
+        .post('plans/add-file-to-quarterly-target/manager', formData)
+        .then(() => {
+          dispatch(
+            createAlert({
+              message: 'Gửi file thành công',
+              type: 'success',
+            }),
+          )
+          window.location.reload()
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+          setLoading(false)
+        })
+    }
+
+    const DeleteFile = (props) => {
+      const dispatch = useDispatch()
+      const [modalVisible, setModalVisible] = React.useState(false)
+      const [isSubmit, setIsSubmit] = React.useState(false)
+
+      const onClickDelete = () => {
+        setIsSubmit(true)
+        api
+          .delete(
+            `/plans/delete-file-of-quarterly-target/manager?plan_id=${plan.plan_id}&kpi_template_id=${item.kpi_template.kpi_template_id}&quarter=${selectedQuarter}&file_id=${props.fileId}`,
+          )
+          .then(() => {
+            dispatch(
+              createAlert({
+                message: 'Xóa file thành công.',
+                type: 'success',
+              }),
+            )
+            dispatch(
+              setLoading({
+                value: true,
+              }),
+            )
+            dispatch(setReload())
+            setModalVisible(false)
+          })
+          .catch((error) => {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          })
+          .finally(() => {
+            setIsSubmit(false)
+          })
+      }
+
+      return (
+        <>
+          <IconButton id="delete" color="error" onClick={() => setModalVisible(true)} size="small">
+            <DeleteForeverIcon fontSize="small" />
+          </IconButton>
+
+          <CModal
+            alignment="center"
+            scrollable
+            visible={modalVisible}
+            onClose={() => {
+              setModalVisible(false)
+            }}
+          >
+            <CModalHeader>
+              <CModalTitle>Xóa fileId</CModalTitle>
+            </CModalHeader>
+            <CModalBody className="mx-4 mb-3">Bạn có chắc chắn muốn xóa file đã chọn ?</CModalBody>
+            <CModalFooter>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<DeleteForeverIcon />}
+                type="submit"
+                onClick={() => onClickDelete()}
+                disabled={isSubmit}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
+                Xóa bỏ
+              </Button>
+              {isSubmit && <LoadingCircle />}
+            </CModalFooter>
+          </CModal>
+        </>
+      )
+    }
+
+    DeleteFile.propTypes = {
+      fileId: PropTypes.number,
+    }
+
+    return (
+      <>
+        <IconButton
+          id="note"
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <AttachFileIcon fontSize="small" />
+        </IconButton>
+
+        <CForm>
+          <CModal
+            alignment="center"
+            scrollable
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+          >
+            <CModalHeader>
+              <CModalTitle>File đính kèm</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              <div className="mb-3">
+                {handleQuarterActualFile(item).length === 0 ? null : (
+                  <CListGroup>
+                    {handleQuarterActualFile(item).map((row, index) => (
+                      <div className="d-flex justify-content-between" key={index}>
+                        <CListGroupItem component="a" href={row.url}>
+                          {row.key}
+                        </CListGroupItem>
+                        <DeleteFile fileId={row.id} />
+                      </div>
+                    ))}
+                  </CListGroup>
+                )}
+              </div>
+              <div className="mb-3">
+                <CFormInput
+                  type="file"
+                  onChange={(event) => {
+                    setSelectedFile(event.target.files[0])
+                  }}
+                />
+              </div>
+            </CModalBody>
+            <CModalFooter>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<CheckIcon />}
+                type="submit"
+                onClick={() => onClickUpload()}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
+                Xác nhận
+              </Button>
+            </CModalFooter>
+          </CModal>
+        </CForm>
+      </>
+    )
+  }
+
   return (
     <>
       <CForm onSubmit={formik.handleSubmit}>
@@ -331,6 +509,7 @@ const EnterDataQuarterlyTarget = (props) => {
             {...formik.getFieldProps('value')}
           />
           <EnterNoteData />
+          <FileUploadQuarterly />
           <IconButton
             variant="contained"
             color="primary"
