@@ -10,7 +10,7 @@ import {
   CInputGroupText,
   CFormTextarea,
 } from '@coreui/react'
-import FilePresentIcon from '@mui/icons-material/FilePresent'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
 import { Button, IconButton, TextareaAutosize } from '@mui/material'
 import PropTypes from 'prop-types'
 import SaveIcon from '@mui/icons-material/Save'
@@ -37,114 +37,6 @@ const FileUploadMonthly = (props) => {
     setIsSubmit(true)
   }
 
-  const handleMonthActualNote = (item) => {
-    //console.log(item)
-    switch (selectedMonth) {
-      case 1: {
-        if (item.first_monthly_target) {
-          if (item.first_monthly_target.hasOwnProperty('actual')) {
-            return item.first_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 2: {
-        if (item.second_monthly_target) {
-          if (item.second_monthly_target.hasOwnProperty('actual')) {
-            return item.second_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 3: {
-        if (item.third_monthly_target) {
-          if (item.third_monthly_target.hasOwnProperty('actual')) {
-            if (item.third_monthly_target.actual) {
-              return item.third_monthly_target.actual.note
-            }
-          }
-        }
-        return ''
-      }
-      case 4: {
-        if (item.fourth_monthly_target) {
-          if (item.fourth_monthly_target.hasOwnProperty('actual')) {
-            if (item.fourth_monthly_target.actual) {
-              return item.fourth_monthly_target.actual.note
-            }
-          }
-        }
-        return ''
-      }
-      case 5: {
-        if (item.fifth_monthly_target) {
-          if (item.fifth_monthly_target.hasOwnProperty('actual')) {
-            return item.fifth_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 6: {
-        if (item.sixth_monthly_target) {
-          if (item.sixth_monthly_target.hasOwnProperty('actual')) {
-            return item.sixth_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 7: {
-        if (item.seventh_monthly_target) {
-          if (item.seventh_monthly_target.hasOwnProperty('actual')) {
-            return item.seventh_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 8: {
-        if (item.eighth_monthly_target) {
-          if (item.eighth_monthly_target.hasOwnProperty('actual')) {
-            return item.eighth_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 9: {
-        if (item.ninth_monthly_target) {
-          if (item.ninth_monthly_target.hasOwnProperty('actual')) {
-            return item.ninth_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 10: {
-        if (item.tenth_monthly_target) {
-          if (item.tenth_monthly_target.hasOwnProperty('actual')) {
-            return item.tenth_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 11: {
-        if (item.eleventh_monthly_target) {
-          if (item.eleventh_monthly_target.hasOwnProperty('actual')) {
-            return item.eleventh_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      case 12: {
-        if (item.twelfth_monthly_target) {
-          if (item.twelfth_monthly_target.hasOwnProperty('actual')) {
-            return item.twelfth_monthly_target.actual.note
-          }
-        }
-        return ''
-      }
-      default:
-        return ''
-    }
-  }
-
   return (
     <>
       <IconButton
@@ -155,8 +47,34 @@ const FileUploadMonthly = (props) => {
         }}
         size="small"
       >
-        <FilePresentIcon fontSize="small" />
+        <AttachFileIcon fontSize="small" />
       </IconButton>
+
+      <CForm>
+        <CModal
+          alignment="center"
+          scrollable
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        >
+          <CModalHeader>
+            <CModalTitle>File đính kèm</CModalTitle>
+          </CModalHeader>
+          <CModalBody></CModalBody>
+          <CModalFooter>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<CheckIcon />}
+              type="submit"
+              onClick={() => onClickDelete()}
+              sx={{ textTransform: 'none', borderRadius: 10 }}
+            >
+              Xác nhận
+            </Button>
+          </CModalFooter>
+        </CModal>
+      </CForm>
     </>
   )
 }
