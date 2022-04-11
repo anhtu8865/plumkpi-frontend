@@ -47,6 +47,7 @@ import { planTooltip, kpiTooltip, timeOfChart } from 'src/utils/function'
 import { Report } from './Report'
 import { ExportReportButton } from './ExportReportButton'
 import { EditReportButton } from './EditReportButton'
+import { DeleteReportButton } from './DeleteReportButton'
 
 const DashboardDetail = () => {
   const history = useHistory()
@@ -238,7 +239,7 @@ const DashboardDetail = () => {
                     <div className="d-flex flex-row justify-content-end">
                       <ExportReportButton chart={props.chartItem} result={result} />
                       <EditReportButton chart={props.chartItem} />
-                      <DeleteChartButton chart={props.chartItem} />
+                      <DeleteReportButton chart={props.chartItem} />
                     </div>
                   </CCol>
                 </CRow>
