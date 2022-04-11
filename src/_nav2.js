@@ -51,12 +51,12 @@ const _nav = [
     to: '/dashboard',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'Báo cáo',
-    to: '/',
-    icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Báo cáo',
+  //   to: '/',
+  //   icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
+  // },
 
   /*{
     component: CNavItem,

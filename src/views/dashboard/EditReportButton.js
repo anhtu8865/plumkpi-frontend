@@ -425,7 +425,7 @@ export const EditReportButton = (props) => {
             })
             dispatch(
               createAlert({
-                message: 'Chỉnh sửa biểu đồ thành công.',
+                message: 'Chỉnh sửa báo cáo thành công.',
                 type: 'success',
               }),
             )
