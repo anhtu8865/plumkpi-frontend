@@ -33,13 +33,13 @@ import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
 import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
-import { formatDate, compareToToday, compareYear } from 'src/utils/function'
+import { quarterOption, monthOption, currentTime } from 'src/utils/function'
 import { monthArray, quarterArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
 import BookIcon from '@mui/icons-material/Book'
+import Select from 'react-select'
 
 const PlanDetail = () => {
   const { id } = useParams()
@@ -59,6 +59,8 @@ const PlanDetail = () => {
   const { user } = useSelector((state) => state.user)
   const [newResult, setNewResult] = useState([])
   const entryPerPage = 10
+  const [quarterOpt, setQuarterOpt] = useState(quarterOption(4))
+  const [monthOpt, setMonthOpt] = useState(monthOption(12))
 
   const getPlan = async () => {
     const response = await api.get(`plans/${id}`)
@@ -155,11 +157,30 @@ const PlanDetail = () => {
     }
   }
 
+  const getTime = async () => {
+    const response = await api.get(`authentication/time`)
+    return response.data
+  }
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getPlan()
         const res = await getCatPlan()
+        const res1 = await getTime()
+        const time = currentTime(res1.time, result.year)
+        dispatch(
+          setSelectedQuarter({
+            value: time.quarter,
+          }),
+        )
+        dispatch(
+          setSelectedMonth({
+            value: time.month,
+          }),
+        )
+        setQuarterOpt(quarterOption(time.quarter))
+        setMonthOpt(monthOption(time.month))
         if (res) {
           dispatch(
             setCatInPlan({
@@ -338,22 +359,18 @@ const PlanDetail = () => {
             />{' '}
             <CInputGroup size="sm">
               <CInputGroupText>Tháng</CInputGroupText>
-              <CFormSelect
-                className="text-center"
-                value={selectedMonth}
-                onChange={(event) => {
-                  dispatch(setSelectedMonth({ value: Number(event.target.value) }))
-                }}
-                disabled={!checkedMonth}
-              >
-                {checkedMonth
-                  ? monthArray.map((item) => (
-                      <option value={item} key={item}>
-                        {item}
-                      </option>
-                    ))
-                  : null}
-              </CFormSelect>
+              <div style={{ width: '110px' }}>
+                <Select
+                  value={checkedMonth ? { value: selectedMonth, label: selectedMonth } : null}
+                  placeholder=""
+                  maxMenuHeight={300}
+                  options={monthOpt}
+                  onChange={(event) => {
+                    dispatch(setSelectedMonth({ value: Number(event.value) }))
+                  }}
+                  isDisabled={!checkedMonth}
+                />
+              </div>
             </CInputGroup>
           </CCol>
           <CCol xs={12} sm={4} xl={3} className="d-flex flex-row">
@@ -366,22 +383,18 @@ const PlanDetail = () => {
             />{' '}
             <CInputGroup size="sm">
               <CInputGroupText>Quý</CInputGroupText>
-              <CFormSelect
-                className="text-center"
-                value={selectedQuarter}
-                onChange={(event) => {
-                  dispatch(setSelectedQuarter({ value: Number(event.target.value) }))
-                }}
-                disabled={!checkedQuarter}
-              >
-                {checkedQuarter
-                  ? quarterArray.map((item) => (
-                      <option value={item} key={item}>
-                        {item}
-                      </option>
-                    ))
-                  : null}
-              </CFormSelect>
+              <div style={{ width: '120px' }}>
+                <Select
+                  value={checkedQuarter ? { value: selectedQuarter, label: selectedQuarter } : null}
+                  placeholder=""
+                  maxMenuHeight={300}
+                  options={quarterOpt}
+                  onChange={(event) => {
+                    dispatch(setSelectedQuarter({ value: Number(event.value) }))
+                  }}
+                  isDisabled={!checkedQuarter}
+                />
+              </div>
             </CInputGroup>
           </CCol>
           <CCol xs={12} sm={4} xl={3} className="d-flex align-items-stretch">
@@ -405,7 +418,7 @@ const PlanDetail = () => {
             </h3>
             <h6>{plan && plan.description ? plan.description : null}</h6>
           </CCol>
-          {user.role === 'Giám đốc' && compareYear(plan.year) && (
+          {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={6}>
               <div className="d-grid gap-3 d-md-flex justify-content-end">
                 {EditCategoryInPlanButton()}
@@ -430,7 +443,7 @@ const PlanDetail = () => {
             </h3>
             <h6>{plan && plan.description ? plan.description : null}</h6>
           </CCol>
-          {user.role === 'Nhân viên' && compareYear(plan.year) && (
+          {user.role === 'Nhân viên' && (
             <CCol xs={12} sm={7}>
               <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
@@ -447,7 +460,7 @@ const PlanDetail = () => {
               </div>
             </CCol>
           )}
-          {user.role === 'Quản lý' && compareYear(plan.year) && (
+          {user.role === 'Quản lý' && (
             <CCol xs={12} sm={7}>
               <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
@@ -486,7 +499,7 @@ const PlanDetail = () => {
               </div>
             </CCol>
           )}
-          {user.role === 'Giám đốc' && compareYear(plan.year) && (
+          {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={7}>
               <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button

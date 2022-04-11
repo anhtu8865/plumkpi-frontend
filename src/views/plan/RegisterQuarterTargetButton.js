@@ -263,10 +263,7 @@ export const RegisterQuarterTargetButton = (kpiItem, quarter) => {
                 onQuarterSubmit(event, target)
               }}
               disabled={
-                isSubmit ||
-                target === '' ||
-                !compareYear(plan.year) ||
-                handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
+                isSubmit || target === '' || handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
               }
               sx={{ textTransform: 'none', borderRadius: 10 }}
             >

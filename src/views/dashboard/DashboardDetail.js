@@ -42,7 +42,7 @@ import { Chart } from './Chart'
 import { EditChartButton } from './EditChartButton'
 import { DeleteChartButton } from './DeleteChartButton'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
-import { planTooltip, kpiTooltip } from 'src/utils/function'
+import { planTooltip, kpiTooltip, timeOfChart } from 'src/utils/function'
 
 import { Report } from './Report'
 import { ExportReportButton } from './ExportReportButton'
@@ -173,6 +173,16 @@ const DashboardDetail = () => {
                     ))}
                   </small>
                 </CRow>
+                <CRow className="mt-2">
+                  <small>
+                    Thời gian:{' '}
+                    {timeOfChart(
+                      props.chartItem.properties.dateType,
+                      props.chartItem.properties.period,
+                      props.chartItem.plan.year,
+                    )}
+                  </small>
+                </CRow>
                 <CRow className="mt-4">
                   <Chart result={result} />
                 </CRow>
@@ -266,6 +276,16 @@ const DashboardDetail = () => {
                     ))}
                   </small>
                 </CRow>
+                <CRow className="mt-2">
+                  <small>
+                    Thời gian:{' '}
+                    {timeOfChart(
+                      props.chartItem.properties.dateType,
+                      props.chartItem.properties.period,
+                      props.chartItem.plan.year,
+                    )}
+                  </small>
+                </CRow>
                 <CRow className="mt-4">
                   <Report result={result} />
                 </CRow>
@@ -285,7 +305,6 @@ const DashboardDetail = () => {
 
   return (
     <>
-      {loading && <LoadingCircle />}
       <CRow className="mt-4">
         <CCol xs={12} sm={6}></CCol>
         <CCol xs={12} sm={6} className="d-flex flex-row gap-1 justify-content-end">
@@ -311,6 +330,7 @@ const DashboardDetail = () => {
             })
           : null}
       </CRow>
+      {loading && <LoadingCircle />}
     </>
   )
 }

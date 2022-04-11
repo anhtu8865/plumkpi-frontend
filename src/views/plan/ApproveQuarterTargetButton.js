@@ -379,7 +379,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                   onClick={() => {
                     onDenySubmit()
                   }}
-                  disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
+                  disabled={isSubmit || selectedDeptApprove.length === 0}
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Từ chối
@@ -392,7 +392,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                   onClick={() => {
                     onApproveSubmit()
                   }}
-                  disabled={isSubmit || selectedDeptApprove.length === 0 || !compareYear(plan.year)}
+                  disabled={isSubmit || selectedDeptApprove.length === 0}
                   sx={{ textTransform: 'none', borderRadius: 10 }}
                 >
                   Chấp nhận

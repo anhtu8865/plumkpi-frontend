@@ -46,7 +46,7 @@ import PropTypes from 'prop-types'
 import FileUploadMonthly from './FileUploadMonthly'
 import NoteDataMonthlyApprove from './NoteDataMonthlyApprove'
 
-export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
+export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
   //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
@@ -56,7 +56,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
   const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
   const [selectValue, setSelectValue] = useState('Month')
   const [selectedQuarter, setSelectedQuarter] = useState(1)
-  const [selectedMonth, setSelectedMonth] = useState(3)
+  const [selectedMonth, setSelectedMonth] = useState(Number(month))
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
   const [target, setTarget] = useState(0)
@@ -1220,10 +1220,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem) => {
                 onQuarterSubmit(event, target)
               }}
               disabled={
-                isSubmit ||
-                target === '' ||
-                !compareYear(plan.year) ||
-                handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
+                isSubmit || target === '' || handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
               }
             >
               Đăng kí

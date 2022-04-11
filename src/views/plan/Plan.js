@@ -101,7 +101,6 @@ const Plan = () => {
                           <CProgress>
                             <CProgressBar
                               color="info"
-                              variant="striped"
                               value={calculateTimeProgress(
                                 planItem.year.toString() + '-01-01',
                                 planItem.year.toString() + '-12-31',
@@ -230,7 +229,7 @@ const Plan = () => {
                   <CRow className="mt-1">
                     <div>
                       <CProgress>
-                        <CProgressBar color="info" variant="striped" value={100}>
+                        <CProgressBar color="info" value={100}>
                           100%
                         </CProgressBar>
                       </CProgress>

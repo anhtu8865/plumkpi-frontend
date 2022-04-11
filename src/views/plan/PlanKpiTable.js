@@ -786,10 +786,10 @@ export const PlanKpiTable = (catItem) => {
                           ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)} */}
                         {user.role === 'Quản lý' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                          AssignPlanKpiButtonM(item)}
+                          AssignPlanKpiButtonM(item, selectedMonth)}
                         {user.role === 'Quản lý' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                          ApproveDataMonthlyTarget(plan.plan_id, item)}
+                          ApproveDataMonthlyTarget(plan.plan_id, item, selectedMonth)}
                         {/*{user.role === 'Quản lý' &&
                           RegisterQuarterTargetButton(item, selectedQuarter)}*/}
                         <KpiInfoButton kpiItem={item} />

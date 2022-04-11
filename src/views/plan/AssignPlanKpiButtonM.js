@@ -32,7 +32,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import { compareYear, formatNumber } from 'src/utils/function'
 
-export const AssignPlanKpiButtonM = (kpiItem) => {
+export const AssignPlanKpiButtonM = (kpiItem, month) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -40,7 +40,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
   const [tempSelectedList, setTempSelectedList] = useState([])
   const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
   const [selectValue, setSelectValue] = useState('Month')
-  const [selectedMonth, setSelectedMonth] = useState(3)
+  const [selectedMonth, setSelectedMonth] = useState(Number(month))
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
   const [sum, setSum] = useState(0)
@@ -555,7 +555,7 @@ export const AssignPlanKpiButtonM = (kpiItem) => {
               onClick={() => {
                 onMonthSubmit()
               }}
-              disabled={isSubmit || !compareYear(plan.year) || selectedEmployeeList.length === 0}
+              disabled={isSubmit || selectedEmployeeList.length === 0}
               sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận

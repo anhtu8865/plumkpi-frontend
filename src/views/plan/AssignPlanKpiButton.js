@@ -448,7 +448,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
               onClick={(event) => {
                 onSubmit(event, target)
               }}
-              disabled={isSubmit || target === '' || !compareYear(plan.year)}
+              disabled={isSubmit || target === ''}
               sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận

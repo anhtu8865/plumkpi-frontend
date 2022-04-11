@@ -1,7 +1,7 @@
 //chứa những hàm để xử lý dữ liệu
 
 import React from 'react'
-import { formulaOperators, checkValidError } from 'src/utils/constant'
+import { formulaOperators, checkValidError, quarterArray, monthArray } from 'src/utils/constant'
 import { format, parse } from 'date-fns'
 
 export const translate = (str, engToVietList) => {
@@ -381,4 +381,77 @@ export const kpiTooltip = (kpiItem) => {
         : 'Không có'}
     </div>
   )
+}
+
+export const timeOfChart = (dateType, period, year) => {
+  const yearString = `năm ${year}`
+  switch (dateType) {
+    case 'Năm':
+      return yearString
+    case 'Quý':
+      if (period.length === 1) {
+        return `quý ${period[0]} ` + yearString
+      } else {
+        return (
+          `quý ${period[0]} ` + yearString + ` - quý ${period[period.length - 1]} ` + yearString
+        )
+      }
+    case 'Tháng':
+      if (period.length === 1) {
+        return `tháng ${period[0]} ` + yearString
+      } else {
+        return (
+          `tháng ${period[0]} ` + yearString + ` - tháng ${period[period.length - 1]} ` + yearString
+        )
+      }
+    default:
+      return ''
+  }
+}
+
+export const currentTime = (str, planYear) => {
+  try {
+    const year = str.slice(0, 4)
+    if (Number(planYear) < Number(year)) {
+      return { quarter: 4, month: 12 }
+    }
+    const month = str.slice(5, 7)
+    if (['01', '02', '03'].includes(month)) {
+      return { quarter: 1, month: Number(month.charAt(1)) }
+    } else if (['04', '05', '06'].includes(month)) {
+      return { quarter: 2, month: Number(month.charAt(1)) }
+    } else if (['07', '08', '09'].includes(month)) {
+      return { quarter: 3, month: Number(month.charAt(1)) }
+    } else if (['10', '11', '12'].includes(month)) {
+      return { quarter: 4, month: Number(month) }
+    } else {
+      return { quarter: 4, month: 12 } //kbh xảy ra
+    }
+  } catch (error) {
+    return { quarter: 4, month: 12 }
+  }
+}
+
+export const quarterOption = (quarter) => {
+  const options = []
+  quarterArray.map((item) => {
+    if (item > quarter) {
+      options.push({ value: item, label: item, isDisabled: true })
+    } else {
+      options.push({ value: item, label: item })
+    }
+  })
+  return options
+}
+
+export const monthOption = (month) => {
+  const options = []
+  monthArray.map((item) => {
+    if (item > month) {
+      options.push({ value: item, label: item, isDisabled: true })
+    } else {
+      options.push({ value: item, label: item })
+    }
+  })
+  return options
 }
