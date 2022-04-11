@@ -258,11 +258,11 @@ export const CreateReportButton = () => {
           <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
             <CTableHead color="light">
               <CTableRow>
-                <CTableHeaderCell>TÊN</CTableHeaderCell>
-                <CTableHeaderCell>THỰC HIỆN</CTableHeaderCell>
-                <CTableHeaderCell>CHỈ TIÊU</CTableHeaderCell>
-                <CTableHeaderCell>KÊT QUẢ</CTableHeaderCell>
-                <CTableHeaderCell>ĐƠN VỊ</CTableHeaderCell>
+                <CTableHeaderCell>Tên</CTableHeaderCell>
+                <CTableHeaderCell>Thực hiện</CTableHeaderCell>
+                <CTableHeaderCell>Chỉ tiêu</CTableHeaderCell>
+                <CTableHeaderCell>Kết quả</CTableHeaderCell>
+                <CTableHeaderCell>Đơn vị</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -322,6 +322,7 @@ export const CreateReportButton = () => {
                 type: 'success',
               }),
             )
+            dispatch(setReload())
             setModalVisible(false)
           } catch (error) {
             if (error.response) {
