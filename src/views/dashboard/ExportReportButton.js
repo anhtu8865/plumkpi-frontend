@@ -19,7 +19,6 @@ export const ExportReportButton = (props) => {
   const [csvData, setCsvData] = React.useState([])
 
   const fetchData = (datasets) => {
-    console.log(datasets)
     const array = []
 
     datasets.map((item) => {
