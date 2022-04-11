@@ -246,7 +246,7 @@ const KpiRegistration = () => {
   const KpiRegistrationTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+        <CTable align="middle" className="mb-0 border table-bordered" hover responsive>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell />
@@ -254,12 +254,17 @@ const KpiRegistration = () => {
               <CTableHeaderCell>KPI</CTableHeaderCell>
               <CTableHeaderCell>Mô tả</CTableHeaderCell>
               <CTableHeaderCell>Đơn vị</CTableHeaderCell>
+              <CTableHeaderCell>Trạng thái</CTableHeaderCell>
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {props.temList.map((row, index) => (
-              <CTableRow v-for="item in tableItems" key={index}>
+              <CTableRow
+                v-for="item in tableItems"
+                key={index}
+                color={row.registered ? 'info' : null}
+              >
                 <CTableDataCell>
                   <Checkbox
                     size="small"
@@ -273,6 +278,7 @@ const KpiRegistration = () => {
                 <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
                 <CTableDataCell>{row.description}</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
+                <CTableDataCell>{row.registered ? 'Đã đăng ký' : 'Không đăng ký'}</CTableDataCell>
                 <CTableDataCell className="text-center">
                   <KpiInfoButton kpiItem={{ kpi_template: row }} />
                 </CTableDataCell>
