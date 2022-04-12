@@ -97,6 +97,18 @@ const KpiRegistration = () => {
     fetchKPIList()
   }, [kpiRegisReload, dispatch])
 
+  React.useEffect(() => {
+    async function fetchSelectedKPI(entry) {
+      entry.map((row) => {
+        if (row.registered) {
+          setSelectedKpi([...selectedKpi, row])
+        }
+      })
+    }
+
+    fetchSelectedKPI(entry)
+  }, [entry])
+
   //Đăng ký KPI cá nhân
   const AddKpiRegistration = (props) => {
     const id = parseInt(props.plan_id)
@@ -254,7 +266,7 @@ const KpiRegistration = () => {
               <CTableHeaderCell>KPI</CTableHeaderCell>
               <CTableHeaderCell>Mô tả</CTableHeaderCell>
               <CTableHeaderCell>Đơn vị</CTableHeaderCell>
-              <CTableHeaderCell>Trạng thái</CTableHeaderCell>
+              {/* <CTableHeaderCell>Trạng thái</CTableHeaderCell> */}
               <CTableHeaderCell />
             </CTableRow>
           </CTableHead>
@@ -278,7 +290,7 @@ const KpiRegistration = () => {
                 <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
                 <CTableDataCell>{row.description}</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
-                <CTableDataCell>{row.registered ? 'Đã đăng ký' : 'Không đăng ký'}</CTableDataCell>
+                {/* <CTableDataCell>{row.registered ? 'Đã đăng ký' : 'Không đăng ký'}</CTableDataCell> */}
                 <CTableDataCell className="text-center">
                   <KpiInfoButton kpiItem={{ kpi_template: row }} />
                 </CTableDataCell>
