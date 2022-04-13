@@ -172,13 +172,14 @@ export const EditReportButton = (props) => {
   }
 
   const reverseConvertPeriod = (period) => {
-    if (period.length === 0) {
-      return period
-    } else if (period.length === 1) {
-      return [period[0], period[0]]
-    } else {
-      return [period[0], period[period.length - 1]]
-    }
+    // if (period.length === 0) {
+    //   return period
+    // } else if (period.length === 1) {
+    //   return [period[0], period[0]]
+    // } else {
+    //   return [period[0], period[period.length - 1]]
+    // }
+    return period
   }
 
   const reverseConvertFilter = (resultList, filter) => {
@@ -469,7 +470,7 @@ export const EditReportButton = (props) => {
               }}
             >
               <CModalHeader>
-                <CModalTitle>Chỉnh sửa biểu đồ</CModalTitle>
+                <CModalTitle>Chỉnh sửa báo cáo</CModalTitle>
               </CModalHeader>
               <CModalBody style={{ minHeight: '450px' }} className="mx-4 mb-3">
                 <Form>
@@ -594,8 +595,8 @@ export const EditReportButton = (props) => {
                         <CRow className="mt-1">
                           <CCol xs={12}>
                             {/*<CFormLabel htmlFor="de">
-                              {user.role === 'Giám đốc' ? 'Phòng ban' : 'Nhân viên'}
-                      </CFormLabel>*/}
+                            {user.role === 'Giám đốc' ? 'Phòng ban' : 'Nhân viên'}
+                    </CFormLabel>*/}
                             <Select
                               value={values.filter}
                               placeholder={
@@ -619,7 +620,7 @@ export const EditReportButton = (props) => {
                     </>
                   )}
                   <CRow className="mt-5">
-                    <CCol xs={12}>
+                    <CCol xs={12} className="d-flex flex-row justify-content-center">
                       <ReportPreview />
                     </CCol>
                   </CRow>
@@ -627,11 +628,11 @@ export const EditReportButton = (props) => {
                     <>
                       <CRow className="mt-2">
                         <CCol xs={12} sm={6}>
-                          <CFormLabel htmlFor="chartname">Tên biểu đồ</CFormLabel>
+                          <CFormLabel htmlFor="chartname">Tên báo cáo</CFormLabel>
                           <CFormInput
                             name="chart_name"
                             id="chartname"
-                            placeholder="Nhập tên biểu đồ"
+                            placeholder="Nhập tên báo cáo"
                             value={values.chart_name}
                             onChange={handleChange}
                             onBlur={handleBlur}
