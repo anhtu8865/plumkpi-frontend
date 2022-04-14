@@ -24,7 +24,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 const RegisterQuarterTarget = (props) => {
-  //console.log(props)
+  console.log(props)
   const { plan, item, selectedQuarter } = props
   const dispatch = useDispatch()
 
@@ -40,8 +40,8 @@ const RegisterQuarterTarget = (props) => {
         return 'Chưa có'
       }
       case 2: {
-        if (item.cond_quarterly_target) {
-          return item.cond_quarterly_target.approve
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.approve
         }
         return 'Chưa có'
       }
@@ -72,8 +72,8 @@ const RegisterQuarterTarget = (props) => {
         return 'Chưa có'
       }
       case 2: {
-        if (item.cond_quarterly_target) {
-          return item.cond_quarterly_target.target
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.target
         }
         return 'Chưa có'
       }

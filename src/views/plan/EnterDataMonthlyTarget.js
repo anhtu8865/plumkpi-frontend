@@ -23,6 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
   TextareaAutosize,
+  Tooltip,
 } from '@mui/material'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
@@ -52,7 +53,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.first_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 2: {
         if (item.second_monthly_target) {
@@ -60,7 +61,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.second_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 3: {
         if (item.third_monthly_target) {
@@ -70,7 +71,7 @@ const EnterDateMonthlyTarget = (props) => {
             }
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 4: {
         if (item.fourth_monthly_target) {
@@ -78,7 +79,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.fourth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 5: {
         if (item.fifth_monthly_target) {
@@ -86,7 +87,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.fifth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 6: {
         if (item.sixth_monthly_target) {
@@ -94,7 +95,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.sixth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 7: {
         if (item.seventh_monthly_target) {
@@ -102,7 +103,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.seventh_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 8: {
         if (item.eighth_monthly_target) {
@@ -110,7 +111,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.eighth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 9: {
         if (item.ninth_monthly_target) {
@@ -118,7 +119,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.ninth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 10: {
         if (item.tenth_monthly_target) {
@@ -126,7 +127,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.tenth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 11: {
         if (item.eleventh_monthly_target) {
@@ -134,7 +135,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.eleventh_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       case 12: {
         if (item.twelfth_monthly_target) {
@@ -142,10 +143,10 @@ const EnterDateMonthlyTarget = (props) => {
             return item.twelfth_monthly_target.actual.value
           }
         }
-        return 0
+        return 'Chưa có'
       }
       default:
-        return 0
+        return 'Chưa có'
     }
   }
 
@@ -554,16 +555,19 @@ const EnterDateMonthlyTarget = (props) => {
 
     return (
       <>
-        <IconButton
-          id="note"
-          color="primary"
-          onClick={() => {
-            setModalVisible(true)
-          }}
-          size="small"
-        >
-          <FilePresentIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Ghi chú">
+          <IconButton
+            id="note"
+            color="primary"
+            onClick={() => {
+              setModalVisible(true)
+            }}
+            size="small"
+          >
+            <FilePresentIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+
         <CForm>
           <CModal
             alignment="center"
@@ -722,16 +726,18 @@ const EnterDateMonthlyTarget = (props) => {
 
     return (
       <>
-        <IconButton
-          id="note"
-          color="primary"
-          onClick={() => {
-            setModalVisible(true)
-          }}
-          size="small"
-        >
-          <AttachFileIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Nộp file đính kèm">
+          <IconButton
+            id="note"
+            color="primary"
+            onClick={() => {
+              setModalVisible(true)
+            }}
+            size="small"
+          >
+            <AttachFileIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
 
         <CForm>
           <CModal
@@ -801,18 +807,22 @@ const EnterDateMonthlyTarget = (props) => {
             valid={handleMonthActualStatus(item) === 'Chấp nhận'}
             invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}
+            disabled={handleMonthActualStatus(item) === 'Chấp nhận' ? true : false}
           />
           <EnterNoteData />
           <FileUploadMonthly />
-          <IconButton
-            variant="contained"
-            color="primary"
-            onClick={formik.submitForm}
-            disabled={formik.isSubmitting}
-            size="small"
-          >
-            <SaveIcon fontSize="small" />
-          </IconButton>
+          <Tooltip title="Lưu kết quả">
+            <IconButton
+              variant="contained"
+              color="primary"
+              onClick={formik.submitForm}
+              //disabled={formik.isSubmitting}
+              size="small"
+              disabled={handleMonthActualStatus(item) === 'Chấp nhận' ? true : false}
+            >
+              <SaveIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </CInputGroup>
       </CForm>
     </>

@@ -241,14 +241,16 @@ const RegisterMonthlyTarget = (props) => {
             defaultValue={formatNumber(handleMonthTargetValue(item))}
             valid={handleMonthTargetStatus(item) === 'Chấp nhận'}
             invalid={handleMonthTargetStatus(item) === 'Từ chối'}
+            disabled={handleMonthTargetStatus(item) === 'Chấp nhận' ? true : false}
             {...formik.getFieldProps('target')}
           />
           <IconButton
             variant="contained"
             color="primary"
             onClick={formik.submitForm}
-            disabled={formik.isSubmitting}
+            //disabled={formik.isSubmitting}
             size="small"
+            disabled={handleMonthTargetStatus(item) === 'Chấp nhận' ? true : false}
           >
             <SaveIcon fontSize="small" />
           </IconButton>

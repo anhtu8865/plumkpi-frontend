@@ -25,6 +25,7 @@ import {
   ListItemIcon,
   ListItemText,
   TextareaAutosize,
+  Tooltip,
 } from '@mui/material'
 import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
@@ -58,28 +59,28 @@ const EnterDataQuarterlyTarget = (props) => {
         if (item.first_quarterly_target && item.first_quarterly_target.hasOwnProperty('actual')) {
           return item.first_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       case 2: {
         if (item.second_quarterly_target && item.second_quarterly_target.hasOwnProperty('actual')) {
           return item.second_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       case 3: {
         if (item.third_quarterly_target && item.third_quarterly_target.hasOwnProperty('actual')) {
           return item.third_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       case 4: {
         if (item.fourth_quarterly_target && item.fourth_quarterly_target.hasOwnProperty('actual')) {
           return item.fourth_quarterly_target.actual.value
         }
-        return 0
+        return 'Chưa có'
       }
       default:
-        return 0
+        return 'Chưa có'
     }
   }
 
@@ -276,16 +277,19 @@ const EnterDataQuarterlyTarget = (props) => {
 
     return (
       <>
-        <IconButton
-          id="note"
-          color="primary"
-          onClick={() => {
-            setModalVisible(true)
-          }}
-          size="small"
-        >
-          <FilePresentIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Ghi chú">
+          <IconButton
+            id="note"
+            color="primary"
+            onClick={() => {
+              setModalVisible(true)
+            }}
+            size="small"
+          >
+            <FilePresentIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+
         <CForm>
           <CModal
             alignment="center"
@@ -444,16 +448,18 @@ const EnterDataQuarterlyTarget = (props) => {
 
     return (
       <>
-        <IconButton
-          id="note"
-          color="primary"
-          onClick={() => {
-            setModalVisible(true)
-          }}
-          size="small"
-        >
-          <AttachFileIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Nộp file đính kèm">
+          <IconButton
+            id="note"
+            color="primary"
+            onClick={() => {
+              setModalVisible(true)
+            }}
+            size="small"
+          >
+            <AttachFileIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
 
         <CForm>
           <CModal
@@ -522,19 +528,23 @@ const EnterDataQuarterlyTarget = (props) => {
             defaultValue={formatNumber(handleQuarterActualValue(item))}
             valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterDataStatus(item) === 'Từ chối'}
+            disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
             {...formik.getFieldProps('value')}
           />
           <EnterNoteData />
           <FileUploadQuarterly />
-          <IconButton
-            variant="contained"
-            color="primary"
-            onClick={formik.submitForm}
-            disabled={formik.isSubmitting}
-            size="small"
-          >
-            <SaveIcon fontSize="small" />
-          </IconButton>{' '}
+          <Tooltip title="Lưu kết quả">
+            <IconButton
+              variant="contained"
+              color="primary"
+              onClick={formik.submitForm}
+              //disabled={formik.isSubmitting}
+              size="small"
+              disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
+            >
+              <SaveIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </CInputGroup>
       </CForm>
     </>
