@@ -158,7 +158,7 @@ const PlanDetail = () => {
   }
 
   const getTime = async () => {
-    const response = await api.get(`authentication/time`)
+    const response = await api.get(`notifs/time`)
     return response.data
   }
 
