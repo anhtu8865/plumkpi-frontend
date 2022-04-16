@@ -103,7 +103,7 @@ const Login = () => {
           setSuccess(true)
           setLoading(true)
           if (res.data.role === 'Admin') {
-            history.push('/kpiadmin')
+            history.push('/kpicategory')
           } else {
             history.push('/plan')
           }

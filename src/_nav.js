@@ -3,12 +3,23 @@ import CIcon from '@coreui/icons-react'
 import { cilChartPie, cilLayers, cilBook, cilFile, cilPeople, cilHouse } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
-const _nav = [
+export const navigationAdmin = [
   {
-    component: CNavItem,
-    name: 'KPI mẫu',
-    to: '/kpiadmin',
+    component: CNavGroup,
+    name: 'Mẫu KPI',
     icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Danh mục KPI',
+        to: '/kpicategory',
+      },
+      {
+        component: CNavItem,
+        name: 'KPI',
+        to: '/kpitemplate',
+      },
+    ],
   },
   {
     component: CNavItem,
@@ -22,16 +33,72 @@ const _nav = [
     to: '/depts',
     icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
-  /*{
-    component: CNavItem,
-    name: 'Dashboard',
-    to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
-  },*/
 ]
 
-export default _nav
+export const navigationDirector = [
+  {
+    component: CNavGroup,
+    name: 'Mẫu KPI',
+    icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Danh mục KPI',
+        to: '/kpicategory',
+      },
+      {
+        component: CNavItem,
+        name: 'KPI',
+        to: '/kpitemplate',
+      },
+    ],
+  },
+  {
+    component: CNavItem,
+    name: 'Kế hoạch',
+    to: '/plan',
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Bảng điều khiển',
+    to: '/dashboard',
+    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Nhân sự',
+    to: '/companytree',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+]
+
+export const navigationManager = [
+  {
+    component: CNavItem,
+    name: 'Kế hoạch',
+    to: '/plan',
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Bảng điều khiển',
+    to: '/dashboard',
+    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  },
+]
+
+export const navigationEmployee = [
+  {
+    component: CNavItem,
+    name: 'Kế hoạch',
+    to: '/plan',
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Bảng điều khiển',
+    to: '/dashboard',
+    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  },
+]

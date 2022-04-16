@@ -17,7 +17,7 @@ import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetail
 import api from 'src/views/axiosConfig'
 import GaugeChart from 'react-gauge-chart'
 import PropTypes from 'prop-types'
-import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
+import { EditCategoryInPlanButton } from '../categoryInPlan/EditCategoryInPlanButton'
 import { convertPercent } from 'src/utils/function'
 
 export const PlanOverview = (props) => {

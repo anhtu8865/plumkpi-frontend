@@ -10,6 +10,7 @@ import {
   CModalTitle,
   CModalHeader,
   CFormFeedback,
+  CFormTextarea,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { Button, IconButton } from '@mui/material'
@@ -33,12 +34,14 @@ export const EditCategoryButton = (props) => {
   const formik = useFormik({
     initialValues: {
       editcat: props.inCat.kpi_category_name,
+      description: props.inCat.description,
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
       api
         .put(`/kpi-categories/${props.inCat.kpi_category_id}`, {
           kpi_category_name: values.editcat,
+          description: values.description,
         })
         .then(() => {
           dispatch(
@@ -93,12 +96,12 @@ export const EditCategoryButton = (props) => {
             <CModalTitle>Chỉnh sửa danh mục KPI</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CRow className="mt-2 mb-2 mx-2">
+            <CRow className="mt-2 mb-2">
               <CCol xs>
-                <CFormLabel htmlFor="editcat">Nhập tên mới cho danh mục</CFormLabel>
+                <CFormLabel htmlFor="editcat">Tên danh mục</CFormLabel>
                 <CFormInput
                   id="editcat"
-                  placeholder="Tên danh mục"
+                  placeholder="Nhập tên danh mục..."
                   value={formik.values.editcat}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -110,6 +113,19 @@ export const EditCategoryButton = (props) => {
                   }
                 />
                 <CFormFeedback invalid>{formik.errors.editcat}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3 mb-2">
+              <CCol>
+                <CFormLabel htmlFor="description">Mô tả</CFormLabel>
+                <CFormTextarea
+                  id="description"
+                  placeholder="Nhập mô tả danh mục..."
+                  rows={2}
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
               </CCol>
             </CRow>
           </CModalBody>

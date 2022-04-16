@@ -15,6 +15,7 @@ import {
   CModalHeader,
   CFormFeedback,
   CFormSelect,
+  CFormTextarea,
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
@@ -229,9 +230,10 @@ export const AddKpiButton = (props) => {
                       <CFormLabel htmlFor="description">
                         <b>Mô tả KPI</b>
                       </CFormLabel>
-                      <CFormInput
+                      <CFormTextarea
                         id="description"
                         placeholder="Nhập mô tả KPI"
+                        rows={3}
                         value={values.description}
                         onChange={handleChange}
                         onBlur={handleBlur}

@@ -42,7 +42,7 @@ import { ApproveTargetMonthlyPersonal } from './ApproveTargetMonthlyPersonal'
 import { ApproveTargetQuarterPersonal } from './ApproveTargetQuarterPersonal'
 import { ApproveDataQuarterPersonal } from './ApproveDataQuarterPersonal'
 import { InfoKpiApproving } from './InfoKpiApproving'
-import { KpiInfoButton } from 'src/views/plan/KpiInfoButton'
+import { KpiInfoButton } from 'src/views/plan/planDetail/KpiInfoButton'
 
 const KpiApproving = () => {
   const { id } = useParams()

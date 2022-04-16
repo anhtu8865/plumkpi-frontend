@@ -93,7 +93,7 @@ const Plan = () => {
                       </CRow>
                       <CRow className="mt-2">
                         <div>
-                          <small>Thời gian</small>
+                          <small>Năm thực hiện: {planItem.year}</small>
                         </div>
                       </CRow>
                       <CRow className="mt-1">
@@ -169,7 +169,7 @@ const Plan = () => {
                   </CRow>
                   <CRow className="mt-2">
                     <div>
-                      <small>Thời gian</small>
+                      <small>Năm thực hiện: {planItem.year}</small>
                     </div>
                   </CRow>
                   <CRow className="mt-1">
@@ -223,7 +223,7 @@ const Plan = () => {
                   </CRow>
                   <CRow className="mt-2">
                     <div>
-                      <small>Thời gian</small>
+                      <small>Năm thực hiện: {planItem.year}</small>
                     </div>
                   </CRow>
                   <CRow className="mt-1">

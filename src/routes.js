@@ -6,24 +6,28 @@ const KpiAdmin = React.lazy(() => import('./views/kpi/KpiAdmin'))
 const KpiTemplate = React.lazy(() => import('./views/kpi/KpiTemplate'))
 const UserPage = React.lazy(() => import('./views/pages/user/User'))
 const Department = React.lazy(() => import('./views/pages/department/Department'))
-const Plan = React.lazy(() => import('./views/plan/Plan'))
+const Plan = React.lazy(() => import('./views/plan/plan/Plan'))
 const UserDepartment = React.lazy(() => import('./views/pages/department/UserDepartment'))
-const PlanDetail = React.lazy(() => import('./views/plan/PlanDetail'))
+const PlanDetail = React.lazy(() => import('./views/plan/planDetail/PlanDetail'))
 const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTree'))
 const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
 const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
 const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
-const EditWeightDept = React.lazy(() => import('./views/plan/EditWeightDept'))
-const DeptPlan = React.lazy(() => import('./views/plan/DeptPlan'))
-const EditWeightEmployee = React.lazy(() => import('./views/plan/EditWeightEmployee'))
-const EmployeePlan = React.lazy(() => import('./views/plan/EmployeePlan'))
+const EditWeightDept = React.lazy(() =>
+  import('./views/plan/weightDeptEmployeePlan/EditWeightDept'),
+)
+const DeptPlan = React.lazy(() => import('./views/plan/weightDeptEmployeePlan/DeptPlan'))
+const EditWeightEmployee = React.lazy(() =>
+  import('./views/plan/weightDeptEmployeePlan/EditWeightEmployee'),
+)
+const EmployeePlan = React.lazy(() => import('./views/plan/weightDeptEmployeePlan/EmployeePlan'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/info', name: 'Thông tin cá nhân', component: UserInfo },
-  { path: '/kpiadmin', exact: true, name: 'Danh mục KPI mẫu', component: KpiAdmin },
-  { path: '/kpiadmin/:id', name: 'KPI mẫu', component: KpiTemplate },
+  { path: '/kpicategory', exact: true, name: 'Danh mục KPI mẫu', component: KpiAdmin },
+  { path: '/kpitemplate/:id?', name: 'KPI mẫu', component: KpiTemplate },
   { path: '/plan', exact: true, name: 'Kế hoạch', component: Plan },
   { path: '/plan/:id', exact: true, name: 'Chi tiết kế hoạch', component: PlanDetail },
   { path: '/users', name: 'Người dùng', component: UserPage },

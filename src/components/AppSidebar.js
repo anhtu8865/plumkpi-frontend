@@ -14,10 +14,7 @@ import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
 // sidebar nav config
-import navigationAdmin from '../_nav'
-import navigationEmployee from '../_nav2'
-import navigationManager from '../_nav3'
-import navigationDirector from '../_nav4'
+import { navigationAdmin, navigationEmployee, navigationManager, navigationDirector } from '../_nav'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()

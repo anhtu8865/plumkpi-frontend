@@ -30,6 +30,7 @@ import { DeleteKpiButton } from './DeleteKpiButton'
 import { setCategoryList } from 'src/slices/kpiCategorySlice'
 import SearchIcon from '@mui/icons-material/Search'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
+import { KpiInfoButton } from 'src/views/plan/planDetail/KpiInfoButton'
 
 const KpiTemplate = () => {
   const { id } = useParams()
@@ -37,6 +38,8 @@ const KpiTemplate = () => {
   const [catItem, setCatItem] = useState({ kpi_category_id: null, kpi_category_name: null })
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
+  const { categoryList } = useSelector((state) => state.kpiCategory)
+  const { user } = useSelector((state) => state.user)
   const entryPerPage = 10
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
@@ -46,9 +49,11 @@ const KpiTemplate = () => {
 
   const getTemplateList = async (name) => {
     let paramsObject = {
-      kpi_category_id: id,
       offset: (page - 1) * entryPerPage,
       limit: entryPerPage,
+    }
+    if (id) {
+      paramsObject.kpi_category_id = id
     }
     if (name !== '') {
       paramsObject.name = name
@@ -59,33 +64,50 @@ const KpiTemplate = () => {
     return response.data
   }
 
+  const getAllCategories = async () => {
+    const response = await api.get('/kpi-categories/all')
+    return response.data
+  }
+
+  const getCategory = async (catId) => {
+    const response = await api.get(`/kpi-categories/${catId}`)
+    return response.data
+  }
+
   React.useEffect(() => {
-    api
-      .get('/kpi-categories/all')
-      .then((response) => {
-        dispatch(setCategoryList({ value: response.data }))
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const result = await getAllCategories()
+        dispatch(setCategoryList({ value: result }))
+        if (id) {
+          if (user.role === 'Admin') {
+            const res = await getCategory(id)
+            setCatItem(res)
+          } else {
+            setCatItem(result.find((item) => item.kpi_category_id === Number(id)))
+          }
+        } else {
+          setCatItem(result[0])
+        }
+      } catch (error) {
+        if (error.response) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
+      } finally {
         dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
+          setLoading({
+            value: false,
           }),
         )
-      })
-    api
-      .get(`/kpi-categories/${id}`)
-      .then((response) => {
-        setCatItem(response.data)
-      })
-      .catch((error) => {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      })
+      }
+    }
+
+    fetchData()
   }, [])
 
   React.useEffect(() => {
@@ -134,21 +156,24 @@ const KpiTemplate = () => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  <CTableHeaderCell>Mô tả</CTableHeaderCell>
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {entry.map((temItem) => (
                   <CTableRow v-for="item in tableItems" key={temItem.kpi_template_id}>
                     <CTableDataCell>{temItem.kpi_template_name}</CTableDataCell>
-                    <CTableDataCell>{temItem.description}</CTableDataCell>
                     <CTableDataCell>{temItem.unit}</CTableDataCell>
-                    <CTableDataCell className="text-center">
+                    <CTableDataCell className="w-25 text-center">
                       <div className="d-flex flex-row justify-content-center">
-                        <EditKpiButton inTem={temItem} />
-                        <DeleteKpiButton inTem={temItem} />
+                        {user.role === 'Admin' && (
+                          <>
+                            <EditKpiButton inTem={temItem} />
+                            <DeleteKpiButton inTem={temItem} />
+                          </>
+                        )}
+                        <KpiInfoButton kpiItem={{ kpi_template: temItem }} />
                       </div>
                     </CTableDataCell>
                   </CTableRow>
@@ -209,24 +234,26 @@ const KpiTemplate = () => {
           <CCol xs={12}>
             <CCard>
               <CCardBody className="p-5">
-                <CRow>
-                  <CCol xs={12} sm={6}>
-                    <Button
-                      variant="outlined"
-                      startIcon={<KeyboardDoubleArrowLeftIcon />}
-                      onClick={() => {
-                        history.push(`/kpiadmin`)
-                      }}
-                      sx={{ textTransform: 'none', borderRadius: 10 }}
-                    >
-                      Quay lại danh mục KPI mẫu
-                    </Button>
-                  </CCol>
-                </CRow>
+                {id && (
+                  <CRow>
+                    <CCol xs={12} sm={6}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<KeyboardDoubleArrowLeftIcon />}
+                        onClick={() => {
+                          history.push(`/kpicategory`)
+                        }}
+                        sx={{ textTransform: 'none', borderRadius: 10 }}
+                      >
+                        Quay lại danh mục KPI mẫu
+                      </Button>
+                    </CCol>
+                  </CRow>
+                )}
                 <CRow className="mt-4">
                   <CCol xs={12} sm={6}>
                     <h3>
-                      <b>{catItem.kpi_category_name}</b>
+                      <b>{id ? catItem.kpi_category_name : 'KPI mẫu'}</b>
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
@@ -245,7 +272,9 @@ const KpiTemplate = () => {
                       >
                         Tìm kiếm
                       </Button>
-                      <AddKpiButton inCat={catItem} />
+                      {user.role === 'Admin' && categoryList.length > 0 && (
+                        <AddKpiButton inCat={catItem} />
+                      )}
                     </div>
                   </CCol>
                 </CRow>

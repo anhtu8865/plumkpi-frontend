@@ -37,7 +37,7 @@ import { quarterOption, monthOption, currentTime } from 'src/utils/function'
 import { monthArray, quarterArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import { EditCategoryInPlanButton } from './EditCategoryInPlanButton'
+import { EditCategoryInPlanButton } from '../categoryInPlan/EditCategoryInPlanButton'
 import BookIcon from '@mui/icons-material/Book'
 import Select from 'react-select'
 

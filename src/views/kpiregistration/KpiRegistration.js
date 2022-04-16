@@ -43,7 +43,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 // import DeleteKpiRegistration from './DeleteKpiRegistration'
 // import EditKpiRegistration from './EditKpiRegistration'
 import { InfoKpiRegistration } from './InfoKpiRegistration'
-import { KpiInfoButton } from 'src/views/plan/KpiInfoButton'
+import { KpiInfoButton } from 'src/views/plan/planDetail/KpiInfoButton'
 
 const KpiRegistration = () => {
   const history = useHistory()

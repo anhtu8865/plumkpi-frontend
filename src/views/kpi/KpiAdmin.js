@@ -20,7 +20,7 @@ const KpiAdmin = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
   const history = useHistory()
-
+  const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
 
@@ -56,21 +56,26 @@ const KpiAdmin = () => {
             <CCol xs={12} sm={6} lg={4} key={index} className="mb-4">
               <CCard className="text-center shadow-sm">
                 <CCardBody>
-                  <CRow>
-                    <div className="d-flex flex-row justify-content-end">
-                      <EditCategoryButton inCat={catItem} />
-                      <DeleteCategoryButton inCat={catItem} />
-                    </div>
-                  </CRow>
+                  {user.role === 'Admin' && (
+                    <CRow>
+                      <div className="d-flex flex-row justify-content-end">
+                        <EditCategoryButton inCat={catItem} />
+                        <DeleteCategoryButton inCat={catItem} />
+                      </div>
+                    </CRow>
+                  )}
                   <CCardTitle>
                     <h4>{catItem.kpi_category_name}</h4>
                   </CCardTitle>
+                  <CRow className="mb-2">
+                    <small>{catItem.description ? catItem.description : null}</small>
+                  </CRow>
                   <CRow className="mb-2">
                     <div className="d-flex flex-row justify-content-center">
                       <IconButton
                         color="primary"
                         onClick={() => {
-                          history.push(`kpiadmin/${catItem.kpi_category_id}`)
+                          history.push(`kpitemplate/${catItem.kpi_category_id}`)
                         }}
                         size="small"
                       >
@@ -110,11 +115,13 @@ const KpiAdmin = () => {
                       <b>Danh mục KPI mẫu</b>
                     </h3>
                   </CCol>
-                  <CCol xs={12} sm={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      <AddCategoryButton />
-                    </div>
-                  </CCol>
+                  {user.role === 'Admin' && (
+                    <CCol xs={12} sm={6}>
+                      <div className="d-grid gap-3 d-md-flex justify-content-end">
+                        <AddCategoryButton />
+                      </div>
+                    </CCol>
+                  )}
                 </CRow>
                 <CRow className="mt-5">
                   <ViewTabs />

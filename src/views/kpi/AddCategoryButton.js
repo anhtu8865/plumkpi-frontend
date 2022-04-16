@@ -10,6 +10,7 @@ import {
   CModalTitle,
   CModalHeader,
   CFormFeedback,
+  CFormTextarea,
 } from '@coreui/react'
 import { Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
@@ -32,12 +33,14 @@ export const AddCategoryButton = () => {
   const formik = useFormik({
     initialValues: {
       addcat: '',
+      description: '',
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
       api
         .post(`/kpi-categories/`, {
           kpi_category_name: values.addcat,
+          description: values.description,
         })
         .then(() => {
           dispatch(
@@ -91,12 +94,12 @@ export const AddCategoryButton = () => {
             <CModalTitle>Tạo danh mục KPI mới</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CRow className="mt-2 mb-2 mx-2">
+            <CRow className="mt-2">
               <CCol xs>
-                <CFormLabel htmlFor="editcat">Nhập tên danh mục mới</CFormLabel>
+                <CFormLabel htmlFor="editcat">Tên danh mục</CFormLabel>
                 <CFormInput
                   id="addcat"
-                  placeholder="Tên danh mục mới"
+                  placeholder="Nhập tên danh mục mới..."
                   value={formik.values.addcat}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -108,6 +111,19 @@ export const AddCategoryButton = () => {
                   }
                 />
                 <CFormFeedback invalid>{formik.errors.addcat}</CFormFeedback>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3 mb-2">
+              <CCol>
+                <CFormLabel htmlFor="description">Mô tả</CFormLabel>
+                <CFormTextarea
+                  id="description"
+                  placeholder="Nhập mô tả danh mục..."
+                  rows={2}
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
               </CCol>
             </CRow>
           </CModalBody>
