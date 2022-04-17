@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -27,24 +27,36 @@ import { EditPlanButton } from './EditPlanButton'
 import { DeletePlanButton } from './DeletePlanButton'
 
 const Plan = () => {
-  const [entry, setEntry] = React.useState({ oldPlan: [], currentPlan: [], futurePlan: [] })
+  const [entry, setEntry] = useState({ oldPlan: [], currentPlan: [], futurePlan: [] })
   const history = useHistory()
   const dispatch = useDispatch()
   const { reload, loading } = useSelector((state) => state.view)
   const { planList } = useSelector((state) => state.plan)
   const { user } = useSelector((state) => state.user)
+  const [today, setToday] = useState('2000-01-01')
 
-  React.useEffect(() => {
-    api
-      .get('/plans/all')
-      .then((response) => {
+  const getAllPlans = async () => {
+    const response = await api.get('/plans/all')
+    return response.data
+  }
+
+  const getTime = async () => {
+    const response = await api.get(`notifs/time`)
+    return response.data
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getAllPlans()
+        const res = await getTime()
         dispatch(
           setPlanList({
-            value: response.data,
+            value: result,
           }),
         )
-      })
-      .catch((error) => {
+        setToday(res.time)
+      } catch (error) {
         if (error.response) {
           dispatch(
             createAlert({
@@ -53,16 +65,20 @@ const Plan = () => {
             }),
           )
         }
-      })
-    dispatch(
-      setLoading({
-        value: false,
-      }),
-    )
+      } finally {
+        dispatch(
+          setLoading({
+            value: false,
+          }),
+        )
+      }
+    }
+
+    fetchData()
   }, [reload, dispatch])
 
-  React.useEffect(() => {
-    setEntry(sortPlanListByYear(planList))
+  useEffect(() => {
+    setEntry(sortPlanListByYear(planList, today))
   }, [planList])
 
   const CurrentPlanView = () => {
@@ -104,11 +120,13 @@ const Plan = () => {
                               value={calculateTimeProgress(
                                 planItem.year.toString() + '-01-01',
                                 planItem.year.toString() + '-12-31',
+                                today,
                               )}
                             >
                               {calculateTimeProgress(
                                 planItem.year.toString() + '-01-01',
                                 planItem.year.toString() + '-12-31',
+                                today,
                               )}
                               %
                             </CProgressBar>

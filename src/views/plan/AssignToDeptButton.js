@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Tooltip } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox, Tooltip, Switch } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -32,7 +32,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import { compareYear, formatNumber } from 'src/utils/function'
 
-export const AssignPlanKpiButton = (kpiItem) => {
+export const AssignToDeptButton = (kpiItem) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -320,7 +320,7 @@ export const AssignPlanKpiButton = (kpiItem) => {
                         color={handleCheckboxValue(item.dept_id) ? null : 'secondary'}
                       >
                         <CTableDataCell>
-                          <Checkbox
+                          <Switch
                             size="small"
                             checked={handleCheckboxValue(item.dept_id)}
                             onChange={() => {

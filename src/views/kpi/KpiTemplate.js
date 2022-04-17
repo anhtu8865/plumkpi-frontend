@@ -137,7 +137,7 @@ const KpiTemplate = () => {
     }
 
     fetchData()
-  }, [reload, page, name, dispatch])
+  }, [reload, page, name, id, dispatch])
 
   const ViewTabs = () => {
     return (
@@ -156,7 +156,9 @@ const KpiTemplate = () => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
+                  <CTableHeaderCell>Công thức tổng hợp</CTableHeaderCell>
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
+                  {!id && <CTableHeaderCell>Danh mục</CTableHeaderCell>}
                   <CTableHeaderCell className="w-25" />
                 </CTableRow>
               </CTableHead>
@@ -164,7 +166,11 @@ const KpiTemplate = () => {
                 {entry.map((temItem) => (
                   <CTableRow v-for="item in tableItems" key={temItem.kpi_template_id}>
                     <CTableDataCell>{temItem.kpi_template_name}</CTableDataCell>
+                    <CTableDataCell>{temItem.aggregation}</CTableDataCell>
                     <CTableDataCell>{temItem.unit}</CTableDataCell>
+                    {!id && (
+                      <CTableDataCell>{temItem.kpi_category.kpi_category_name}</CTableDataCell>
+                    )}
                     <CTableDataCell className="w-25 text-center">
                       <div className="d-flex flex-row justify-content-center">
                         {user.role === 'Admin' && (
@@ -181,7 +187,7 @@ const KpiTemplate = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="4">
+                  <CTableDataCell colSpan={id ? 4 : 5}>
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}

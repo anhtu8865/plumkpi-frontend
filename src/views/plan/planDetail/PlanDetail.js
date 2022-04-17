@@ -282,14 +282,17 @@ const PlanDetail = () => {
   }, [newResult])
 
   React.useEffect(() => {
+    let isCalled = true
     const fetchData = async () => {
       try {
         const res = await getPerformResult()
-        dispatch(
-          setPerformResult({
-            value: res,
-          }),
-        )
+        if (isCalled) {
+          dispatch(
+            setPerformResult({
+              value: res,
+            }),
+          )
+        }
       } catch (error) {
         if (error.response) {
           dispatch(
@@ -302,6 +305,7 @@ const PlanDetail = () => {
       }
     }
     fetchData()
+    return () => (isCalled = false)
   }, [checkedMonth, checkedQuarter, selectedMonth, selectedQuarter])
 
   const setCheckFirstOpen = () => {

@@ -25,11 +25,12 @@ import SaveIcon from '@mui/icons-material/Save'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTemPage } from 'src/slices/planDetailSlice'
 import { KpiInfoButton } from './KpiInfoButton'
-import { AssignPlanKpiButton } from '../AssignPlanKpiButton'
+import { AssignToDeptButton } from '../AssignToDeptButton'
+import { AssignToEmployeeButton } from '../AssignToEmployeeButton'
+import { AssignMonthlyTargetButton } from '../AssignMonthlyTargetButton'
 import { AssignPlanKpiButtonM } from '../AssignPlanKpiButtonM'
 import { formatNumber, handleColor } from 'src/utils/function'
 import { ApproveQuarterTargetButton } from '../ApproveQuarterTargetButton'
-import { RegisterQuarterTargetButton } from '../RegisterQuarterTargetButton'
 import { EditKpiInOneCategoryButton } from '../kpiInPlan/EditKpiInOneCategoryButton'
 import { DeleteKpiInOneCategoryButton } from '../kpiInPlan/DeleteKpiInOneCategoryButton'
 import AutorenewIcon from '@mui/icons-material/Autorenew'
@@ -722,19 +723,22 @@ export const PlanKpiTable = (catItem) => {
                       <div className="d-flex flex-row justify-content-center">
                         {user.role === 'Giám đốc' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                          AssignPlanKpiButton(item)}
+                          AssignToDeptButton(item)}
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
                         {/* {user.role === 'Giám đốc' &&
                           ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)} */}
                         {user.role === 'Quản lý' &&
-                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                          AssignPlanKpiButtonM(item, selectedMonth)}
+                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
+                            <AssignToEmployeeButton kpiItem={item} />
+                          )}
+                        {user.role === 'Quản lý' &&
+                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
+                            <AssignMonthlyTargetButton kpiItem={item} month={selectedMonth} />
+                          )}
                         {user.role === 'Quản lý' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
                           ApproveDataMonthlyTarget(plan.plan_id, item, selectedMonth)}
-                        {/*{user.role === 'Quản lý' &&
-                          RegisterQuarterTargetButton(item, selectedQuarter)}*/}
                         <KpiInfoButton kpiItem={item} />
                       </div>
                     </CTableDataCell>

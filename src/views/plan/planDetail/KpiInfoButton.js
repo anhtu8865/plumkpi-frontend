@@ -70,6 +70,13 @@ export const KpiInfoButton = (props) => {
               <b>Đơn vị: </b> {props.kpiItem.kpi_template.unit}
             </CCol>
           </CRow>
+          {props.kpiItem.kpi_template.kpi_category && (
+            <CRow className="mt-2">
+              <CCol xs={12}>
+                <b>Danh mục KPI: </b> {props.kpiItem.kpi_template.kpi_category.kpi_category_name}
+              </CCol>
+            </CRow>
+          )}
           <CRow className="mt-2">
             <CCol xs={12}>
               <b>Cách đo lường: </b>

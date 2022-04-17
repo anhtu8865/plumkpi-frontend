@@ -210,18 +210,18 @@ export const sortPlanList = (planList) => {
   return { oldPlan: oldPlan, currentPlan: currentPlan, futurePlan: futurePlan }
 }
 
-export const sortPlanListByYear = (planList) => {
+export const sortPlanListByYear = (planList, today) => {
   if (planList.length === 0) {
     return { oldPlan: [], currentPlan: [], futurePlan: [] }
   }
-  const today = new Date().getFullYear()
+  const year = Number(today.slice(0, 4))
   const oldPlan = []
   const currentPlan = []
   const futurePlan = []
   planList.map((planItem) => {
-    if (planItem.year > today) {
+    if (planItem.year > year) {
       futurePlan.push(planItem)
-    } else if (planItem.year < today) {
+    } else if (planItem.year < year) {
       oldPlan.push(planItem)
     } else {
       currentPlan.push(planItem)
@@ -230,8 +230,8 @@ export const sortPlanListByYear = (planList) => {
   return { oldPlan: oldPlan, currentPlan: currentPlan, futurePlan: futurePlan }
 }
 
-export const calculateTimeProgress = (start, end) => {
-  const today = new Date().toLocaleDateString('en-CA')
+export const calculateTimeProgress = (start, end, today) => {
+  //const today = new Date().toLocaleDateString('en-CA')
   return Math.ceil(((new Date(today) - new Date(start)) / (new Date(end) - new Date(start))) * 100)
 }
 
@@ -263,7 +263,7 @@ export const compareYear = (year) => {
 export const getYearsList = () => {
   const currentYear = new Date().getFullYear()
   const returnList = []
-  for (var i = 0; i < 5; i++) {
+  for (var i = -5; i < 5; i++) {
     returnList.push(currentYear + i)
   }
   return returnList
