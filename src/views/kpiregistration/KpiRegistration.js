@@ -33,7 +33,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setKpiRegisLoading, setKpiRegisReload } from 'src/slices/kpiRegisSlice'
+import { setLoading, setReload } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { useParams } from 'react-router-dom'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
@@ -56,7 +56,7 @@ const KpiRegistration = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
-  const { kpiRegisReload, kpiRegisLoading } = useSelector((state) => state.kpiRegis)
+  const { reload, loading } = useSelector((state) => state.view)
 
   const [selectedKpi, setSelectedKpi] = React.useState([])
 
@@ -74,34 +74,57 @@ const KpiRegistration = () => {
     }
   }
 
+  const getKpiList = async () => {
+    let paramsObject = {
+      offset: (page - 1) * entryPerPage,
+      limit: entryPerPage,
+      plan_id: id,
+    }
+
+    const response = await api.get('/kpi-templates/personal-kpis', {
+      params: paramsObject,
+    })
+    return response.data
+  }
+
   React.useEffect(() => {
-    async function fetchKPIList() {
-      api
-        .get(`kpi-templates/personal-kpis`, {
-          params: { plan_id: id, offset: (page - 1) * entryPerPage, limit: entryPerPage },
-        })
-        .then((response) => {
-          setTotalPage(Math.ceil(response.data.count / entryPerPage))
-          setEntry(response.data.items)
-        })
-        .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const result = await getKpiList()
+        if (result) {
+          setTotalPage(Math.ceil(result.count / entryPerPage))
+          setEntry(result.items)
+          for (let i = 0; i < result.items.length; i++) {
+            if (result.items[i].registered) {
+              setSelectedKpi((selectedKpi) => [...selectedKpi, result.items[i]])
+            }
+          }
+        }
+      } catch (error) {
+        if (error.response) {
           dispatch(
             createAlert({
               message: error.response.data.message,
               type: 'error',
             }),
           )
-        })
+        }
+      } finally {
+        dispatch(
+          setLoading({
+            value: false,
+          }),
+        )
+      }
     }
 
-    fetchKPIList()
-  }, [kpiRegisReload, dispatch])
+    fetchData()
+  }, [reload, dispatch])
 
   //Đăng ký KPI cá nhân
   const AddKpiRegistration = (props) => {
     const id = parseInt(props.plan_id)
     const dispatch = useDispatch()
-    const { kpiRegisReload, kpiRegisLoading } = useSelector((state) => state.kpiRegis)
 
     const [modalVisible, setModalVisible] = React.useState(false)
     const [isSubmit, setIsSubmit] = React.useState(false)
@@ -123,7 +146,7 @@ const KpiRegistration = () => {
         setRegisList(newRegisList)
       }
       createRowsAccept()
-    }, [props.selectedKpi, kpiRegisReload])
+    }, [props.selectedKpi, reload])
 
     const onClickRegis = () => {
       setIsSubmit(true)
@@ -143,11 +166,11 @@ const KpiRegistration = () => {
               }),
             )
             dispatch(
-              setKpiRegisLoading({
+              setLoading({
                 value: true,
               }),
             )
-            dispatch(setKpiRegisReload())
+            dispatch(setReload())
             setModalVisible(false)
             setSelectedKpi([])
           })
@@ -177,11 +200,11 @@ const KpiRegistration = () => {
               }),
             )
             dispatch(
-              setKpiRegisLoading({
+              setLoading({
                 value: true,
               }),
             )
-            dispatch(setKpiRegisReload())
+            dispatch(setReload())
             setModalVisible(false)
             setSelectedKpi([])
           })
@@ -265,7 +288,7 @@ const KpiRegistration = () => {
               <CTableRow
                 v-for="item in tableItems"
                 key={index}
-                color={row.registered ? 'info' : null}
+                color={selectedKpi.includes(row) ? 'info' : null}
               >
                 <CTableDataCell>
                   <Checkbox
