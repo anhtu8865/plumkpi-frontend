@@ -10,6 +10,7 @@ import {
   CModalTitle,
   CModalHeader,
   CFormFeedback,
+  CFormTextarea,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { Button, IconButton } from '@mui/material'
@@ -142,7 +143,8 @@ const EditDepartment = (props) => {
             <CRow className="mt-2 mb-2 mx-2">
               <CCol xs>
                 <CFormLabel htmlFor="editdept">Mô tả</CFormLabel>
-                <CFormInput
+                <CFormTextarea
+                  row="2"
                   id="editdes"
                   placeholder="Mô tả"
                   value={formik.values.editdes}

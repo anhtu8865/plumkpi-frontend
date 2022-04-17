@@ -38,7 +38,7 @@ const Department = () => {
 
   const [showDepartmentFilter, setShowDepartmentFilter] = React.useState(false)
 
-  const [filter, setFilter] = React.useState('')
+  const { user } = useSelector((state) => state.user)
 
   const dispatch = useDispatch()
 
@@ -49,156 +49,154 @@ const Department = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
+  const [name, setName] = React.useState('')
+
+  const getDeptList = async (name) => {
+    let paramsObject = {
+      offset: (page - 1) * entryPerPage,
+      limit: entryPerPage,
+    }
+    if (name != '') {
+      paramsObject.name = name
+    }
+
+    const response = await api.get('/depts/', {
+      params: paramsObject,
+    })
+    return response.data
+  }
+
   React.useEffect(() => {
-    async function fetchDeptList() {
-      api
-        .get('/depts', {
-          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
-        })
-        .then((response) => {
-          setTotalPage(Math.ceil(response.data.count / entryPerPage))
-          setEntry(response.data.items)
-        })
-        .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const result = await getDeptList(name)
+        if (result) {
+          setTotalPage(Math.ceil(result.count / entryPerPage))
+          setEntry(result.items)
+        }
+      } catch (error) {
+        if (error.response) {
           dispatch(
             createAlert({
               message: error.response.data.message,
               type: 'error',
             }),
           )
-        })
+        }
+      } finally {
+        dispatch(
+          setDepartmentLoading({
+            value: false,
+          }),
+        )
+      }
     }
 
-    fetchDeptList()
-
-    dispatch(
-      setDepartmentLoading({
-        value: false,
-      }),
-    )
-  }, [departmentReload, page, dispatch])
+    fetchData()
+  }, [departmentReload, page, name, dispatch])
 
   const DepartmentFilter = () => {
-    const formik = useFormik({
-      initialValues: {
-        filter_id: null,
-        filter_name: '',
-      },
-      validateOnBlur: true,
-      onSubmit: (values) => {
-        //console.log('Đây là search')
-        console.log(values)
-        let apiLink = '/depts?offset=0&limit=10&'
-        if (values.filter_name !== '') {
-          apiLink += 'name=' + values.filter_name
-        }
-
-        //apiLink = 'users?user_name=' + values.filter_name + '&user_id=' + values.filter_id
-        api
-          .get(apiLink)
-          .then((res) => {
-            //alert('Thành công')
-            setFilter(res.data.items)
-          })
-          .catch((error) => {
-            alert('Thất bại')
-          })
-          .finally(() => formik.setSubmitting(false))
-      },
-    })
-
     return (
-      <CForm>
-        <CCol md={4}>
-          <CFormLabel htmlFor="filterDepartment">Phòng ban</CFormLabel>
-          <CFormInput
-            type="text"
-            id="filterDepartment"
-            name="filter_name"
-            value={formik.values.filter_name}
-            onChange={formik.handleChange}
-          />
-        </CCol>
-        <CCol className="mt-3" xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-            onClick={formik.submitForm}
-            disabled={formik.isSubmitting}
-            sx={{ textTransform: 'none', borderRadius: 10 }}
-          >
-            Tìm
-          </Button>
-          {formik.isSubmitting && <LoadingCircle />}
-        </CCol>
-      </CForm>
+      <CCol xs={12} sm={6} lg={4}>
+        <CFormLabel htmlFor="search">Phòng ban</CFormLabel>
+        <CFormInput
+          id="search"
+          placeholder="Tìm theo tên phòng ban"
+          value={name}
+          onChange={(event) => {
+            setName(event.target.value)
+          }}
+        />
+      </CCol>
     )
   }
 
   const DeptTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border" hover responsive striped>
-          <CTableHead color="light">
-            <CTableRow>
-              <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>Phòng ban</CTableHeaderCell>
-              <CTableHeaderCell>Mô tả</CTableHeaderCell>
-              <CTableHeaderCell>Quản lý</CTableHeaderCell>
-              <CTableHeaderCell />
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {props.temList.map((catItem, index) => (
-              <CTableRow v-for="item in tableItems" key={index}>
-                <CTableDataCell>{catItem.dept_id}</CTableDataCell>
-                <CTableDataCell>{catItem.dept_name}</CTableDataCell>
-                <CTableDataCell>{catItem.description}</CTableDataCell>
-                <CTableDataCell className="d-flex flex-row">
-                  {catItem.manager != null ? (
-                    <Avatar
-                      src={catItem.manager.avatar !== null ? catItem.manager.avatar.url : null}
-                      className="me-3"
-                    />
-                  ) : null}
-                  {catItem.manager != null ? catItem.manager.user_name : null}
-                </CTableDataCell>
-                <CTableDataCell className="">
-                  <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <IconButton
-                      onClick={() => {
-                        history.push(`depts/${catItem.dept_id}`)
-                      }}
-                      size="small"
-                    >
-                      <ArrowCircleRightIcon fontSize="small" />
-                    </IconButton>
-                    <EditDepartment inCat={catItem} />
-                    <DeleteDepartment inCat={catItem} />
-                  </Grid>
-                </CTableDataCell>
-              </CTableRow>
-            ))}
-          </CTableBody>
-          <CTableFoot>
-            <CTableRow>
-              <CTableDataCell colSpan="5">
-                <div className="d-flex flex-row justify-content-end">
-                  <Pagination
-                    page={page}
-                    count={totalPage}
-                    showFirstButton
-                    showLastButton
-                    size="small"
-                    onChange={(event, page) => setPage(page)}
-                  />
-                </div>
-              </CTableDataCell>
-            </CTableRow>
-          </CTableFoot>
-        </CTable>
+        {entry.length !== 0 ? (
+          <>
+            <CTable align="middle" className="mb-0 border" hover responsive striped>
+              <CTableHead color="light">
+                <CTableRow>
+                  <CTableHeaderCell>ID</CTableHeaderCell>
+                  <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+                  {/* <CTableHeaderCell>Mô tả</CTableHeaderCell> */}
+                  <CTableHeaderCell>Quản lý</CTableHeaderCell>
+                  <CTableHeaderCell />
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {entry.map((catItem, index) => (
+                  <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{catItem.dept_id}</CTableDataCell>
+                    <CTableDataCell>{catItem.dept_name}</CTableDataCell>
+                    {/* <CTableDataCell>{catItem.description}</CTableDataCell> */}
+                    <CTableDataCell className="d-flex flex-row">
+                      {catItem.manager != null ? (
+                        <Avatar
+                          src={catItem.manager.avatar !== null ? catItem.manager.avatar.url : null}
+                          className="me-3"
+                        />
+                      ) : null}
+                      <div className="d-flex align-items-center">
+                        {catItem.manager != null ? catItem.manager.user_name : null}
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell className="">
+                      <Grid container direction="row" justifyContent="center" alignItems="center">
+                        {user.role === 'Admin' && (
+                          <>
+                            <IconButton
+                              onClick={() => {
+                                history.push(`depts/${catItem.dept_id}`)
+                              }}
+                              size="small"
+                            >
+                              <ArrowCircleRightIcon fontSize="small" />
+                            </IconButton>
+                            <EditDepartment inCat={catItem} />
+                            <DeleteDepartment inCat={catItem} />
+                          </>
+                        )}
+                        {user.role === 'Giám đốc' && (
+                          <>
+                            <IconButton
+                              onClick={() => {
+                                history.push(`companytree/${catItem.dept_id}`)
+                              }}
+                              size="small"
+                            >
+                              <ArrowCircleRightIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        )}
+                      </Grid>
+                    </CTableDataCell>
+                  </CTableRow>
+                ))}
+              </CTableBody>
+              <CTableFoot>
+                <CTableRow>
+                  <CTableDataCell colSpan="5">
+                    <div className="d-flex flex-row justify-content-end">
+                      <Pagination
+                        page={page}
+                        count={totalPage}
+                        showFirstButton
+                        showLastButton
+                        size="small"
+                        onChange={(event, page) => setPage(page)}
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
+              </CTableFoot>
+            </CTable>
+          </>
+        ) : (
+          <div></div>
+        )}
       </>
     )
   }
@@ -231,17 +229,13 @@ const Department = () => {
                       >
                         Tạo bộ lọc
                       </Button>
-                      <AddDepartment />
+                      {user.role === 'Admin' && <AddDepartment />}
                     </div>
                   </CCol>
                 </CRow>
-                {showDepartmentFilter ? (
-                  <CRow className="mt-4">
-                    <DepartmentFilter />
-                  </CRow>
-                ) : null}
+                {showDepartmentFilter && <CRow className="mt-4">{DepartmentFilter()}</CRow>}
                 <CRow className="mt-5">
-                  <DeptTable temList={filter.length > 0 ? filter : entry} />
+                  <DeptTable />
                 </CRow>
               </CCardBody>
             </CCard>

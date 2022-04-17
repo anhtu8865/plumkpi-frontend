@@ -100,10 +100,9 @@ const UserDepartment = (props) => {
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>HỌ VÀ TÊN</CTableHeaderCell>
-              <CTableHeaderCell>EMAIL</CTableHeaderCell>
-
-              <CTableHeaderCell>CHỨC VỤ</CTableHeaderCell>
+              <CTableHeaderCell>Họ và tên</CTableHeaderCell>
+              <CTableHeaderCell>Email</CTableHeaderCell>
+              <CTableHeaderCell>Chức vụ</CTableHeaderCell>
               {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
               {/* <CTableHeaderCell /> */}
             </CTableRow>

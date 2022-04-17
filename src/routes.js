@@ -22,6 +22,8 @@ const EditWeightEmployee = React.lazy(() =>
 )
 const EmployeePlan = React.lazy(() => import('./views/plan/weightDeptEmployeePlan/EmployeePlan'))
 
+const DeptByManager = React.lazy(() => import('./views/pages/deptbymanager/DeptByManager'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
@@ -70,6 +72,7 @@ const routes = [
     name: 'Kế hoạch nhân viên',
     component: EmployeePlan,
   },
+  { path: '/manager', name: 'Nhân sự', component: DeptByManager },
 ]
 
 export default routes

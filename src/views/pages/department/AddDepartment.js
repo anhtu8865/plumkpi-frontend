@@ -10,6 +10,7 @@ import {
   CModalFooter,
   CModalTitle,
   CModalHeader,
+  CFormTextarea,
 } from '@coreui/react'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import { Button } from '@mui/material'
@@ -110,7 +111,8 @@ const AddDepartment = () => {
             <CRow className="mt-2 mb-2">
               <CCol>
                 <CFormLabel htmlFor="inputDeptName">Mô tả</CFormLabel>
-                <CFormInput
+                <CFormTextarea
+                  row="2"
                   name="description"
                   id="inputDeptName"
                   value={formik.values.description}

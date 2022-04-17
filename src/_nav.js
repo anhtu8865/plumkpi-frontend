@@ -1,6 +1,14 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilChartPie, cilLayers, cilBook, cilFile, cilPeople, cilHouse } from '@coreui/icons'
+import {
+  cilChartPie,
+  cilLayers,
+  cilBook,
+  cilFile,
+  cilPeople,
+  cilHouse,
+  cilLan,
+} from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 export const navigationAdmin = [
@@ -69,7 +77,19 @@ export const navigationDirector = [
     component: CNavItem,
     name: 'Nhân sự',
     to: '/companytree',
+    icon: <CIcon icon={cilLan} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Người dùng',
+    to: '/users',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Phòng ban',
+    to: '/depts',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
 ]
 
@@ -85,6 +105,12 @@ export const navigationManager = [
     name: 'Bảng điều khiển',
     to: '/dashboard',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Nhân sự',
+    to: '/manager',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
 ]
 

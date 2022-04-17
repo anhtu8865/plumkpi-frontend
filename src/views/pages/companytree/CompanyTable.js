@@ -140,11 +140,11 @@ const CompanyTable = (props) => {
                       variant="outlined"
                       startIcon={<KeyboardDoubleArrowLeftIcon />}
                       onClick={() => {
-                        history.push('/companytree')
+                        history.goBack()
                       }}
                       sx={{ textTransform: 'none', borderRadius: 10 }}
                     >
-                      Quay lại cây nhân sự
+                      Quay lại
                     </Button>
                   </CCol>
                 </CRow>
