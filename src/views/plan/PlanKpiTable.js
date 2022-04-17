@@ -448,9 +448,13 @@ export const PlanKpiTable = (catItem) => {
       )
       if (result) {
         const find = result.kpi_templates.find((item) => item.kpi_template_id === temId)
-
+        console.log(find.actual)
         if (find) {
-          return Number(find.actual)
+          if (find.actual) {
+            return Number(find.actual)
+          } else {
+            return 'Chưa có'
+          }
         }
         return 0
       }

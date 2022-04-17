@@ -14,6 +14,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CFormSelect,
 } from '@coreui/react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import SearchIcon from '@mui/icons-material/Search'
@@ -27,12 +28,15 @@ import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import { setUserLoading } from 'src/slices/userSlice'
 import api from 'src/views/axiosConfig'
+import ToggleOffIcon from '@mui/icons-material/ToggleOff'
+import ToggleOnIcon from '@mui/icons-material/ToggleOn'
 
 import AddUser from './AddUser'
 import DeleteUser from './DeleteUser'
 import EditUser from './EditUser'
 import InfoUser from './InfoUser'
 import ResetPwUser from './ResetPwUser'
+import StatusUser from './StatusUser'
 
 const User = () => {
   const [showUserFilter, setShowUserFilter] = React.useState(false)
@@ -48,119 +52,108 @@ const User = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
+  const [deptList, setDeptList] = React.useState([])
+
+  const [filterName, setFilterName] = React.useState('')
+  const [filterEmail, setFilterEmail] = React.useState('')
+  const [filterPhone, setFilterPhone] = React.useState('')
+  const [filterRole, setFilterRole] = React.useState('')
+  const [filterDept, setFilterDept] = React.useState('')
+
+  const getUserList = async (user_name, email, phone, dept, role) => {
+    let paramsObject = {
+      offset: (page - 1) * entryPerPage,
+      limit: entryPerPage,
+    }
+    if (user_name != '') {
+      paramsObject.user_name = user_name
+    }
+
+    if (email !== '') {
+      paramsObject.email = email
+    }
+
+    if (phone !== '') {
+      paramsObject.email = phone
+    }
+
+    if (dept !== '') {
+      paramsObject.dept = dept
+    }
+
+    if (role !== '') {
+      paramsObject.role = role
+    }
+
+    const response = await api.get('/users/', {
+      params: paramsObject,
+    })
+    return response.data
+  }
+
   React.useEffect(() => {
-    async function fetchDeptList() {
-      api
-        .get('/users', {
-          params: { offset: (page - 1) * entryPerPage, limit: entryPerPage },
-        })
-        .then((response) => {
-          setTotalPage(Math.ceil(response.data.count / entryPerPage))
-          setEntry(response.data.items)
-        })
-        .catch((error) => {
+    api
+      .get('/depts/all')
+      .then((response) => {
+        setDeptList(response.data)
+      })
+      .catch((error) => {
+        alert('Failed')
+      })
+  }, [])
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getUserList(
+          filterName,
+          filterEmail,
+          filterPhone,
+          filterDept,
+          filterRole,
+        )
+        if (result) {
+          setTotalPage(Math.ceil(result.count / entryPerPage))
+          setEntry(result.items)
+        }
+      } catch (error) {
+        if (error.response) {
           dispatch(
             createAlert({
               message: error.response.data.message,
               type: 'error',
             }),
           )
-        })
+        }
+      } finally {
+        dispatch(
+          setUserLoading({
+            value: false,
+          }),
+        )
+      }
     }
 
-    fetchDeptList()
-
-    dispatch(
-      setUserLoading({
-        value: false,
-      }),
-    )
-  }, [userReload, page, dispatch])
+    fetchData()
+  }, [userReload, page, filterName, filterEmail, filterPhone, filterDept, filterRole, dispatch])
 
   const UserFilter = () => {
-    const [deptList, setDeptList] = React.useState([])
-    React.useEffect(() => {
-      api
-        .get('/depts/all')
-        .then((response) => {
-          setDeptList(response.data)
-        })
-        .catch((error) => {
-          alert('Failed')
-        })
-    }, [])
-
-    const formik = useFormik({
-      initialValues: {
-        filter_name: '',
-        filter_email: '',
-        filter_role: '',
-        filter_dept: '',
-        filter_phone: '',
-      },
-      validateOnBlur: true,
-      onSubmit: (values) => {
-        console.log('Đây là search')
-        console.log(values)
-        let apiLink = '/users?'
-        if (values.filter_name !== '') {
-          apiLink += 'user_name=' + values.filter_name
-        }
-        if (values.filter_id !== null) {
-          apiLink += '&user_id=' + values.filter_id
-        }
-        if (values.filter_email !== '') {
-          apiLink += '&email=' + values.filter_email
-        }
-        if (values.filter_dept !== '') {
-          apiLink += '&dept=' + values.filter_dept
-        }
-        if (values.filter_role !== '') {
-          apiLink += '&role=' + values.filter_role
-        }
-        if (values.filter_phone !== '') {
-          apiLink += '&phone=' + values.filter_phone
-        }
-        //apiLink = 'users?user_name=' + values.filter_name + '&user_id=' + values.filter_id
-        api
-          .get(apiLink, {
-            params: {
-              offset: (page - 1) * entryPerPage,
-              limit: entryPerPage,
-            },
-          })
-          .then((res) => {
-            //alert('Thành công')
-            setFilter(res.data.items)
-            console.log(res.data.items)
-          })
-          .catch((error) => {
-            alert('Thất bại')
-          })
-          .finally(() => formik.setSubmitting(false))
-      },
-    })
     return (
-      <CForm>
-        {/* <CCol md={1}>
-          <CFormLabel htmlFor="filterID">ID</CFormLabel>
-          <CFormInput
-            type={'number'}
-            id="filterID"
-            name="filter_id"
-            value={formik.values.filter_id}
-            onChange={formik.handleChange}
-          />
-        </CCol> */}
+      <>
         <CRow>
           <CCol md={4}>
             <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
             <CFormInput
               type="text"
               id="filterName"
-              name="filter_name"
-              value={formik.values.filter_name}
-              onChange={formik.handleChange}
+              name="filterName"
+              //value={filterName}
+              defaultValue=""
+              onChange={(event) => {
+                setTimeout(() => {
+                  setFilterName(event.target.value)
+                }, 500)
+              }}
             />
           </CCol>
           <CCol md={4}>
@@ -169,8 +162,13 @@ const User = () => {
               id="filterEmail"
               type="email"
               name="filter_email"
-              value={formik.values.filter_email}
-              onChange={formik.handleChange}
+              //value={filterEmail}
+              defaultValue=""
+              onChange={(event) => {
+                setTimeout(() => {
+                  setFilterEmail(event.target.value)
+                }, 500)
+              }}
             />
           </CCol>
           <CCol md={4}>
@@ -179,114 +177,137 @@ const User = () => {
               id="filterPhone"
               type="number"
               name="filter_phone"
-              value={formik.values.filter_phone}
-              onChange={formik.handleChange}
+              //value={filterPhone}
+              defaultValue=""
+              onChange={(event) => {
+                setTimeout(() => {
+                  setFilterPhone(event.target.value)
+                }, 500)
+              }}
             />
           </CCol>
         </CRow>
         <CRow className="mt-3">
           <CCol md={4}>
             <CFormLabel htmlFor="filterDept">Phòng ban</CFormLabel>
-            <FormikProvider value={formik}>
-              <Field as="select" name="filter_dept" className="form-select">
-                <option value="" label="Chọn phòng ban" />
-                {deptList.map((row) => (
-                  <option value={row.dept_id} key={row.dept_id}>
-                    {row.dept_name}
-                  </option>
-                ))}
-              </Field>
-            </FormikProvider>
+            <CFormSelect
+              aria-label="Default select example"
+              defaultValue=""
+              onChange={(event) => {
+                setFilterDept(event.target.value)
+              }}
+            >
+              <option value="" label="Chọn phòng ban" />
+              {deptList.map((row) => (
+                <option value={row.dept_id} key={row.dept_id}>
+                  {row.dept_name}
+                </option>
+              ))}
+            </CFormSelect>
           </CCol>
           <CCol md={4}>
             <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
-            <FormikProvider value={formik}>
-              <Field as="select" name="filter_role" className="form-select">
-                <option value="" label="Chọn vai trò" />
-                <option value="Admin">Admin</option>
-                <option value="Quản lý">Quản lý</option>
-                <option value="Giám đốc">Giám đốc</option>
-                <option value="Nhân viên">Nhân viên</option>
-              </Field>
-            </FormikProvider>
+            <CFormSelect
+              aria-label="Default select example"
+              defaultValue=""
+              onChange={(event) => {
+                setFilterRole(event.target.value)
+              }}
+            >
+              <option value="" label="Chọn vai trò" />
+              <option value="Admin">Admin</option>
+              <option value="Quản lý">Quản lý</option>
+              <option value="Giám đốc">Giám đốc</option>
+              <option value="Nhân viên">Nhân viên</option>
+            </CFormSelect>
           </CCol>
         </CRow>
-        <CCol className="mt-3" xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-            onClick={formik.submitForm}
-            disabled={formik.isSubmitting}
-            style={{ marginBottom: '10px' }}
-            sx={{ textTransform: 'none', borderRadius: 10 }}
-          >
-            Tìm
-          </Button>
-          {formik.isSubmitting && <LoadingCircle />}
-        </CCol>
-      </CForm>
+      </>
     )
   }
 
   const UserTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border" hover responsive striped>
-          <CTableHead color="light">
-            <CTableRow>
-              <CTableHeaderCell>ID</CTableHeaderCell>
-              <CTableHeaderCell>Họ và tên</CTableHeaderCell>
-              <CTableHeaderCell>Email</CTableHeaderCell>
-              <CTableHeaderCell>Phòng ban</CTableHeaderCell>
-              <CTableHeaderCell>Chức vụ</CTableHeaderCell>
-              {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
-              <CTableHeaderCell />
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {props.temList.map((row, index) => (
-              <CTableRow v-for="item in tableItems" key={index}>
-                <CTableDataCell>{row.user_id}</CTableDataCell>
-                <CTableDataCell className="d-flex flex-row">
-                  <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
-                  {row.user_name}
-                </CTableDataCell>
-                <CTableDataCell>{row.email}</CTableDataCell>
-                <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
-                <CTableDataCell>{row.role}</CTableDataCell>
-                {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
-                    {row.is_active ? 'Active' : 'Block'}
-                  </CTableDataCell>*/}
-                <CTableDataCell className="text-center">
-                  <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <InfoUser userItem={row} />
-                    <ResetPwUser userItem={row} />
-                    <EditUser inCat={row} />
-                    <DeleteUser inCat={row} />
-                  </Grid>
-                </CTableDataCell>
-              </CTableRow>
-            ))}
-          </CTableBody>
-          <CTableFoot>
-            <CTableRow>
-              <CTableDataCell colSpan="6">
-                <div className="d-flex flex-row justify-content-end">
-                  <Pagination
-                    page={page}
-                    count={totalPage}
-                    showFirstButton
-                    showLastButton
-                    size="small"
-                    onChange={(event, page) => setPage(page)}
-                  />
-                </div>
-              </CTableDataCell>
-            </CTableRow>
-          </CTableFoot>
-        </CTable>
+        {entry.length !== 0 ? (
+          <>
+            <CTable align="middle" className="mb-0 border" hover responsive striped>
+              <CTableHead color="light">
+                <CTableRow>
+                  <CTableHeaderCell>ID</CTableHeaderCell>
+                  <CTableHeaderCell>Họ và tên</CTableHeaderCell>
+                  <CTableHeaderCell>Email</CTableHeaderCell>
+                  <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+                  <CTableHeaderCell>Chức vụ</CTableHeaderCell>
+                  <CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>
+                  <CTableHeaderCell />
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {entry.map((row, index) => (
+                  <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{row.user_id}</CTableDataCell>
+                    <CTableDataCell className="d-flex flex-row">
+                      <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
+                      <div className="d-flex align-items-center">{row.user_name}</div>
+                    </CTableDataCell>
+                    <CTableDataCell>{row.email}</CTableDataCell>
+                    <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
+                    <CTableDataCell>{row.role}</CTableDataCell>
+                    <CTableDataCell className={row.is_active ? 'text-success' : 'text-danger'}>
+                      {row.is_active ? (
+                        <>
+                          Active
+                          <StatusUser userItem={row} />
+                        </>
+                      ) : (
+                        <>
+                          Block
+                          <StatusUser userItem={row} />
+                        </>
+                      )}
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="center"
+                      >
+                        <InfoUser userItem={row} />
+                        <ResetPwUser userItem={row} />
+                        {['Admin', 'Giám đốc'].includes(row.role) ? null : (
+                          <>
+                            <EditUser inCat={row} />
+                            <DeleteUser inCat={row} />
+                          </>
+                        )}
+                      </Grid>
+                    </CTableDataCell>
+                  </CTableRow>
+                ))}
+              </CTableBody>
+              <CTableFoot>
+                <CTableRow>
+                  <CTableDataCell colSpan="6">
+                    <div className="d-flex flex-row justify-content-end">
+                      <Pagination
+                        page={page}
+                        count={totalPage}
+                        showFirstButton
+                        showLastButton
+                        size="small"
+                        onChange={(event, page) => setPage(page)}
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
+              </CTableFoot>
+            </CTable>
+          </>
+        ) : (
+          <div></div>
+        )}
       </>
     )
   }
@@ -324,13 +345,9 @@ const User = () => {
                   </CCol>
                 </CRow>
                 {/*Table*/}
-                {showUserFilter ? (
-                  <CRow className="mt-4">
-                    <UserFilter />
-                  </CRow>
-                ) : null}
+                {showUserFilter && <CRow className="mt-4">{UserFilter()}</CRow>}
                 <CRow className="mt-5">
-                  <UserTable temList={filter.length > 0 ? filter : entry} />
+                  <UserTable />
                 </CRow>
               </CCardBody>
             </CCard>
