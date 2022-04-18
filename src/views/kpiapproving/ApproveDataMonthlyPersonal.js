@@ -38,7 +38,7 @@ import PropTypes from 'prop-types'
 import NoteDataMonthlyApprove from '../plan/NoteDataMonthlyApprove'
 import FileUploadMonthly from '../plan/FileUploadMonthly'
 
-export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
+export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
   //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
@@ -48,14 +48,14 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
   const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
   const [selectValue, setSelectValue] = useState('Month')
 
-  const [selectedMonth, setSelectedMonth] = useState(3)
+  const [selectedMonth, setSelectedMonth] = useState(Number(month))
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
-  const [sum, setSum] = useState(0)
+
   const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const [monthTarget, setMonthTarget] = useState(0)
 
-  const [userID, setUserID] = React.useState(0)
+  const [userIDs, setUserIDs] = React.useState([])
   const [selectedKpi, setSelectedKpi] = React.useState({})
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
@@ -224,13 +224,24 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
           })
           break
         }
+        default:
+          break
       }
     }
   }, [selectedMonth, tempSelectedList])
 
   const handleDataTargetKpiChange = (item) => {
-    setUserID(item.user.user_id)
-    setSelectedKpi(item)
+    if (!userIDs.includes(item.user.user_id)) {
+      setUserIDs((userIDs) => [...userIDs, item.user.user_id])
+    } else {
+      setUserIDs(
+        userIDs.filter((tmp) => {
+          if (tmp !== item.user.user_id) {
+            return tmp
+          }
+        }),
+      )
+    }
   }
 
   const handleMonthTargetValue = (item) => {
@@ -687,7 +698,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
                             // onChange={() => {
                             //   handleCheckbox(item.user)
                             // }}
-                            checked={item == selectedKpi}
+                            checked={userIDs.includes(item.user.user_id)}
                             onChange={() => {
                               handleDataTargetKpiChange(item)
                             }}
@@ -797,7 +808,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
   }
 
   const AcceptActualButton = (props) => {
-    const { plan_id, kpi_template_id, user_id, month } = props
+    const { plan_id, kpi_template_id, user_ids, month } = props
 
     const onClickAccept = () => {
       setIsSubmit(true)
@@ -806,7 +817,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
         .put(`plans/approve-data-monthly-target/manager`, {
           plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
-          user_id: user_id,
+          user_ids: user_ids,
           month: month,
           approve: 'Chấp nhận',
         })
@@ -885,12 +896,12 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
   AcceptActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    user_id: PropTypes.number,
+    user_ids: PropTypes.array,
     month: PropTypes.number,
   }
 
   const DenyActualButton = (props) => {
-    const { plan_id, kpi_template_id, user_id, month } = props
+    const { plan_id, kpi_template_id, user_ids, month } = props
 
     const onClickDeny = () => {
       setIsSubmit(true)
@@ -899,7 +910,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
         .put(`plans/approve-data-monthly-target/manager`, {
           plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
-          user_id: user_id,
+          user_ids: user_ids,
           month: month,
           approve: 'Từ chối',
         })
@@ -979,7 +990,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
   DenyActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    user_id: PropTypes.number,
+    user_ids: PropTypes.array,
     month: PropTypes.number,
   }
 
@@ -1013,13 +1024,13 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem) => {
               <DenyActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template_id}
-                user_id={userID}
+                user_ids={userIDs}
                 month={selectedMonth}
               />
               <AcceptActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template_id}
-                user_id={userID}
+                user_ids={userIDs}
                 month={selectedMonth}
               />
             </div>

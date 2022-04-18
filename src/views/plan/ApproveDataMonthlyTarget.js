@@ -60,16 +60,15 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
   const [target, setTarget] = useState(0)
-  const [sum, setSum] = useState(0)
+
   const [sampleTarget, setSampleTarget] = useState('')
   const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const [monthTarget, setMonthTarget] = useState(0)
 
-  const [userID, setUserID] = React.useState(0)
-  const [selectedKpi, setSelectedKpi] = React.useState({})
+  const [userIDs, setUserIDs] = React.useState([])
+
   const [smModalVisible1, setSmModalVisible1] = useState(false) //accept modal
   const [smModalVisible2, setSmModalVisible2] = useState(false) //deny modal
-  const [smModalVisible3, setSmModalVisible3] = useState(false) //note modal
 
   const { reload } = useSelector((state) => state.view)
 
@@ -308,17 +307,11 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
           })
           break
         }
+        default:
+          break
       }
     }
   }, [selectedMonth, tempSelectedList])
-
-  React.useEffect(() => {
-    let sumTarget = 0
-    selectedEmployeeList.map((item) => {
-      sumTarget = sumTarget + Number(item.target)
-    })
-    setSum(sumTarget)
-  }, [selectedEmployeeList])
 
   React.useEffect(() => {
     setTarget(handleQuarterTargetValue(kpiItem))
@@ -458,9 +451,17 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
   }
 
   const handleDataTargetKpiChange = (item) => {
-    setUserID(item.user.user_id)
-
-    setSelectedKpi(item)
+    if (!userIDs.includes(item.user.user_id)) {
+      setUserIDs((userIDs) => [...userIDs, item.user.user_id])
+    } else {
+      setUserIDs(
+        userIDs.filter((tmp) => {
+          if (tmp !== item.user.user_id) {
+            return tmp
+          }
+        }),
+      )
+    }
   }
 
   const handleMonthTargetValue = (item) => {
@@ -770,24 +771,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
             </CFormSelect>
           </CCol>
         </CRow>
-        {/* <CRow className="mt-4">
-          <CCol xs={12}>
-            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI tháng {selectedMonth}</CFormLabel>
-            <CInputGroup>
-              <CFormInput
-                id="parenttarget"
-                placeholder="Nhập chỉ tiêu KPI"
-                type="number"
-                value={monthTarget}
-                onChange={(event) => {
-                  setMonthTarget(event.target.value)
-                }}
-              />
-              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-            </CInputGroup>
-            <CFormFeedback invalid></CFormFeedback>
-          </CCol>
-        </CRow> */}
+
         <CRow className="mt-4">
           <div>
             <h6>Nhân viên</h6>
@@ -805,25 +789,8 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {/* <CTableRow>
-                  <CTableHeaderCell />
-                  <CTableHeaderCell />
-                  <CTableHeaderCell className="w-25">
-                    <CInputGroup size="sm">
-                      <CFormInput
-                        size="sm"
-                        type="number"
-                        value={sampleTarget}
-                        onChange={(event) => {
-                          handleSampleTargetOnChange(event)
-                        }}
-                      />
-                      <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                </CTableRow> */}
                 {employeeList.map((item, index) => {
-                  //console.log(item)
+                  console.log(item)
                   return (
                     <>
                       <CTableRow
@@ -837,7 +804,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                             // onChange={() => {
                             //   handleCheckbox(item.user)
                             // }}
-                            checked={item == selectedKpi}
+                            checked={userIDs.includes(item.user.user_id)}
                             onChange={() => {
                               handleDataTargetKpiChange(item)
                             }}
@@ -886,78 +853,11 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                   )
                 })}
               </CTableBody>
-              <CTableFoot>
-                {/* <CTableRow>
-                  <CTableDataCell />
-                  <CTableHeaderCell>TỔNG</CTableHeaderCell>
-                  <CTableDataCell>
-                    <CInputGroup size="sm">
-                      <CFormInput size="sm" disabled value={formatNumber(sum)} />
-                      <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                    </CInputGroup>
-                  </CTableDataCell>
-                </CTableRow> */}
-              </CTableFoot>
+              <CTableFoot></CTableFoot>
             </CTable>
           ) : (
             <div>Phòng ban chưa có nhân viên.</div>
           )}
-        </CRow>
-      </>
-    )
-  }
-
-  const QuarterTargetView = () => {
-    return (
-      <>
-        <CRow className="mt-2">
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="freq">Chọn quý</CFormLabel>
-            <CFormSelect
-              id="freq"
-              value={selectedQuarter}
-              onChange={(event) => {
-                setSelectedQuarter(Number(event.target.value))
-              }}
-            >
-              <option value={1}>Quý 1</option>
-              <option value={2}>Quý 2</option>
-              <option value={3}>Quý 3</option>
-              <option value={4}>Quý 4</option>
-            </CFormSelect>
-          </CCol>
-        </CRow>
-        <CRow className="mt-4">
-          <CCol xs={12}>
-            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI quý {selectedQuarter}</CFormLabel>
-            <CInputGroup>
-              <CFormInput
-                id="parenttarget"
-                placeholder="Nhập chỉ tiêu KPI"
-                type="number"
-                value={target}
-                onChange={(event) => {
-                  setTarget(event.target.value)
-                }}
-                invalid={handleQuarterTargetStatus(kpiItem) === 'Từ chối'}
-                valid={handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'}
-                disabled={handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'}
-              />
-              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-              <CFormFeedback invalid>
-                Chỉ tiêu không được Ban giám đốc chấp nhận. Bạn nhập lại chỉ tiêu khác nhé.
-              </CFormFeedback>
-              <CFormFeedback valid>Chỉ tiêu đã được duyệt bởi Ban giám đốc.</CFormFeedback>
-              {handleQuarterTargetStatus(kpiItem) === 'Đang xử lý' && (
-                <CRow className="mt-1">
-                  <div>
-                    <small>Chỉ tiêu đang chờ Ban giám đốc xét duyệt...</small>
-                  </div>
-                </CRow>
-              )}
-            </CInputGroup>
-            <CFormFeedback invalid></CFormFeedback>
-          </CCol>
         </CRow>
       </>
     )
@@ -976,28 +876,14 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
             <b>Phòng ban:</b> {user.manage.dept_name}
           </CCol>
         </CRow>
-        {/*<CRow className="mt-2">
-          <CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="freq">Theo</CFormLabel>
-            <CFormSelect
-              id="freq"
-              value={selectValue}
-              onChange={(event) => {
-                setSelectValue(event.target.value)
-              }}
-            >
-              <option value="Month">Tháng</option>
-            </CFormSelect>
-          </CCol>
-            </CRow>
-        {selectValue === 'Quarter' && QuarterTargetView()}*/}
+
         {selectValue === 'Month' && MonthTargetView()}
       </>
     )
   }
 
   const AcceptActualButton = (props) => {
-    const { plan_id, kpi_template_id, user_id, month } = props
+    const { plan_id, kpi_template_id, user_ids, month } = props
 
     const onClickAccept = () => {
       setIsSubmit(true)
@@ -1006,7 +892,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
         .put(`plans/approve-data-monthly-target/manager`, {
           plan_id: plan_id,
           kpi_template_id: kpi_template_id,
-          user_id: user_id,
+          user_ids: user_ids,
           month: month,
           approve: 'Chấp nhận',
         })
@@ -1045,6 +931,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
           color="success"
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
           Chấp nhận
         </Button>
@@ -1084,12 +971,12 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
   AcceptActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    user_id: PropTypes.number,
+    user_ids: PropTypes.array,
     month: PropTypes.number,
   }
 
   const DenyActualButton = (props) => {
-    const { plan_id, kpi_template_id, user_id, month } = props
+    const { plan_id, kpi_template_id, user_ids, month } = props
 
     const onClickDeny = () => {
       setIsSubmit(true)
@@ -1098,7 +985,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
         .put(`plans/approve-data-monthly-target/manager`, {
           plan_id: plan_id,
           kpi_template_id: kpi_template_id,
-          user_id: user_id,
+          user_ids: user_ids,
           month: month,
           approve: 'Từ chối',
         })
@@ -1178,7 +1065,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
   DenyActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    user_id: PropTypes.number,
+    user_ids: PropTypes.array,
     month: PropTypes.number,
   }
 
@@ -1210,46 +1097,18 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
-          {selectValue === 'Quarter' && (
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<CheckIcon />}
-              type="submit"
-              onClick={(event) => {
-                onQuarterSubmit(event, target)
-              }}
-              disabled={
-                isSubmit || target === '' || handleQuarterTargetStatus(kpiItem) === 'Chấp nhận'
-              }
-            >
-              Đăng kí
-            </Button>
-          )}
           {selectValue === 'Month' && (
-            // <Button
-            //   variant="contained"
-            //   color="success"
-            //   startIcon={<CheckIcon />}
-            //   type="submit"
-            //   onClick={() => {
-            //     onMonthSubmit()
-            //   }}
-            //   disabled={isSubmit || !compareYear(plan.year) || selectedEmployeeList.length === 0}
-            // >
-            //   Xác nhận
-            // </Button>
             <div className="d-grid gap-2 d-md-flex justify-content-end">
               <DenyActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template.kpi_template_id}
-                user_id={userID}
+                user_ids={userIDs}
                 month={selectedMonth}
               />
               <AcceptActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template.kpi_template_id}
-                user_id={userID}
+                user_ids={userIDs}
                 month={selectedMonth}
               />
             </div>

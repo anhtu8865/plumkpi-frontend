@@ -227,6 +227,7 @@ const EnterDataQuarterlyTarget = (props) => {
               type: 'success',
             }),
           )
+          dispatch(setReload())
         })
         .catch((error) => {
           dispatch(
