@@ -8,6 +8,7 @@ import {
   cilPeople,
   cilHouse,
   cilLan,
+  cilAlarm,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -40,6 +41,12 @@ export const navigationAdmin = [
     name: 'Phòng ban',
     to: '/depts',
     icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Thông báo hệ thống',
+    to: '/notif',
+    icon: <CIcon icon={cilAlarm} customClassName="nav-icon" />,
   },
 ]
 

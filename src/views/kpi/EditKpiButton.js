@@ -211,9 +211,7 @@ export const EditKpiButton = (props) => {
                   {isSubmitting && <LoadingCircle />}
                   <CRow>
                     <CCol>
-                      <CFormLabel htmlFor="kpiname">
-                        <b>Tên KPI</b>
-                      </CFormLabel>
+                      <CFormLabel htmlFor="kpiname">Tên KPI</CFormLabel>
                       <CFormInput
                         name="kpi_template_name"
                         id="kpiname"
@@ -236,9 +234,7 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol>
-                      <CFormLabel htmlFor="description">
-                        <b>Mô tả KPI</b>
-                      </CFormLabel>
+                      <CFormLabel htmlFor="description">Mô tả KPI</CFormLabel>
                       <CFormTextarea
                         id="description"
                         placeholder="Nhập mô tả KPI"
@@ -251,9 +247,7 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="aggregation">
-                        <b>Công thức tổng hợp</b>
-                      </CFormLabel>
+                      <CFormLabel htmlFor="aggregation">Công thức tổng hợp</CFormLabel>
                       <CFormSelect
                         id="aggregation"
                         value={values.aggregation}
@@ -269,9 +263,7 @@ export const EditKpiButton = (props) => {
                       <CFormFeedback invalid>{errors.aggregation}</CFormFeedback>
                     </CCol>
                     <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="unit">
-                        <b>Đơn vị tính</b>
-                      </CFormLabel>
+                      <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
                       <CFormInput
                         id="unit"
                         placeholder="Nhập đơn vị tính"
@@ -286,9 +278,7 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol xs={12} sm={6}>
-                      <CFormLabel htmlFor="category">
-                        <b>Danh mục</b>
-                      </CFormLabel>
+                      <CFormLabel htmlFor="category">Danh mục</CFormLabel>
                       <CFormSelect
                         id="category"
                         value={values.category}
@@ -308,9 +298,7 @@ export const EditKpiButton = (props) => {
                   </CRow>
                   <CRow className="mt-3">
                     <CCol xs={12} sm={6}>
-                      <div>
-                        <b>Cách đo lường:</b>
-                      </div>
+                      <div>Cách đo lường:</div>
                     </CCol>
                   </CRow>
                   <FieldArray name="measures">

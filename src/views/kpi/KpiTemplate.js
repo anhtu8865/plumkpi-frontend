@@ -46,6 +46,7 @@ const KpiTemplate = () => {
   const [entry, setEntry] = useState([])
   const [searchVisible, setSearchVisible] = useState(false)
   const [name, setName] = useState('')
+  const [oldSearchValue, setOldSearchValue] = useState({ name: '' })
 
   const getTemplateList = async (name) => {
     let paramsObject = {
@@ -58,6 +59,12 @@ const KpiTemplate = () => {
     if (name !== '') {
       paramsObject.name = name
     }
+    if (name !== oldSearchValue.name) {
+      paramsObject.offset = 0
+      setPage(1)
+    }
+    setOldSearchValue({ name: name })
+
     const response = await api.get('/kpi-templates/', {
       params: paramsObject,
     })

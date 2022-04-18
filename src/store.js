@@ -11,6 +11,7 @@ import kpiRegisSlice from './slices/kpiRegisSlice'
 import kpiApprovingSlice from './slices/kpiApprovingSlice'
 import dashboardSlice from './slices/dashboardSlice'
 import dashboardDetailSlice from './slices/dashboardDetailSlice'
+import timeSlice from './slices/timeSlice'
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     kpiApproving: kpiApprovingSlice.reducer,
     dashboard: dashboardSlice.reducer,
     dashboardDetail: dashboardDetailSlice.reducer,
+    today: timeSlice.reducer,
   },
 })
 

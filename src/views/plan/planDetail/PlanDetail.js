@@ -57,6 +57,7 @@ const PlanDetail = () => {
     checkedMonth,
   } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
+  const { today } = useSelector((state) => state.today)
   const [newResult, setNewResult] = useState([])
   const entryPerPage = 10
   const [quarterOpt, setQuarterOpt] = useState(quarterOption(4))
@@ -157,18 +158,12 @@ const PlanDetail = () => {
     }
   }
 
-  const getTime = async () => {
-    const response = await api.get(`notifs/time`)
-    return response.data
-  }
-
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getPlan()
         const res = await getCatPlan()
-        const res1 = await getTime()
-        const time = currentTime(res1.time, result.year)
+        const time = currentTime(today.time, result.year)
         dispatch(
           setSelectedQuarter({
             value: time.quarter,

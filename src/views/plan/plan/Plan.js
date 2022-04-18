@@ -33,15 +33,10 @@ const Plan = () => {
   const { reload, loading } = useSelector((state) => state.view)
   const { planList } = useSelector((state) => state.plan)
   const { user } = useSelector((state) => state.user)
-  const [today, setToday] = useState('2000-01-01')
+  const { today } = useSelector((state) => state.today)
 
   const getAllPlans = async () => {
     const response = await api.get('/plans/all')
-    return response.data
-  }
-
-  const getTime = async () => {
-    const response = await api.get(`notifs/time`)
     return response.data
   }
 
@@ -49,13 +44,11 @@ const Plan = () => {
     const fetchData = async () => {
       try {
         const result = await getAllPlans()
-        const res = await getTime()
         dispatch(
           setPlanList({
             value: result,
           }),
         )
-        setToday(res.time)
       } catch (error) {
         if (error.response) {
           dispatch(
@@ -78,7 +71,7 @@ const Plan = () => {
   }, [reload, dispatch])
 
   useEffect(() => {
-    setEntry(sortPlanListByYear(planList, today))
+    setEntry(sortPlanListByYear(planList, today.time))
   }, [planList])
 
   const CurrentPlanView = () => {
@@ -120,13 +113,13 @@ const Plan = () => {
                               value={calculateTimeProgress(
                                 planItem.year.toString() + '-01-01',
                                 planItem.year.toString() + '-12-31',
-                                today,
+                                today.time,
                               )}
                             >
                               {calculateTimeProgress(
                                 planItem.year.toString() + '-01-01',
                                 planItem.year.toString() + '-12-31',
-                                today,
+                                today.time,
                               )}
                               %
                             </CProgressBar>

@@ -31,6 +31,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import { compareYear, formatNumber } from 'src/utils/function'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
+import TrackChangesIcon from '@mui/icons-material/TrackChanges'
 
 export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
   const dispatch = useDispatch()
@@ -277,13 +278,15 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                     <>
                       <CTableRow key={index}>
                         <CTableDataCell className="text-center">
-                          <Checkbox
-                            size="small"
-                            checked={selectedDeptApprove.includes(item.dept.dept_id)}
-                            onChange={() => {
-                              handleApproveCheckbox(item)
-                            }}
-                          />
+                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
+                            <Checkbox
+                              size="small"
+                              checked={selectedDeptApprove.includes(item.dept.dept_id)}
+                              onChange={() => {
+                                handleApproveCheckbox(item)
+                              }}
+                            />
+                          ) : null}
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
@@ -342,7 +345,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
 
   return (
     <>
-      <Tooltip title="Duyệt chỉ tiêu phòng ban">
+      <Tooltip title="Duyệt chỉ tiêu phòng ban theo quý">
         <IconButton
           color="primary"
           onClick={() => {
@@ -350,7 +353,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
           }}
           size="small"
         >
-          <FactCheckIcon fontSize="small" />
+          <TrackChangesIcon fontSize="small" />
         </IconButton>
       </Tooltip>
 

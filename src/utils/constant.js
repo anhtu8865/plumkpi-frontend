@@ -84,3 +84,11 @@ export const colorArray = [
   '#795548',
   '#009688',
 ]
+
+export const dayArray = () => {
+  const array = []
+  for (let i = 1; i <= 31; i++) {
+    array.push(i)
+  }
+  return array
+}
