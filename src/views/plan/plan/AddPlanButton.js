@@ -11,6 +11,7 @@ import {
   CModalHeader,
   CFormFeedback,
   CFormSelect,
+  CFormTextarea,
 } from '@coreui/react'
 import { Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
@@ -133,8 +134,9 @@ export const AddPlanButton = () => {
             <CRow className="mt-3">
               <CCol>
                 <CFormLabel htmlFor="des">Mô tả</CFormLabel>
-                <CFormInput
+                <CFormTextarea
                   id="des"
+                  rows={3}
                   placeholder="Nhập mô tả"
                   {...formik.getFieldProps('description')}
                 />

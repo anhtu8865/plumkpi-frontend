@@ -11,6 +11,7 @@ import {
   CModalHeader,
   CFormFeedback,
   CFormSelect,
+  CFormTextarea,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { Button, IconButton } from '@mui/material'
@@ -136,8 +137,9 @@ export const EditPlanButton = (props) => {
             <CRow className="mt-3">
               <CCol>
                 <CFormLabel htmlFor="des">Mô tả</CFormLabel>
-                <CFormInput
+                <CFormTextarea
                   id="des"
+                  rows={3}
                   placeholder="Nhập mô tả"
                   {...formik.getFieldProps('description')}
                 />

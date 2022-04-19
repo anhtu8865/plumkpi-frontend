@@ -27,9 +27,11 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
-import { formatNumber } from 'src/utils/function'
+import { formatNumber, kpiTooltip } from 'src/utils/function'
 import { useParams } from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit'
+import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
+import InfoIcon from '@mui/icons-material/Info'
 
 export const EditKpiInOneCategoryButton = (catItem) => {
   const { id } = useParams()
@@ -234,7 +236,8 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                 <CTableRow>
                   <CTableHeaderCell />
                   <CTableHeaderCell>KPI</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">TRỌNG SỐ</CTableHeaderCell>
+                  <CTableHeaderCell />
+                  <CTableHeaderCell className="w-25">Trọng số</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -255,6 +258,17 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                           />
                         </CTableDataCell>
                         <CTableDataCell>{item.kpi_template_name}</CTableDataCell>
+                        <CTableDataCell>
+                          <CustomWidthTooltip
+                            key={index}
+                            title={kpiTooltip(item)}
+                            placement="bottom-start"
+                          >
+                            <IconButton color="primary" size="small">
+                              <InfoIcon fontSize="small" />
+                            </IconButton>
+                          </CustomWidthTooltip>
+                        </CTableDataCell>
                         <CTableDataCell className="w-25">
                           <CInputGroup size="sm">
                             <CFormInput
@@ -278,7 +292,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                 })}
               </CTableBody>
               <CTableFoot>
-                <CTableDataCell colSpan="3">
+                <CTableDataCell colSpan="4">
                   <div className="d-flex flex-row justify-content-end">
                     <Pagination
                       page={page}
@@ -294,7 +308,8 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                 </CTableDataCell>
                 <CTableRow>
                   <CTableDataCell />
-                  <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                  <CTableDataCell />
+                  <CTableHeaderCell>Tổng</CTableHeaderCell>
                   <CTableDataCell>
                     <CInputGroup size="sm">
                       <CFormInput

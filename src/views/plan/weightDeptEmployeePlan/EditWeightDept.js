@@ -294,15 +294,15 @@ const EditWeightDept = () => {
                     >
                       <CTableHead color="light">
                         <CTableRow>
-                          <CTableHeaderCell className="w-25">DANH MỤC</CTableHeaderCell>
+                          <CTableHeaderCell className="w-25">Danh mục</CTableHeaderCell>
                           <CTableHeaderCell>KPI</CTableHeaderCell>
-                          <CTableHeaderCell className="w-25">TRỌNG SỐ</CTableHeaderCell>
+                          <CTableHeaderCell className="w-25">Trọng số</CTableHeaderCell>
                         </CTableRow>
                       </CTableHead>
                       <CTableBody>
-                        <CTableRow key={index} color="info">
+                        <CTableRow key={index} color="dark">
                           <CTableDataCell colSpan={2}>
-                            {item.kpi_category.kpi_category_name}
+                            <b>{item.kpi_category.kpi_category_name}</b>
                           </CTableDataCell>
                           <CTableDataCell className="w-25">
                             <CInputGroup size="sm">
@@ -371,7 +371,7 @@ const EditWeightDept = () => {
                         </CTableDataCell>
                         <CTableRow>
                           <CTableHeaderCell className="w-25" />
-                          <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                          <CTableHeaderCell>Tổng</CTableHeaderCell>
                           <CTableHeaderCell className="w-25">
                             <CInputGroup size="sm">
                               <CFormInput
@@ -397,9 +397,9 @@ const EditWeightDept = () => {
               hover
               responsive
             >
-              <CTableHead color="info">
+              <CTableHead color="dark">
                 <CTableRow>
-                  <CTableHeaderCell>TỔNG TRỌNG SỐ DANH MỤC</CTableHeaderCell>
+                  <CTableHeaderCell>Tổng trọng số doanh mục</CTableHeaderCell>
                   <CTableHeaderCell className="w-25 text-end">
                     <CInputGroup size="sm">
                       <CFormInput

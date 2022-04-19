@@ -72,7 +72,7 @@ const Plan = () => {
 
   useEffect(() => {
     setEntry(sortPlanListByYear(planList, today.time))
-  }, [planList])
+  }, [planList, today])
 
   const CurrentPlanView = () => {
     return (
@@ -231,6 +231,12 @@ const Plan = () => {
                     <CCol xs={12} sm={8}>
                       <CCardTitle>{planItem.plan_name}</CCardTitle>
                     </CCol>
+                    <CCol xs={12} sm={4}>
+                      <div className="d-flex flex-row justify-content-end">
+                        {user.role === 'Giám đốc' && <EditPlanButton inPlan={planItem} />}
+                        {user.role === 'Giám đốc' && <DeletePlanButton inPlan={planItem} />}
+                      </div>
+                    </CCol>
                   </CRow>
                   <CRow className="mt-2">
                     <div>
@@ -280,7 +286,7 @@ const Plan = () => {
                 <CRow>
                   <CCol xs={12} sm={6}>
                     <h3>
-                      <b>Kế hoạch KPI</b>
+                      <b>Kế hoạch</b>
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>

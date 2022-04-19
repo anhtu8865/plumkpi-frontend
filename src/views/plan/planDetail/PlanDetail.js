@@ -219,7 +219,7 @@ const PlanDetail = () => {
       }
     }
     fetchData()
-  }, [reload, dispatch])
+  }, [reload, today, dispatch])
 
   React.useEffect(() => {
     setNewResult([])
@@ -440,7 +440,7 @@ const PlanDetail = () => {
             <h3>
               <b>{plan ? plan.plan_name : null}</b>
             </h3>
-            <h6>{plan && plan.description ? plan.description : null}</h6>
+            <small>{plan && plan.description ? plan.description : null}</small>
           </CCol>
           {user.role === 'Nhân viên' && (
             <CCol xs={12} sm={7}>

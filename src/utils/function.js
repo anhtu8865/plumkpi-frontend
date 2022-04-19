@@ -336,11 +336,11 @@ export const transparentColor = (color) => {
 export const planTooltip = (planItem) => {
   return (
     <div>
-      Tên kế hoạch: {planItem.plan_name}
+      <b>Tên kế hoạch:</b> {planItem.plan_name}
       <br />
-      Mô tả: {planItem.description}
+      <b>Mô tả:</b> {planItem.description}
       <br />
-      Năm thực hiện: {planItem.year}
+      <b>Năm thực hiện:</b> {planItem.year}
       <br />
     </div>
   )
@@ -349,15 +349,15 @@ export const planTooltip = (planItem) => {
 export const kpiTooltip = (kpiItem) => {
   return (
     <div>
-      Tên KPI: {kpiItem.kpi_template_name}
+      <b>Tên KPI:</b> {kpiItem.kpi_template_name}
       <br />
-      Mô tả: {kpiItem.description ? kpiItem.description : 'Không có'}
+      <b>Mô tả:</b> {kpiItem.description ? kpiItem.description : 'Không có'}
       <br />
-      Công thức tổng hợp: {kpiItem.aggregation}
+      <b>Công thức tổng hợp:</b> {kpiItem.aggregation}
       <br />
-      Đơn vị: {kpiItem.unit}
+      <b>Đơn vị:</b> {kpiItem.unit}
       <br />
-      Cách đo lường:
+      <b>Cách đo lường:</b>
       <br />
       {kpiItem.measures.items.length > 0
         ? kpiItem.measures.items.map((item, index) => {

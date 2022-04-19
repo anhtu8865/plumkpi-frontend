@@ -193,8 +193,8 @@ export const EditCategoryInPlanButton = () => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
-                  <CTableHeaderCell>DANH MỤC</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">TRỌNG SỐ</CTableHeaderCell>
+                  <CTableHeaderCell>Danh mục</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Trọng số</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -240,7 +240,7 @@ export const EditCategoryInPlanButton = () => {
               <CTableFoot>
                 <CTableRow>
                   <CTableDataCell />
-                  <CTableHeaderCell>TỔNG</CTableHeaderCell>
+                  <CTableHeaderCell>Tổng</CTableHeaderCell>
                   <CTableDataCell>
                     <CInputGroup size="sm">
                       <CFormInput

@@ -570,7 +570,7 @@ export const PlanKpiTable = (catItem) => {
   const Table = () => {
     return (
       <>
-        {catInPlan.length !== 0 && catItem ? (
+        {catInPlan.length !== 0 && catItem && temInPlan.length > 0 ? (
           <>
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
@@ -588,7 +588,7 @@ export const PlanKpiTable = (catItem) => {
                   <CTableHeaderCell>Thực hiện</CTableHeaderCell>
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
                   <CTableHeaderCell>Tiến độ</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25" />
+                  <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -597,7 +597,11 @@ export const PlanKpiTable = (catItem) => {
                     <CTableDataCell>
                       {item.kpi_template.kpi_template_name}
                       {'    '}
-                      {item.weight ? <CBadge color="dark">{item.weight}%</CBadge> : null}
+                      {item.weight ? (
+                        <CBadge color="dark" size="sm">
+                          {item.weight}%
+                        </CBadge>
+                      ) : null}
                     </CTableDataCell>
                     {!checkedMonth && !checkedQuarter ? (
                       <CTableDataCell>
@@ -718,7 +722,7 @@ export const PlanKpiTable = (catItem) => {
                         }
                       />
                     </CTableDataCell>
-                    <CTableDataCell className="text-center w-25">
+                    <CTableDataCell className="text-center">
                       <div className="d-flex flex-row justify-content-center">
                         {user.role === 'Giám đốc' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
@@ -764,7 +768,9 @@ export const PlanKpiTable = (catItem) => {
               </CTableFoot>
             </CTable>
           </>
-        ) : null}
+        ) : (
+          <div>Không có KPI.</div>
+        )}
       </>
     )
   }
@@ -782,7 +788,9 @@ export const PlanKpiTable = (catItem) => {
             <CCol xs={12} sm={6}>
               <div className="d-flex flex-row gap-1 justify-content-end">
                 {user.role === 'Giám đốc' && EditKpiInOneCategoryButton(catItem)}
-                {user.role === 'Giám đốc' && DeleteKpiInOneCategoryButton(catItem)}
+                {user.role === 'Giám đốc' &&
+                  temInPlan.length > 0 &&
+                  DeleteKpiInOneCategoryButton(catItem)}
               </div>
             </CCol>
           </CRow>

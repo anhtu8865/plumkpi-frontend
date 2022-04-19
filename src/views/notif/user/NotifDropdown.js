@@ -84,19 +84,42 @@ export const NotifDropdown = () => {
           entry.map((item, index) => (
             <>
               <CDropdownItem component="button" key={index}>
-                <div className="d-flex justify-content-end">
-                  <small>
-                    {handleDiffDayDisplay(
-                      new Date(today.time.slice(0, 4), item.month - 1, item.day),
-                      new Date(today.time),
-                    )}
-                  </small>
-                </div>
-                <small>
-                  <ShowMoreText lines={10} more=" Xem thêm" less=" Thu gọn" expanded={false}>
-                    {item.content}
-                  </ShowMoreText>
-                </small>
+                {handleDiffDayDisplay(
+                  new Date(today.time.slice(0, 4), item.month - 1, item.day),
+                  new Date(today.time),
+                ) === 'Hôm nay' ? (
+                  <>
+                    <div className="d-flex justify-content-end">
+                      <b>
+                        <small style={{ color: 'grey' }}>
+                          {handleDiffDayDisplay(
+                            new Date(today.time.slice(0, 4), item.month - 1, item.day),
+                            new Date(today.time),
+                          )}
+                        </small>
+                      </b>
+                    </div>
+                    <b>
+                      <ShowMoreText lines={10} more=" Xem thêm" less=" Thu gọn" expanded={false}>
+                        {item.content}
+                      </ShowMoreText>
+                    </b>
+                  </>
+                ) : (
+                  <>
+                    <div className="d-flex justify-content-end">
+                      <small style={{ color: 'grey' }}>
+                        {handleDiffDayDisplay(
+                          new Date(today.time.slice(0, 4), item.month - 1, item.day),
+                          new Date(today.time),
+                        )}
+                      </small>
+                    </div>
+                    <ShowMoreText lines={10} more=" Xem thêm" less=" Thu gọn" expanded={false}>
+                      {item.content}
+                    </ShowMoreText>
+                  </>
+                )}
               </CDropdownItem>
               <CDropdownDivider />
             </>

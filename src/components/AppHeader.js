@@ -29,11 +29,13 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
 import { NotifDropdown } from 'src/views/notif/user/NotifDropdown'
+import { setReload, setLoading } from 'src/slices/viewSlice'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const { today } = useSelector((state) => state.today)
   const { user } = useSelector((state) => state.user)
+  const { reload, loading } = useSelector((state) => state.view)
   const [timeValue, setTimeValue] = useState('2000-01-01')
   const [isEdit, setIsEdit] = useState(false)
 
@@ -69,7 +71,7 @@ const AppHeader = () => {
     }
 
     fetchData()
-  }, [dispatch])
+  }, [reload, dispatch])
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -125,7 +127,19 @@ const AppHeader = () => {
                 onClick={async () => {
                   try {
                     await putTime(timeValue)
-                    window.location.reload()
+                    setIsEdit(false)
+                    dispatch(
+                      createAlert({
+                        message: 'Thay đổi thời gian hệ thống thành công',
+                        type: 'success',
+                      }),
+                    )
+                    dispatch(
+                      setLoading({
+                        value: true,
+                      }),
+                    )
+                    dispatch(setReload())
                   } catch (error) {
                     if (error.response) {
                       dispatch(
