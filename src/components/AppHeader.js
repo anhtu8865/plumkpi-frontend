@@ -28,10 +28,12 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
+import { NotifDropdown } from 'src/views/notif/user/NotifDropdown'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const { today } = useSelector((state) => state.today)
+  const { user } = useSelector((state) => state.user)
   const [timeValue, setTimeValue] = useState('2000-01-01')
   const [isEdit, setIsEdit] = useState(false)
 
@@ -78,17 +80,22 @@ const AppHeader = () => {
         <CHeaderBrand className="mx-auto d-md-none" to="/">
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
-        <div className="me-5 d-flex align-items-center">
+        <CHeaderNav className="d-none d-md-flex me-auto">
+          {' '}
+          {['Giám đốc', 'Quản lý', 'Nhân viên'].includes(user.role) && (
+            <CNavItem>
+              <CNavLink>
+                <NotifDropdown />
+              </CNavLink>
+            </CNavItem>
+          )}
+        </CHeaderNav>
+        <div className="me-2 d-flex align-items-center">
           {!isEdit ? (
             <>
               <div className="me-1">
                 {convertNameOfDay(
-                  new Date(
-                    today.time.slice(0, 4),
-                    today.time.slice(5, 7) - 1,
-                    today.time.slice(8),
-                  ).toLocaleDateString('en-US', { weekday: 'long' }),
+                  new Date(today.time).toLocaleDateString('en-US', { weekday: 'long' }),
                 )}
                 {', '}
                 {formatDate(today.time)}
@@ -148,13 +155,7 @@ const AppHeader = () => {
             </>
           )}
         </div>
-        <CHeaderNav>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav>
+        <CHeaderNav></CHeaderNav>
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav>

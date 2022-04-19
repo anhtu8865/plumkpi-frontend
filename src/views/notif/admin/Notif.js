@@ -29,6 +29,7 @@ import { EditNotifButton } from './EditNotifButton'
 import { DeleteNotifButton } from './DeleteNotifButton'
 import SearchIcon from '@mui/icons-material/Search'
 import { dayArray, monthArray } from 'src/utils/constant'
+import ShowMoreText from 'react-show-more-text'
 
 const Notif = () => {
   const dispatch = useDispatch()
@@ -126,20 +127,25 @@ const Notif = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell>Nội dung</CTableHeaderCell>
+                  <CTableHeaderCell className="w-50">Nội dung</CTableHeaderCell>
                   <CTableHeaderCell>Ngày gửi</CTableHeaderCell>
                   <CTableHeaderCell>Tháng gửi</CTableHeaderCell>
                   <CTableHeaderCell>Gửi đến</CTableHeaderCell>
+                  <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {entry.map((item) => (
                   <CTableRow v-for="item in tableItems" key={item.notif_id}>
-                    <CTableDataCell>{item.content}</CTableDataCell>
+                    <CTableDataCell className="w-50">
+                      <ShowMoreText lines={1} more=" Xem thêm" less=" Thu gọn" expanded={false}>
+                        {item.content}
+                      </ShowMoreText>
+                    </CTableDataCell>
                     <CTableDataCell>{item.day}</CTableDataCell>
                     <CTableDataCell>{item.month}</CTableDataCell>
                     <CTableDataCell>{item.role}</CTableDataCell>
-                    <CTableDataCell className="w-25 text-center">
+                    <CTableDataCell className="text-center">
                       <div className="d-flex flex-row justify-content-center">
                         <EditNotifButton inNotif={item} />
                         <DeleteNotifButton inNotif={item} />

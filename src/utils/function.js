@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { formulaOperators, checkValidError, quarterArray, monthArray } from 'src/utils/constant'
-import { format, parse } from 'date-fns'
+import { format, parse, differenceInDays } from 'date-fns'
 
 export const translate = (str, engToVietList) => {
   const find = engToVietList.find((item) => item.eng == str)
@@ -474,5 +474,18 @@ export const convertNameOfDay = (str) => {
       return 'Chủ nhật'
     default:
       return ''
+  }
+}
+
+export const handleDiffDayDisplay = (earlierDate, laterDate) => {
+  const result = differenceInDays(laterDate, earlierDate)
+  if (result === 0) {
+    return 'Hôm nay'
+  } else if (result === 1) {
+    return 'Hôm qua'
+  } else if (result < 7) {
+    return `${result} ngày trước`
+  } else {
+    return format(earlierDate, 'dd/MM/yyyy')
   }
 }
