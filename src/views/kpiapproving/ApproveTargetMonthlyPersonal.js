@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
+import { Button, IconButton, Tooltip, Checkbox, Avatar } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -404,13 +404,15 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
                         // color={handleCheckboxValue(item.user_id) ? null : 'secondary'}
                       >
                         <CTableDataCell>
-                          <Checkbox
-                            size="small"
-                            checked={userIDs.includes(item.user.user_id)}
-                            onChange={() => {
-                              handleTargetKpiCheckboxChange(item)
-                            }}
-                          />
+                          {handleTargetValue(item.user.user_id) ? (
+                            <Checkbox
+                              size="small"
+                              checked={userIDs.includes(item.user.user_id)}
+                              onChange={() => {
+                                handleTargetKpiCheckboxChange(item)
+                              }}
+                            />
+                          ) : null}
                         </CTableDataCell>
                         <CTableDataCell className="d-flex flex-row">
                           <Avatar
@@ -685,15 +687,17 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <GroupAddIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Duyệt chỉ tiêu">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <GroupAddIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"

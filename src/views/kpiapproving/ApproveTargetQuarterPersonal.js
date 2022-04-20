@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Button, IconButton, Checkbox } from '@mui/material'
+import { Button, IconButton, Checkbox, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -367,17 +367,15 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
                     <>
                       <CTableRow key={index}>
                         <CTableDataCell className="text-center">
-                          <Checkbox
-                            size="small"
-                            // checked={selectedDeptApprove.includes(item.dept.dept_id)}
-                            // onChange={() => {
-                            //   handleApproveCheckbox(item)
-                            // }}
-                            checked={deptIDs.includes(item.dept.dept_id)}
-                            onChange={() => {
-                              handleTargetKpiCheckboxChange(item)
-                            }}
-                          />
+                          {handleQuarterTargetValue(item) !== 'Chưa có' ? (
+                            <Checkbox
+                              size="small"
+                              checked={deptIDs.includes(item.dept.dept_id)}
+                              onChange={() => {
+                                handleTargetKpiCheckboxChange(item)
+                              }}
+                            />
+                          ) : null}
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
@@ -623,15 +621,17 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-        size="small"
-      >
-        <GroupAddIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Duyệt chỉ tiêu">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+          size="small"
+        >
+          <GroupAddIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"

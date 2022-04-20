@@ -13,7 +13,7 @@ import {
   CTableRow,
   CTableFoot,
 } from '@coreui/react'
-import { Pagination, Avatar, Grid, IconButton } from '@mui/material'
+import { Pagination, Avatar, Button } from '@mui/material'
 import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
@@ -21,7 +21,7 @@ import { createAlert } from 'src/slices/alertSlice'
 //import { setUserLoading } from 'src/slices/userSlice'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 
 //import DeleteUser from 'src/views/user/DeleteUser'
 //import EditUser from 'src/views/user/EditUser'
@@ -159,22 +159,27 @@ const UserDepartment = (props) => {
             <CCard>
               <CCardBody className="p-4">
                 <CRow>
-                  <CCol xs={6}>
-                    <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                      <IconButton
-                        onClick={() => {
-                          history.push('/depts')
-                        }}
-                      >
-                        <ArrowCircleLeftIcon />
-                      </IconButton>
-                      <h4>Phòng ban: {deptName}</h4>
-                    </Grid>
+                  <CCol xs={12} sm={6}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<KeyboardDoubleArrowLeftIcon />}
+                      onClick={() => {
+                        history.push('/depts')
+                      }}
+                      sx={{ textTransform: 'none', borderRadius: 10 }}
+                    >
+                      Quay lạiY
+                    </Button>
                   </CCol>
-                  <CCol xs={6}>
-                    <div className="d-grid gap-3 d-md-flex justify-content-end">
-                      {/* <AddManager dept_id={id} /> */}
-                    </div>
+                </CRow>
+                <CRow className="mt-4">
+                  <CCol xs={12} sm={6}>
+                    <h3>
+                      <b>Phòng ban: {deptName}</b>
+                    </h3>
+                  </CCol>
+                  <CCol xs={12} sm={6}>
+                    <div className="d-flex flex-row gap-2 justify-content-end"></div>
                   </CCol>
                 </CRow>
                 {/*Table*/}

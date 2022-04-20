@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
+import { Button, IconButton, Avatar, Checkbox, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -681,17 +681,15 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
                         // color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
                       >
                         <CTableDataCell>
-                          <Checkbox
-                            size="small"
-                            // checked={handleCheckboxValue(item.user.id)}
-                            // onChange={() => {
-                            //   handleCheckbox(item.user)
-                            // }}
-                            checked={userIDs.includes(item.user.user_id)}
-                            onChange={() => {
-                              handleDataTargetKpiChange(item)
-                            }}
-                          />
+                          {handleMonthTargetValue(item) ? (
+                            <Checkbox
+                              size="small"
+                              checked={userIDs.includes(item.user.user_id)}
+                              onChange={() => {
+                                handleDataTargetKpiChange(item)
+                              }}
+                            />
+                          ) : null}
                         </CTableDataCell>
                         <CTableDataCell className="d-flex flex-row">
                           <Avatar
@@ -985,14 +983,16 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
 
   return (
     <>
-      <IconButton
-        color="primary"
-        onClick={() => {
-          setModalVisible(true)
-        }}
-      >
-        <FactCheckIcon />
-      </IconButton>
+      <Tooltip title="Duyệt số liệu">
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setModalVisible(true)
+          }}
+        >
+          <FactCheckIcon />
+        </IconButton>
+      </Tooltip>
 
       <CModal
         alignment="center"

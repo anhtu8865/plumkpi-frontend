@@ -772,17 +772,15 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                         // color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
                       >
                         <CTableDataCell>
-                          <Checkbox
-                            size="small"
-                            // checked={handleCheckboxValue(item.user.id)}
-                            // onChange={() => {
-                            //   handleCheckbox(item.user)
-                            // }}
-                            checked={userIDs.includes(item.user.user_id)}
-                            onChange={() => {
-                              handleDataTargetKpiChange(item)
-                            }}
-                          />
+                          {handleMonthTargetValue(item) !== 'Chưa có' ? (
+                            <Checkbox
+                              size="small"
+                              checked={userIDs.includes(item.user.user_id)}
+                              onChange={() => {
+                                handleDataTargetKpiChange(item)
+                              }}
+                            />
+                          ) : null}
                         </CTableDataCell>
                         <CTableDataCell className="d-flex flex-row">
                           <Avatar

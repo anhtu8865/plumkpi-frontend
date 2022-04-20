@@ -366,17 +366,15 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                     <>
                       <CTableRow key={index}>
                         <CTableDataCell className="text-center">
-                          <Checkbox
-                            size="small"
-                            // checked={selectedDeptApprove.includes(item.dept.dept_id)}
-                            // onChange={() => {
-                            //   handleApproveCheckbox(item)
-                            // }}
-                            checked={deptIDs.includes(item.dept.dept_id)}
-                            onChange={() => {
-                              handleDataTargetKpiChange(item)
-                            }}
-                          />
+                          {handleQuarterDataValue(item) !== 'Chưa có' ? (
+                            <Checkbox
+                              size="small"
+                              checked={deptIDs.includes(item.dept.dept_id)}
+                              onChange={() => {
+                                handleDataTargetKpiChange(item)
+                              }}
+                            />
+                          ) : null}
                         </CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">

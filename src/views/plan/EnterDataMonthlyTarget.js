@@ -564,6 +564,7 @@ const EnterDateMonthlyTarget = (props) => {
               setModalVisible(true)
             }}
             size="small"
+            disabled={handleMonthActualStatus(item) === 'Chấp nhận' ? true : false}
           >
             <FilePresentIcon fontSize="small" />
           </IconButton>
@@ -735,6 +736,7 @@ const EnterDateMonthlyTarget = (props) => {
               setModalVisible(true)
             }}
             size="small"
+            disabled={handleMonthActualStatus(item) === 'Chấp nhận' ? true : false}
           >
             <AttachFileIcon fontSize="small" />
           </IconButton>
