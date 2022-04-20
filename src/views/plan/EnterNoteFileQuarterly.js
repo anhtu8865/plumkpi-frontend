@@ -243,6 +243,7 @@ const EnterNoteFileQuarterly = (props) => {
               setModalVisible(true)
             }}
             size="small"
+            disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
           >
             <FilePresentIcon fontSize="small" />
           </IconButton>
@@ -414,6 +415,7 @@ const EnterNoteFileQuarterly = (props) => {
               setModalVisible(true)
             }}
             size="small"
+            disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
           >
             <AttachFileIcon fontSize="small" />
           </IconButton>
