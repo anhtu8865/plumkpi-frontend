@@ -38,9 +38,9 @@ import { formatNumber } from 'src/utils/function'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 
-const EnterDataQuarterlyTarget = (props) => {
-  //console.log(props)
-  const { plan, item, selectedQuarter } = props
+const EnterNoteFileQuarterly = (props) => {
+  console.log(props)
+  const { plan, item, selectedQuarter, value } = props
   //console.log(item)
 
   const dispatch = useDispatch()
@@ -202,48 +202,6 @@ const EnterDataQuarterlyTarget = (props) => {
 
   const validationSchema = yup.object({})
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      plan_id: plan.plan_id,
-      kpi_template_id: item.kpi_template.kpi_template_id,
-      quarter: selectedQuarter,
-      value: formatNumber(handleQuarterActualValue(item)),
-    },
-    validateOnBlur: true,
-    onSubmit: (values, { resetForm }) => {
-      //console.log(values)
-      api
-        .put('plans/enter-data-quarterly-target/manager', {
-          plan_id: values.plan_id,
-          kpi_template_id: values.kpi_template_id,
-          quarter: values.quarter,
-          value: values.value,
-        })
-        .then(() => {
-          dispatch(
-            createAlert({
-              message: 'Cập nhật thành công.',
-              type: 'success',
-            }),
-          )
-          dispatch(setReload())
-        })
-        .catch((error) => {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        })
-        .finally(() => {
-          formik.setSubmitting(false)
-        })
-    },
-    validationSchema: validationSchema,
-  })
-
   const EnterNoteData = () => {
     const [inputNote, setInputNote] = React.useState('')
 
@@ -272,9 +230,7 @@ const EnterDataQuarterlyTarget = (props) => {
             }),
           )
         })
-        .finally(() => {
-          formik.setSubmitting(false)
-        })
+        .finally(() => {})
     }
 
     return (
@@ -523,41 +479,28 @@ const EnterDataQuarterlyTarget = (props) => {
 
   return (
     <>
-      <CForm onSubmit={formik.handleSubmit}>
+      <CForm>
         <CInputGroup>
           <CFormInput
             type="number"
-            defaultValue={formatNumber(handleQuarterActualValue(item))}
+            defaultValue={formatNumber(value)}
             valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterDataStatus(item) === 'Từ chối'}
-            disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
-            {...formik.getFieldProps('value')}
+            disabled
           />
           <EnterNoteData />
           <FileUploadQuarterly />
-          <Tooltip title="Lưu kết quả">
-            <IconButton
-              variant="contained"
-              color="primary"
-              onClick={formik.submitForm}
-              //disabled={formik.isSubmitting}
-              size="small"
-              disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
-            >
-              <SaveIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
         </CInputGroup>
       </CForm>
     </>
   )
 }
 
-EnterDataQuarterlyTarget.propTypes = {
+EnterNoteFileQuarterly.propTypes = {
   plan: PropTypes.object,
   item: PropTypes.object,
   selectedQuarter: PropTypes.number,
-  // value: PropTypes.number,
+  value: PropTypes.number,
 }
 
-export default EnterDataQuarterlyTarget
+export default EnterNoteFileQuarterly

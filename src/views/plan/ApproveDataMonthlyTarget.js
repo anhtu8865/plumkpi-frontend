@@ -790,7 +790,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
               </CTableHead>
               <CTableBody>
                 {employeeList.map((item, index) => {
-                  console.log(item)
+                  //console.log(item)
                   return (
                     <>
                       <CTableRow

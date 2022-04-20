@@ -34,8 +34,10 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle'
 import PropTypes from 'prop-types'
 
+import NoteDataQuarterApprove from './NoteDataQuarterApprove'
+import FileUploadQuarterly from './FileUploadQuarterly'
+
 export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
-  //console.log(kpiItem)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -45,7 +47,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   const { plan } = useSelector((state) => state.planDetail)
   const [selectedDeptApprove, setSelectedDeptApprove] = useState([])
 
-  const [deptID, setDeptID] = React.useState(0)
+  const [deptIDs, setDeptIDs] = React.useState([])
   const [selectedDept, setSelectedDept] = React.useState({})
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
@@ -194,32 +196,33 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   }
 
   const handleQuarterDataValue = (item) => {
+    //console.log(item)
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {
-          if (item.first_quarterly_target.hasOwnProperty('actual'))
-            return item.first_quarterly_target.actual.value
+          if (item.first_quarterly_target.hasOwnProperty('actual_value'))
+            return item.first_quarterly_target.actual_value
         }
         return 'Chưa có'
       }
       case 2: {
         if (item.second_quarterly_target) {
-          if (item.second_quarterly_target.hasOwnProperty('actual'))
-            return item.second_quarterly_target.actual.value
+          if (item.second_quarterly_target.hasOwnProperty('actual_value'))
+            return item.second_quarterly_target.actual_value
         }
         return 'Chưa có'
       }
       case 3: {
         if (item.third_quarterly_target) {
-          if (item.third_quarterly_target.hasOwnProperty('actual'))
-            return item.third_quarterly_target.actual.value
+          if (item.third_quarterly_target.hasOwnProperty('actual_value'))
+            return item.third_quarterly_target.actual_value
         }
         return 'Chưa có'
       }
       case 4: {
         if (item.fourth_quarterly_target) {
-          if (item.fourth_quarterly_target.hasOwnProperty('actual'))
-            return item.fourth_quarterly_target.actual.value
+          if (item.fourth_quarterly_target.hasOwnProperty('actual_value'))
+            return item.fourth_quarterly_target.actual_value
         }
         return 'Chưa có'
       }
@@ -260,7 +263,6 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   }
 
   const handleQuarterDataStatus = (item) => {
-    console.log(item)
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {
@@ -317,7 +319,17 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   }
 
   const handleDataTargetKpiChange = (item) => {
-    setDeptID(item.dept.dept_id)
+    if (!deptIDs.includes(item.dept.dept_id)) {
+      setDeptIDs((deptIDs) => [...deptIDs, item.dept.dept_id])
+    } else {
+      setDeptIDs(
+        deptIDs.filter((tmp) => {
+          if (tmp !== item.dept.dept_id) {
+            return tmp
+          }
+        }),
+      )
+    }
     setSelectedDept(item)
   }
 
@@ -370,7 +382,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                             // onChange={() => {
                             //   handleApproveCheckbox(item)
                             // }}
-                            checked={item == selectedDept}
+                            checked={deptIDs.includes(item.dept.dept_id)}
                             onChange={() => {
                               handleDataTargetKpiChange(item)
                             }}
@@ -401,7 +413,16 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                                 invalid={handleQuarterDataStatus(item) === 'Từ chối'}
                                 disabled
                               />
-                              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                              {/* <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText> */}
+                              <NoteDataQuarterApprove
+                                item={item}
+                                selectedQuarter={selectedQuarter}
+                              />
+                              <FileUploadQuarterly
+                                plan_id={plan_id}
+                                item={item}
+                                selectedQuarter={selectedQuarter}
+                              />
                             </CInputGroup>
                           ) : (
                             'Chưa có'
@@ -447,7 +468,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   }
 
   const AcceptActualButton = (props) => {
-    const { plan_id, kpi_template_id, dept_id, quarter } = props
+    const { plan_id, kpi_template_id, dept_ids, quarter } = props
 
     const onClickAccept = () => {
       setIsSubmit(true)
@@ -456,7 +477,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         .put(`plans/approve-data-quarterly-target/director`, {
           plan_id: plan_id,
           kpi_template_id: kpi_template_id,
-          dept_id: dept_id,
+          dept_ids: dept_ids,
           quarter: quarter,
           approve: 'Chấp nhận',
         })
@@ -535,12 +556,12 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   AcceptActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    dept_id: PropTypes.number,
+    dept_ids: PropTypes.array,
     quarter: PropTypes.number,
   }
 
   const DenyActualButton = (props) => {
-    const { plan_id, kpi_template_id, dept_id, quarter } = props
+    const { plan_id, kpi_template_id, dept_ids, quarter } = props
 
     const onClickDeny = () => {
       setIsSubmit(true)
@@ -549,7 +570,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         .put(`plans/approve-data-quarterly-target/director`, {
           plan_id: plan_id,
           kpi_template_id: kpi_template_id,
-          dept_id: dept_id,
+          dept_ids: dept_ids,
           quarter: quarter,
           approve: 'Từ chối',
         })
@@ -629,7 +650,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   DenyActualButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    dept_id: PropTypes.number,
+    dept_ids: PropTypes.array,
     quarter: PropTypes.number,
   }
 
@@ -693,13 +714,13 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                 <DenyActualButton
                   plan_id={plan_id}
                   kpi_template_id={kpiItem.kpi_template.kpi_template_id}
-                  dept_id={deptID}
+                  dept_ids={deptIDs}
                   quarter={selectedQuarter}
                 />
                 <AcceptActualButton
                   plan_id={plan_id}
                   kpi_template_id={kpiItem.kpi_template.kpi_template_id}
-                  dept_id={deptID}
+                  dept_ids={deptIDs}
                   quarter={selectedQuarter}
                 />
               </div>

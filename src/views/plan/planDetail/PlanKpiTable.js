@@ -44,6 +44,7 @@ import { ApproveDataMonthlyTarget } from '../ApproveDataMonthlyTarget'
 import RegisterMonthlyTarget from '../RegisterMonthlyTarget'
 import RegisterQuarterTarget from '../RegisterQuarterTarget'
 import { ApproveDataQuarterTarget } from '../ApproveDataQuarterTarget'
+import EnterNoteFileQuarterly from '../EnterNoteFileQuarterly'
 
 export const PlanKpiTable = (catItem) => {
   //console.log(catItem)
@@ -657,6 +658,15 @@ export const PlanKpiTable = (catItem) => {
                             // value={handleActualValue(item.kpi_template.kpi_template_id)}
                           />
                         </CTableDataCell>
+                      ) : checkedQuarter && catItem.kpi_category.kpi_category_name !== 'Cá nhân' ? (
+                        <CTableDataCell>
+                          <EnterNoteFileQuarterly
+                            plan={plan}
+                            item={item}
+                            selectedQuarter={selectedQuarter}
+                            value={handleActualValue(item.kpi_template.kpi_template_id)}
+                          />
+                        </CTableDataCell>
                       ) : (
                         <CTableDataCell>
                           {handleActualValue(item.kpi_template.kpi_template_id)}
@@ -726,8 +736,8 @@ export const PlanKpiTable = (catItem) => {
                           AssignToDeptButton(item)}
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
-                        {/* {user.role === 'Giám đốc' &&
-                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)} */}
+                        {user.role === 'Giám đốc' &&
+                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
                         {user.role === 'Quản lý' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
                             <AssignToEmployeeButton kpiItem={item} />
