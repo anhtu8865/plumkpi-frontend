@@ -504,6 +504,7 @@ const EnterDateMonthlyTarget = (props) => {
               type: 'success',
             }),
           )
+          dispatch(setReload())
         })
         .catch((error) => {
           dispatch(
@@ -803,7 +804,7 @@ const EnterDateMonthlyTarget = (props) => {
         <CInputGroup>
           <CFormInput
             type="number"
-            defaultValue={formatNumber(handleMonthActualValue(item))}
+            defaultValue={handleMonthActualValue(item)}
             valid={handleMonthActualStatus(item) === 'Chấp nhận'}
             invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}

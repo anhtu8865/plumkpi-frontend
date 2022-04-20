@@ -43,6 +43,7 @@ import { ApproveDataMonthlyTarget } from '../ApproveDataMonthlyTarget'
 import RegisterMonthlyTarget from '../RegisterMonthlyTarget'
 import RegisterQuarterTarget from '../RegisterQuarterTarget'
 import { ApproveDataQuarterTarget } from '../ApproveDataQuarterTarget'
+import EnterNoteFileQuarterly from '../EnterNoteFileQuarterly'
 
 export const PlanKpiTable = (catItem) => {
   //console.log(catItem)
@@ -448,7 +449,7 @@ export const PlanKpiTable = (catItem) => {
       )
       if (result) {
         const find = result.kpi_templates.find((item) => item.kpi_template_id === temId)
-        console.log(find.actual)
+
         if (find) {
           if (find.actual) {
             return Number(find.actual)
@@ -660,6 +661,15 @@ export const PlanKpiTable = (catItem) => {
                             // value={handleActualValue(item.kpi_template.kpi_template_id)}
                           />
                         </CTableDataCell>
+                      ) : checkedQuarter && catItem.kpi_category.kpi_category_name !== 'Cá nhân' ? (
+                        <CTableDataCell>
+                          <EnterNoteFileQuarterly
+                            plan={plan}
+                            item={item}
+                            selectedQuarter={selectedQuarter}
+                            value={handleActualValue(item.kpi_template.kpi_template_id)}
+                          />
+                        </CTableDataCell>
                       ) : (
                         <CTableDataCell>
                           {handleActualValue(item.kpi_template.kpi_template_id)}
@@ -729,8 +739,8 @@ export const PlanKpiTable = (catItem) => {
                           AssignToDeptButton(item)}
                         {user.role === 'Giám đốc' &&
                           ApproveQuarterTargetButton(item, selectedQuarter)}
-                        {/* {user.role === 'Giám đốc' &&
-                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)} */}
+                        {user.role === 'Giám đốc' &&
+                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
                         {user.role === 'Quản lý' &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
                             <AssignToEmployeeButton kpiItem={item} />

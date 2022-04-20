@@ -3,9 +3,6 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CForm,
-  CFormInput,
-  CFormLabel,
   CRow,
   CTable,
   CTableBody,
@@ -14,35 +11,21 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
 } from '@coreui/react'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import SearchIcon from '@mui/icons-material/Search'
-import CheckIcon from '@mui/icons-material/Check'
-import DoDisturbIcon from '@mui/icons-material/DoDisturb'
-import { Avatar, Button, Grid, Pagination, Checkbox } from '@mui/material'
-import { Field, FormikProvider, useFormik } from 'formik'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
+import { Button, Pagination } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { LoadingCircle } from 'src/components/LoadingCircle'
+import { useHistory, useParams } from 'react-router-dom'
 import SystemAlert from 'src/components/SystemAlert'
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import { createAlert } from 'src/slices/alertSlice'
-import { setKpiApprovingLoading, setKpiApprovingReload } from 'src/slices/kpiApprovingSlice'
 import api from 'src/views/axiosConfig'
-import { useParams, useHistory } from 'react-router-dom'
-
+import { KpiInfoButton } from 'src/views/plan/planDetail/KpiInfoButton'
 import { ApproveDataMonthlyPersonal } from './ApproveDataMonthlyPersonal'
+import { ApproveDataQuarterPersonal } from './ApproveDataQuarterPersonal'
 import { ApproveTargetMonthlyPersonal } from './ApproveTargetMonthlyPersonal'
 import { ApproveTargetQuarterPersonal } from './ApproveTargetQuarterPersonal'
-import { ApproveDataQuarterPersonal } from './ApproveDataQuarterPersonal'
-import { InfoKpiApproving } from './InfoKpiApproving'
-import { KpiInfoButton } from 'src/views/plan/planDetail/KpiInfoButton'
 
 const KpiApproving = () => {
   const { id } = useParams()
@@ -50,7 +33,20 @@ const KpiApproving = () => {
 
   const dispatch = useDispatch()
 
-  const { kpiApprovingReload, kpiApprovingLoading } = useSelector((state) => state.kpiApproving)
+  const {
+    plan,
+    temInPlan,
+    catInPlan,
+    temPage,
+    temTotalPage,
+    selectedMonth,
+    selectedQuarter,
+    performResult,
+    checkedMonth,
+    checkedQuarter,
+  } = useSelector((state) => state.planDetail)
+
+  const { reload } = useSelector((state) => state.view)
 
   const { user } = useSelector((state) => state.user)
 
@@ -118,7 +114,7 @@ const KpiApproving = () => {
     } else if (user.role === 'Giám đốc') {
       fetchDeptKPIList()
     }
-  }, [kpiApprovingReload, dispatch])
+  }, [reload, dispatch])
 
   const KpiApprovingTable = (props) => {
     return (
@@ -144,8 +140,8 @@ const KpiApproving = () => {
                 <CTableDataCell className="text-center">
                   {/* <InfoKpiApproving kpiItem={row} /> */}
                   <div className="d-flex flex-row justify-content-center">
-                    {true && ApproveTargetMonthlyPersonal(id, row)}
-                    {true && ApproveDataMonthlyPersonal(id, row)}
+                    {true && ApproveTargetMonthlyPersonal(id, row, selectedMonth)}
+                    {true && ApproveDataMonthlyPersonal(id, row, selectedMonth)}
                     <KpiInfoButton kpiItem={{ kpi_template: row }} />
                   </div>
                 </CTableDataCell>
@@ -200,8 +196,8 @@ const KpiApproving = () => {
                 <CTableDataCell>{row.unit}</CTableDataCell>
                 <CTableDataCell className="text-center">
                   <div className="d-flex flex-row justify-content-center">
-                    {true && ApproveTargetQuarterPersonal(id, row)}
-                    {true && ApproveDataQuarterPersonal(id, row)}
+                    {true && ApproveTargetQuarterPersonal(id, row, selectedQuarter)}
+                    {true && ApproveDataQuarterPersonal(id, row, selectedQuarter)}
                     <KpiInfoButton kpiItem={{ kpi_template: row }} />
                   </div>
                 </CTableDataCell>

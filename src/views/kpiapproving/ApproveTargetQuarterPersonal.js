@@ -34,17 +34,17 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import PropTypes from 'prop-types'
 
-export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
+export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
   const [selectedDeptList, setSelectedDeptList] = useState([])
   const [selectValue, setSelectValue] = useState('Quarter')
-  const [selectedQuarter, setSelectedQuarter] = useState(1)
+  const [selectedQuarter, setSelectedQuarter] = useState(Number(quarter))
   const { plan } = useSelector((state) => state.planDetail)
   const [selectedDeptApprove, setSelectedDeptApprove] = useState([])
 
-  const [deptID, setDeptID] = React.useState(0)
+  const [deptIDs, setDeptIDs] = React.useState([])
   const [selectedDept, setSelectedDept] = React.useState({})
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
@@ -319,7 +319,17 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
   }
 
   const handleTargetKpiCheckboxChange = (item) => {
-    setDeptID(item.dept.dept_id)
+    if (!deptIDs.includes(item.dept.dept_id)) {
+      setDeptIDs((deptIDs) => [...deptIDs, item.dept.dept_id])
+    } else {
+      setDeptIDs(
+        deptIDs.filter((tmp) => {
+          if (tmp !== item.dept.dept_id) {
+            return tmp
+          }
+        }),
+      )
+    }
     setSelectedDept(item)
   }
 
@@ -370,7 +380,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                             // onChange={() => {
                             //   handleApproveCheckbox(item)
                             // }}
-                            checked={item == selectedDept}
+                            checked={deptIDs.includes(item.dept.dept_id)}
                             onChange={() => {
                               handleTargetKpiCheckboxChange(item)
                             }}
@@ -432,7 +442,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
   }
 
   const AcceptTargetButton = (props) => {
-    const { plan_id, kpi_template_id, dept_id, quarter } = props
+    const { plan_id, kpi_template_id, dept_ids, quarter } = props
 
     const onClickAccept = () => {
       setIsSubmit(true)
@@ -441,7 +451,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
         .put(`plans/approve-quarterly-target/director`, {
           plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
-          dept_id: dept_id,
+          dept_ids: dept_ids,
           quarter: quarter,
           approve: 'Chấp nhận',
         })
@@ -520,12 +530,12 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
   AcceptTargetButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    dept_id: PropTypes.number,
+    dept_ids: PropTypes.array,
     quarter: PropTypes.number,
   }
 
   const DenyTargetButton = (props) => {
-    const { plan_id, kpi_template_id, dept_id, quarter } = props
+    const { plan_id, kpi_template_id, dept_ids, quarter } = props
 
     const onClickDeny = () => {
       setIsSubmit(true)
@@ -534,7 +544,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
         .put(`plans/approve-quarterly-target/director`, {
           plan_id: parseInt(plan_id),
           kpi_template_id: kpi_template_id,
-          dept_id: dept_id,
+          dept_ids: dept_ids,
           quarter: quarter,
           approve: 'Từ chối',
         })
@@ -614,7 +624,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
   DenyTargetButton.propTypes = {
     plan_id: PropTypes.number,
     kpi_template_id: PropTypes.number,
-    dept_id: PropTypes.number,
+    dept_ids: PropTypes.array,
     quarter: PropTypes.number,
   }
 
@@ -676,13 +686,13 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem) => {
                 <DenyTargetButton
                   plan_id={plan_id}
                   kpi_template_id={kpiItem.kpi_template_id}
-                  dept_id={deptID}
+                  dept_ids={deptIDs}
                   quarter={selectedQuarter}
                 />
                 <AcceptTargetButton
                   plan_id={plan_id}
                   kpi_template_id={kpiItem.kpi_template_id}
-                  dept_id={deptID}
+                  dept_ids={deptIDs}
                   quarter={selectedQuarter}
                 />
               </div>

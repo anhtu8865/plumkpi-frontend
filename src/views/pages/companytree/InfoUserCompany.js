@@ -25,8 +25,9 @@ const InfoUserCompany = (props) => {
         onClick={() => {
           setModalVisible(true)
         }}
+        size="small"
       >
-        <InfoIcon />
+        <InfoIcon fontSize="small" />
       </IconButton>
 
       <CModal
