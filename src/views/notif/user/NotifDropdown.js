@@ -6,12 +6,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CDropdownItemPlain,
-  CRow,
-  CCol,
   CBadge,
-  CListGroup,
-  CListGroupItem,
 } from '@coreui/react'
 import { cilBell } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -40,13 +35,15 @@ export const NotifDropdown = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getNotif(counter, entryPerCounter)
-        if (result) {
-          setTotal(result.count)
-          setEntry(result.items)
+        if (['Giám đốc', 'Quản lý', 'Nhân viên'].includes(user.role)) {
+          const result = await getNotif(counter, entryPerCounter)
+          if (result) {
+            setTotal(result.count)
+            setEntry(result.items)
+          }
         }
       } catch (error) {
-        if (error.response && user.role !== 'Admin') {
+        if (error.response) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -58,7 +55,7 @@ export const NotifDropdown = () => {
     }
 
     fetchData()
-  }, [dispatch, counter])
+  }, [dispatch, counter, user.role])
 
   return (
     <CDropdown variant="nav-item">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, IconButton, Slider } from '@mui/material'
+import { Button, Slider } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import {
@@ -14,11 +14,8 @@ import {
   CModalHeader,
   CFormFeedback,
   CFormSelect,
-  CInputGroup,
-  CInputGroupText,
   CFormCheck,
 } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
@@ -97,9 +94,9 @@ export const CreateChartButton = () => {
 
   const handleKpis = (kpisList) => {
     const array = []
-    kpisList.map((item) => {
+    kpisList.forEach((item) => {
       const arr = []
-      item.kpi_templates.map((i) => {
+      item.kpi_templates.forEach((i) => {
         arr.push({
           label: i.kpi_template_name,
           value: i.kpi_template_id,
@@ -114,14 +111,14 @@ export const CreateChartButton = () => {
     switch (user.role) {
       case 'Giám đốc': {
         const array = []
-        resultList.map((item) => {
+        resultList.forEach((item) => {
           array.push({ label: item.dept_name, value: item.dept_id })
         })
         return array
       }
       case 'Quản lý': {
         const array = []
-        resultList.map((item) => {
+        resultList.forEach((item) => {
           array.push({ label: item.user_name, value: item.user_id })
         })
         return array
@@ -133,7 +130,7 @@ export const CreateChartButton = () => {
 
   const convertKpisOrFilter = (resultList) => {
     const array = []
-    resultList.map((item) => {
+    resultList.forEach((item) => {
       array.push(item.value)
     })
     return array
@@ -182,7 +179,7 @@ export const CreateChartButton = () => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, dispatch])
 
   const validationSchema = yup.object({
     chart_name: yup
@@ -229,7 +226,16 @@ export const CreateChartButton = () => {
 
       fetchData()
       return () => (isCalled = false)
-    }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
+    }, [
+      values.plan_id,
+      values.kpis,
+      values.dateType,
+      values.period,
+      values.filter,
+      newFilter,
+      newKpis,
+      newPeriod,
+    ])
 
     if (values.kpis.length === 0) {
       return <div>Hãy chọn KPI để vẽ biểu đồ</div>

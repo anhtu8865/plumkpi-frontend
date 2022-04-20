@@ -46,7 +46,7 @@ const AddManager = (props) => {
     }
 
     fetchDeptList()
-  }, [])
+  }, [dispatch, props.dept_id])
 
   const ValidationSchema = yup.object({})
 

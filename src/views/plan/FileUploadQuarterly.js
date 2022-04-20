@@ -6,9 +6,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 const FileUploadQuarterly = (props) => {
-  const { plan_id, item, selectedQuarter } = props
+  const { item, selectedQuarter } = props
   const [modalVisible, setModalVisible] = React.useState(false)
-  const [selectedFile, setSelectedFile] = React.useState(null)
 
   const handleQuarterActualFile = (item) => {
     //console.log(item)

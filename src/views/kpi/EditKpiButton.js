@@ -1,7 +1,5 @@
 import React from 'react'
 import { Button, IconButton } from '@mui/material'
-import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import {
   CCol,
@@ -31,7 +29,6 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import { GithubPicker } from 'react-color'
-import { convertColor, reverseConvertColor } from 'src/utils/function'
 import reactCSS from 'reactcss'
 
 export const EditKpiButton = (props) => {
@@ -74,7 +71,7 @@ export const EditKpiButton = (props) => {
 
   const newMeasures = () => {
     const convertMeasures = []
-    props.inTem.measures.items.map((item) => {
+    props.inTem.measures.items.forEach((item) => {
       convertMeasures.push({
         comparison: item.comparison,
         percentOfKpi: item.percentOfKpi,
@@ -121,11 +118,11 @@ export const EditKpiButton = (props) => {
 
   const editKpi = async (values) => {
     let selectedCat = categoryList.filter(
-      (catItem) => catItem.kpi_category_id == values.category,
+      (catItem) => catItem.kpi_category_id === values.category,
     )[0]
 
     const convertMeasures = []
-    values.measures.map((item) => {
+    values.measures.forEach((item) => {
       convertMeasures.push({
         comparison: item.comparison,
         percentOfKpi: Number(item.percentOfKpi),

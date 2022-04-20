@@ -1,10 +1,7 @@
-import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
-import LockResetIcon from '@mui/icons-material/LockReset'
-import { Button, IconButton, Tooltip } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
 import { setUserLoading, setUserReload } from 'src/slices/userSlice'
 import ToggleOffIcon from '@mui/icons-material/ToggleOff'
@@ -14,11 +11,8 @@ import api from 'src/views/axiosConfig'
 const StatusUser = (props) => {
   const { userItem } = props
   const dispatch = useDispatch()
-  const [modalVisible, setModalVisible] = React.useState(false)
-  const [isSubmit, setIsSubmit] = React.useState(false)
 
   const onClickIsActive = (status) => {
-    setIsSubmit(true)
     api
       .put(`/users/${props.userItem.user_id}`, {
         is_active: !status,
@@ -36,7 +30,6 @@ const StatusUser = (props) => {
           }),
         )
         dispatch(setUserReload())
-        setModalVisible(false)
       })
       .catch((error) => {
         dispatch(
@@ -45,9 +38,6 @@ const StatusUser = (props) => {
             type: 'error',
           }),
         )
-      })
-      .finally(() => {
-        setIsSubmit(false)
       })
   }
   if (userItem.is_active === true) {

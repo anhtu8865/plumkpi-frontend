@@ -4,16 +4,14 @@ import {
   cilChartPie,
   cilLayers,
   cilBook,
-  cilStorage,
   cilPeople,
   cilHouse,
   cilLan,
   cilAlarm,
   cilCalendar,
-  cilAddressBook,
   cilFolderOpen,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { CNavGroup, CNavItem } from '@coreui/react'
 
 export const navigationAdmin = [
   {

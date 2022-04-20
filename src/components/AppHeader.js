@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Button, IconButton, TextField } from '@mui/material'
+import { IconButton, TextField } from '@mui/material'
 import {
   CContainer,
   CHeader,
   CHeaderBrand,
-  CHeaderDivider,
   CHeaderNav,
   CHeaderToggler,
   CNavLink,
@@ -14,8 +12,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import api from 'src/views/axiosConfig'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
-import { AppBreadcrumb } from './index'
+import { cilMenu } from '@coreui/icons'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import { setSidebarShow } from 'src/slices/sidebarSlice'
@@ -35,14 +32,14 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const { today } = useSelector((state) => state.today)
   const { user } = useSelector((state) => state.user)
-  const { reload, loading } = useSelector((state) => state.view)
+  const { reload } = useSelector((state) => state.view)
   const [timeValue, setTimeValue] = useState('2000-01-01')
   const [isEdit, setIsEdit] = useState(false)
 
-  const getTime = async () => {
+  const getTime = useCallback(async () => {
     const response = await api.get(`notifs/time`)
     return response.data
-  }
+  }, [])
 
   const putTime = async (time) => {
     await api.put(`notifs/time`, { time })
@@ -71,7 +68,7 @@ const AppHeader = () => {
     }
 
     fetchData()
-  }, [reload, dispatch])
+  }, [reload, getTime, dispatch])
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -174,10 +171,6 @@ const AppHeader = () => {
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-      {/*<CHeaderDivider />
-      <CContainer fluid>
-        <AppBreadcrumb />
-        </CContainer>*/}
     </CHeader>
   )
 }

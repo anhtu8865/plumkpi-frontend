@@ -15,7 +15,7 @@ const SystemAlert = () => {
       setShow(true)
       dispatch(clearAlert())
     }
-  }, [alerts])
+  }, [alerts, dispatch])
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

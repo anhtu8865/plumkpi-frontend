@@ -37,7 +37,7 @@ const AddDashboardButton = () => {
       description: '',
     },
     validateOnBlur: true,
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values) => {
       // console.log(values)
       api
         .post('dashboards', {

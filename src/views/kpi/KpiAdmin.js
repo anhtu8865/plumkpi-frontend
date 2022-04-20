@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { CCard, CCardBody, CCol, CContainer, CRow, CCardTitle, CCardText } from '@coreui/react'
-import { Pagination, IconButton, Button } from '@mui/material'
+import React from 'react'
+import { CCard, CCardBody, CCol, CContainer, CRow, CCardTitle } from '@coreui/react'
+import { Pagination, IconButton } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +11,6 @@ import { AddCategoryButton } from './AddCategoryButton'
 import { EditCategoryButton } from './EditCategoryButton'
 import { DeleteCategoryButton } from './DeleteCategoryButton'
 import { useHistory } from 'react-router-dom'
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 
 const KpiAdmin = () => {

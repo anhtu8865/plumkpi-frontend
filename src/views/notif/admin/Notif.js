@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   CCard,
   CCardBody,
@@ -46,39 +46,42 @@ const Notif = () => {
     role: 'Tất cả',
   })
 
-  const getNotifList = async (values) => {
-    let paramsObject = {
-      offset: (page - 1) * entryPerPage,
-      limit: entryPerPage,
-    }
-    if (values.content !== '') {
-      paramsObject.content = values.content
-    }
-    if (values.day !== 'Tất cả') {
-      paramsObject.day = Number(values.day)
-    }
-    if (values.month !== 'Tất cả') {
-      paramsObject.month = Number(values.month)
-    }
-    if (values.role !== 'Tất cả') {
-      paramsObject.role = values.role
-    }
-    if (
-      values.content !== oldSearchValue.content ||
-      values.day !== oldSearchValue.day ||
-      values.month !== oldSearchValue.month ||
-      values.role !== oldSearchValue.role
-    ) {
-      paramsObject.offset = 0
-      setPage(1)
-    }
-    setOldSearchValue(values)
+  const getNotifList = useCallback(
+    async (values) => {
+      let paramsObject = {
+        offset: (page - 1) * entryPerPage,
+        limit: entryPerPage,
+      }
+      if (values.content !== '') {
+        paramsObject.content = values.content
+      }
+      if (values.day !== 'Tất cả') {
+        paramsObject.day = Number(values.day)
+      }
+      if (values.month !== 'Tất cả') {
+        paramsObject.month = Number(values.month)
+      }
+      if (values.role !== 'Tất cả') {
+        paramsObject.role = values.role
+      }
+      if (
+        values.content !== oldSearchValue.content ||
+        values.day !== oldSearchValue.day ||
+        values.month !== oldSearchValue.month ||
+        values.role !== oldSearchValue.role
+      ) {
+        paramsObject.offset = 0
+        setPage(1)
+        setOldSearchValue(values)
+      }
 
-    const response = await api.get('/notifs/', {
-      params: paramsObject,
-    })
-    return response.data
-  }
+      const response = await api.get('/notifs/', {
+        params: paramsObject,
+      })
+      return response.data
+    },
+    [oldSearchValue.content, oldSearchValue.day, oldSearchValue.month, oldSearchValue.role, page],
+  )
 
   const formik = useFormik({
     initialValues: {
@@ -117,7 +120,7 @@ const Notif = () => {
     }
 
     fetchData()
-  }, [reload, page, formik.values, dispatch])
+  }, [reload, page, formik.values, dispatch, getNotifList])
 
   const Table = () => {
     return (

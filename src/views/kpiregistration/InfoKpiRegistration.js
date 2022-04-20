@@ -1,20 +1,8 @@
 import React, { useState } from 'react'
-import {
-  CCol,
-  CFormLabel,
-  CFormInput,
-  CRow,
-  CModal,
-  CModalBody,
-  CModalTitle,
-  CModalHeader,
-  CInputGroup,
-  CInputGroupText,
-} from '@coreui/react'
+import { CCol, CRow, CModal, CModalBody, CModalTitle, CModalHeader } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { IconButton, Tooltip } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
-import api from 'src/views/axiosConfig'
 import { convertComparison } from 'src/utils/function'
 
 export const InfoKpiRegistration = (props) => {

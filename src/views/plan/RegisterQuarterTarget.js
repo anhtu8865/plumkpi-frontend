@@ -1,21 +1,9 @@
-import {
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-} from '@coreui/react'
-import FilePresentIcon from '@mui/icons-material/FilePresent'
-import { Button, IconButton } from '@mui/material'
+import { CForm, CFormInput, CInputGroup } from '@coreui/react'
+import { IconButton } from '@mui/material'
 import PropTypes from 'prop-types'
 import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
 import { formatNumber } from 'src/utils/function'
 import { setReload, setLoading } from 'src/slices/viewSlice'
@@ -27,8 +15,6 @@ const RegisterQuarterTarget = (props) => {
   //console.log(props)
   const { plan, item, selectedQuarter } = props
   const dispatch = useDispatch()
-
-  const [isSubmit, setIsSubmit] = React.useState(false)
 
   const handleQuarterTargetStatus = (item) => {
     //console.log(item)

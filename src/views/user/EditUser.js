@@ -25,8 +25,6 @@ import { setUserLoading, setUserReload } from 'src/slices/userSlice'
 
 const EditUser = (props) => {
   const [deptList, setDeptList] = React.useState([])
-  const [deptVisible, setDeptVisible] = React.useState(false)
-
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
 

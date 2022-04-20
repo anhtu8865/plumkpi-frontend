@@ -65,9 +65,7 @@ const EmployeePlan = () => {
         if (result) {
           setEntry(result)
         }
-        if (loading) {
-          setLoading(false)
-        }
+        setLoading(false)
       } catch (error) {
         if (error.response) {
           dispatch(
@@ -80,7 +78,7 @@ const EmployeePlan = () => {
       }
     }
     fetchData()
-  }, [page, name, email, phone])
+  }, [page, name, email, phone, dispatch])
 
   const Table = () => {
     return (

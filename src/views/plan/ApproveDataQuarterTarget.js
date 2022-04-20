@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Tooltip } from '@mui/material'
+import React, { useState, useCallback } from 'react'
+import { Button, IconButton, Checkbox, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -12,11 +12,9 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CTableFoot,
   CRow,
   CCol,
   CFormInput,
-  CFormFeedback,
   CFormLabel,
   CFormSelect,
   CInputGroup,
@@ -26,14 +24,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
+import { setReload } from 'src/slices/viewSlice'
 import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
-import { compareYear, formatNumber } from 'src/utils/function'
+import { formatNumber } from 'src/utils/function'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
-import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle'
 import PropTypes from 'prop-types'
-
 import NoteDataQuarterApprove from './NoteDataQuarterApprove'
 import FileUploadQuarterly from './FileUploadQuarterly'
 
@@ -42,17 +38,15 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
   const [selectedDeptList, setSelectedDeptList] = useState([])
-  const [selectValue, setSelectValue] = useState('Quarter')
+  const selectValue = 'Quarter'
   const [selectedQuarter, setSelectedQuarter] = useState(Number(quarter))
   const { plan } = useSelector((state) => state.planDetail)
-  const [selectedDeptApprove, setSelectedDeptApprove] = useState([])
-
   const [deptIDs, setDeptIDs] = React.useState([])
-  const [selectedDept, setSelectedDept] = React.useState({})
+  //const [selectedDept, setSelectedDept] = React.useState({})
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
-  const getInfoTargetKpi = async () => {
+  const getInfoTargetKpi = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-depts`, {
         params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template.kpi_template_id },
@@ -68,9 +62,9 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         )
       }
     }
-  }
+  }, [dispatch, plan.plan_id, kpiItem.kpi_template.kpi_template_id])
 
-  const approveQuarterTarget = async (selectedDeptApprove) => {
+  /*const approveQuarterTarget = async (selectedDeptApprove) => {
     try {
       selectedDeptApprove.map(async (item) => {
         await api.put(`/plans/approve-quarterly-target/director`, {
@@ -140,7 +134,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         )
       }
     }
-  }
+  }*/
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -148,7 +142,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
       const deptList = []
       const assignDepts = await getInfoTargetKpi()
       if (assignDepts) {
-        assignDepts.map((item) => {
+        assignDepts.forEach((item) => {
           deptList.push(item)
         })
         setSelectedDeptList(deptList)
@@ -158,11 +152,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
-
-  React.useEffect(() => {
-    setSelectedDeptApprove([])
-  }, [selectedQuarter])
+  }, [modalVisible, getInfoTargetKpi])
 
   const handleQuarterTargetValue = (item) => {
     switch (selectedQuarter) {
@@ -298,7 +288,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
     }
   }
 
-  const handleApproveCheckbox = (item) => {
+  /*const handleApproveCheckbox = (item) => {
     if (selectedDeptApprove.includes(item.dept.dept_id)) {
       setSelectedDeptApprove(selectedDeptApprove.filter((i) => i !== item.dept.dept_id))
     } else {
@@ -316,7 +306,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
     setIsSubmit(true)
     await denyQuarterTarget(selectedDeptApprove)
     setIsSubmit(false)
-  }
+  }*/
 
   const handleDataTargetKpiChange = (item) => {
     if (!deptIDs.includes(item.dept.dept_id)) {
@@ -330,7 +320,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         }),
       )
     }
-    setSelectedDept(item)
+    //setSelectedDept(item)
   }
 
   const QuarterTargetView = () => {
@@ -664,7 +654,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
           }}
           size="small"
         >
-          <PlaylistAddCheckCircleIcon fontSize="small" />
+          <FactCheckIcon fontSize="small" />
         </IconButton>
       </Tooltip>
 

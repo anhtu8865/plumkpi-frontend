@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, IconButton, Checkbox } from '@mui/material'
+import React, { useState, useCallback } from 'react'
+import { Button, Checkbox } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -19,12 +19,11 @@ import {
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
-import { Pagination } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
+import { setReload } from 'src/slices/viewSlice'
 import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import { formatNumber } from 'src/utils/function'
@@ -48,14 +47,14 @@ export const EditCategoryInPlanButton = () => {
     return result
   }
 
-  const getSelectedCatList = async () => {
+  const getSelectedCatList = useCallback(async () => {
     const array = []
     const response = await api.get(`plans/${id}/kpi-categories/director`)
-    response.data.map((item) => {
+    response.data.forEach((item) => {
       array.push({ kpi_category_id: item.kpi_category.kpi_category_id, weight: item.weight })
     })
     return array
-  }
+  }, [id])
 
   const registerKpi = async (selectedCatList) => {
     await api.post(`/plans/register-kpi-categories`, {
@@ -98,11 +97,11 @@ export const EditCategoryInPlanButton = () => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, dispatch, getSelectedCatList])
 
   React.useEffect(() => {
     let sumTarget = 0
-    selectedCatList.map((item) => {
+    selectedCatList.forEach((item) => {
       sumTarget = sumTarget + Number(item.weight)
     })
     setSum(sumTarget)

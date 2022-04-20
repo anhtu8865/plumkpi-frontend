@@ -1,28 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { CSVLink } from 'react-csv'
-import { Button, IconButton } from '@mui/material'
-import { CModal, CModalBody, CModalFooter, CModalTitle, CModalHeader } from '@coreui/react'
+import { IconButton } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { createAlert } from 'src/slices/alertSlice'
-import api from 'src/views/axiosConfig'
-import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 
 export const ExportReportButton = (props) => {
   const { chart, result } = props
-
-  const dispatch = useDispatch()
-  const { selectedDashboard } = useSelector((state) => state.dashboardDetail)
-
   const [csvData, setCsvData] = React.useState([])
 
   const fetchData = (datasets) => {
     const array = []
 
-    datasets.map((item) => {
-      item.data.map((row) => {
+    datasets.forEach((item) => {
+      item.data.forEach((row) => {
         let tmp = {}
         tmp['Tên'] = item.label
         tmp['Thực hiện'] = row.actual ? row.actual : 'Chưa có'

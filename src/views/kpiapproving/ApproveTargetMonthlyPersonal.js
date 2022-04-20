@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
 import {
   CModal,
@@ -16,7 +16,6 @@ import {
   CRow,
   CCol,
   CFormInput,
-  CFormFeedback,
   CFormLabel,
   CFormSelect,
   CInputGroup,
@@ -26,12 +25,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
+import { setReload } from 'src/slices/viewSlice'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
-import { compareYear, formatNumber } from 'src/utils/function'
 import PropTypes from 'prop-types'
 
 export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
@@ -44,20 +41,15 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
   const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
   const [selectValue, setSelectValue] = useState('Month')
   const [selectedMonth, setSelectedMonth] = useState(Number(month))
-  const { plan } = useSelector((state) => state.planDetail)
-  const { user } = useSelector((state) => state.user)
-  const [sampleTarget, setSampleTarget] = useState('')
   const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  const [monthTarget, setMonthTarget] = useState(0)
 
   const [userIDs, setUserIDs] = React.useState([])
-  const [selectedKpi, setSelectedKpi] = React.useState({})
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
   const { reload } = useSelector((state) => state.view)
 
-  const getEmployeeList = async () => {
+  const getEmployeeList = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
         params: { plan_id: plan_id, kpi_template_id: kpiItem.kpi_template_id },
@@ -73,16 +65,16 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
         )
       }
     }
-  }
+  }, [dispatch, kpiItem.kpi_template_id, plan_id])
 
-  const getInfoTargetKpi = async () => {
+  const getInfoTargetKpi = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
         params: { plan_id: plan_id, kpi_template_id: kpiItem.kpi_template_id },
       })
       return response.data
     } catch (error) {
-      if (error.response && plan.plan_id) {
+      if (error.response) {
         dispatch(
           createAlert({
             message: error.response.data.message,
@@ -91,7 +83,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
         )
       }
     }
-  }
+  }, [dispatch, kpiItem.kpi_template_id, plan_id])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -107,15 +99,15 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [reload, modalVisible])
+  }, [reload, modalVisible, getEmployeeList, getInfoTargetKpi])
 
   React.useEffect(() => {
     setSelectedEmployeeList([])
-    setSampleTarget('')
+    //setSampleTarget('')
     if (tempSelectedList.length > 0) {
       switch (selectedMonth) {
         case 1: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.first_monthly_target) {
               item.target = item.first_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -124,7 +116,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 2: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.second_monthly_target) {
               item.target = item.second_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -133,7 +125,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 3: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.third_monthly_target) {
               item.target = item.third_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -142,7 +134,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 4: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.fourth_monthly_target) {
               item.target = item.fourth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -151,7 +143,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 5: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.fifth_monthly_target) {
               item.target = item.fifth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -160,7 +152,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 6: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.sixth_monthly_target) {
               item.target = item.sixth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -169,7 +161,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 7: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.seventh_monthly_target) {
               item.target = item.seventh_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -178,7 +170,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 8: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.eighth_monthly_target) {
               item.target = item.eighth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -187,7 +179,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 9: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.ninth_monthly_target) {
               item.target = item.ninth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -196,7 +188,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 10: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.tenth_monthly_target) {
               item.target = item.tenth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -205,7 +197,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 11: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.eleventh_monthly_target) {
               item.target = item.eleventh_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -214,7 +206,7 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
         }
         case 12: {
-          tempSelectedList.map((item) => {
+          tempSelectedList.forEach((item) => {
             if (item.twelfth_monthly_target) {
               item.target = item.twelfth_monthly_target.target
               setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
@@ -366,8 +358,6 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
       )
     }
   }
-
-  const onMonthSubmit = () => {}
 
   const MonthTargetView = () => {
     return (

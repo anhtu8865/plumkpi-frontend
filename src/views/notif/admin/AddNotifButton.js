@@ -1,11 +1,10 @@
 import React from 'react'
-import { Button, IconButton } from '@mui/material'
+import { Button } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import {
   CCol,
   CFormLabel,
-  CFormInput,
   CRow,
   CModal,
   CModalBody,
@@ -15,10 +14,7 @@ import {
   CFormFeedback,
   CFormSelect,
   CFormTextarea,
-  CInputGroup,
-  CInputGroupText,
 } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CCard,
   CCardBody,
@@ -8,14 +8,13 @@ import {
   CFormInput,
   CInputGroup,
   CInputGroupText,
-  CFormSelect,
 } from '@coreui/react'
 import { Button, Checkbox } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setLoading, setReload } from 'src/slices/viewSlice'
+import { setLoading } from 'src/slices/viewSlice'
 import {
   setCatInPlan,
   setTemInPlan,
@@ -34,7 +33,6 @@ import { useParams, useHistory } from 'react-router-dom'
 import { PlanOverview } from './PlanOverview'
 import { PlanKpiTable } from './PlanKpiTable'
 import { quarterOption, monthOption, currentTime } from 'src/utils/function'
-import { monthArray, quarterArray } from 'src/utils/constant'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import { EditCategoryInPlanButton } from '../categoryInPlan/EditCategoryInPlanButton'
@@ -63,12 +61,12 @@ const PlanDetail = () => {
   const [quarterOpt, setQuarterOpt] = useState(quarterOption(4))
   const [monthOpt, setMonthOpt] = useState(monthOption(12))
 
-  const getPlan = async () => {
+  const getPlan = useCallback(async () => {
     const response = await api.get(`plans/${id}`)
     return response.data
-  }
+  }, [id])
 
-  const getPerformResult = async () => {
+  const getPerformResult = useCallback(async () => {
     switch (user.role) {
       case 'Giám đốc':
         if (checkedMonth) {
@@ -118,9 +116,9 @@ const PlanDetail = () => {
       default:
         return {}
     }
-  }
+  }, [checkedQuarter, checkedMonth, id, selectedMonth, selectedQuarter, user.role])
 
-  const getCatPlan = async () => {
+  const getCatPlan = useCallback(async () => {
     if (user.role === 'Giám đốc') {
       const response = await api.get(`plans/${id}/kpi-categories/director`)
       const newResponse = response.data.filter(
@@ -134,29 +132,59 @@ const PlanDetail = () => {
       const response = await api.get(`plans/${id}/kpi-categories/employee`)
       return response.data
     }
-  }
+  }, [id, user.role])
 
-  const getTemInOneCatPlan = async (offset, catId) => {
-    if (user.role === 'Giám đốc') {
-      const response = await api.get(`plans/${id}/kpis/director`, {
-        params: { offset: offset, limit: 10, kpi_category_id: catId },
-      })
-      dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
-      return response.data.items
-    } else if (user.role === 'Quản lý') {
-      const response = await api.get(`plans/${id}/kpis/manager`, {
-        params: { offset: offset, limit: 10, kpi_category_id: catId },
-      })
-      dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
-      return response.data.items
+  const getTemInOneCatPlan = useCallback(
+    async (offset, catId) => {
+      if (user.role === 'Giám đốc') {
+        const response = await api.get(`plans/${id}/kpis/director`, {
+          params: { offset: offset, limit: 10, kpi_category_id: catId },
+        })
+        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
+        return response.data.items
+      } else if (user.role === 'Quản lý') {
+        const response = await api.get(`plans/${id}/kpis/manager`, {
+          params: { offset: offset, limit: 10, kpi_category_id: catId },
+        })
+        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
+        return response.data.items
+      } else if (user.role === 'Nhân viên') {
+        const response = await api.get(`plans/${id}/kpis/employee`, {
+          params: { offset: offset, limit: 10, kpi_category_id: catId },
+        })
+        dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
+        return response.data.items
+      }
+    },
+    [dispatch, id, user.role],
+  )
+
+  const setCheckFirstOpen = useCallback(() => {
+    if (user.role === 'Quản lý') {
+      if (checkedMonth) {
+        dispatch(setCheckedMonth({ value: false }))
+      }
+      dispatch(setCheckedQuarter({ value: true }))
     } else if (user.role === 'Nhân viên') {
-      const response = await api.get(`plans/${id}/kpis/employee`, {
-        params: { offset: offset, limit: 10, kpi_category_id: catId },
-      })
-      dispatch(setTemTotalPage({ value: Math.ceil(response.data.count / entryPerPage) }))
-      return response.data.items
+      if (checkedQuarter) {
+        dispatch(setCheckedQuarter({ value: false }))
+      }
+      dispatch(setCheckedMonth({ value: true }))
+    } else {
+      if (checkedMonth) {
+        dispatch(setCheckedMonth({ value: false }))
+      }
+      if (checkedQuarter) {
+        dispatch(setCheckedQuarter({ value: false }))
+      }
+      /*const res1 = await getPerformResult()
+      dispatch(
+        setPerformResult({
+          value: res1,
+        }),
+      )*/
     }
-  }
+  }, [checkedMonth, checkedQuarter, dispatch, user.role])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -219,7 +247,7 @@ const PlanDetail = () => {
       }
     }
     fetchData()
-  }, [reload, today, dispatch])
+  }, [reload, today, getCatPlan, getPlan, setCheckFirstOpen, dispatch])
 
   React.useEffect(() => {
     setNewResult([])
@@ -231,7 +259,7 @@ const PlanDetail = () => {
     } else {
       setNewResult([])
     }
-  }, [currentCat])
+  }, [currentCat, temPage, dispatch])
 
   React.useEffect(() => {
     let isCalled = true
@@ -247,7 +275,7 @@ const PlanDetail = () => {
               if (user.role === 'Giám đốc') {
                 dispatch(setTemInPlan({ value: result }))
               } else if (['Quản lý', 'Nhân viên'].includes(user.role)) {
-                result.map((item) => {
+                result.forEach((item) => {
                   item.kpi_template = item.plan_kpi_template.kpi_template
                   setNewResult((newResult) => [...newResult, item])
                 })
@@ -268,13 +296,20 @@ const PlanDetail = () => {
     }
     fetchData()
     return () => (isCalled = false)
-  }, [newResult])
+  }, [
+    newResult,
+    currentCat.kpi_category.kpi_category_id,
+    dispatch,
+    getTemInOneCatPlan,
+    temPage,
+    user.role,
+  ])
 
   React.useEffect(() => {
     if (['Quản lý', 'Nhân viên'].includes(user.role)) {
       dispatch(setTemInPlan({ value: newResult }))
     }
-  }, [newResult])
+  }, [newResult, dispatch, user.role])
 
   React.useEffect(() => {
     let isCalled = true
@@ -301,34 +336,7 @@ const PlanDetail = () => {
     }
     fetchData()
     return () => (isCalled = false)
-  }, [checkedMonth, checkedQuarter, selectedMonth, selectedQuarter])
-
-  const setCheckFirstOpen = () => {
-    if (user.role === 'Quản lý') {
-      if (checkedMonth) {
-        dispatch(setCheckedMonth({ value: false }))
-      }
-      dispatch(setCheckedQuarter({ value: true }))
-    } else if (user.role === 'Nhân viên') {
-      if (checkedQuarter) {
-        dispatch(setCheckedQuarter({ value: false }))
-      }
-      dispatch(setCheckedMonth({ value: true }))
-    } else {
-      if (checkedMonth) {
-        dispatch(setCheckedMonth({ value: false }))
-      }
-      if (checkedQuarter) {
-        dispatch(setCheckedQuarter({ value: false }))
-      }
-      /*const res1 = await getPerformResult()
-      dispatch(
-        setPerformResult({
-          value: res1,
-        }),
-      )*/
-    }
-  }
+  }, [checkedMonth, checkedQuarter, selectedMonth, selectedQuarter, dispatch, getPerformResult])
 
   const handleCheck = (flag) => {
     if (flag === 'Month') {

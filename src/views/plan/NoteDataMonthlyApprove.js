@@ -1,41 +1,13 @@
-import {
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CFormTextarea,
-} from '@coreui/react'
+import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import FilePresentIcon from '@mui/icons-material/FilePresent'
-import { Button, IconButton, TextareaAutosize } from '@mui/material'
+import { IconButton, TextareaAutosize } from '@mui/material'
 import PropTypes from 'prop-types'
-import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { LoadingCircle } from 'src/components/LoadingCircle'
-import { createAlert } from 'src/slices/alertSlice'
-import { formatNumber } from 'src/utils/function'
-import CheckIcon from '@mui/icons-material/Check'
-import api from 'src/views/axiosConfig'
-import { useFormik } from 'formik'
-import * as yup from 'yup'
 
 const NoteDataMonthlyApprove = (props) => {
   //console.log(props)
   const { item, selectedMonth } = props
-
-  const dispatch = useDispatch()
-
-  const [isSubmit, setIsSubmit] = React.useState(false)
   const [modalVisible, setModalVisible] = React.useState(false)
-
-  const onClickDelete = () => {
-    setIsSubmit(true)
-  }
 
   const handleMonthActualNote = (item) => {
     //console.log(item)

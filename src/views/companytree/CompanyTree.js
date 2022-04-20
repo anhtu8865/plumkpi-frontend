@@ -1,13 +1,13 @@
 import { CCard, CCardBody, CCol, CContainer, CRow } from '@coreui/react'
-import { Pagination, Avatar, Grid, IconButton } from '@mui/material'
+import { Avatar, Grid } from '@mui/material'
 import * as React from 'react'
 import './CompanyTree.scss'
-
 import api from 'src/views/axiosConfig'
 import { createAlert } from 'src/slices/alertSlice'
 import SystemAlert from 'src/components/SystemAlert'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+
 const CompanyTree = () => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -34,7 +34,7 @@ const CompanyTree = () => {
     }
 
     fetchDeptList()
-  }, [])
+  }, [dispatch])
 
   React.useEffect(() => {
     async function authentication() {
@@ -54,7 +54,7 @@ const CompanyTree = () => {
     }
 
     authentication()
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="tree bg-light min-vh-100 d-flex flex-col">

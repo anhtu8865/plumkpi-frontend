@@ -6,20 +6,18 @@ import {
   CContainer,
   CRow,
   CCardTitle,
-  CCardText,
   CProgress,
   CProgressBar,
 } from '@coreui/react'
-import { Pagination, IconButton, Button } from '@mui/material'
+import { Button } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setLoading, setReload } from 'src/slices/viewSlice'
+import { setLoading } from 'src/slices/viewSlice'
 import { setPlanList } from 'src/slices/planSlice'
 import { AddPlanButton } from './AddPlanButton'
 import { useHistory } from 'react-router-dom'
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import api from 'src/views/axiosConfig'
 import { sortPlanListByYear, calculateTimeProgress } from 'src/utils/function'

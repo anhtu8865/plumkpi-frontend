@@ -3,7 +3,6 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CForm,
   CFormInput,
   CFormLabel,
   CRow,
@@ -17,14 +16,11 @@ import {
 } from '@coreui/react'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import SearchIcon from '@mui/icons-material/Search'
 import { Button, Grid, Pagination, IconButton, Avatar } from '@mui/material'
-import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
-import { LoadingCircle } from 'src/components/LoadingCircle'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import { setDepartmentLoading } from 'src/slices/departmentSlice'
@@ -42,7 +38,7 @@ const Department = () => {
 
   const dispatch = useDispatch()
 
-  const { departmentReload, departmentLoading } = useSelector((state) => state.department)
+  const { departmentReload } = useSelector((state) => state.department)
 
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)
@@ -51,20 +47,23 @@ const Department = () => {
 
   const [name, setName] = React.useState('')
 
-  const getDeptList = async (name) => {
-    let paramsObject = {
-      offset: (page - 1) * entryPerPage,
-      limit: entryPerPage,
-    }
-    if (name != '') {
-      paramsObject.name = name
-    }
+  const getDeptList = useCallback(
+    async (name) => {
+      let paramsObject = {
+        offset: (page - 1) * entryPerPage,
+        limit: entryPerPage,
+      }
+      if (name !== '') {
+        paramsObject.name = name
+      }
 
-    const response = await api.get('/depts/', {
-      params: paramsObject,
-    })
-    return response.data
-  }
+      const response = await api.get('/depts/', {
+        params: paramsObject,
+      })
+      return response.data
+    },
+    [page],
+  )
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -93,7 +92,7 @@ const Department = () => {
     }
 
     fetchData()
-  }, [departmentReload, page, name, dispatch])
+  }, [departmentReload, page, name, dispatch, getDeptList])
 
   const DepartmentFilter = () => {
     return (

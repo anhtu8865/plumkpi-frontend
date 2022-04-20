@@ -2,8 +2,6 @@ import {
   CForm,
   CFormInput,
   CInputGroup,
-  CListGroup,
-  CListGroupItem,
   CModal,
   CModalBody,
   CModalFooter,
@@ -15,7 +13,6 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import FilePresentIcon from '@mui/icons-material/FilePresent'
-import SaveIcon from '@mui/icons-material/Save'
 import {
   Button,
   IconButton,
@@ -27,7 +24,6 @@ import {
   TextareaAutosize,
   Tooltip,
 } from '@mui/material'
-import { useFormik } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -36,7 +32,6 @@ import { createAlert } from 'src/slices/alertSlice'
 import { setLoading, setReload } from 'src/slices/viewSlice'
 import { formatNumber } from 'src/utils/function'
 import api from 'src/views/axiosConfig'
-import * as yup from 'yup'
 
 const EnterNoteFileQuarterly = (props) => {
   console.log(props)
@@ -45,15 +40,9 @@ const EnterNoteFileQuarterly = (props) => {
 
   const dispatch = useDispatch()
 
-  const [isSubmit, setIsSubmit] = React.useState(false)
-
   const [modalVisible, setModalVisible] = React.useState(false)
 
-  const onClickDelete = () => {
-    setIsSubmit(true)
-  }
-
-  const handleQuarterActualValue = (item) => {
+  /*const handleQuarterActualValue = (item) => {
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target && item.first_quarterly_target.hasOwnProperty('actual')) {
@@ -82,7 +71,7 @@ const EnterNoteFileQuarterly = (props) => {
       default:
         return 'Chưa có'
     }
-  }
+  }*/
 
   const handleQuarterDataStatus = (item) => {
     //console.log(item)
@@ -199,8 +188,6 @@ const EnterNoteFileQuarterly = (props) => {
         return []
     }
   }
-
-  const validationSchema = yup.object({})
 
   const EnterNoteData = () => {
     const [inputNote, setInputNote] = React.useState('')

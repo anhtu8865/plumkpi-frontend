@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CCard,
   CCardBody,
@@ -48,28 +48,31 @@ const KpiTemplate = () => {
   const [name, setName] = useState('')
   const [oldSearchValue, setOldSearchValue] = useState({ name: '' })
 
-  const getTemplateList = async (name) => {
-    let paramsObject = {
-      offset: (page - 1) * entryPerPage,
-      limit: entryPerPage,
-    }
-    if (id) {
-      paramsObject.kpi_category_id = id
-    }
-    if (name !== '') {
-      paramsObject.name = name
-    }
-    if (name !== oldSearchValue.name) {
-      paramsObject.offset = 0
-      setPage(1)
-    }
-    setOldSearchValue({ name: name })
+  const getTemplateList = useCallback(
+    async (name) => {
+      let paramsObject = {
+        offset: (page - 1) * entryPerPage,
+        limit: entryPerPage,
+      }
+      if (id) {
+        paramsObject.kpi_category_id = id
+      }
+      if (name !== '') {
+        paramsObject.name = name
+      }
+      if (name !== oldSearchValue.name) {
+        paramsObject.offset = 0
+        setPage(1)
+        setOldSearchValue({ name: name })
+      }
 
-    const response = await api.get('/kpi-templates/', {
-      params: paramsObject,
-    })
-    return response.data
-  }
+      const response = await api.get('/kpi-templates/', {
+        params: paramsObject,
+      })
+      return response.data
+    },
+    [id, oldSearchValue.name, page],
+  )
 
   const getAllCategories = async () => {
     const response = await api.get('/kpi-categories/all')
@@ -115,7 +118,7 @@ const KpiTemplate = () => {
     }
 
     fetchData()
-  }, [])
+  }, [dispatch, id, user.role])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -144,7 +147,7 @@ const KpiTemplate = () => {
     }
 
     fetchData()
-  }, [reload, page, name, id, dispatch])
+  }, [reload, page, name, id, dispatch, getTemplateList])
 
   const ViewTabs = () => {
     return (

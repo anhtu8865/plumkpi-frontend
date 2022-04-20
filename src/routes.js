@@ -4,14 +4,14 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const UserInfo = React.lazy(() => import('./views/userinfo/UserInfo'))
 const KpiAdmin = React.lazy(() => import('./views/kpi/KpiAdmin'))
 const KpiTemplate = React.lazy(() => import('./views/kpi/KpiTemplate'))
-const UserPage = React.lazy(() => import('./views/pages/user/User'))
-const Department = React.lazy(() => import('./views/pages/department/Department'))
+const UserPage = React.lazy(() => import('./views/user/User'))
+const Department = React.lazy(() => import('./views/department/Department'))
 const Plan = React.lazy(() => import('./views/plan/plan/Plan'))
-const UserDepartment = React.lazy(() => import('./views/pages/department/UserDepartment'))
+const UserDepartment = React.lazy(() => import('./views/department/UserDepartment'))
 const PlanDetail = React.lazy(() => import('./views/plan/planDetail/PlanDetail'))
-const CompanyTree = React.lazy(() => import('./views/pages/companytree/CompanyTree'))
+const CompanyTree = React.lazy(() => import('./views/companytree/CompanyTree'))
 const KpiRegistration = React.lazy(() => import('./views/kpiregistration/KpiRegistration'))
-const CompanyTable = React.lazy(() => import('./views/pages/companytree/CompanyTable'))
+const CompanyTable = React.lazy(() => import('./views/companytree/CompanyTable'))
 const KpiApproving = React.lazy(() => import('./views/kpiapproving/KpiApproving'))
 const EditWeightDept = React.lazy(() =>
   import('./views/plan/weightDeptEmployeePlan/EditWeightDept'),
@@ -21,7 +21,7 @@ const EditWeightEmployee = React.lazy(() =>
   import('./views/plan/weightDeptEmployeePlan/EditWeightEmployee'),
 )
 const EmployeePlan = React.lazy(() => import('./views/plan/weightDeptEmployeePlan/EmployeePlan'))
-const DeptByManager = React.lazy(() => import('./views/pages/deptbymanager/DeptByManager'))
+const DeptByManager = React.lazy(() => import('./views/deptbymanager/DeptByManager'))
 const Notif = React.lazy(() => import('./views/notif/admin/Notif'))
 const NotifScheduler = React.lazy(() => import('./views/notif/user/NotifScheduler'))
 

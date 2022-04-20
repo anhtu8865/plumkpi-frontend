@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Tooltip } from '@mui/material'
+import React, { useState, useCallback } from 'react'
+import { Button, IconButton, Checkbox, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -12,11 +12,9 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CTableFoot,
   CRow,
   CCol,
   CFormInput,
-  CFormFeedback,
   CFormLabel,
   CFormSelect,
   CInputGroup,
@@ -29,8 +27,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
-import { compareYear, formatNumber } from 'src/utils/function'
-import FactCheckIcon from '@mui/icons-material/FactCheck'
+import { formatNumber } from 'src/utils/function'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
 
 export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
@@ -38,12 +35,12 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
   const [selectedDeptList, setSelectedDeptList] = useState([])
-  const [selectValue, setSelectValue] = useState('Quarter')
+  const selectValue = 'Quarter'
   const [selectedQuarter, setSelectedQuarter] = useState(Number(quarter))
   const { plan } = useSelector((state) => state.planDetail)
   const [selectedDeptApprove, setSelectedDeptApprove] = useState([])
 
-  const getInfoTargetKpi = async () => {
+  const getInfoTargetKpi = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-depts`, {
         params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template.kpi_template_id },
@@ -59,22 +56,20 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
         )
       }
     }
-  }
+  }, [plan.plan_id, dispatch, kpiItem.kpi_template.kpi_template_id])
 
   const approveQuarterTarget = async (selectedDeptApprove) => {
     try {
-      selectedDeptApprove.map(async (item) => {
-        await api.put(`/plans/approve-quarterly-target/director`, {
-          plan_id: plan.plan_id,
-          kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-          dept_id: Number(item),
-          quarter: Number(selectedQuarter),
-          approve: 'Chấp nhận',
-        })
+      await api.put(`/plans/approve-quarterly-target/director`, {
+        plan_id: plan.plan_id,
+        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
+        dept_ids: selectedDeptApprove,
+        quarter: Number(selectedQuarter),
+        approve: 'Chấp nhận',
       })
       dispatch(
         createAlert({
-          message: 'Duyệt chỉ tiêu KPI cho phòng ban thành công',
+          message: 'Duyệt chỉ tiêu cho phòng ban thành công',
           type: 'success',
         }),
       )
@@ -99,18 +94,16 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
 
   const denyQuarterTarget = async (selectedDeptApprove) => {
     try {
-      selectedDeptApprove.map(async (item) => {
-        await api.put(`/plans/approve-quarterly-target/director`, {
-          plan_id: plan.plan_id,
-          kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-          dept_id: Number(item),
-          quarter: Number(selectedQuarter),
-          approve: 'Từ chối',
-        })
+      await api.put(`/plans/approve-quarterly-target/director`, {
+        plan_id: plan.plan_id,
+        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
+        dept_ids: selectedDeptApprove,
+        quarter: Number(selectedQuarter),
+        approve: 'Từ chối',
       })
       dispatch(
         createAlert({
-          message: 'Từ chối chỉ tiêu KPI của phòng ban thành công',
+          message: 'Từ chối chỉ tiêu của phòng ban thành công',
           type: 'success',
         }),
       )
@@ -139,7 +132,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
       const deptList = []
       const assignDepts = await getInfoTargetKpi()
       if (assignDepts) {
-        assignDepts.map((item) => {
+        assignDepts.forEach((item) => {
           deptList.push(item)
         })
         setSelectedDeptList(deptList)
@@ -149,7 +142,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, getInfoTargetKpi])
 
   React.useEffect(() => {
     setSelectedDeptApprove([])
@@ -268,8 +261,8 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
-                  <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU ĐĂNG KÝ</CTableHeaderCell>
+                  <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Chỉ tiêu đăng ký</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -367,7 +360,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Xét duyệt chỉ tiêu KPI</CModalTitle>
+          <CModalTitle>Duyệt chỉ tiêu phòng ban theo quý</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>

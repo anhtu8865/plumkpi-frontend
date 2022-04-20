@@ -8,7 +8,6 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CFormCheck,
   CRow,
 } from '@coreui/react'
 import AddBoxIcon from '@mui/icons-material/AddBox'
@@ -24,8 +23,6 @@ import * as yup from 'yup'
 
 const AddUser = () => {
   const [deptList, setDeptList] = React.useState([])
-  const [deptVisible, setDeptVisible] = React.useState(false)
-
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
 

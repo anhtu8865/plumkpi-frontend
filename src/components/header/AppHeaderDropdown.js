@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  CAvatar,
   CBadge,
   CDropdown,
   CDropdownDivider,
@@ -11,25 +10,13 @@ import {
   CRow,
   CCol,
 } from '@coreui/react'
-import {
-  cilBell,
-  cilCreditCard,
-  cilCommentSquare,
-  cilEnvelopeOpen,
-  cilFile,
-  cilLockLocked,
-  cilSettings,
-  cilTask,
-  cilUser,
-} from '@coreui/icons'
+import { cilLockLocked, cilUser } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import api from 'src/views/axiosConfig'
 import { useHistory } from 'react-router-dom'
 import { Avatar } from '@mui/material'
-import { roleList } from 'src/utils/engToViet'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from 'src/slices/userSlice'
-import { translate } from 'src/utils/function'
 
 const AppHeaderDropdown = () => {
   const dispatch = useDispatch()
@@ -44,7 +31,7 @@ const AppHeaderDropdown = () => {
       .catch((error) => {
         alert(error.response.data.message)
       })
-  }, [])
+  }, [dispatch])
 
   const history = useHistory()
 

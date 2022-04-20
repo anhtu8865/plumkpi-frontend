@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Tooltip, Switch } from '@mui/material'
+import React, { useState, useEffect, useCallback } from 'react'
+import { Button, IconButton, Avatar, Tooltip, Switch } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -12,19 +12,12 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CTableFoot,
   CRow,
   CCol,
-  CFormInput,
-  CFormFeedback,
-  CFormLabel,
-  CFormSelect,
-  CInputGroup,
-  CInputGroupText,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { FieldArray, Form, Formik, getIn, useFormikContext } from 'formik'
+import { FieldArray, Form, Formik, useFormikContext } from 'formik'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
@@ -45,7 +38,7 @@ export const AssignToEmployeeButton = (props) => {
     return response.data
   }
 
-  const getAssignedEmployeeList = async () => {
+  const getAssignedEmployeeList = useCallback(async () => {
     const response = await api.get(`/plans/plan/employees-assigned-kpi`, {
       params: {
         plan_id: plan.plan_id,
@@ -53,15 +46,15 @@ export const AssignToEmployeeButton = (props) => {
       },
     })
     const array = []
-    response.data.map((item) => {
+    response.data.forEach((item) => {
       array.push(item.user_id)
     })
     return array
-  }
+  }, [plan.plan_id, props.kpiItem.kpi_template.kpi_template_id])
 
   const assignEmployee = async (array) => {
     const users = []
-    array.map((item) => {
+    array.forEach((item) => {
       users.push({ user_id: item })
     })
     await api.post(`plans/assign-kpi-employees`, {
@@ -96,7 +89,7 @@ export const AssignToEmployeeButton = (props) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, dispatch, getAssignedEmployeeList])
 
   const Table = () => {
     const { values } = useFormikContext()
@@ -179,7 +172,7 @@ export const AssignToEmployeeButton = (props) => {
 
   return (
     <>
-      <Tooltip title="Gán KPI cho nhân viên">
+      <Tooltip title="Gán KPI cho nhân viên theo năm">
         <IconButton
           color="primary"
           onClick={() => {
@@ -228,7 +221,7 @@ export const AssignToEmployeeButton = (props) => {
               }}
             >
               <CModalHeader>
-                <CModalTitle>Gán KPI cho nhân viên</CModalTitle>
+                <CModalTitle>Gán KPI cho nhân viên theo năm</CModalTitle>
               </CModalHeader>
               <Form>
                 <CModalBody className="mx-4 mb-3" style={{ maxHeight: '450px' }}>

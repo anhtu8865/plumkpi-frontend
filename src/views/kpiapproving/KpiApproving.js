@@ -33,18 +33,7 @@ const KpiApproving = () => {
 
   const dispatch = useDispatch()
 
-  const {
-    plan,
-    temInPlan,
-    catInPlan,
-    temPage,
-    temTotalPage,
-    selectedMonth,
-    selectedQuarter,
-    performResult,
-    checkedMonth,
-    checkedQuarter,
-  } = useSelector((state) => state.planDetail)
+  const { selectedMonth, selectedQuarter } = useSelector((state) => state.planDetail)
 
   const { reload } = useSelector((state) => state.view)
 
@@ -55,7 +44,7 @@ const KpiApproving = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
-  const [selectedKpi, setSelectedKpi] = React.useState([])
+  //const [selectedKpi, setSelectedKpi] = React.useState([])
 
   // const handleKpiChange = (item) => {
   //   if (!selectedKpi.includes(item)) {
@@ -114,7 +103,7 @@ const KpiApproving = () => {
     } else if (user.role === 'Giám đốc') {
       fetchDeptKPIList()
     }
-  }, [reload, dispatch])
+  }, [reload, dispatch, id, page, user.role])
 
   const KpiApprovingTable = (props) => {
     return (

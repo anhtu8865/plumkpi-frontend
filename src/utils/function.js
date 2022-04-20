@@ -5,7 +5,7 @@ import { formulaOperators, checkValidError, quarterArray, monthArray } from 'src
 import { format, parse, differenceInDays } from 'date-fns'
 
 export const translate = (str, engToVietList) => {
-  const find = engToVietList.find((item) => item.eng == str)
+  const find = engToVietList.find((item) => item.eng === str)
   if (find) {
     return find.viet
   }
@@ -27,7 +27,7 @@ export const checkValid = (formulaString, kpiList) => {
   const formulaElements = formulaString.trim().split(/\s+/)
 
   for (var i = 0; i < formulaElements.length; i++) {
-    if (formulaElements[i].length == 1) {
+    if (formulaElements[i].length === 1) {
       if (formulaElements[i] === '.') {
         return {
           errorMessage: 'Dấu "." chỉ được sử dụng trong số thập phân, không được đứng đơn lẻ',
@@ -42,9 +42,9 @@ export const checkValid = (formulaString, kpiList) => {
     } else {
       if (isNumeric(formulaElements[i])) {
         finalFormulaElements.push(formulaElements[i])
-      } else if (formulaElements[i][0] == '-') {
+      } else if (formulaElements[i][0] === '-') {
         const mapKpi = mappedKpi(formulaElements[i].slice(1), kpiList)
-        if (mapKpi.length != 0) {
+        if (mapKpi.length !== 0) {
           finalFormulaElements.push('KPI' + mapKpi[0].kpi_template_id)
         } else {
           return {
@@ -53,7 +53,7 @@ export const checkValid = (formulaString, kpiList) => {
         }
       } else {
         const mapKpi = mappedKpi(formulaElements[i], kpiList)
-        if (mapKpi.length != 0) {
+        if (mapKpi.length !== 0) {
           finalFormulaElements.push('KPI' + mapKpi[0].kpi_template_id)
         } else {
           return {
@@ -85,13 +85,13 @@ export const checkFormulaLogic = (formulaArray) => {
       operator.push(formulaArray[i])
       isTrue = true
     } else {
-      if (formulaArray[i] == '(') {
+      if (formulaArray[i] === '(') {
         operator.push(formulaArray[i])
       } else {
         let flag = true
-        while (operator.length != 0) {
+        while (operator.length !== 0) {
           let c = operator.pop()
-          if (c == '(') {
+          if (c === '(') {
             flag = false
             break
           } else {
@@ -112,7 +112,7 @@ export const checkFormulaLogic = (formulaArray) => {
       }
     }
   }
-  while (operator.length != 0) {
+  while (operator.length !== 0) {
     let c = operator.pop()
     if (!formulaOperators.slice(0, 4).includes(c)) {
       return {
@@ -127,7 +127,7 @@ export const checkFormulaLogic = (formulaArray) => {
       numberOrKpi.pop()
     }
   }
-  if (numberOrKpi.length > 1 || operator.length != 0) {
+  if (numberOrKpi.length > 1 || operator.length !== 0) {
     return {
       errorMessage: 'Trong công thức đang dư thừa phép toán, dấu ngoặc, số hoặc KPI',
     }
@@ -150,10 +150,10 @@ export const convertFormula = (str, kpiList) => {
   }
   let finalString = ''
   const formulaArray = str.trim().split(' ')
-  formulaArray.map((element) => {
+  formulaArray.forEach((element) => {
     if (isNumeric(element) || formulaOperators.includes(element)) {
       finalString = finalString + element + ' '
-    } else if (element[0] == '-') {
+    } else if (element[0] === '-') {
       finalString = finalString + findKpi(Number(element.slice(4)), kpiList) + ' '
     } else {
       finalString = finalString + findKpi(Number(element.slice(3)), kpiList) + ' '
@@ -198,7 +198,7 @@ export const sortPlanList = (planList) => {
   const oldPlan = []
   const currentPlan = []
   const futurePlan = []
-  planList.map((planItem) => {
+  planList.forEach((planItem) => {
     if (planItem.start_date > today) {
       futurePlan.push(planItem)
     } else if (planItem.end_date < today) {
@@ -218,7 +218,7 @@ export const sortPlanListByYear = (planList, today) => {
   const oldPlan = []
   const currentPlan = []
   const futurePlan = []
-  planList.map((planItem) => {
+  planList.forEach((planItem) => {
     if (planItem.year > year) {
       futurePlan.push(planItem)
     } else if (planItem.year < year) {
@@ -434,7 +434,7 @@ export const currentTime = (str, planYear) => {
 
 export const quarterOption = (quarter) => {
   const options = []
-  quarterArray.map((item) => {
+  quarterArray.forEach((item) => {
     if (item > quarter) {
       options.push({ value: item, label: item, isDisabled: true })
     } else {
@@ -446,7 +446,7 @@ export const quarterOption = (quarter) => {
 
 export const monthOption = (month) => {
   const options = []
-  monthArray.map((item) => {
+  monthArray.forEach((item) => {
     if (item > month) {
       options.push({ value: item, label: item, isDisabled: true })
     } else {

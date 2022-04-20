@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Button, IconButton, Slider } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import EditIcon from '@mui/icons-material/Edit'
@@ -14,8 +14,6 @@ import {
   CModalHeader,
   CFormFeedback,
   CFormSelect,
-  CInputGroup,
-  CInputGroupText,
   CFormCheck,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
@@ -59,24 +57,27 @@ export const EditChartButton = (props) => {
     return response.data
   }
 
-  const getDeptsOrEmployees = async (planId, kpiId) => {
-    switch (user.role) {
-      case 'Giám đốc': {
-        const response = await api.get('/plans/plan/depts-assigned-kpi', {
-          params: { plan_id: Number(planId), kpi_template_id: kpiId },
-        })
-        return response.data
+  const getDeptsOrEmployees = useCallback(
+    async (planId, kpiId) => {
+      switch (user.role) {
+        case 'Giám đốc': {
+          const response = await api.get('/plans/plan/depts-assigned-kpi', {
+            params: { plan_id: Number(planId), kpi_template_id: kpiId },
+          })
+          return response.data
+        }
+        case 'Quản lý': {
+          const response = await api.get('/plans/plan/employees-assigned-kpi', {
+            params: { plan_id: Number(planId), kpi_template_id: kpiId },
+          })
+          return response.data
+        }
+        default:
+          return []
       }
-      case 'Quản lý': {
-        const response = await api.get('/plans/plan/employees-assigned-kpi', {
-          params: { plan_id: Number(planId), kpi_template_id: kpiId },
-        })
-        return response.data
-      }
-      default:
-        return []
-    }
-  }
+    },
+    [user.role],
+  )
 
   const getData = async (planId, kpis, dateType, period, filter) => {
     const response = await api.post(`charts/data`, {
@@ -97,9 +98,9 @@ export const EditChartButton = (props) => {
 
   const handleKpis = (kpisList) => {
     const array = []
-    kpisList.map((item) => {
+    kpisList.forEach((item) => {
       const arr = []
-      item.kpi_templates.map((i) => {
+      item.kpi_templates.forEach((i) => {
         arr.push({
           label: i.kpi_template_name,
           value: i.kpi_template_id,
@@ -110,30 +111,33 @@ export const EditChartButton = (props) => {
     return array
   }
 
-  const handleDeptsOrEmployees = (resultList) => {
-    switch (user.role) {
-      case 'Giám đốc': {
-        const array = []
-        resultList.map((item) => {
-          array.push({ label: item.dept_name, value: item.dept_id })
-        })
-        return array
+  const handleDeptsOrEmployees = useCallback(
+    (resultList) => {
+      switch (user.role) {
+        case 'Giám đốc': {
+          const array = []
+          resultList.forEach((item) => {
+            array.push({ label: item.dept_name, value: item.dept_id })
+          })
+          return array
+        }
+        case 'Quản lý': {
+          const array = []
+          resultList.forEach((item) => {
+            array.push({ label: item.user_name, value: item.user_id })
+          })
+          return array
+        }
+        default:
+          return []
       }
-      case 'Quản lý': {
-        const array = []
-        resultList.map((item) => {
-          array.push({ label: item.user_name, value: item.user_id })
-        })
-        return array
-      }
-      default:
-        return []
-    }
-  }
+    },
+    [user.role],
+  )
 
   const convertKpisOrFilter = (resultList) => {
     const array = []
-    resultList.map((item) => {
+    resultList.forEach((item) => {
       array.push(item.value)
     })
     return array
@@ -151,17 +155,17 @@ export const EditChartButton = (props) => {
     }
   }
 
-  const reverseConvertKpis = (kpisList, kpis) => {
+  const reverseConvertKpis = useCallback((kpisList, kpis) => {
     const array = []
-    kpisList.map((item) => {
-      item.kpi_templates.map((i) => {
+    kpisList.forEach((item) => {
+      item.kpi_templates.forEach((i) => {
         if (kpis.includes(i.kpi_template_id)) {
           array.push({ label: i.kpi_template_name, value: i.kpi_template_id })
         }
       })
     })
     return array
-  }
+  }, [])
 
   const reverseConvertPeriod = (period) => {
     if (period.length === 0) {
@@ -173,30 +177,33 @@ export const EditChartButton = (props) => {
     }
   }
 
-  const reverseConvertFilter = (resultList, filter) => {
-    switch (user.role) {
-      case 'Giám đốc': {
-        const array = []
-        resultList.map((item) => {
-          if (filter.includes(item.dept_id)) {
-            array.push({ label: item.dept_name, value: item.dept_id })
-          }
-        })
-        return array
+  const reverseConvertFilter = useCallback(
+    (resultList, filter) => {
+      switch (user.role) {
+        case 'Giám đốc': {
+          const array = []
+          resultList.forEach((item) => {
+            if (filter.includes(item.dept_id)) {
+              array.push({ label: item.dept_name, value: item.dept_id })
+            }
+          })
+          return array
+        }
+        case 'Quản lý': {
+          const array = []
+          resultList.forEach((item) => {
+            if (filter.includes(item.user_id)) {
+              array.push({ label: item.user_name, value: item.user_id })
+            }
+          })
+          return array
+        }
+        default:
+          return []
       }
-      case 'Quản lý': {
-        const array = []
-        resultList.map((item) => {
-          if (filter.includes(item.user_id)) {
-            array.push({ label: item.user_name, value: item.user_id })
-          }
-        })
-        return array
-      }
-      default:
-        return []
-    }
-  }
+    },
+    [user.role],
+  )
 
   useEffect(() => {
     const fetchData = async () => {
@@ -254,7 +261,21 @@ export const EditChartButton = (props) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [
+    modalVisible,
+    dispatch,
+    props.chart.properties.chart_name,
+    props.chart.properties.dateType,
+    props.chart.properties.description,
+    props.chart.properties.filter,
+    props.chart.properties.kpis,
+    props.chart.properties.period,
+    props.chart.properties.plan_id,
+    getDeptsOrEmployees,
+    handleDeptsOrEmployees,
+    reverseConvertKpis,
+    reverseConvertFilter,
+  ])
 
   const validationSchema = yup.object({
     chart_name: yup
@@ -301,7 +322,16 @@ export const EditChartButton = (props) => {
 
       fetchData()
       return () => (isCalled = false)
-    }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
+    }, [
+      values.plan_id,
+      values.kpis,
+      values.dateType,
+      values.period,
+      values.filter,
+      newFilter,
+      newKpis,
+      newPeriod,
+    ])
 
     if (values.kpis.length === 0) {
       return <div>Hãy chọn KPI để vẽ biểu đồ</div>

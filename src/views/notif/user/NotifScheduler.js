@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { CCard, CCardBody, CCol, CContainer, CRow } from '@coreui/react'
 import { Paper } from '@mui/material'
 import { ViewState } from '@devexpress/dx-react-scheduler'
@@ -7,6 +7,8 @@ import {
   MonthView,
   Appointments,
   AppointmentTooltip,
+  Toolbar,
+  DateNavigator,
 } from '@devexpress/dx-react-scheduler-material-ui'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
@@ -21,7 +23,7 @@ const NotifScheduler = () => {
   const { loading } = useSelector((state) => state.view)
   const { today } = useSelector((state) => state.today)
 
-  const getNotif = async () => {
+  const getNotif = useCallback(async () => {
     const array = []
     const response = await api.get(`notifs/user`)
     response.data.items.map((item) =>
@@ -32,7 +34,7 @@ const NotifScheduler = () => {
       }),
     )
     return array
-  }
+  }, [today.time])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,14 +60,16 @@ const NotifScheduler = () => {
     }
 
     fetchData()
-  }, [])
+  }, [dispatch, getNotif])
 
   const Table = () => {
     return (
       <Paper>
-        <Scheduler data={entry}>
-          <ViewState currentDate={today.time} />
+        <Scheduler data={entry} firstDayOfWeek={1}>
+          <ViewState defaultCurrentDate={today.time} />
           <MonthView />
+          <Toolbar />
+          <DateNavigator />
           <Appointments />
           <AppointmentTooltip />
         </Scheduler>
@@ -87,7 +91,7 @@ const NotifScheduler = () => {
                     </h3>
                   </CCol>
                 </CRow>
-                <CRow className="mt-5">
+                <CRow className="mt-2">
                   <Table />
                 </CRow>
                 {loading && <LoadingCircle />}

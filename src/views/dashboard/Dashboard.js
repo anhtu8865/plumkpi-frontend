@@ -25,7 +25,7 @@ import EditDashboardButton from './EditDashboardButton'
 const Dashboard = () => {
   const dispatch = useDispatch()
 
-  const { reload, loading } = useSelector((state) => state.view)
+  const { reload } = useSelector((state) => state.view)
   const { dashboardList } = useSelector((state) => state.dashboard)
 
   const { selectedDashboard } = useSelector((state) => state.dashboardDetail)
@@ -92,7 +92,7 @@ const Dashboard = () => {
       }
     }
     getDashBoardId(dashboard)
-  }, [dashboard])
+  }, [dashboard, dispatch])
 
   const DashBoardViewNav = (props) => {
     return (

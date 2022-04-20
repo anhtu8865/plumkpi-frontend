@@ -1,41 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCardTitle,
-  CCol,
-  CContainer,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableFoot,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CInputGroup,
-  CInputGroupText,
-  CFormSelect,
-  CBadge,
-} from '@coreui/react'
-import { Avatar, Button, Grid, Pagination, IconButton, Tooltip } from '@mui/material'
-import { setDashboardList } from 'src/slices/dashboardSlice'
-import SystemAlert from 'src/components/SystemAlert'
+import { CCard, CCardBody, CCardTitle, CCol, CRow, CBadge } from '@coreui/react'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
-import { setLoading, setReload } from 'src/slices/viewSlice'
+import { setLoading } from 'src/slices/viewSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import AddIcon from '@mui/icons-material/Add'
 import api from 'src/views/axiosConfig'
 import PropTypes from 'prop-types'
-import AddDashboardButton from './AddDashboardButton'
 import { CreateChartButton } from './CreateChartButton'
 import { CreateReportButton } from './CreateReportButton'
 import { Chart } from './Chart'
@@ -50,7 +20,6 @@ import { EditReportButton } from './EditReportButton'
 import { DeleteReportButton } from './DeleteReportButton'
 
 const DashboardDetail = () => {
-  const history = useHistory()
   const dispatch = useDispatch()
 
   const { reload, loading } = useSelector((state) => state.view)
@@ -121,7 +90,7 @@ const DashboardDetail = () => {
       }
 
       fetchData()
-    }, [])
+    }, [props.chartItem.properties])
 
     if (result) {
       return (
@@ -223,7 +192,7 @@ const DashboardDetail = () => {
       }
 
       fetchData()
-    }, [])
+    }, [props.chartItem.properties])
 
     if (result) {
       return (

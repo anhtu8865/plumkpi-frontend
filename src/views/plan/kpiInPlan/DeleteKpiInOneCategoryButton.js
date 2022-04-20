@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, IconButton } from '@mui/material'
+import { Button } from '@mui/material'
 import { CModal, CModalBody, CModalFooter, CModalTitle, CModalHeader } from '@coreui/react'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'

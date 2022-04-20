@@ -57,9 +57,7 @@ const DeptPlan = () => {
         if (result) {
           setEntry(result)
         }
-        if (loading) {
-          setLoading(false)
-        }
+        setLoading(false)
       } catch (error) {
         if (error.response) {
           dispatch(
@@ -72,7 +70,7 @@ const DeptPlan = () => {
       }
     }
     fetchData()
-  }, [page, name])
+  }, [page, name, dispatch])
 
   const Table = () => {
     return (

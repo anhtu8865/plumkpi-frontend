@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Button, IconButton, Checkbox } from '@mui/material'
 import {
   CModal,
@@ -14,17 +14,16 @@ import {
   CTableRow,
   CTableFoot,
   CRow,
-  CCol,
   CFormInput,
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
 import { Pagination } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
+import { setReload } from 'src/slices/viewSlice'
 import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import { formatNumber, kpiTooltip } from 'src/utils/function'
@@ -45,19 +44,22 @@ export const EditKpiInOneCategoryButton = (catItem) => {
   const [totalPage, setTotalPage] = useState(1)
   const [selectedKpiList, setSelectedKpiList] = useState([])
 
-  const getKpiList = async (offset) => {
-    const response = await api.get(`/kpi-templates/`, {
-      params: {
-        offset: offset,
-        limit: entryPerPage,
-        kpi_category_id: catItem.kpi_category.kpi_category_id,
-      },
-    })
-    setTotalPage(Math.ceil(response.data.count / entryPerPage))
-    return response.data.items
-  }
+  const getKpiList = useCallback(
+    async (offset) => {
+      const response = await api.get(`/kpi-templates/`, {
+        params: {
+          offset: offset,
+          limit: entryPerPage,
+          kpi_category_id: catItem.kpi_category.kpi_category_id,
+        },
+      })
+      setTotalPage(Math.ceil(response.data.count / entryPerPage))
+      return response.data.items
+    },
+    [catItem.kpi_category.kpi_category_id],
+  )
 
-  const getSelectedKpiList = async () => {
+  const getSelectedKpiList = useCallback(async () => {
     const array = []
     const response = await api.get(`plans/${id}/kpis/director`, {
       params: {
@@ -66,7 +68,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
         kpi_category_id: catItem.kpi_category.kpi_category_id,
       },
     })
-    response.data.items.map((item) => {
+    response.data.items.forEach((item) => {
       array.push({ kpi_template_id: item.kpi_template.kpi_template_id, weight: item.weight })
     })
     if (response.data.count > entryPerPage) {
@@ -78,13 +80,13 @@ export const EditKpiInOneCategoryButton = (catItem) => {
             kpi_category_id: catItem.kpi_category.kpi_category_id,
           },
         })
-        res.data.items.map((item) => {
+        res.data.items.forEach((item) => {
           array.push({ kpi_template_id: item.kpi_template.kpi_template_id, weight: item.weight })
         })
       }
     }
     return array
-  }
+  }, [catItem.kpi_category.kpi_category_id, id])
 
   const registerKpi = async (selectedKpiList) => {
     await api.post(`/plans/register-kpis`, {
@@ -124,7 +126,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, catItem.kpi_category.kpi_category_id, dispatch, getSelectedKpiList])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -147,11 +149,11 @@ export const EditKpiInOneCategoryButton = (catItem) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [page, modalVisible])
+  }, [page, modalVisible, getKpiList, dispatch, catItem.kpi_category.kpi_category_id])
 
   React.useEffect(() => {
     let sumTarget = 0
-    selectedKpiList.map((item) => {
+    selectedKpiList.forEach((item) => {
       sumTarget = sumTarget + Number(item.weight)
     })
     setSum(sumTarget)

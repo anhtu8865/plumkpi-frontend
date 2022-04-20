@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Tooltip, Switch } from '@mui/material'
+import React, { useState, useEffect, useCallback } from 'react'
+import { Button, IconButton, Avatar, Tooltip } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -42,7 +42,7 @@ export const AssignMonthlyTargetButton = (props) => {
   const { plan } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
 
-  const getInfoTargetKpi = async () => {
+  const getInfoTargetKpi = useCallback(async () => {
     const response = await api.get(`plans/plan/target-kpi-of-employees`, {
       params: {
         plan_id: plan.plan_id,
@@ -50,11 +50,11 @@ export const AssignMonthlyTargetButton = (props) => {
       },
     })
     return response.data
-  }
+  }, [plan.plan_id, props.kpiItem.kpi_template.kpi_template_id])
 
   const registerMonthlyTarget = async (list, month) => {
     const users = []
-    list.map((item) => {
+    list.forEach((item) => {
       if (item.target && item.target !== '') {
         users.push({ user_id: item.user.user_id, target: Number(item.target) })
       }
@@ -91,13 +91,13 @@ export const AssignMonthlyTargetButton = (props) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, dispatch, getInfoTargetKpi])
 
   const handleTargetList = (list, month) => {
     if (list.length > 0) {
       switch (month) {
         case 1: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.first_monthly_target) {
               item.target = item.first_monthly_target.target
             } else {
@@ -107,7 +107,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 2: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.second_monthly_target) {
               item.target = item.second_monthly_target.target
             } else {
@@ -117,7 +117,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 3: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.third_monthly_target) {
               item.target = item.third_monthly_target.target
             } else {
@@ -127,7 +127,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 4: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.fourth_monthly_target) {
               item.target = item.fourth_monthly_target.target
             } else {
@@ -137,7 +137,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 5: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.fifth_monthly_target) {
               item.target = item.fifth_monthly_target.target
             } else {
@@ -147,7 +147,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 6: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.sixth_monthly_target) {
               item.target = item.sixth_monthly_target.target
             } else {
@@ -157,7 +157,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 7: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.seventh_monthly_target) {
               item.target = item.seventh_monthly_target.target
             } else {
@@ -167,7 +167,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 8: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.eighth_monthly_target) {
               item.target = item.eighth_monthly_target.target
             } else {
@@ -177,7 +177,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 9: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.ninth_monthly_target) {
               item.target = item.ninth_monthly_target.target
             } else {
@@ -187,7 +187,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 10: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.tenth_monthly_target) {
               item.target = item.tenth_monthly_target.target
             } else {
@@ -197,7 +197,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 11: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.eleventh_monthly_target) {
               item.target = item.eleventh_monthly_target.target
             } else {
@@ -207,7 +207,7 @@ export const AssignMonthlyTargetButton = (props) => {
           break
         }
         case 12: {
-          list.map((item) => {
+          list.forEach((item) => {
             if (item.twelfth_monthly_target) {
               item.target = item.twelfth_monthly_target.target
             } else {
@@ -216,6 +216,8 @@ export const AssignMonthlyTargetButton = (props) => {
           })
           break
         }
+        default:
+          break
       }
     }
     return list
@@ -224,7 +226,7 @@ export const AssignMonthlyTargetButton = (props) => {
   const handleLastTarget = (list) => {
     let target = 0
     const targetArray = []
-    list.map((item) => {
+    list.forEach((item) => {
       targetArray.push(Number(item.target))
     })
     switch (props.kpiItem.kpi_template.aggregation) {
@@ -248,7 +250,7 @@ export const AssignMonthlyTargetButton = (props) => {
   }
 
   const handleSampleTarget = (list, target) => {
-    list.map((item) => {
+    list.forEach((item) => {
       item.target = target
     })
     return list
@@ -268,7 +270,7 @@ export const AssignMonthlyTargetButton = (props) => {
     useEffect(() => {
       const newList = handleTargetList(targetList, values.month)
       setFieldValue('selectedList', newList)
-    }, [values.month, targetList])
+    }, [values.month, setFieldValue])
 
     return (
       <>
@@ -415,7 +417,7 @@ export const AssignMonthlyTargetButton = (props) => {
 
   return (
     <>
-      <Tooltip title="Thiết lập chỉ tiêu KPI cho nhân viên">
+      <Tooltip title="Thiết lập chỉ tiêu nhân viên theo tháng">
         <IconButton
           color="primary"
           onClick={() => {
@@ -437,7 +439,7 @@ export const AssignMonthlyTargetButton = (props) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Thiết lập chỉ tiêu KPI theo tháng</CModalTitle>
+          <CModalTitle>Thiết lập chỉ tiêu nhân viên theo tháng</CModalTitle>
         </CModalHeader>
         <Formik
           enableReinitialize={true}
@@ -448,7 +450,7 @@ export const AssignMonthlyTargetButton = (props) => {
               await registerMonthlyTarget(values.selectedList, values.month)
               dispatch(
                 createAlert({
-                  message: 'Thiết lập chỉ tiêu KPI cho nhân viên thành công.',
+                  message: 'Thiết lập chỉ tiêu cho nhân viên thành công.',
                   type: 'success',
                 }),
               )

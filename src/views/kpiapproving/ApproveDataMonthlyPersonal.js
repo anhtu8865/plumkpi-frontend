@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Radio } from '@mui/material'
+import React, { useState, useCallback } from 'react'
+import { Button, IconButton, Avatar, Checkbox } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -16,7 +16,6 @@ import {
   CRow,
   CCol,
   CFormInput,
-  CFormFeedback,
   CFormLabel,
   CFormSelect,
   CInputGroup,
@@ -26,13 +25,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
-import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import cloneDeep from 'lodash/cloneDeep'
+import { setReload } from 'src/slices/viewSlice'
 import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
-import { translate, compareToToday, compareYear, formatNumber } from 'src/utils/function'
 import PropTypes from 'prop-types'
 
 import NoteDataMonthlyApprove from '../plan/NoteDataMonthlyApprove'
@@ -44,25 +40,18 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
   const [employeeList, setEmployeeList] = useState([])
-  const [tempSelectedList, setTempSelectedList] = useState([])
-  const [selectedEmployeeList, setSelectedEmployeeList] = useState([])
+  //const [tempSelectedList, setTempSelectedList] = useState([])
   const [selectValue, setSelectValue] = useState('Month')
-
   const [selectedMonth, setSelectedMonth] = useState(Number(month))
   const { plan } = useSelector((state) => state.planDetail)
-  const { user } = useSelector((state) => state.user)
-
   const monthArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  const [monthTarget, setMonthTarget] = useState(0)
-
   const [userIDs, setUserIDs] = React.useState([])
-  const [selectedKpi, setSelectedKpi] = React.useState({})
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
   const { reload } = useSelector((state) => state.view)
 
-  const getEmployeeList = async () => {
+  const getEmployeeList = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
         params: { plan_id: plan_id, kpi_template_id: kpiItem.kpi_template_id },
@@ -78,16 +67,16 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
         )
       }
     }
-  }
+  }, [dispatch, kpiItem.kpi_template_id, plan_id])
 
-  const getInfoTargetKpi = async () => {
+  const getInfoTargetKpi = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
         params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template_id },
       })
       return response.data
     } catch (error) {
-      if (error.response && plan.plan_id) {
+      if (error.response) {
         dispatch(
           createAlert({
             message: error.response.data.message,
@@ -96,7 +85,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
         )
       }
     }
-  }
+  }, [dispatch, kpiItem.kpi_template_id, plan.plan_id])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -105,14 +94,14 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
       const assignEmployees = await getInfoTargetKpi()
       //console.log(assignEmployees)
       if (assignEmployees) {
-        setTempSelectedList(assignEmployees)
+        //setTempSelectedList(assignEmployees)
       }
       setEmployeeList(employees)
     }
     fetchData()
-  }, [reload])
+  }, [reload, getEmployeeList, getInfoTargetKpi])
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     setSelectedEmployeeList([])
     if (tempSelectedList.length > 0) {
       switch (selectedMonth) {
@@ -228,7 +217,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
           break
       }
     }
-  }, [selectedMonth, tempSelectedList])
+  }, [selectedMonth, tempSelectedList])*/
 
   const handleDataTargetKpiChange = (item) => {
     if (!userIDs.includes(item.user.user_id)) {

@@ -3,7 +3,6 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CForm,
   CFormInput,
   CFormLabel,
   CRow,
@@ -17,30 +16,30 @@ import {
   CFormSelect,
 } from '@coreui/react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import SearchIcon from '@mui/icons-material/Search'
 import { Avatar, Button, Grid, Pagination } from '@mui/material'
-import { Field, FormikProvider, useFormik } from 'formik'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { LoadingCircle } from 'src/components/LoadingCircle'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import { setUserLoading } from 'src/slices/userSlice'
 import api from 'src/views/axiosConfig'
-import ToggleOffIcon from '@mui/icons-material/ToggleOff'
-import ToggleOnIcon from '@mui/icons-material/ToggleOn'
 
-import InfoUser from '../user/InfoUser'
+import AddUser from './AddUser'
+import DeleteUser from './DeleteUser'
+import EditUser from './EditUser'
+import InfoUser from './InfoUser'
+import ResetPwUser from './ResetPwUser'
+import StatusUser from './StatusUser'
 
-const DeptByManager = () => {
+const User = () => {
   const [showUserFilter, setShowUserFilter] = React.useState(false)
 
   const { user } = useSelector((state) => state.user)
 
   const dispatch = useDispatch()
 
-  const { userReload, userLoading } = useSelector((state) => state.user)
+  const { userReload } = useSelector((state) => state.user)
 
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)
@@ -52,34 +51,64 @@ const DeptByManager = () => {
   const [filterName, setFilterName] = React.useState('')
   const [filterEmail, setFilterEmail] = React.useState('')
   const [filterPhone, setFilterPhone] = React.useState('')
+  const [filterRole, setFilterRole] = React.useState('')
+  const [filterDept, setFilterDept] = React.useState('')
 
-  const getUserList = async (user_name, email, phone) => {
-    let paramsObject = {
-      offset: (page - 1) * entryPerPage,
-      limit: entryPerPage,
-    }
-    if (user_name != '') {
-      paramsObject.user_name = user_name
-    }
+  const getUserList = useCallback(
+    async (user_name, email, phone, dept, role) => {
+      let paramsObject = {
+        offset: (page - 1) * entryPerPage,
+        limit: entryPerPage,
+      }
+      if (user_name !== '') {
+        paramsObject.user_name = user_name
+      }
 
-    if (email !== '') {
-      paramsObject.email = email
-    }
+      if (email !== '') {
+        paramsObject.email = email
+      }
 
-    if (phone !== '') {
-      paramsObject.email = phone
-    }
+      if (phone !== '') {
+        paramsObject.email = phone
+      }
 
-    const response = await api.get('/users/employees/manager/info', {
-      params: paramsObject,
-    })
-    return response.data
-  }
+      if (dept !== '') {
+        paramsObject.dept = dept
+      }
+
+      if (role !== '') {
+        paramsObject.role = role
+      }
+
+      const response = await api.get('/users/', {
+        params: paramsObject,
+      })
+      return response.data
+    },
+    [page],
+  )
+
+  React.useEffect(() => {
+    api
+      .get('/depts/all')
+      .then((response) => {
+        setDeptList(response.data)
+      })
+      .catch((error) => {
+        alert('Failed')
+      })
+  }, [])
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getUserList(filterName, filterEmail, filterPhone)
+        const result = await getUserList(
+          filterName,
+          filterEmail,
+          filterPhone,
+          filterDept,
+          filterRole,
+        )
         if (result) {
           setTotalPage(Math.ceil(result.count / entryPerPage))
           setEntry(result.items)
@@ -103,7 +132,17 @@ const DeptByManager = () => {
     }
 
     fetchData()
-  }, [userReload, page, filterName, filterEmail, filterPhone, dispatch])
+  }, [
+    userReload,
+    page,
+    filterName,
+    filterEmail,
+    filterPhone,
+    filterDept,
+    filterRole,
+    getUserList,
+    dispatch,
+  ])
 
   const UserFilter = () => {
     return (
@@ -155,6 +194,41 @@ const DeptByManager = () => {
             />
           </CCol>
         </CRow>
+        <CRow className="mt-3">
+          <CCol md={4}>
+            <CFormLabel htmlFor="filterDept">Phòng ban</CFormLabel>
+            <CFormSelect
+              aria-label="Default select example"
+              defaultValue=""
+              onChange={(event) => {
+                setFilterDept(event.target.value)
+              }}
+            >
+              <option value="" label="Chọn phòng ban" />
+              {deptList.map((row) => (
+                <option value={row.dept_id} key={row.dept_id}>
+                  {row.dept_name}
+                </option>
+              ))}
+            </CFormSelect>
+          </CCol>
+          <CCol md={4}>
+            <CFormLabel htmlFor="inputState">Vai trò</CFormLabel>
+            <CFormSelect
+              aria-label="Default select example"
+              defaultValue=""
+              onChange={(event) => {
+                setFilterRole(event.target.value)
+              }}
+            >
+              <option value="" label="Chọn vai trò" />
+              <option value="Admin">Admin</option>
+              <option value="Quản lý">Quản lý</option>
+              <option value="Giám đốc">Giám đốc</option>
+              <option value="Nhân viên">Nhân viên</option>
+            </CFormSelect>
+          </CCol>
+        </CRow>
       </>
     )
   }
@@ -171,6 +245,7 @@ const DeptByManager = () => {
                   <CTableHeaderCell>Họ và tên</CTableHeaderCell>
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+                  <CTableHeaderCell>Chức vụ</CTableHeaderCell>
                   <CTableHeaderCell>Trạng thái</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
@@ -184,9 +259,20 @@ const DeptByManager = () => {
                       <div className="d-flex align-items-center">{row.user_name}</div>
                     </CTableDataCell>
                     <CTableDataCell>{row.email}</CTableDataCell>
+                    <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
                     <CTableDataCell>{row.role}</CTableDataCell>
                     <CTableDataCell className={row.is_active ? 'text-success' : 'text-danger'}>
-                      {row.is_active ? <>Active</> : <>Block</>}
+                      {row.is_active ? (
+                        <>
+                          Active
+                          {user.role === 'Admin' && <StatusUser userItem={row} />}
+                        </>
+                      ) : (
+                        <>
+                          Block
+                          {user.role === 'Admin' && <StatusUser userItem={row} />}
+                        </>
+                      )}
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
                       <Grid
@@ -196,6 +282,17 @@ const DeptByManager = () => {
                         alignItems="center"
                       >
                         <InfoUser userItem={row} />
+                        {user.role === 'Admin' && (
+                          <>
+                            <ResetPwUser userItem={row} />
+                            {['Admin', 'Giám đốc'].includes(row.role) ? null : (
+                              <>
+                                <EditUser inCat={row} />
+                                <DeleteUser inCat={row} />
+                              </>
+                            )}
+                          </>
+                        )}
                       </Grid>
                     </CTableDataCell>
                   </CTableRow>
@@ -254,6 +351,7 @@ const DeptByManager = () => {
                       >
                         Tạo bộ lọc
                       </Button>
+                      {user.role === 'Admin' && <AddUser />}
                     </div>
                   </CCol>
                 </CRow>
@@ -272,4 +370,4 @@ const DeptByManager = () => {
   )
 }
 
-export default DeptByManager
+export default User

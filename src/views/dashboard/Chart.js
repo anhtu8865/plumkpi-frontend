@@ -15,7 +15,7 @@ export const Chart = (props) => {
       //vẽ biểu đồ tròn
       const labels = []
       const data = []
-      result.datasets.map((item) => {
+      result.datasets.forEach((item) => {
         labels.push(item.label)
         data.push(item.data[0])
       })
@@ -64,11 +64,11 @@ export const Chart = (props) => {
     } else if (result.labels.length > 1 && result.datasets.length > 1) {
       //vẽ biểu đồ đường
       let copyResult = cloneDeep(result)
-      copyResult.datasets.map((item, index) => {
+      copyResult.datasets.forEach((item, index) => {
         item.backgroundColor = colorArray[index]
         item.borderColor = colorArray[index]
         item.borderWidth = 2
-        item.data.map((i, id) => {
+        item.data.forEach((i, id) => {
           i.x = copyResult.labels[id]
         })
       })
@@ -126,7 +126,7 @@ export const Chart = (props) => {
       const backgroundColor = []
       const borderColor = []
       if (copyResult.datasets[0].data) {
-        copyResult.datasets[0].data.map((item, index) => {
+        copyResult.datasets[0].data.forEach((item, index) => {
           borderColor.push(handleColor(item.resultOfKpi.color))
           backgroundColor.push(transparentColor(handleColor(item.resultOfKpi.color)))
           item.x = copyResult.labels[index]

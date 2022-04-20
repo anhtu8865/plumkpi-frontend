@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, IconButton, Slider } from '@mui/material'
+import { Button, Slider } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import {
@@ -14,8 +14,6 @@ import {
   CModalHeader,
   CFormFeedback,
   CFormSelect,
-  CInputGroup,
-  CInputGroupText,
   CFormCheck,
   CTable,
   CTableBody,
@@ -25,22 +23,15 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
-import { FieldArray, Form, Formik, getIn, useFormikContext } from 'formik'
+import { Form, Formik, useFormikContext } from 'formik'
 import * as yup from 'yup'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { setReload, setLoading } from 'src/slices/viewSlice'
-import { dateTypeOption, colorArray } from 'src/utils/constant'
-import { handleColor, formatNumber, transparentColor } from 'src/utils/function'
+import { setReload } from 'src/slices/viewSlice'
+import { dateTypeOption } from 'src/utils/constant'
 import Select from 'react-select'
-import cloneDeep from 'lodash/cloneDeep'
-import { CChart } from '@coreui/react-chartjs'
-import GaugeChart from 'react-gauge-chart'
-import { Bar, Line, Pie } from 'react-chartjs-2'
-import 'chart.js/auto'
 
 export const CreateReportButton = () => {
   const dispatch = useDispatch()
@@ -109,9 +100,9 @@ export const CreateReportButton = () => {
 
   const handleKpis = (kpisList) => {
     const array = []
-    kpisList.map((item) => {
+    kpisList.forEach((item) => {
       const arr = []
-      item.kpi_templates.map((i) => {
+      item.kpi_templates.forEach((i) => {
         arr.push({
           label: i.kpi_template_name,
           value: i.kpi_template_id,
@@ -126,14 +117,14 @@ export const CreateReportButton = () => {
     switch (user.role) {
       case 'Giám đốc': {
         const array = []
-        resultList.map((item) => {
+        resultList.forEach((item) => {
           array.push({ label: item.dept_name, value: item.dept_id })
         })
         return array
       }
       case 'Quản lý': {
         const array = []
-        resultList.map((item) => {
+        resultList.forEach((item) => {
           array.push({ label: item.user_name, value: item.user_id })
         })
         return array
@@ -145,7 +136,7 @@ export const CreateReportButton = () => {
 
   const convertKpisOrFilter = (resultList) => {
     const array = []
-    resultList.map((item) => {
+    resultList.forEach((item) => {
       array.push(item.value)
     })
     return array
@@ -195,7 +186,7 @@ export const CreateReportButton = () => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, dispatch])
 
   const validationSchema = yup.object({
     chart_name: yup
@@ -243,7 +234,16 @@ export const CreateReportButton = () => {
 
       fetchData()
       return () => (isCalled = false)
-    }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
+    }, [
+      values.plan_id,
+      values.kpis,
+      values.dateType,
+      values.period,
+      values.filter,
+      newFilter,
+      newKpis,
+      newPeriod,
+    ])
 
     //console.log(result)
 

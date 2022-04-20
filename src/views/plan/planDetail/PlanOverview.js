@@ -1,30 +1,15 @@
-import React, { useState } from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCol,
-  CRow,
-  CCardTitle,
-  CCardText,
-  CProgress,
-  CProgressBar,
-  CBadge,
-} from '@coreui/react'
-import { Button } from '@mui/material'
+import React from 'react'
+import { CCard, CCardBody, CCol, CRow, CBadge } from '@coreui/react'
 import ProgressBar from '@ramonak/react-progress-bar'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCatInPlan, setTemInPlan, setCurrentCat } from 'src/slices/planDetailSlice'
-import api from 'src/views/axiosConfig'
+import { setCurrentCat } from 'src/slices/planDetailSlice'
 import GaugeChart from 'react-gauge-chart'
-import PropTypes from 'prop-types'
 import { EditCategoryInPlanButton } from '../categoryInPlan/EditCategoryInPlanButton'
 import { convertPercent } from 'src/utils/function'
 
 export const PlanOverview = (props) => {
   const dispatch = useDispatch()
-  const { catInPlan, temInPlan, currentCat, performResult } = useSelector(
-    (state) => state.planDetail,
-  )
+  const { catInPlan, currentCat, performResult } = useSelector((state) => state.planDetail)
   const { user } = useSelector((state) => state.user)
 
   const handleCategoryResult = (resultObject, catId) => {

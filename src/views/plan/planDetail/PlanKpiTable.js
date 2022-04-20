@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   CCard,
   CCardBody,
@@ -11,17 +11,10 @@ import {
   CTableHeaderCell,
   CTableRow,
   CTableFoot,
-  CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CProgress,
-  CProgressBar,
   CBadge,
 } from '@coreui/react'
-import { Pagination, IconButton } from '@mui/material'
+import { Pagination } from '@mui/material'
 import ProgressBar from '@ramonak/react-progress-bar'
-import SaveIcon from '@mui/icons-material/Save'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTemPage } from 'src/slices/planDetailSlice'
 import { KpiInfoButton } from './KpiInfoButton'
@@ -32,11 +25,6 @@ import { formatNumber, handleColor } from 'src/utils/function'
 import { ApproveQuarterTargetButton } from '../ApproveQuarterTargetButton'
 import { EditKpiInOneCategoryButton } from '../kpiInPlan/EditKpiInOneCategoryButton'
 import { DeleteKpiInOneCategoryButton } from '../kpiInPlan/DeleteKpiInOneCategoryButton'
-import AutorenewIcon from '@mui/icons-material/Autorenew'
-import DoneIcon from '@mui/icons-material/Done'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
-
-import api from 'src/views/axiosConfig'
 import EnterDataMonthlyTarget from '../EnterDataMonthlyTarget'
 import EnterDataQuarterlyTarget from '../EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from '../ApproveDataMonthlyTarget'
@@ -62,8 +50,6 @@ export const PlanKpiTable = (catItem) => {
   //console.log(useSelector((state) => state.planDetail))
   const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
-
-  const [monthlyData, setMonthlyData] = React.useState([])
 
   //console.log(useSelector((state) => state.planDetail))
 
@@ -208,7 +194,7 @@ export const PlanKpiTable = (catItem) => {
   //   }
   // }
 
-  const handleMonthPersonalBarStatus = (item) => {
+  /*const handleMonthPersonalBarStatus = (item) => {
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
@@ -380,7 +366,7 @@ export const PlanKpiTable = (catItem) => {
       default:
         return false
     }
-  }
+  }*/
 
   const handleTargetValue = (temId) => {
     if (performResult && performResult.kpi_categories) {
@@ -464,7 +450,7 @@ export const PlanKpiTable = (catItem) => {
     return 0
   }
 
-  const handleMonthActualValue = (item) => {
+  /*const handleMonthActualValue = (item) => {
     switch (selectedMonth) {
       case 1: {
         if (item.first_monthly_target) {
@@ -566,7 +552,7 @@ export const PlanKpiTable = (catItem) => {
       default:
         return 0
     }
-  }
+  }*/
 
   const Table = () => {
     return (

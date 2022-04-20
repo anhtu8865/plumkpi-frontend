@@ -9,6 +9,7 @@ import {
   CFormSelect,
   CRow,
   CFormFeedback,
+  CFormTextarea,
 } from '@coreui/react'
 import { Tabs, Tab, Box, Button, Avatar, TextField } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
@@ -119,10 +120,10 @@ const UserInfo = () => {
 
     return (
       <CRow className="mt-2">
-        <CCol xs={1}>
+        <CCol xs={3} lg={1}>
           <Avatar src={user.avatar ? user.avatar.url : null} sx={{ width: 68, height: 68 }} />
         </CCol>
-        <CCol xs={11}>
+        <CCol xs={8} lg={11}>
           <CCol xs={12}>
             <div className="d-grid gap-2 d-md-flex ms-4">
               <input
@@ -207,7 +208,7 @@ const UserInfo = () => {
       <>
         <form onSubmit={formik.handleSubmit}>
           <CRow className="mt-3">
-            <CCol xs>
+            <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
               <CFormInput
                 id="username"
@@ -224,7 +225,7 @@ const UserInfo = () => {
               />
               <CFormFeedback invalid>{formik.errors.username}</CFormFeedback>
             </CCol>
-            <CCol xs>
+            <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="email">Email</CFormLabel>
               <CFormInput
                 type="email"
@@ -264,7 +265,7 @@ const UserInfo = () => {
             </CCol>
           </CRow>
           <CRow className="mt-4">
-            <CCol xs>
+            <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="gender">Giới tính</CFormLabel>
               <CFormSelect
                 id="gender"
@@ -282,7 +283,7 @@ const UserInfo = () => {
                 <option value="Nữ">Nữ</option>
               </CFormSelect>
             </CCol>
-            <CCol xs>
+            <CCol xs={12} sm={6}>
               <CFormLabel htmlFor="phone">Số điện thoại</CFormLabel>
               <CFormInput
                 id="phone"
@@ -301,8 +302,9 @@ const UserInfo = () => {
           <CRow className="mt-4">
             <CCol xs>
               <CFormLabel htmlFor="address">Địa chỉ</CFormLabel>
-              <CFormInput
+              <CFormTextarea
                 id="address"
+                rows={3}
                 placeholder="Nhập địa chỉ"
                 {...formik.getFieldProps('address')}
                 invalid={formik.touched.address && formik.errors.address ? true : false}
@@ -316,17 +318,11 @@ const UserInfo = () => {
             </CCol>
           </CRow>
           <CRow className="mt-4">
-            <CCol xs>
-              <CFormLabel htmlFor="userdept">Phòng ban</CFormLabel>
-              <CFormInput
-                id="userdept"
-                disabled
-                value={user.dept ? user.dept.dept_name : 'Không'}
-              />
+            <CCol xs={12} sm={6}>
+              <div>Phòng ban: {user.dept ? user.dept.dept_name : 'Không'}</div>
             </CCol>
-            <CCol xs>
-              <CFormLabel htmlFor="userrole">Vai trò</CFormLabel>
-              <CFormInput id="userrole" disabled value={user.role} />
+            <CCol xs={12} sm={6}>
+              <div>Vai trò:{user.role}</div>
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">

@@ -3,9 +3,6 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CForm,
-  CFormInput,
-  CFormLabel,
   CRow,
   CTable,
   CTableBody,
@@ -20,15 +17,11 @@ import {
   CModalHeader,
   CModalTitle,
 } from '@coreui/react'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckIcon from '@mui/icons-material/Check'
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
-import SearchIcon from '@mui/icons-material/Search'
-import { Avatar, Button, Grid, Pagination, Checkbox, IconButton } from '@mui/material'
-import { Field, FormikProvider, useFormik } from 'formik'
+import { Button, Pagination, Checkbox } from '@mui/material'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import SystemAlert from 'src/components/SystemAlert'
@@ -42,7 +35,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 // import AddKpiRegistration from './AddKpiRegistration'
 // import DeleteKpiRegistration from './DeleteKpiRegistration'
 // import EditKpiRegistration from './EditKpiRegistration'
-import { InfoKpiRegistration } from './InfoKpiRegistration'
+//import { InfoKpiRegistration } from './InfoKpiRegistration'
 import { KpiInfoButton } from 'src/views/plan/planDetail/KpiInfoButton'
 
 const KpiRegistration = () => {
@@ -56,7 +49,7 @@ const KpiRegistration = () => {
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
 
-  const { reload, loading } = useSelector((state) => state.view)
+  const { reload } = useSelector((state) => state.view)
 
   const [selectedKpi, setSelectedKpi] = React.useState([])
 
@@ -74,7 +67,7 @@ const KpiRegistration = () => {
     }
   }
 
-  const getKpiList = async () => {
+  const getKpiList = useCallback(async () => {
     let paramsObject = {
       offset: (page - 1) * entryPerPage,
       limit: entryPerPage,
@@ -85,7 +78,7 @@ const KpiRegistration = () => {
       params: paramsObject,
     })
     return response.data
-  }
+  }, [id, page])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -119,7 +112,7 @@ const KpiRegistration = () => {
     }
 
     fetchData()
-  }, [reload, dispatch])
+  }, [reload, dispatch, getKpiList])
 
   //Đăng ký KPI cá nhân
   const AddKpiRegistration = (props) => {
@@ -146,12 +139,12 @@ const KpiRegistration = () => {
         setRegisList(newRegisList)
       }
       createRowsAccept()
-    }, [props.selectedKpi, reload])
+    }, [props.selectedKpi])
 
     const onClickRegis = () => {
       setIsSubmit(true)
 
-      if (user.role == 'Nhân viên') {
+      if (user.role === 'Nhân viên') {
         api
           .post(`plans/register-personal-kpis/employee`, {
             plan_id: id,
@@ -185,7 +178,7 @@ const KpiRegistration = () => {
           .finally(() => {
             setIsSubmit(false)
           })
-      } else if (user.role == 'Quản lý') {
+      } else if (user.role === 'Quản lý') {
         api
           .post(`plans/register-personal-kpis/manager`, {
             plan_id: id,

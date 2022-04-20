@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CCard,
   CCardBody,
@@ -22,7 +22,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setLoading, setReload } from 'src/slices/viewSlice'
+import { setReload } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { useParams, useHistory } from 'react-router-dom'
 import CheckIcon from '@mui/icons-material/Check'
@@ -35,36 +35,39 @@ const EditWeightDept = () => {
   const { id, deptId } = useParams()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { reload, loading } = useSelector((state) => state.view)
+  const { reload } = useSelector((state) => state.view)
   const [plan, setPlan] = useState({ plan_name: '' })
   const [dept, setDept] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
   const entryPerPage = 5
   const [entry, setEntry] = useState([])
 
-  const getPlan = async () => {
+  const getPlan = useCallback(async () => {
     const response = await api.get(`plans/${id}`)
     return response.data
-  }
+  }, [id])
 
-  const getCatPlan = async () => {
+  const getCatPlan = useCallback(async () => {
     const response = await api.get(`plans/${id}/kpi-categories/director/dept`, {
       params: { dept_id: deptId },
     })
     return response.data
-  }
+  }, [deptId, id])
 
-  const getTemInOneCatPlan = async (offset, catId) => {
-    const response = await api.get(`plans/${id}/kpis/director/dept`, {
-      params: { offset: offset, limit: entryPerPage, kpi_category_id: catId, dept_id: deptId },
-    })
-    return response.data
-  }
+  const getTemInOneCatPlan = useCallback(
+    async (offset, catId) => {
+      const response = await api.get(`plans/${id}/kpis/director/dept`, {
+        params: { offset: offset, limit: entryPerPage, kpi_category_id: catId, dept_id: deptId },
+      })
+      return response.data
+    },
+    [deptId, id],
+  )
 
-  const getDept = async () => {
+  const getDept = useCallback(async () => {
     const response = await api.get(`/depts/all`)
     return response.data.find((item) => item.dept_id === Number(deptId))
-  }
+  }, [deptId])
 
   const changeWeightDept = async (catObjectArray, temObjectArray) => {
     await api.put(
@@ -125,17 +128,17 @@ const EditWeightDept = () => {
       }
     }
     fetchData()
-  }, [reload])
+  }, [reload, getCatPlan, getDept, getPlan, getTemInOneCatPlan, dispatch])
 
   const handlePage = async (page, catId) => {
     try {
       const copyEntry = cloneDeep(entry)
       const kpis = await getTemInOneCatPlan((page - 1) * entryPerPage, catId)
-      copyEntry.map((item) => {
+      copyEntry.forEach((item) => {
         if (item.kpi_category.kpi_category_id === catId) {
           item.page = page
           item.displayKpis = kpis.rows
-          kpis.rows.map((i) => {
+          kpis.rows.forEach((i) => {
             const find = item.toBeSentKpis.find(
               (f) => f.kpi_template.kpi_template_id === i.kpi_template.kpi_template_id,
             )
@@ -160,7 +163,7 @@ const EditWeightDept = () => {
 
   const handleCatOnChange = (event, catId) => {
     const copyEntry = cloneDeep(entry)
-    copyEntry.map((item) => {
+    copyEntry.forEach((item) => {
       if (item.kpi_category.kpi_category_id === catId) {
         if (event.target.value === '') {
           item.weight = null
@@ -182,9 +185,9 @@ const EditWeightDept = () => {
 
   const handleTemOnChange = (event, catId, temId) => {
     const copyEntry = cloneDeep(entry)
-    copyEntry.map((item) => {
+    copyEntry.forEach((item) => {
       if (item.kpi_category.kpi_category_id === catId) {
-        item.toBeSentKpis.map((i) => {
+        item.toBeSentKpis.forEach((i) => {
           if (i.kpi_template.kpi_template_id === temId) {
             if (event.target.value === '') {
               i.weight = null
@@ -201,7 +204,7 @@ const EditWeightDept = () => {
   const handleSumValue = (catId) => {
     if (catId === 0) {
       let sum = 0
-      entry.map((item) => {
+      entry.forEach((item) => {
         sum = sum + Number(item.weight)
       })
       return sum
@@ -209,7 +212,7 @@ const EditWeightDept = () => {
       const find = entry.find((item) => item.kpi_category.kpi_category_id === catId)
       if (find) {
         let sum = 0
-        find.toBeSentKpis.map((item) => {
+        find.toBeSentKpis.forEach((item) => {
           sum = sum + Number(item.weight)
         })
         return sum
@@ -243,7 +246,7 @@ const EditWeightDept = () => {
             valid = false
           } else {
             const kpi_templates = []
-            entry[i].toBeSentKpis.map((item) => {
+            entry[i].toBeSentKpis.forEach((item) => {
               kpi_templates.push({
                 kpi_template_id: item.kpi_template.kpi_template_id,
                 weight: Number(item.weight),

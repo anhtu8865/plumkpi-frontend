@@ -2,8 +2,6 @@ import {
   CForm,
   CFormInput,
   CInputGroup,
-  CListGroup,
-  CListGroupItem,
   CModal,
   CModalBody,
   CModalFooter,
@@ -44,14 +42,7 @@ const EnterDataQuarterlyTarget = (props) => {
   //console.log(item)
 
   const dispatch = useDispatch()
-
-  const [isSubmit, setIsSubmit] = React.useState(false)
-
   const [modalVisible, setModalVisible] = React.useState(false)
-
-  const onClickDelete = () => {
-    setIsSubmit(true)
-  }
 
   const handleQuarterActualValue = (item) => {
     switch (selectedQuarter) {

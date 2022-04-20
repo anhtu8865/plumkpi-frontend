@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, IconButton, Avatar, Checkbox, Tooltip, Switch } from '@mui/material'
+import React, { useState, useCallback } from 'react'
+import { Button, IconButton, Avatar, Tooltip, Switch } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -18,7 +18,6 @@ import {
   CFormInput,
   CFormFeedback,
   CFormLabel,
-  CFormSelect,
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
@@ -30,7 +29,7 @@ import { setReload, setLoading } from 'src/slices/viewSlice'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
-import { compareYear, formatNumber } from 'src/utils/function'
+import { formatNumber } from 'src/utils/function'
 
 export const AssignToDeptButton = (kpiItem) => {
   const dispatch = useDispatch()
@@ -38,13 +37,13 @@ export const AssignToDeptButton = (kpiItem) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const [deptList, setDeptList] = useState([])
   const [selectedDeptList, setSelectedDeptList] = useState([])
-  const [selectValue, setSelectValue] = useState('Year')
+  const selectValue = 'Year'
   const { plan } = useSelector((state) => state.planDetail)
   const [target, setTarget] = useState(0)
   const [sum, setSum] = useState(0)
   const [sampleTarget, setSampleTarget] = useState('')
 
-  const getDeptList = async () => {
+  const getDeptList = useCallback(async () => {
     try {
       const response = await api.get(`/depts/all`)
       return response.data
@@ -58,9 +57,9 @@ export const AssignToDeptButton = (kpiItem) => {
         )
       }
     }
-  }
+  }, [dispatch])
 
-  const getInfoTargetKpi = async () => {
+  const getInfoTargetKpi = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-depts`, {
         params: { plan_id: plan.plan_id, kpi_template_id: kpiItem.kpi_template.kpi_template_id },
@@ -76,7 +75,7 @@ export const AssignToDeptButton = (kpiItem) => {
         )
       }
     }
-  }
+  }, [dispatch, plan.plan_id, kpiItem.kpi_template.kpi_template_id])
 
   const assignKpi = async (listToReturn) => {
     try {
@@ -119,7 +118,7 @@ export const AssignToDeptButton = (kpiItem) => {
       })
       dispatch(
         createAlert({
-          message: 'Thiết lập chỉ tiêu cho KPI thành công',
+          message: 'Thiết lập chỉ tiêu cho phòng ban thành công',
           type: 'success',
         }),
       )
@@ -149,7 +148,7 @@ export const AssignToDeptButton = (kpiItem) => {
       const depts = await getDeptList()
       const assignDepts = await getInfoTargetKpi()
       if (assignDepts) {
-        assignDepts.map((item) => {
+        assignDepts.forEach((item) => {
           deptList.push(item)
         })
         setSelectedDeptList(deptList)
@@ -163,12 +162,12 @@ export const AssignToDeptButton = (kpiItem) => {
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible])
+  }, [modalVisible, getDeptList, getInfoTargetKpi, kpiItem])
 
   React.useEffect(() => {
     let target = 0
     const targetArray = []
-    selectedDeptList.map((item) => {
+    selectedDeptList.forEach((item) => {
       targetArray.push(Number(item.target))
     })
     switch (kpiItem.kpi_template.aggregation) {
@@ -189,7 +188,7 @@ export const AssignToDeptButton = (kpiItem) => {
         target = 0
     }
     setSum(target)
-  }, [selectedDeptList])
+  }, [selectedDeptList, kpiItem.kpi_template.aggregation])
 
   const handleCheckbox = (deptItem) => {
     const result = handleCheckboxValue(deptItem.dept_id)
@@ -228,7 +227,7 @@ export const AssignToDeptButton = (kpiItem) => {
   const handleSampleTargetOnChange = (event) => {
     setSampleTarget(event.target.value)
     const copySelectedDeptList = cloneDeep(selectedDeptList)
-    copySelectedDeptList.map((item) => {
+    copySelectedDeptList.forEach((item) => {
       item.target = event.target.value
     })
     setSelectedDeptList(copySelectedDeptList)
@@ -239,7 +238,7 @@ export const AssignToDeptButton = (kpiItem) => {
     if (selectValue === 'Year') {
       const listToReturn = []
       let valid = true
-      selectedDeptList.map((item) => {
+      selectedDeptList.forEach((item) => {
         if (item.target === '') {
           valid = false
         }
@@ -413,7 +412,7 @@ export const AssignToDeptButton = (kpiItem) => {
 
   return (
     <>
-      <Tooltip title="Gán KPI cho phòng ban">
+      <Tooltip title="Gán KPI cho phòng ban theo năm">
         <IconButton
           color="primary"
           onClick={() => {
@@ -435,7 +434,7 @@ export const AssignToDeptButton = (kpiItem) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Gán chỉ tiêu KPI</CModalTitle>
+          <CModalTitle>Gán KPI cho phòng ban theo năm</CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>

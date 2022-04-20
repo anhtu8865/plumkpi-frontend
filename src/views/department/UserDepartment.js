@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   CCard,
   CCardBody,
@@ -13,29 +13,35 @@ import {
   CTableRow,
   CTableFoot,
 } from '@coreui/react'
-import { Pagination, Avatar, Grid, IconButton, Button } from '@mui/material'
-import { LoadingCircle } from 'src/components/LoadingCircle'
+import { Pagination, Avatar, Grid, IconButton } from '@mui/material'
 import api from 'src/views/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
-import { setUserLoading } from 'src/slices/userSlice'
+//import { setUserLoading } from 'src/slices/userSlice'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
+
+//import DeleteUser from 'src/views/user/DeleteUser'
+//import EditUser from 'src/views/user/EditUser'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+//import AddManager from './AddManager'
+import { setDepartmentLoading } from 'src/slices/departmentSlice'
 
-import InfoUserCompany from './InfoUserCompany'
-
-const CompanyTable = (props) => {
+const UserDepartment = (props) => {
   const history = useHistory()
   const { id } = useParams()
+  // console.log(typeof id)
 
   const entryPerPage = 10
   const [page, setPage] = React.useState(1)
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
+  const [deptName, setDeptName] = React.useState('')
+
+  //const { userReload, userLoading } = useSelector((state) => state.user)
+  const { departmentReload } = useSelector((state) => state.department)
 
   const dispatch = useDispatch()
 
@@ -59,27 +65,45 @@ const CompanyTable = (props) => {
         })
     }
 
+    async function fetchDeptName() {
+      api
+        .get(`depts/${id}`)
+        .then((response) => {
+          setDeptName(response.data.dept_name)
+        })
+        .catch((error) => {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        })
+    }
+
     fetchDeptList()
 
+    fetchDeptName()
+
     dispatch(
-      setUserLoading({
+      setDepartmentLoading({
         value: false,
       }),
     )
-  }, [])
+  }, [id, departmentReload, page, dispatch])
 
   const UserTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border" hover responsive striped>
+        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>Họ và tên</CTableHeaderCell>
               <CTableHeaderCell>Email</CTableHeaderCell>
-              <CTableHeaderCell>Phòng ban</CTableHeaderCell>
               <CTableHeaderCell>Chức vụ</CTableHeaderCell>
-              <CTableHeaderCell />
+              {/*<CTableHeaderCell>TRẠNG THÁI</CTableHeaderCell>*/}
+              {/* <CTableHeaderCell /> */}
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -91,30 +115,30 @@ const CompanyTable = (props) => {
                   {row.user_name}
                 </CTableDataCell>
                 <CTableDataCell>{row.email}</CTableDataCell>
-                <CTableDataCell>{row.dept !== null ? row.dept.dept_name : ''}</CTableDataCell>
                 <CTableDataCell>{row.role}</CTableDataCell>
                 {/*<CTableDataCell className={row.is_active ? 'text-success' : 'text-warning'}>
                     {row.is_active ? 'Active' : 'Block'}
                   </CTableDataCell>*/}
-                <CTableDataCell>
-                  <InfoUserCompany userItem={row} />
-                </CTableDataCell>
+                {/* <CTableDataCell className="text-center">
+                  <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <EditUser inCat={row} />
+                    <DeleteUser inCat={row} />
+                  </Grid>
+                </CTableDataCell> */}
               </CTableRow>
             ))}
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="6">
-                <div className="d-flex flex-row justify-content-end">
-                  <Pagination
-                    page={page}
-                    count={totalPage}
-                    showFirstButton
-                    showLastButton
-                    size="small"
-                    onChange={(event, page) => setPage(page)}
-                  />
-                </div>
+              <CTableDataCell colSpan="4">
+                <Pagination
+                  page={page}
+                  count={totalPage}
+                  showFirstButton
+                  showLastButton
+                  size="small"
+                  onChange={(event, page) => setPage(page)}
+                />
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>
@@ -133,25 +157,30 @@ const CompanyTable = (props) => {
         <CRow className="justify-content-center">
           <CCol xs={12}>
             <CCard>
-              <CCardBody className="p-5">
+              <CCardBody className="p-4">
                 <CRow>
-                  <CCol xs={12} sm={6}>
-                    <Button
-                      variant="outlined"
-                      startIcon={<KeyboardDoubleArrowLeftIcon />}
-                      onClick={() => {
-                        history.goBack()
-                      }}
-                      sx={{ textTransform: 'none', borderRadius: 10 }}
-                    >
-                      Quay lại
-                    </Button>
+                  <CCol xs={6}>
+                    <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+                      <IconButton
+                        onClick={() => {
+                          history.push('/depts')
+                        }}
+                      >
+                        <ArrowCircleLeftIcon />
+                      </IconButton>
+                      <h4>Phòng ban: {deptName}</h4>
+                    </Grid>
+                  </CCol>
+                  <CCol xs={6}>
+                    <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      {/* <AddManager dept_id={id} /> */}
+                    </div>
                   </CCol>
                 </CRow>
                 {/*Table*/}
-                <CRow className="mt-4">
+                <div className="mt-2 p-4">
                   <UserTable temList={entry} />
-                </CRow>
+                </div>
               </CCardBody>
             </CCard>
           </CCol>
@@ -162,12 +191,12 @@ const CompanyTable = (props) => {
   )
 }
 
-CompanyTable.propTypes = {
+UserDepartment.propTypes = {
   temList: PropTypes.array,
 }
 
-CompanyTable.defaultProps = {
+UserDepartment.defaultProps = {
   temList: [],
 }
 
-export default CompanyTable
+export default UserDepartment

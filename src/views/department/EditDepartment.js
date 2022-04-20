@@ -48,7 +48,7 @@ const EditDepartment = (props) => {
     }
 
     fetchUserList()
-  }, [])
+  }, [dispatch, props.inCat.dept_id])
 
   const ValidationSchema = yup.object({
     editdept: yup.string().required('Đây là trường bắt buộc'),

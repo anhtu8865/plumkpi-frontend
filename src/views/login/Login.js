@@ -23,24 +23,10 @@ import './Login.css'
 
 const Login = () => {
   const history = useHistory()
-
-  const [value, setValue] = React.useState(0)
-
   const [error, setError] = React.useState(false)
-
   const [success, setSuccess] = React.useState(false)
-
   const [successMessage, setSuccessMessage] = React.useState('')
-
   const [errorMessage, setErrorMessage] = React.useState('')
-
-  const [reload, setReload] = React.useState(true)
-
-  const [loading, setLoading] = React.useState(true)
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
 
   const SuccessErrorToast = () => {
     const handleClose = (event, reason) => {
@@ -49,7 +35,7 @@ const Login = () => {
       }
       if (success === true) {
         setSuccess(false)
-        setReload(true)
+        //setReload(true)
       } else {
         setError(false)
       }
@@ -101,7 +87,7 @@ const Login = () => {
           //alert('Đăng nhập thành công')
           setSuccessMessage('Đăng nhập thành công')
           setSuccess(true)
-          setLoading(true)
+          //setLoading(true)
           if (res.data.role === 'Admin') {
             history.push('/kpicategory')
           } else {
