@@ -184,7 +184,8 @@ const PlanDetail = () => {
         }),
       )*/
     }
-  }, [checkedMonth, checkedQuarter, dispatch, user.role])
+    // eslint-disable-next-line
+  }, [])
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -427,7 +428,7 @@ const PlanDetail = () => {
           </CCol>
           {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={6}>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 {EditCategoryInPlanButton()}
               </div>
             </CCol>

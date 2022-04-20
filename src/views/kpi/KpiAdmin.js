@@ -116,7 +116,7 @@ const KpiAdmin = () => {
                   </CCol>
                   {user.role === 'Admin' && (
                     <CCol xs={12} sm={6}>
-                      <div className="d-grid gap-3 d-md-flex justify-content-end">
+                      <div className="d-grid gap-2 d-md-flex justify-content-end">
                         <AddCategoryButton />
                       </div>
                     </CCol>

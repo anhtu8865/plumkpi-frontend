@@ -30,6 +30,7 @@ import EnterDataQuarterlyTarget from '../EnterDataQuarterlyTarget'
 import { ApproveDataMonthlyTarget } from '../ApproveDataMonthlyTarget'
 import RegisterMonthlyTarget from '../RegisterMonthlyTarget'
 import RegisterQuarterTarget from '../RegisterQuarterTarget'
+import RegisterYearlyTarget from '../RegisterYearlyTarget'
 import { ApproveDataQuarterTarget } from '../ApproveDataQuarterTarget'
 import EnterNoteFileQuarterly from '../EnterNoteFileQuarterly'
 
@@ -591,9 +592,15 @@ export const PlanKpiTable = (catItem) => {
                       ) : null}
                     </CTableDataCell>
                     {!checkedMonth && !checkedQuarter ? (
-                      <CTableDataCell>
-                        {handleTargetValue(item.kpi_template.kpi_template_id)}
-                      </CTableDataCell>
+                      user.role === 'Giám đốc' ? (
+                        <CTableDataCell>
+                          <RegisterYearlyTarget item={item} />
+                        </CTableDataCell>
+                      ) : (
+                        <CTableDataCell>
+                          {handleTargetValue(item.kpi_template.kpi_template_id)}
+                        </CTableDataCell>
+                      )
                     ) : null}
                     {checkedQuarter ? (
                       user.role === 'Quản lý' ? (

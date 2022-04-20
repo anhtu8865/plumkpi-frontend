@@ -71,7 +71,8 @@ const KpiTemplate = () => {
       })
       return response.data
     },
-    [id, oldSearchValue.name, page],
+    // eslint-disable-next-line
+    [id, page],
   )
 
   const getAllCategories = async () => {

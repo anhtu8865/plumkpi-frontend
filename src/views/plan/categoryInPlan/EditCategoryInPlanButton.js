@@ -182,7 +182,7 @@ export const EditCategoryInPlanButton = () => {
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-flex flex-row justify-content-end">
-              {DeleteCategoryInPlanButton()}
+              {catInPlan.length > 0 && DeleteCategoryInPlanButton()}
             </div>
           </CCol>
         </CRow>

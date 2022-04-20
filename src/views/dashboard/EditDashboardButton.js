@@ -9,6 +9,7 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
+  CFormTextarea,
 } from '@coreui/react'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import EditIcon from '@mui/icons-material/Edit'
@@ -118,8 +119,9 @@ const EditDashboardButton = () => {
             <CRow className="mt-4">
               <CCol>
                 <CFormLabel htmlFor="inputDes">Mô tả</CFormLabel>
-                <CFormInput
+                <CFormTextarea
                   id="inputDes"
+                  rows={2}
                   type="text"
                   {...formik.getFieldProps('description')}
                   invalid={formik.touched.description && formik.errors.description ? true : false}

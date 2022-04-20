@@ -20,9 +20,12 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 import './Login.css'
+import { setUser } from 'src/slices/userSlice'
+import { useDispatch } from 'react-redux'
 
 const Login = () => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [error, setError] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [successMessage, setSuccessMessage] = React.useState('')
@@ -87,6 +90,7 @@ const Login = () => {
           //alert('Đăng nhập thành công')
           setSuccessMessage('Đăng nhập thành công')
           setSuccess(true)
+          dispatch(setUser({ value: res.data }))
           //setLoading(true)
           if (res.data.role === 'Admin') {
             history.push('/kpicategory')

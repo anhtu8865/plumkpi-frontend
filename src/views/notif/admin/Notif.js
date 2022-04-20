@@ -80,7 +80,8 @@ const Notif = () => {
       })
       return response.data
     },
-    [oldSearchValue.content, oldSearchValue.day, oldSearchValue.month, oldSearchValue.role, page],
+    // eslint-disable-next-line
+    [page],
   )
 
   const formik = useFormik({

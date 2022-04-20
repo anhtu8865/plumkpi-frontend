@@ -26,13 +26,12 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DatePicker from '@mui/lab/DatePicker'
 import { NotifDropdown } from 'src/views/notif/user/NotifDropdown'
-import { setReload, setLoading } from 'src/slices/viewSlice'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const { today } = useSelector((state) => state.today)
   const { user } = useSelector((state) => state.user)
-  const { reload } = useSelector((state) => state.view)
+  const [reload, setReload] = useState(false)
   const [timeValue, setTimeValue] = useState('2000-01-01')
   const [isEdit, setIsEdit] = useState(false)
 
@@ -131,12 +130,7 @@ const AppHeader = () => {
                         type: 'success',
                       }),
                     )
-                    dispatch(
-                      setLoading({
-                        value: true,
-                      }),
-                    )
-                    dispatch(setReload())
+                    setReload(!reload)
                   } catch (error) {
                     if (error.response) {
                       dispatch(

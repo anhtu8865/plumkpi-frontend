@@ -322,7 +322,7 @@ const UserInfo = () => {
               <div>Phòng ban: {user.dept ? user.dept.dept_name : 'Không'}</div>
             </CCol>
             <CCol xs={12} sm={6}>
-              <div>Vai trò:{user.role}</div>
+              <div>Vai trò: {user.role}</div>
             </CCol>
           </CRow>
           <div className="d-grid d-md-flex mt-4">

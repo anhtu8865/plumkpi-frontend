@@ -19,7 +19,7 @@ import {
   CInputGroupText,
 } from '@coreui/react'
 import { Pagination } from '@mui/material'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
@@ -43,6 +43,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const [selectedKpiList, setSelectedKpiList] = useState([])
+  const { temInPlan } = useSelector((state) => state.planDetail)
 
   const getKpiList = useCallback(
     async (offset) => {
@@ -346,7 +347,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
         }}
         sx={{ textTransform: 'none', borderRadius: 10 }}
       >
-        Thay đổi KPI
+        {temInPlan.length > 0 ? 'Thay đổi KPI' : 'Thêm KPI'}
       </Button>
 
       <CModal
@@ -359,7 +360,9 @@ export const EditKpiInOneCategoryButton = (catItem) => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>Thêm/ bớt KPI trong danh mục</CModalTitle>
+          <CModalTitle>
+            {temInPlan.length > 0 ? 'Thêm/ bớt KPI trong danh mục' : 'Thêm KPI vào danh mục'}
+          </CModalTitle>
         </CModalHeader>
         <CModalBody className="mx-4 mb-3">{View()}</CModalBody>
         <CModalFooter>

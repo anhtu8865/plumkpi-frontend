@@ -305,7 +305,7 @@ const KpiRegistration = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="6">
+              <CTableDataCell colSpan="7">
                 <div className="d-flex flex-row justify-content-end">
                   <Pagination
                     page={page}

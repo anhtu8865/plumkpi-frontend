@@ -26,7 +26,9 @@ const AppHeaderDropdown = () => {
     api
       .get('authentication')
       .then((response) => {
-        dispatch(setUser({ value: response.data }))
+        if (!user.user_id || user.user_id !== response.data.user_id) {
+          dispatch(setUser({ value: response.data }))
+        }
       })
       .catch((error) => {
         alert(error.response.data.message)

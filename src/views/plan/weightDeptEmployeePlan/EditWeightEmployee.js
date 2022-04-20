@@ -481,7 +481,7 @@ const EditWeightEmployee = () => {
               onClick={() => {
                 onSubmit()
               }}
-              disabled={isSubmit}
+              disabled={isSubmit || entry.length === 0}
               sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận

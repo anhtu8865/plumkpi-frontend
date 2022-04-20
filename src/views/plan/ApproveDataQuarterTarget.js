@@ -674,7 +674,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         <CModalFooter>
           {selectValue === 'Quarter' && (
             <>
-              <div className="d-grid gap-3 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 {/* <Button
                   variant="contained"
                   color="error"

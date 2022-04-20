@@ -22,6 +22,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CFormTextarea,
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
@@ -199,15 +200,15 @@ export const CreateReportButton = () => {
     const { values } = useFormikContext()
 
     const [result, setResult] = useState({})
-    const newKpis = convertKpisOrFilter(values.kpis)
-    const newFilter = convertKpisOrFilter(values.filter)
-    const newPeriod = convertPeriod(values.period)
 
     useEffect(() => {
       let isCalled = true
       const fetchData = async () => {
         try {
           setResult({})
+          const newKpis = convertKpisOrFilter(values.kpis)
+          const newFilter = convertKpisOrFilter(values.filter)
+          const newPeriod = convertPeriod(values.period)
           if (values.kpis.length > 0) {
             const res = await getData(
               values.plan_id,
@@ -234,16 +235,7 @@ export const CreateReportButton = () => {
 
       fetchData()
       return () => (isCalled = false)
-    }, [
-      values.plan_id,
-      values.kpis,
-      values.dateType,
-      values.period,
-      values.filter,
-      newFilter,
-      newKpis,
-      newPeriod,
-    ])
+    }, [values.plan_id, values.kpis, values.dateType, values.period, values.filter])
 
     //console.log(result)
 
@@ -513,7 +505,7 @@ export const CreateReportButton = () => {
                   {values.kpis.length > 0 && (
                     <>
                       <CRow className="mt-2">
-                        <CCol xs={12} sm={6}>
+                        <CCol xs={12}>
                           <CFormLabel htmlFor="chartname">Tên báo cáo</CFormLabel>
                           <CFormInput
                             name="chart_name"
@@ -531,11 +523,14 @@ export const CreateReportButton = () => {
                           />
                           <CFormFeedback invalid>{errors.chart_name}</CFormFeedback>
                         </CCol>
-                        <CCol xs={12} sm={6}>
+                      </CRow>
+                      <CRow className="mt-2">
+                        <CCol xs={12}>
                           <CFormLabel htmlFor="description">Mô tả</CFormLabel>
-                          <CFormInput
+                          <CFormTextarea
                             id="description"
-                            placeholder="Nhập mô tả biểu đồ"
+                            rows={3}
+                            placeholder="Nhập mô tả báo cáo"
                             value={values.description}
                             onChange={handleChange}
                             onBlur={handleBlur}

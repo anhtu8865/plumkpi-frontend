@@ -16,8 +16,6 @@ import {
   CRow,
   CCol,
   CFormInput,
-  CFormFeedback,
-  CFormLabel,
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
@@ -39,7 +37,6 @@ export const AssignToDeptButton = (kpiItem) => {
   const [selectedDeptList, setSelectedDeptList] = useState([])
   const selectValue = 'Year'
   const { plan } = useSelector((state) => state.planDetail)
-  const [target, setTarget] = useState(0)
   const [sum, setSum] = useState(0)
   const [sampleTarget, setSampleTarget] = useState('')
 
@@ -109,38 +106,6 @@ export const AssignToDeptButton = (kpiItem) => {
     }
   }
 
-  const setTargetKpi = async (target) => {
-    try {
-      await api.put(`/plans/register-target/director`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        target: Number(target),
-      })
-      dispatch(
-        createAlert({
-          message: 'Thiết lập chỉ tiêu cho phòng ban thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }
-
   React.useEffect(() => {
     const fetchData = async () => {
       setIsSubmit(true)
@@ -154,15 +119,12 @@ export const AssignToDeptButton = (kpiItem) => {
         setSelectedDeptList(deptList)
       }
       setDeptList(depts)
-      if (kpiItem && kpiItem.target) {
-        setTarget(kpiItem.target)
-      }
       setIsSubmit(false)
     }
     if (modalVisible) {
       fetchData()
     }
-  }, [modalVisible, getDeptList, getInfoTargetKpi, kpiItem])
+  }, [modalVisible, getDeptList, getInfoTargetKpi])
 
   React.useEffect(() => {
     let target = 0
@@ -233,7 +195,7 @@ export const AssignToDeptButton = (kpiItem) => {
     setSelectedDeptList(copySelectedDeptList)
   }
 
-  const onSubmit = async (event, target) => {
+  const onSubmit = async (event) => {
     setIsSubmit(true)
     if (selectValue === 'Year') {
       const listToReturn = []
@@ -245,7 +207,6 @@ export const AssignToDeptButton = (kpiItem) => {
         listToReturn.push({ dept_id: item.dept.dept_id, target: Number(item.target) })
       })
       if (valid) {
-        await setTargetKpi(target)
         if (listToReturn.length > 0) {
           await assignKpi(listToReturn)
         }
@@ -257,25 +218,6 @@ export const AssignToDeptButton = (kpiItem) => {
   const YearTargetView = () => {
     return (
       <>
-        <CRow className="mt-4">
-          <CCol xs={12}>
-            <CFormLabel htmlFor="parenttarget">Chỉ tiêu KPI cả năm</CFormLabel>
-            <CInputGroup>
-              <CFormInput
-                id="parenttarget"
-                placeholder="Nhập chỉ tiêu KPI"
-                type="number"
-                value={target}
-                onChange={(event) => {
-                  setTarget(event.target.value)
-                }}
-                invalid={target === ''}
-              />
-              <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-            </CInputGroup>
-            <CFormFeedback invalid></CFormFeedback>
-          </CCol>
-        </CRow>
         <CRow className="mt-4">
           <div>
             <h6>Phòng ban</h6>
@@ -445,9 +387,9 @@ export const AssignToDeptButton = (kpiItem) => {
               startIcon={<CheckIcon />}
               type="submit"
               onClick={(event) => {
-                onSubmit(event, target)
+                onSubmit(event)
               }}
-              disabled={isSubmit || target === ''}
+              disabled={isSubmit}
               sx={{ textTransform: 'none', borderRadius: 10 }}
             >
               Xác nhận

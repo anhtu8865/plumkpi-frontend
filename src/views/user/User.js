@@ -265,12 +265,16 @@ const User = () => {
                       {row.is_active ? (
                         <>
                           Active
-                          {user.role === 'Admin' && <StatusUser userItem={row} />}
+                          {user.role === 'Admin' && row.role !== 'Admin' && (
+                            <StatusUser userItem={row} />
+                          )}
                         </>
                       ) : (
                         <>
                           Block
-                          {user.role === 'Admin' && <StatusUser userItem={row} />}
+                          {user.role === 'Admin' && row.role !== 'Admin' && (
+                            <StatusUser userItem={row} />
+                          )}
                         </>
                       )}
                     </CTableDataCell>
@@ -300,7 +304,7 @@ const User = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="6">
+                  <CTableDataCell colSpan="7">
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}
