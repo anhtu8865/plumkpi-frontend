@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Button, IconButton, Avatar, Tooltip, Switch } from '@mui/material'
+import { Button, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -120,7 +120,7 @@ export const AssignToEmployeeButton = (props) => {
                             color={values.selectedList.includes(item.user_id) ? null : 'secondary'}
                           >
                             <CTableDataCell>
-                              <Switch
+                              <Checkbox
                                 size="small"
                                 checked={values.selectedList.includes(item.user_id)}
                                 onChange={() => {
@@ -132,9 +132,16 @@ export const AssignToEmployeeButton = (props) => {
                                 }}
                               />
                             </CTableDataCell>
-                            <CTableDataCell className="d-flex flex-row">
-                              <Avatar src={item.avatar ? item.avatar.url : null} className="me-3" />
-                              {item.user_name}
+                            <CTableDataCell className="d-flex align-items-center">
+                              <CCol xs={2}>
+                                <Avatar src={item.avatar ? item.avatar.url : null} />
+                              </CCol>
+                              <CCol>
+                                <CRow>
+                                  <small>ID: {item.user_id}</small>
+                                </CRow>
+                                <CRow>{item.user_name}</CRow>
+                              </CCol>
                             </CTableDataCell>
                           </CTableRow>
                         )

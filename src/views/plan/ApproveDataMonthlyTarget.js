@@ -755,9 +755,9 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
-                  <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">THỰC HIỆN</CTableHeaderCell>
+                  <CTableHeaderCell>Nhân viên</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Thực hiện</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -769,7 +769,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                         key={index}
                         // color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
                       >
-                        <CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>
                           {handleMonthTargetValue(item) !== 'Chưa có' ? (
                             <Checkbox
                               size="small"
@@ -780,12 +780,16 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                             />
                           ) : null}
                         </CTableDataCell>
-                        <CTableDataCell className="d-flex flex-row">
-                          <Avatar
-                            src={item.user.avatar ? item.user.avatar.url : null}
-                            className="me-3"
-                          />
-                          {item.user.user_name}
+                        <CTableDataCell className="d-flex align-items-center">
+                          <CCol xs={3}>
+                            <Avatar src={item.user.avatar ? item.user.avatar.url : null} />
+                          </CCol>
+                          <CCol>
+                            <CRow>
+                              <small>ID: {item.user.user_id}</small>
+                            </CRow>
+                            <CRow>{item.user.user_name}</CRow>
+                          </CCol>
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
                           {handleMonthTargetValue(item) !== 'Chưa có' ? (
@@ -1068,7 +1072,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
           {selectValue === 'Month' && (
-            <div className="d-grid gap-2 d-md-flex justify-content-end">
+            <div className="d-grid gap-1 d-md-flex justify-content-end">
               <DenyActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template.kpi_template_id}

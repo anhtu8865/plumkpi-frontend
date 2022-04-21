@@ -288,7 +288,7 @@ const Plan = () => {
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
-                    <div className="d-grid gap-2 d-md-flex justify-content-end">
+                    <div className="d-grid gap-1 d-md-flex justify-content-end">
                       {user.role === 'Giám đốc' && <AddPlanButton />}
                     </div>
                   </CCol>

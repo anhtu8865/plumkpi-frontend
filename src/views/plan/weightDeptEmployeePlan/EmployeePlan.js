@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CCard,
   CCardBody,
@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
+import { useFormik } from 'formik'
 import { useParams, useHistory } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
@@ -36,32 +37,59 @@ const EmployeePlan = () => {
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const [searchVisible, setSearchVisible] = useState(false)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  const [oldSearchValue, setOldSearchValue] = useState({
+    id: '',
+    name: '',
+    email: '',
+    phone: '',
+  })
 
-  const getEmployeeList = async (offset, name, email, phone) => {
+  const getEmployeeList = useCallback(async (offset, values) => {
     let paramsObject = { offset: offset, limit: entryPerPage }
-    if (name !== '') {
-      paramsObject.user_name = name
+    if (values.id !== '') {
+      paramsObject.user_id = values.id
     }
-    if (email !== '') {
-      paramsObject.email = email
+    if (values.name !== '') {
+      paramsObject.user_name = values.name
     }
-    if (phone !== '') {
-      paramsObject.phone = phone
+    if (values.email !== '') {
+      paramsObject.email = values.email
     }
+    if (values.phone !== '') {
+      paramsObject.phone = values.phone
+    }
+    if (
+      values.id !== oldSearchValue.id ||
+      values.name !== oldSearchValue.name ||
+      values.email !== oldSearchValue.email ||
+      values.phone !== oldSearchValue.phone
+    ) {
+      paramsObject.offset = 0
+      setPage(1)
+      setOldSearchValue(values)
+    }
+
     const response = await api.get(`users/employees/manager/info`, {
       params: paramsObject,
     })
     setTotalPage(Math.ceil(response.data.count / entryPerPage))
     return response.data.items
-  }
+    // eslint-disable-next-line
+  }, [])
+
+  const formik = useFormik({
+    initialValues: {
+      id: '',
+      name: '',
+      email: '',
+      phone: '',
+    },
+  })
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getEmployeeList((page - 1) * entryPerPage, name, email, phone)
+        const result = await getEmployeeList((page - 1) * entryPerPage, formik.values)
         if (result) {
           setEntry(result)
         }
@@ -78,7 +106,7 @@ const EmployeePlan = () => {
       }
     }
     fetchData()
-  }, [page, name, email, phone, dispatch])
+  }, [page, formik.values, dispatch, getEmployeeList])
 
   const Table = () => {
     return (
@@ -88,16 +116,18 @@ const EmployeePlan = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
-                  <CTableHeaderCell>EMAIL</CTableHeaderCell>
-                  <CTableHeaderCell>SỐ ĐIỆN THOẠI</CTableHeaderCell>
+                  <CTableHeaderCell>ID</CTableHeaderCell>
+                  <CTableHeaderCell>Nhân viên</CTableHeaderCell>
+                  <CTableHeaderCell>Email</CTableHeaderCell>
+                  <CTableHeaderCell>Số điện thoại</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {entry.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell className="d-flex flex-row">
+                    <CTableDataCell>{item.user_id}</CTableDataCell>
+                    <CTableDataCell className="d-flex align-items-center">
                       <Avatar src={item.avatar ? item.avatar.url : null} className="me-3" />
                       {item.user_name}
                     </CTableDataCell>
@@ -120,7 +150,7 @@ const EmployeePlan = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="4">
+                  <CTableDataCell colSpan="5">
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}
@@ -148,37 +178,36 @@ const EmployeePlan = () => {
   const SearchInput = () => {
     return (
       <>
-        <CCol xs={12} sm={6} lg={4}>
-          <CFormLabel htmlFor="search">Nhân viên</CFormLabel>
+        <CCol xs={12} sm={6} lg={1}>
+          <CFormLabel htmlFor="search0">ID</CFormLabel>
           <CFormInput
-            id="search"
-            placeholder="Tìm theo tên nhân viên"
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value)
-            }}
+            id="search0"
+            placeholder="Tìm theo ID nhân viên..."
+            {...formik.getFieldProps('id')}
+          />
+        </CCol>
+        <CCol xs={12} sm={6} lg={3}>
+          <CFormLabel htmlFor="name">Nhân viên</CFormLabel>
+          <CFormInput
+            id="name"
+            placeholder="Tìm theo tên nhân viên..."
+            {...formik.getFieldProps('name')}
           />
         </CCol>
         <CCol xs={12} sm={6} lg={4}>
-          <CFormLabel htmlFor="search1">Email</CFormLabel>
+          <CFormLabel htmlFor="email">Email</CFormLabel>
           <CFormInput
-            id="search1"
-            placeholder="Tìm theo email nhân viên"
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value)
-            }}
+            id="email"
+            placeholder="Tìm theo email nhân viên..."
+            {...formik.getFieldProps('email')}
           />
         </CCol>
         <CCol xs={12} sm={6} lg={4}>
-          <CFormLabel htmlFor="search2">Số điện thoại</CFormLabel>
+          <CFormLabel htmlFor="phone">Số điện thoại</CFormLabel>
           <CFormInput
-            id="search2"
-            placeholder="Tìm theo SĐT nhân viên"
-            value={phone}
-            onChange={(event) => {
-              setPhone(event.target.value)
-            }}
+            id="phone"
+            placeholder="Tìm theo SĐT nhân viên..."
+            {...formik.getFieldProps('phone')}
           />
         </CCol>
       </>
@@ -209,16 +238,17 @@ const EmployeePlan = () => {
             </h3>
           </CCol>
           <CCol xs={12} sm={6}>
-            <div className="d-flex flex-row gap-2 justify-content-end">
+            <div className="d-flex flex-row gap-1 justify-content-end">
               <Button
                 variant="contained"
                 color="primary"
                 startIcon={<SearchIcon />}
                 onClick={() => {
                   if (searchVisible) {
-                    setName('')
-                    setEmail('')
-                    setPhone('')
+                    formik.setFieldValue('id', '')
+                    formik.setFieldValue('name', '')
+                    formik.setFieldValue('email', '')
+                    formik.setFieldValue('phone', '')
                   }
                   setSearchVisible(!searchVisible)
                 }}

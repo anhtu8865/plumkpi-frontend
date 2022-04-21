@@ -11,46 +11,32 @@ import {
   cilCalendar,
   cilFolderOpen,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem } from '@coreui/react'
+import { CNavItem } from '@coreui/react'
 
 export const navigationAdmin = [
   {
-    component: CNavGroup,
-    name: 'Mẫu KPI',
-    icon: <CIcon icon={null} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Danh mục KPI',
-        to: '/kpicategory',
-        icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'KPI',
-        to: '/kpitemplate',
-        icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
-      },
-    ],
+    component: CNavItem,
+    name: 'Danh mục KPI',
+    to: '/kpicategory',
+    icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
   },
   {
-    component: CNavGroup,
-    name: 'Nhân sự',
-    icon: <CIcon icon={null} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Người dùng',
-        to: '/users',
-        icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'Phòng ban',
-        to: '/depts',
-        icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
-      },
-    ],
+    component: CNavItem,
+    name: 'KPI',
+    to: '/kpitemplate',
+    icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Người dùng',
+    to: '/users',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Phòng ban',
+    to: '/depts',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -79,50 +65,38 @@ export const navigationDirector = [
     to: '/dashboard',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
+
   {
-    component: CNavGroup,
-    name: 'Mẫu KPI',
-    icon: <CIcon icon={null} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Danh mục KPI',
-        to: '/kpicategory',
-        icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'KPI',
-        to: '/kpitemplate',
-        icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
-      },
-    ],
+    component: CNavItem,
+    name: 'Danh mục KPI',
+    to: '/kpicategory',
+    icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
   },
   {
-    component: CNavGroup,
-    name: 'Nhân sự',
-    icon: <CIcon icon={null} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Sơ đồ nhân sự',
-        to: '/companytree',
-        icon: <CIcon icon={cilLan} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'Người dùng',
-        to: '/users',
-        icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'Phòng ban',
-        to: '/depts',
-        icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
-      },
-    ],
+    component: CNavItem,
+    name: 'KPI',
+    to: '/kpitemplate',
+    icon: <CIcon icon={cilLayers} customClassName="nav-icon" />,
   },
+
+  {
+    component: CNavItem,
+    name: 'Sơ đồ nhân sự',
+    to: '/companytree',
+    icon: <CIcon icon={cilLan} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Người dùng',
+    to: '/users',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  /*{
+    component: CNavItem,
+    name: 'Phòng ban',
+    to: '/depts',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+  },*/
 ]
 
 export const navigationManager = [

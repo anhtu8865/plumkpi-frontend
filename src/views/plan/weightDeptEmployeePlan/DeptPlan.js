@@ -80,8 +80,8 @@ const DeptPlan = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-                  <CTableHeaderCell>QUẢN LÝ</CTableHeaderCell>
+                  <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+                  <CTableHeaderCell>Quản lý</CTableHeaderCell>
                   <CTableHeaderCell />
                 </CTableRow>
               </CTableHead>
@@ -89,7 +89,7 @@ const DeptPlan = () => {
                 {entry.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
                     <CTableDataCell>{item.dept_name}</CTableDataCell>
-                    <CTableDataCell className="d-flex flex-row">
+                    <CTableDataCell className="d-flex align-items-center">
                       <Avatar
                         src={item.manager.avatar ? item.manager.avatar.url : null}
                         className="me-3"
@@ -144,7 +144,7 @@ const DeptPlan = () => {
         <CFormLabel htmlFor="search">Phòng ban</CFormLabel>
         <CFormInput
           id="search"
-          placeholder="Tìm theo tên phòng ban"
+          placeholder="Tìm theo tên phòng ban..."
           value={name}
           onChange={(event) => {
             setName(event.target.value)
@@ -178,7 +178,7 @@ const DeptPlan = () => {
             </h3>
           </CCol>
           <CCol xs={12} sm={6}>
-            <div className="d-flex flex-row gap-2 justify-content-end">
+            <div className="d-flex flex-row gap-1 justify-content-end">
               <Button
                 variant="contained"
                 color="primary"

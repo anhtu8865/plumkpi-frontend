@@ -166,6 +166,7 @@ const KpiTemplate = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
                   <CTableHeaderCell>Công thức tổng hợp</CTableHeaderCell>
                   <CTableHeaderCell>Đơn vị</CTableHeaderCell>
@@ -174,8 +175,9 @@ const KpiTemplate = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {entry.map((temItem) => (
+                {entry.map((temItem, index) => (
                   <CTableRow v-for="item in tableItems" key={temItem.kpi_template_id}>
+                    <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                     <CTableDataCell>{temItem.kpi_template_name}</CTableDataCell>
                     <CTableDataCell>{temItem.aggregation}</CTableDataCell>
                     <CTableDataCell>{temItem.unit}</CTableDataCell>
@@ -198,7 +200,7 @@ const KpiTemplate = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan={id ? 4 : 5}>
+                  <CTableDataCell colSpan={id ? 5 : 6}>
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}
@@ -234,7 +236,7 @@ const KpiTemplate = () => {
         <CFormLabel htmlFor="search">KPI</CFormLabel>
         <CFormInput
           id="search"
-          placeholder="Tìm theo tên KPI"
+          placeholder="Tìm theo tên KPI..."
           value={name}
           onChange={(event) => {
             setName(event.target.value)
@@ -274,7 +276,7 @@ const KpiTemplate = () => {
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
-                    <div className="d-flex flex-row gap-2 justify-content-end">
+                    <div className="d-flex flex-row gap-1 justify-content-end">
                       <Button
                         variant="contained"
                         color="primary"

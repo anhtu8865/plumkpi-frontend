@@ -352,9 +352,9 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
-                  <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
-                  <CTableHeaderCell className="w-25">TIẾN ĐỘ</CTableHeaderCell>
+                  <CTableHeaderCell>Phòng ban</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
+                  <CTableHeaderCell className="w-25">Tiến độ</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -363,7 +363,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                   return (
                     <>
                       <CTableRow key={index}>
-                        <CTableDataCell className="text-center">
+                        <CTableDataCell style={{ width: '5%' }} className="text-center">
                           {handleQuarterDataValue(item) !== 'Chưa có' ? (
                             <Checkbox
                               size="small"
@@ -670,7 +670,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
         <CModalFooter>
           {selectValue === 'Quarter' && (
             <>
-              <div className="d-grid gap-2 d-md-flex justify-content-end">
+              <div className="d-grid gap-1 d-md-flex justify-content-end">
                 {/* <Button
                   variant="contained"
                   color="error"

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Button, IconButton, Avatar, Tooltip, Switch } from '@mui/material'
+import { Button, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material'
 import {
   CModal,
   CModalBody,
@@ -260,8 +260,8 @@ export const AssignToDeptButton = (kpiItem) => {
                         key={index}
                         color={handleCheckboxValue(item.dept_id) ? null : 'secondary'}
                       >
-                        <CTableDataCell>
-                          <Switch
+                        <CTableDataCell style={{ width: '5%' }}>
+                          <Checkbox
                             size="small"
                             checked={handleCheckboxValue(item.dept_id)}
                             onChange={() => {
@@ -270,7 +270,7 @@ export const AssignToDeptButton = (kpiItem) => {
                           />
                         </CTableDataCell>
                         <CTableDataCell>{item.dept_name}</CTableDataCell>
-                        <CTableDataCell className="d-flex flex-row">
+                        <CTableDataCell className="d-flex align-items-center">
                           <Avatar
                             src={item.manager.avatar ? item.manager.avatar.url : null}
                             className="me-3"
@@ -334,18 +334,14 @@ export const AssignToDeptButton = (kpiItem) => {
           <CCol xs={12}>
             <b>KPI:</b> {kpiItem.kpi_template.kpi_template_name}
           </CCol>
-          {/*<CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="freq">Theo</CFormLabel>
-            <CFormSelect
-              id="freq"
-              value={selectValue}
-              onChange={(event) => {
-                setSelectValue(event.target.value)
-              }}
-            >
-              <option value="Year">Năm</option>
-            </CFormSelect>
-            </CCol>*/}
+        </CRow>
+        <CRow className="mt-2">
+          <CCol xs={12}>
+            <b>Chỉ tiêu cả năm:</b>{' '}
+            {kpiItem.target
+              ? `${formatNumber(kpiItem.target)} ${kpiItem.kpi_template.unit}`
+              : 'Chưa có'}
+          </CCol>
         </CRow>
         {selectValue === 'Year' && YearTargetView()}
       </>

@@ -123,10 +123,10 @@ const EditDepartment = (props) => {
           <CModalBody>
             <CRow className="mt-2 mb-2 mx-2">
               <CCol xs>
-                <CFormLabel htmlFor="editdept">Nhập tên mới cho phòng ban</CFormLabel>
+                <CFormLabel htmlFor="editdept">Tên phòng ban</CFormLabel>
                 <CFormInput
                   id="editdept"
-                  placeholder="Tên phòng ban"
+                  placeholder="Nhập tên phòng ban..."
                   value={formik.values.editdept}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -146,7 +146,7 @@ const EditDepartment = (props) => {
                 <CFormTextarea
                   row="2"
                   id="editdes"
-                  placeholder="Mô tả"
+                  placeholder="Nhập mô tả..."
                   value={formik.values.editdes}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}

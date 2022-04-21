@@ -346,7 +346,7 @@ export const CreateChartButton = () => {
                       <CFormLabel htmlFor="kkpis">KPI</CFormLabel>
                       <Select
                         value={values.kpis}
-                        placeholder="Chọn một hoặc nhiều KPI"
+                        placeholder="Chọn một hoặc nhiều KPI..."
                         isMulti
                         isSearchable
                         maxMenuHeight={300}
@@ -443,8 +443,8 @@ export const CreateChartButton = () => {
                               value={values.filter}
                               placeholder={
                                 user.role === 'Giám đốc'
-                                  ? 'Chọn một hoặc nhiều phòng ban'
-                                  : 'Chọn một hoặc nhiều nhân viên'
+                                  ? 'Chọn một hoặc nhiều phòng ban...'
+                                  : 'Chọn một hoặc nhiều nhân viên...'
                               }
                               isMulti
                               isSearchable
@@ -474,7 +474,7 @@ export const CreateChartButton = () => {
                           <CFormInput
                             name="chart_name"
                             id="chartname"
-                            placeholder="Nhập tên biểu đồ"
+                            placeholder="Nhập tên biểu đồ..."
                             value={values.chart_name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -494,7 +494,7 @@ export const CreateChartButton = () => {
                           <CFormTextarea
                             id="description"
                             rows={3}
-                            placeholder="Nhập mô tả biểu đồ"
+                            placeholder="Nhập mô tả biểu đồ..."
                             value={values.description}
                             onChange={handleChange}
                             onBlur={handleBlur}

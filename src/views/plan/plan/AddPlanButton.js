@@ -124,7 +124,7 @@ export const AddPlanButton = () => {
                 <CFormLabel htmlFor="name">Tên kế hoạch</CFormLabel>
                 <CFormInput
                   id="name"
-                  placeholder="Nhập tên kế hoạch mới"
+                  placeholder="Nhập tên kế hoạch mới..."
                   {...formik.getFieldProps('plan_name')}
                   invalid={formik.touched.plan_name && formik.errors.plan_name ? true : false}
                 />
@@ -137,7 +137,7 @@ export const AddPlanButton = () => {
                 <CFormTextarea
                   id="des"
                   rows={3}
-                  placeholder="Nhập mô tả"
+                  placeholder="Nhập mô tả..."
                   {...formik.getFieldProps('description')}
                 />
               </CCol>

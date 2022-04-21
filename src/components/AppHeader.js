@@ -19,7 +19,7 @@ import { setSidebarShow } from 'src/slices/sidebarSlice'
 import { createAlert } from 'src/slices/alertSlice'
 import { setTime } from 'src/slices/timeSlice'
 import { formatDate, convertNameOfDay } from 'src/utils/function'
-import EditIcon from '@mui/icons-material/Edit'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CancelIcon from '@mui/icons-material/Cancel'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -104,7 +104,7 @@ const AppHeader = () => {
                 }}
                 size="small"
               >
-                <EditIcon fontSize="inherit" />
+                <CalendarTodayIcon fontSize="inherit" />
               </IconButton>
             </>
           ) : (
@@ -160,8 +160,7 @@ const AppHeader = () => {
             </>
           )}
         </div>
-        <CHeaderNav></CHeaderNav>
-        <CHeaderNav className="ms-3">
+        <CHeaderNav>
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>

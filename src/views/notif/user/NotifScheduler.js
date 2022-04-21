@@ -25,7 +25,7 @@ const NotifScheduler = () => {
 
   const getNotif = useCallback(async () => {
     const array = []
-    const response = await api.get(`notifs/user`)
+    const response = await api.get(`notifs/user/scheduler`)
     response.data.items.map((item) =>
       array.push({
         title: item.content,

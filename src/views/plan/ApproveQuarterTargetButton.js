@@ -28,7 +28,10 @@ import { setReload, setLoading } from 'src/slices/viewSlice'
 import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import { formatNumber } from 'src/utils/function'
+import { quarterArray } from 'src/utils/constant'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 
 export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
   const dispatch = useDispatch()
@@ -148,7 +151,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     setSelectedDeptApprove([])
   }, [selectedQuarter])
 
-  const handleQuarterTargetValue = (item) => {
+  const handleQuarterTargetValue = (item, selectedQuarter) => {
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {
@@ -179,7 +182,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     }
   }
 
-  const handleQuarterTargetStatus = (item) => {
+  const handleQuarterTargetStatus = (item, selectedQuarter) => {
     switch (selectedQuarter) {
       case 1: {
         if (item.first_quarterly_target) {
@@ -230,6 +233,40 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     setIsSubmit(false)
   }
 
+  const TooltipTitle = (item, quarter, unit) => {
+    const displayQuarter = quarterArray.filter((item) => item !== quarter)
+    return (
+      <>
+        Chỉ tiêu cả năm: {item.target ? `${formatNumber(item.target)} ${unit}` : `Chưa có`}
+        {displayQuarter.map((element, index) => {
+          const target = handleQuarterTargetValue(item, element)
+          const status = handleQuarterTargetStatus(item, element)
+          return (
+            <div key={index} className="d-flex align-items-center">
+              Chỉ tiêu quý {element}:{' '}
+              {target !== 'Chưa đăng ký' ? `${formatNumber(target)} ${unit} ` : `Chưa đăng ký`}
+              {status !== ''
+                ? status === 'Đang xử lý'
+                  ? `(Đang chờ duyệt...)`
+                  : `(${status})`
+                : null}
+            </div>
+          )
+        })}
+      </>
+    )
+  }
+
+  const AllQuarterTargetDropdown = (item, quarter, unit) => {
+    return (
+      <CustomWidthTooltip title={TooltipTitle(item, quarter, unit)} placement="bottom-start">
+        <IconButton color="primary" size="small">
+          <ArrowDropDownIcon fontSize="small" />
+        </IconButton>
+      </CustomWidthTooltip>
+    )
+  }
+
   const QuarterTargetView = () => {
     return (
       <>
@@ -270,8 +307,8 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                   return (
                     <>
                       <CTableRow key={index}>
-                        <CTableDataCell className="text-center">
-                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
+                        <CTableDataCell style={{ width: '5%' }} className="text-center">
+                          {handleQuarterTargetValue(item, selectedQuarter) !== 'Chưa đăng ký' ? (
                             <Checkbox
                               size="small"
                               checked={selectedDeptApprove.includes(item.dept.dept_id)}
@@ -281,14 +318,31 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                             />
                           ) : null}
                         </CTableDataCell>
-                        <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
+                        <CTableDataCell>
+                          <CRow className="d-flex align-items-center">
+                            <CCol xs={3}>{item.dept.dept_name}</CCol>
+                            <CCol>
+                              {AllQuarterTargetDropdown(
+                                item,
+                                selectedQuarter,
+                                kpiItem.kpi_template.unit,
+                              )}
+                            </CCol>
+                          </CRow>
+                        </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          {handleQuarterTargetValue(item) !== 'Chưa đăng ký' ? (
+                          {handleQuarterTargetValue(item, selectedQuarter) !== 'Chưa đăng ký' ? (
                             <CInputGroup size="sm">
                               <CFormInput
-                                value={formatNumber(handleQuarterTargetValue(item))}
-                                valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
-                                invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
+                                value={formatNumber(
+                                  handleQuarterTargetValue(item, selectedQuarter),
+                                )}
+                                valid={
+                                  handleQuarterTargetStatus(item, selectedQuarter) === 'Chấp nhận'
+                                }
+                                invalid={
+                                  handleQuarterTargetStatus(item, selectedQuarter) === 'Từ chối'
+                                }
                                 disabled
                               />
                               <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
@@ -318,18 +372,14 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
           <CCol xs={12}>
             <b>KPI:</b> {kpiItem.kpi_template.kpi_template_name}
           </CCol>
-          {/*<CCol xs={12} sm={6}>
-            <CFormLabel htmlFor="freq">Theo</CFormLabel>
-            <CFormSelect
-              id="freq"
-              value={selectValue}
-              onChange={(event) => {
-                setSelectValue(event.target.value)
-              }}
-            >
-              <option value="Quarter">Quý</option>
-            </CFormSelect>
-            </CCol>*/}
+        </CRow>
+        <CRow className="mt-2">
+          <CCol xs={12}>
+            <b>Chỉ tiêu cả năm:</b>{' '}
+            {kpiItem.target
+              ? `${formatNumber(kpiItem.target)} ${kpiItem.kpi_template.unit}`
+              : 'Chưa có'}
+          </CCol>
         </CRow>
         {selectValue === 'Quarter' && QuarterTargetView()}
       </>
@@ -362,11 +412,13 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
         <CModalHeader>
           <CModalTitle>Duyệt chỉ tiêu phòng ban theo quý</CModalTitle>
         </CModalHeader>
-        <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
+        <CModalBody className="mx-4 mb-3" style={{ maxHeight: '450px' }}>
+          {HasTargetView()}
+        </CModalBody>
         <CModalFooter>
           {selectValue === 'Quarter' && (
             <>
-              <div className="d-grid gap-2 d-md-flex justify-content-end">
+              <div className="d-grid gap-1 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="error"

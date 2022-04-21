@@ -212,7 +212,7 @@ export const EditKpiButton = (props) => {
                       <CFormInput
                         name="kpi_template_name"
                         id="kpiname"
-                        placeholder="Nhập tên KPI"
+                        placeholder="Nhập tên KPI..."
                         value={values.kpi_template_name}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -234,7 +234,7 @@ export const EditKpiButton = (props) => {
                       <CFormLabel htmlFor="description">Mô tả KPI</CFormLabel>
                       <CFormTextarea
                         id="description"
-                        placeholder="Nhập mô tả KPI"
+                        placeholder="Nhập mô tả KPI..."
                         rows={3}
                         value={values.description}
                         onChange={handleChange}
@@ -263,7 +263,7 @@ export const EditKpiButton = (props) => {
                       <CFormLabel htmlFor="unit">Đơn vị tính</CFormLabel>
                       <CFormInput
                         id="unit"
-                        placeholder="Nhập đơn vị tính"
+                        placeholder="Nhập đơn vị tính..."
                         value={values.unit}
                         onChange={handleChange}
                         onBlur={handleBlur}

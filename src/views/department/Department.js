@@ -100,7 +100,7 @@ const Department = () => {
         <CFormLabel htmlFor="search">Phòng ban</CFormLabel>
         <CFormInput
           id="search"
-          placeholder="Tìm theo tên phòng ban"
+          placeholder="Tìm theo tên phòng ban..."
           value={name}
           onChange={(event) => {
             setName(event.target.value)
@@ -218,7 +218,7 @@ const Department = () => {
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
-                    <div className="d-grid gap-2 d-md-flex justify-content-end">
+                    <div className="d-grid gap-1 d-md-flex justify-content-end">
                       <Button
                         variant="contained"
                         color="primary"

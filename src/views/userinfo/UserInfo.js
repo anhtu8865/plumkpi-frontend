@@ -125,7 +125,7 @@ const UserInfo = () => {
         </CCol>
         <CCol xs={8} lg={11}>
           <CCol xs={12}>
-            <div className="d-grid gap-2 d-md-flex ms-4">
+            <div className="d-grid gap-1 d-md-flex ms-4">
               <input
                 //accept="image/*"
                 type="file"
@@ -212,7 +212,7 @@ const UserInfo = () => {
               <CFormLabel htmlFor="username">Họ và tên</CFormLabel>
               <CFormInput
                 id="username"
-                placeholder="Nhập họ và tên"
+                placeholder="Nhập họ và tên..."
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -230,7 +230,7 @@ const UserInfo = () => {
               <CFormInput
                 type="email"
                 id="email"
-                placeholder="Nhập email"
+                placeholder="Nhập email..."
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -269,7 +269,7 @@ const UserInfo = () => {
               <CFormLabel htmlFor="gender">Giới tính</CFormLabel>
               <CFormSelect
                 id="gender"
-                placeholder="Chọn giới tính"
+                placeholder="Chọn giới tính..."
                 {...formik.getFieldProps('gender')}
                 invalid={formik.touched.gender && formik.errors.gender ? true : false}
                 valid={
@@ -287,7 +287,7 @@ const UserInfo = () => {
               <CFormLabel htmlFor="phone">Số điện thoại</CFormLabel>
               <CFormInput
                 id="phone"
-                placeholder="Nhập số điện thoại"
+                placeholder="Nhập số điện thoại..."
                 {...formik.getFieldProps('phone')}
                 invalid={formik.touched.phone && formik.errors.phone ? true : false}
                 valid={
@@ -305,7 +305,7 @@ const UserInfo = () => {
               <CFormTextarea
                 id="address"
                 rows={3}
-                placeholder="Nhập địa chỉ"
+                placeholder="Nhập địa chỉ..."
                 {...formik.getFieldProps('address')}
                 invalid={formik.touched.address && formik.errors.address ? true : false}
                 valid={

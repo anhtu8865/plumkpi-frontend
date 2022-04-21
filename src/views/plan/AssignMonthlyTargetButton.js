@@ -338,18 +338,23 @@ export const AssignMonthlyTargetButton = (props) => {
 
                         return (
                           <CTableRow key={index}>
-                            <CTableDataCell className="d-flex flex-row">
-                              <Avatar
-                                src={item.user.avatar ? item.user.avatar.url : null}
-                                className="me-3"
-                              />
-                              {item.user.user_name}
+                            <CTableDataCell className="d-flex align-items-center">
+                              <CCol xs={2}>
+                                <Avatar src={item.user.avatar ? item.user.avatar.url : null} />
+                              </CCol>
+                              <CCol>
+                                <CRow>
+                                  <small>ID: {item.user.user_id}</small>
+                                </CRow>
+                                <CRow>{item.user.user_name}</CRow>
+                              </CCol>
                             </CTableDataCell>
                             <CTableHeaderCell className="w-25">
                               <CInputGroup size="sm">
                                 <CFormInput
                                   size="sm"
                                   type="number"
+                                  placeholder="Chưa có"
                                   value={item.target}
                                   name={target}
                                   onChange={handleChange}

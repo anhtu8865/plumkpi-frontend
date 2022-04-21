@@ -367,7 +367,7 @@ const PlanDetail = () => {
             />{' '}
             <CInputGroup size="sm">
               <CInputGroupText>Tháng</CInputGroupText>
-              <div style={{ width: '110px' }}>
+              <div style={{ width: '65%' }}>
                 <Select
                   value={checkedMonth ? { value: selectedMonth, label: selectedMonth } : null}
                   placeholder=""
@@ -391,7 +391,7 @@ const PlanDetail = () => {
             />{' '}
             <CInputGroup size="sm">
               <CInputGroupText>Quý</CInputGroupText>
-              <div style={{ width: '120px' }}>
+              <div style={{ width: '65%' }}>
                 <Select
                   value={checkedQuarter ? { value: selectedQuarter, label: selectedQuarter } : null}
                   placeholder=""
@@ -428,7 +428,7 @@ const PlanDetail = () => {
           </CCol>
           {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={6}>
-              <div className="d-grid gap-2 d-md-flex justify-content-end">
+              <div className="d-grid gap-1 d-md-flex justify-content-end">
                 {EditCategoryInPlanButton()}
               </div>
             </CCol>
@@ -453,7 +453,7 @@ const PlanDetail = () => {
           </CCol>
           {user.role === 'Nhân viên' && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-2 d-md-flex justify-content-end">
+              <div className="d-grid gap-1 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -470,7 +470,7 @@ const PlanDetail = () => {
           )}
           {user.role === 'Quản lý' && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-2 d-md-flex justify-content-end">
+              <div className="d-grid gap-1 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -509,7 +509,7 @@ const PlanDetail = () => {
           )}
           {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-2 d-md-flex justify-content-end">
+              <div className="d-grid gap-1 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"

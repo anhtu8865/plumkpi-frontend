@@ -31,8 +31,22 @@ const userSlice = createSlice({
     setUserList: (state, action) => {
       state.userList = action.payload.value
     },
+    resetUser: (state) => {
+      state.user = {
+        user_id: null,
+        user_name: null,
+        email: null,
+        role: null,
+        phone: null,
+        gender: 'None',
+        address: null,
+        dob: null,
+        dept: null,
+        avatar: null,
+      }
+    },
   },
 })
 
-export const { setUser, setUserLoading, setUserReload } = userSlice.actions
+export const { setUser, setUserLoading, setUserReload, resetUser } = userSlice.actions
 export default userSlice
