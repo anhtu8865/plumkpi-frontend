@@ -81,9 +81,7 @@ const CompanyTree = () => {
                   <div className="branch lv1">
                     {deptList
                       .filter((val) => {
-                        if (val.manager !== null) {
-                          return val
-                        }
+                        return val.manager !== null
                       })
                       .map((row, index) => (
                         <div

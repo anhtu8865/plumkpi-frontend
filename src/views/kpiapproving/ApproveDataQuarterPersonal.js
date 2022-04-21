@@ -316,9 +316,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem, quarter) => {
     } else {
       setDeptIDs(
         deptIDs.filter((tmp) => {
-          if (tmp !== item.dept.dept_id) {
-            return tmp
-          }
+          return tmp !== item.dept.dept_id
         }),
       )
     }

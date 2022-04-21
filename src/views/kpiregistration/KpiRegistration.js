@@ -59,9 +59,7 @@ const KpiRegistration = () => {
     } else if (selectedKpi.includes(item)) {
       setSelectedKpi(
         selectedKpi.filter((tmp) => {
-          if (tmp !== item) {
-            return tmp
-          }
+          return tmp !== item
         }),
       )
     }
@@ -270,7 +268,6 @@ const KpiRegistration = () => {
               <CTableHeaderCell />
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>
-              <CTableHeaderCell>Mô tả</CTableHeaderCell>
               <CTableHeaderCell>Đơn vị</CTableHeaderCell>
               <CTableHeaderCell>Đăng ký</CTableHeaderCell>
               <CTableHeaderCell />
@@ -294,7 +291,6 @@ const KpiRegistration = () => {
                 </CTableDataCell>
                 <CTableDataCell>{row.kpi_template_id}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
-                <CTableDataCell>{row.description}</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
                 <CTableDataCell>{row.registered ? 'Có' : 'Không'}</CTableDataCell>
                 <CTableDataCell className="text-center">

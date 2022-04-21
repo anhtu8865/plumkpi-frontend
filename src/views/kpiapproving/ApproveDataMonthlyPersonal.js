@@ -225,9 +225,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
     } else {
       setUserIDs(
         userIDs.filter((tmp) => {
-          if (tmp !== item.user.user_id) {
-            return tmp
-          }
+          return tmp !== item.user.user_id
         }),
       )
     }
