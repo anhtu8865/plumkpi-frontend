@@ -638,7 +638,7 @@ export const PlanKpiTable = (catItem) => {
                     )}
                     {user.role === 'Giám đốc' && (
                       <CTableDataCell>
-                        {handleActualValue(item.kpi_template.kpi_template_id)}
+                        {formatNumber(handleActualValue(item.kpi_template.kpi_template_id))}
                       </CTableDataCell>
                     )}
                     {user.role === 'Quản lý' ? (
@@ -665,7 +665,7 @@ export const PlanKpiTable = (catItem) => {
                         </CTableDataCell>
                       ) : (
                         <CTableDataCell>
-                          {handleActualValue(item.kpi_template.kpi_template_id)}
+                          {formatNumber(handleActualValue(item.kpi_template.kpi_template_id))}
                         </CTableDataCell>
                       )
                     ) : null}
@@ -708,7 +708,7 @@ export const PlanKpiTable = (catItem) => {
                         </CTableDataCell>
                       ) : (
                         <CTableDataCell>
-                          {handleActualValue(item.kpi_template.kpi_template_id)}
+                          {formatNumber(handleActualValue(item.kpi_template.kpi_template_id))}
                         </CTableDataCell>
                       )
                     ) : null}

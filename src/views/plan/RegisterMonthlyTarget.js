@@ -183,7 +183,7 @@ const RegisterMonthlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       month: selectedMonth,
-      target: formatNumber(handleMonthTargetValue(item)),
+      target: handleMonthTargetValue(item),
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
@@ -225,6 +225,7 @@ const RegisterMonthlyTarget = (props) => {
           <CFormInput
             type="number"
             defaultValue={formatNumber(handleMonthTargetValue(item))}
+            placeholder="Chưa có"
             valid={handleMonthTargetStatus(item) === 'Chấp nhận'}
             invalid={handleMonthTargetStatus(item) === 'Từ chối'}
             disabled={handleMonthTargetStatus(item) === 'Chấp nhận' ? true : false}

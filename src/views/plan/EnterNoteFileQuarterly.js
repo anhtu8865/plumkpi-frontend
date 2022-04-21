@@ -34,7 +34,6 @@ import { formatNumber } from 'src/utils/function'
 import api from 'src/views/axiosConfig'
 
 const EnterNoteFileQuarterly = (props) => {
-  console.log(props)
   const { plan, item, selectedQuarter, value } = props
   //console.log(item)
 
@@ -472,6 +471,7 @@ const EnterNoteFileQuarterly = (props) => {
         <CInputGroup>
           <CFormInput
             type="number"
+            placeholder="Chưa có"
             defaultValue={formatNumber(value)}
             valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterDataStatus(item) === 'Từ chối'}

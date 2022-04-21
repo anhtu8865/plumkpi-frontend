@@ -485,7 +485,7 @@ const EnterDateMonthlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       month: selectedMonth,
-      value: formatNumber(handleMonthActualValue(item)),
+      value: handleMonthActualValue(item),
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
@@ -806,7 +806,8 @@ const EnterDateMonthlyTarget = (props) => {
         <CInputGroup>
           <CFormInput
             type="number"
-            defaultValue={handleMonthActualValue(item)}
+            placeholder="Chưa có"
+            defaultValue={formatNumber(handleMonthActualValue(item))}
             valid={handleMonthActualStatus(item) === 'Chấp nhận'}
             invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}

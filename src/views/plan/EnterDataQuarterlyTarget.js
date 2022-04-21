@@ -199,7 +199,7 @@ const EnterDataQuarterlyTarget = (props) => {
       plan_id: plan.plan_id,
       kpi_template_id: item.kpi_template.kpi_template_id,
       quarter: selectedQuarter,
-      value: formatNumber(handleQuarterActualValue(item)),
+      value: handleQuarterActualValue(item),
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
@@ -520,6 +520,7 @@ const EnterDataQuarterlyTarget = (props) => {
         <CInputGroup>
           <CFormInput
             type="number"
+            placeholder="Chưa có"
             defaultValue={formatNumber(handleQuarterActualValue(item))}
             valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterDataStatus(item) === 'Từ chối'}

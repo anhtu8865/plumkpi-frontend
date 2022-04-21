@@ -48,6 +48,7 @@ const User = () => {
 
   const [deptList, setDeptList] = React.useState([])
 
+  const [filterID, setFilterID] = React.useState('')
   const [filterName, setFilterName] = React.useState('')
   const [filterEmail, setFilterEmail] = React.useState('')
   const [filterPhone, setFilterPhone] = React.useState('')
@@ -55,11 +56,16 @@ const User = () => {
   const [filterDept, setFilterDept] = React.useState('')
 
   const getUserList = useCallback(
-    async (user_name, email, phone, dept, role) => {
+    async (user_id, user_name, email, phone, dept, role) => {
       let paramsObject = {
         offset: (page - 1) * entryPerPage,
         limit: entryPerPage,
       }
+
+      if (user_id !== '') {
+        paramsObject.user_id = user_id
+      }
+
       if (user_name !== '') {
         paramsObject.user_name = user_name
       }
@@ -103,6 +109,7 @@ const User = () => {
     const fetchData = async () => {
       try {
         const result = await getUserList(
+          filterID,
           filterName,
           filterEmail,
           filterPhone,
@@ -135,6 +142,7 @@ const User = () => {
   }, [
     userReload,
     page,
+    filterID,
     filterName,
     filterEmail,
     filterPhone,
@@ -148,12 +156,29 @@ const User = () => {
     return (
       <>
         <CRow>
+          <CCol md={2}>
+            <CFormLabel htmlFor="filterID">ID</CFormLabel>
+            <CFormInput
+              type="number"
+              id="filterID"
+              name="filterID"
+              //value={filterName}
+              placeholder="Nhập ID..."
+              defaultValue=""
+              onChange={(event) => {
+                setTimeout(() => {
+                  setFilterID(event.target.value)
+                }, 500)
+              }}
+            />
+          </CCol>
           <CCol md={4}>
             <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
             <CFormInput
               type="text"
               id="filterName"
               name="filterName"
+              placeholder="Nhập họ tên..."
               //value={filterName}
               defaultValue=""
               onChange={(event) => {
@@ -163,12 +188,13 @@ const User = () => {
               }}
             />
           </CCol>
-          <CCol md={4}>
+          <CCol md={3}>
             <CFormLabel htmlFor="filterEmail">Email</CFormLabel>
             <CFormInput
               id="filterEmail"
               type="email"
               name="filter_email"
+              placeholder="Nhập email..."
               //value={filterEmail}
               defaultValue=""
               onChange={(event) => {
@@ -178,12 +204,13 @@ const User = () => {
               }}
             />
           </CCol>
-          <CCol md={4}>
+          <CCol md={3}>
             <CFormLabel htmlFor="filterPhone">Số điện thoại</CFormLabel>
             <CFormInput
               id="filterPhone"
               type="number"
               name="filter_phone"
+              placeholder="Nhập SĐT..."
               //value={filterPhone}
               defaultValue=""
               onChange={(event) => {
@@ -265,16 +292,16 @@ const User = () => {
                       {row.is_active ? (
                         <>
                           Active
-                          {user.role === 'Admin' && row.role !== 'Admin' && (
-                            <StatusUser userItem={row} />
-                          )}
+                          {user.role === 'Admin' &&
+                            row.role !== 'Admin' &&
+                            row.role !== 'Giám đốc' && <StatusUser userItem={row} />}
                         </>
                       ) : (
                         <>
                           Block
-                          {user.role === 'Admin' && row.role !== 'Admin' && (
-                            <StatusUser userItem={row} />
-                          )}
+                          {user.role === 'Admin' &&
+                            row.role !== 'Admin' &&
+                            row.role !== 'Giám đốc' && <StatusUser userItem={row} />}
                         </>
                       )}
                     </CTableDataCell>
@@ -288,9 +315,9 @@ const User = () => {
                         <InfoUser userItem={row} />
                         {user.role === 'Admin' && (
                           <>
-                            <ResetPwUser userItem={row} />
                             {['Admin', 'Giám đốc'].includes(row.role) ? null : (
                               <>
+                                <ResetPwUser userItem={row} />
                                 <EditUser inCat={row} />
                                 <DeleteUser inCat={row} />
                               </>

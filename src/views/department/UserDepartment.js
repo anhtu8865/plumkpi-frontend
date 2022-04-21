@@ -95,7 +95,7 @@ const UserDepartment = (props) => {
   const UserTable = (props) => {
     return (
       <>
-        <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
+        <CTable align="middle" className="mb-0 border" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell>ID</CTableHeaderCell>
@@ -112,7 +112,7 @@ const UserDepartment = (props) => {
                 <CTableDataCell>{row.user_id}</CTableDataCell>
                 <CTableDataCell className="d-flex flex-row">
                   <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
-                  {row.user_name}
+                  <div className="d-flex align-items-center">{row.user_name}</div>
                 </CTableDataCell>
                 <CTableDataCell>{row.email}</CTableDataCell>
                 <CTableDataCell>{row.role}</CTableDataCell>
@@ -168,7 +168,7 @@ const UserDepartment = (props) => {
                       }}
                       sx={{ textTransform: 'none', borderRadius: 10 }}
                     >
-                      Quay lạiY
+                      Quay lại
                     </Button>
                   </CCol>
                 </CRow>

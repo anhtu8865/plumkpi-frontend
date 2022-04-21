@@ -94,6 +94,7 @@ const AddDepartment = () => {
                 <CFormInput
                   name="dept_name"
                   id="inputDeptName"
+                  placeholder="Nhập tên phòng ban..."
                   value={formik.values.dept_name}
                   onChange={formik.handleChange}
                   invalid={formik.touched.dept_name && formik.errors.dept_name ? true : false}
@@ -114,6 +115,7 @@ const AddDepartment = () => {
                   row="2"
                   name="description"
                   id="inputDeptName"
+                  placeholder="Nhập mô tả..."
                   value={formik.values.description}
                   onChange={formik.handleChange}
                   invalid={formik.touched.description && formik.errors.description ? true : false}

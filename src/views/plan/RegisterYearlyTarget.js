@@ -69,6 +69,7 @@ const RegisterYearlyTarget = (props) => {
           <CFormInput
             type="number"
             defaultValue={item.target}
+            placeholder="Chưa có"
             {...formik.getFieldProps('target')}
           />
           <IconButton

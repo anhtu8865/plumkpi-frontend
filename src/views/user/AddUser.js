@@ -132,6 +132,7 @@ const AddUser = () => {
                   <CFormLabel htmlFor="inputFirstName">Họ và tên</CFormLabel>
                   <CFormInput
                     id="inputFirstName"
+                    placeholder="Nhập họ tên..."
                     {...formik.getFieldProps('user_name')}
                     invalid={formik.touched.user_name && formik.errors.user_name ? true : false}
                     valid={
@@ -150,6 +151,7 @@ const AddUser = () => {
                   <CFormLabel htmlFor="inputEmail">Email</CFormLabel>
                   <CFormInput
                     id="inputEmail"
+                    placeholder="Nhập email..."
                     type="email"
                     {...formik.getFieldProps('email')}
                     invalid={formik.touched.email && formik.errors.email ? true : false}
