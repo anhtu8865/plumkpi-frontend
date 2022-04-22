@@ -118,6 +118,7 @@ const Department = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>ID</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   {/* <CTableHeaderCell>Mô tả</CTableHeaderCell> */}
@@ -128,6 +129,7 @@ const Department = () => {
               <CTableBody>
                 {entry.map((catItem, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                     <CTableDataCell>{catItem.dept_id}</CTableDataCell>
                     <CTableDataCell>{catItem.dept_name}</CTableDataCell>
                     {/* <CTableDataCell>{catItem.description}</CTableDataCell> */}

@@ -111,6 +111,7 @@ const KpiApproving = () => {
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
+              <CTableHeaderCell>STT</CTableHeaderCell>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>
               <CTableHeaderCell>Mô tả</CTableHeaderCell>
@@ -122,6 +123,7 @@ const KpiApproving = () => {
           <CTableBody>
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_id}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
                 <CTableDataCell>{row.description}</CTableDataCell>
@@ -139,7 +141,7 @@ const KpiApproving = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="5">
+              <CTableDataCell colSpan="6">
                 <div className="d-flex flex-row justify-content-end">
                   <Pagination
                     page={page}
@@ -168,6 +170,7 @@ const KpiApproving = () => {
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
+              <CTableHeaderCell>STT</CTableHeaderCell>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>
               <CTableHeaderCell>Mô tả</CTableHeaderCell>
@@ -179,6 +182,7 @@ const KpiApproving = () => {
           <CTableBody>
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_id}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
                 <CTableDataCell>{row.description}</CTableDataCell>
@@ -195,7 +199,7 @@ const KpiApproving = () => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="5">
+              <CTableDataCell colSpan="6">
                 <div className="d-flex flex-row justify-content-end">
                   <Pagination
                     page={page}

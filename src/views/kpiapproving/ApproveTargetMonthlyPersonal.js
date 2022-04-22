@@ -412,12 +412,16 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
                             />
                           ) : null}
                         </CTableDataCell>
-                        <CTableDataCell className="d-flex flex-row">
-                          <Avatar
-                            src={item.user.avatar ? item.user.avatar.url : null}
-                            className="me-3"
-                          />
-                          {item.user.user_name}
+                        <CTableDataCell className="d-flex align-items-center">
+                          <CCol xs={3}>
+                            <Avatar src={item.user.avatar ? item.user.avatar.url : null} />
+                          </CCol>
+                          <CCol>
+                            <CRow>
+                              <small>ID: {item.user.user_id}</small>
+                            </CRow>
+                            <CRow>{item.user.user_name}</CRow>
+                          </CCol>
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
                           {handleTargetValue(item.user.user_id) !== '' ? (

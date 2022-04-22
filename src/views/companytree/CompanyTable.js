@@ -72,6 +72,7 @@ const CompanyTable = (props) => {
         <CTable align="middle" className="mb-0 border" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
+              <CTableHeaderCell>STT</CTableHeaderCell>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>Họ và tên</CTableHeaderCell>
               <CTableHeaderCell>Email</CTableHeaderCell>
@@ -83,6 +84,7 @@ const CompanyTable = (props) => {
           <CTableBody>
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                 <CTableDataCell>{row.user_id}</CTableDataCell>
                 <CTableDataCell className="d-flex flex-row">
                   <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
@@ -102,7 +104,7 @@ const CompanyTable = (props) => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="6">
+              <CTableDataCell colSpan="7">
                 <div className="d-flex flex-row justify-content-end">
                   <Pagination
                     page={page}

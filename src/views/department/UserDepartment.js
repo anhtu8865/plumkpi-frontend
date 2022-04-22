@@ -98,6 +98,7 @@ const UserDepartment = (props) => {
         <CTable align="middle" className="mb-0 border" hover responsive striped>
           <CTableHead color="light">
             <CTableRow>
+              <CTableHeaderCell>STT</CTableHeaderCell>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>Họ và tên</CTableHeaderCell>
               <CTableHeaderCell>Email</CTableHeaderCell>
@@ -109,6 +110,7 @@ const UserDepartment = (props) => {
           <CTableBody>
             {props.temList.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                 <CTableDataCell>{row.user_id}</CTableDataCell>
                 <CTableDataCell className="d-flex flex-row">
                   <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
@@ -130,15 +132,17 @@ const UserDepartment = (props) => {
           </CTableBody>
           <CTableFoot>
             <CTableRow>
-              <CTableDataCell colSpan="4">
-                <Pagination
-                  page={page}
-                  count={totalPage}
-                  showFirstButton
-                  showLastButton
-                  size="small"
-                  onChange={(event, page) => setPage(page)}
-                />
+              <CTableDataCell colSpan="5">
+                <div className="d-flex flex-row justify-content-end">
+                  <Pagination
+                    page={page}
+                    count={totalPage}
+                    showFirstButton
+                    showLastButton
+                    size="small"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                </div>
               </CTableDataCell>
             </CTableRow>
           </CTableFoot>

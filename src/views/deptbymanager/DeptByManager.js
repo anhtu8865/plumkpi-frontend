@@ -33,15 +33,19 @@ const DeptByManager = () => {
   const [page, setPage] = React.useState(1)
   const [totalPage, setTotalPage] = React.useState(1)
   const [entry, setEntry] = React.useState([])
+  const [filterID, setFilterID] = React.useState('')
   const [filterName, setFilterName] = React.useState('')
   const [filterEmail, setFilterEmail] = React.useState('')
   const [filterPhone, setFilterPhone] = React.useState('')
 
   const getUserList = useCallback(
-    async (user_name, email, phone) => {
+    async (user_id, user_name, email, phone) => {
       let paramsObject = {
         offset: (page - 1) * entryPerPage,
         limit: entryPerPage,
+      }
+      if (user_id !== '') {
+        paramsObject.user_id = user_id
       }
       if (user_name !== '') {
         paramsObject.user_name = user_name
@@ -66,7 +70,7 @@ const DeptByManager = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getUserList(filterName, filterEmail, filterPhone)
+        const result = await getUserList(filterID, filterName, filterEmail, filterPhone)
         if (result) {
           setTotalPage(Math.ceil(result.count / entryPerPage))
           setEntry(result.items)
@@ -90,18 +94,35 @@ const DeptByManager = () => {
     }
 
     fetchData()
-  }, [userReload, page, filterName, filterEmail, filterPhone, dispatch, getUserList])
+  }, [userReload, page, filterID, filterName, filterEmail, filterPhone, dispatch, getUserList])
 
   const UserFilter = () => {
     return (
       <>
         <CRow>
+          <CCol md={2}>
+            <CFormLabel htmlFor="filterID">ID</CFormLabel>
+            <CFormInput
+              type="number"
+              id="filterID"
+              name="filterID"
+              //value={filterName}
+              placeholder="Nhập ID..."
+              defaultValue=""
+              onChange={(event) => {
+                setTimeout(() => {
+                  setFilterID(event.target.value)
+                }, 500)
+              }}
+            />
+          </CCol>
           <CCol md={4}>
             <CFormLabel htmlFor="filterName">Họ tên</CFormLabel>
             <CFormInput
               type="text"
               id="filterName"
               name="filterName"
+              placeholder="Nhập họ tên..."
               //value={filterName}
               defaultValue=""
               onChange={(event) => {
@@ -111,12 +132,13 @@ const DeptByManager = () => {
               }}
             />
           </CCol>
-          <CCol md={4}>
+          <CCol md={3}>
             <CFormLabel htmlFor="filterEmail">Email</CFormLabel>
             <CFormInput
               id="filterEmail"
               type="email"
               name="filter_email"
+              placeholder="Nhập email..."
               //value={filterEmail}
               defaultValue=""
               onChange={(event) => {
@@ -126,12 +148,13 @@ const DeptByManager = () => {
               }}
             />
           </CCol>
-          <CCol md={4}>
+          <CCol md={3}>
             <CFormLabel htmlFor="filterPhone">Số điện thoại</CFormLabel>
             <CFormInput
               id="filterPhone"
               type="number"
               name="filter_phone"
+              placeholder="Nhập SĐT..."
               //value={filterPhone}
               defaultValue=""
               onChange={(event) => {
@@ -154,6 +177,7 @@ const DeptByManager = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>ID</CTableHeaderCell>
                   <CTableHeaderCell>Họ và tên</CTableHeaderCell>
                   <CTableHeaderCell>Email</CTableHeaderCell>
@@ -165,6 +189,7 @@ const DeptByManager = () => {
               <CTableBody>
                 {entry.map((row, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                     <CTableDataCell>{row.user_id}</CTableDataCell>
                     <CTableDataCell className="d-flex flex-row">
                       <Avatar src={row.avatar !== null ? row.avatar.url : null} className="me-3" />
@@ -190,7 +215,7 @@ const DeptByManager = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="6">
+                  <CTableDataCell colSpan="7">
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}

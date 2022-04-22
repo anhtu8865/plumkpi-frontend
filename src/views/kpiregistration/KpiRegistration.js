@@ -266,6 +266,7 @@ const KpiRegistration = () => {
           <CTableHead color="light">
             <CTableRow>
               <CTableHeaderCell />
+              <CTableHeaderCell>STT</CTableHeaderCell>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>
               <CTableHeaderCell>Đơn vị</CTableHeaderCell>
@@ -289,6 +290,7 @@ const KpiRegistration = () => {
                     }}
                   />
                 </CTableDataCell>
+                <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_id}</CTableDataCell>
                 <CTableDataCell>{row.kpi_template_name}</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
