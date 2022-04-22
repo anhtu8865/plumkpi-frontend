@@ -30,7 +30,7 @@ import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import { formatNumber } from 'src/utils/function'
 import { quarterArray } from 'src/utils/constant'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 
 export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
@@ -261,7 +261,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     return (
       <CustomWidthTooltip title={TooltipTitle(item, quarter, unit)} placement="bottom-start">
         <IconButton color="primary" size="small">
-          <ArrowDropDownIcon fontSize="small" />
+          <ArrowDropDownCircleIcon fontSize="small" />
         </IconButton>
       </CustomWidthTooltip>
     )

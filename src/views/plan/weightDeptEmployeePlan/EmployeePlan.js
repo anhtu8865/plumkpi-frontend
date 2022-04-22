@@ -116,6 +116,7 @@ const EmployeePlan = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>ID</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>
                   <CTableHeaderCell>Email</CTableHeaderCell>
@@ -126,6 +127,7 @@ const EmployeePlan = () => {
               <CTableBody>
                 {entry.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                     <CTableDataCell>{item.user_id}</CTableDataCell>
                     <CTableDataCell className="d-flex align-items-center">
                       <Avatar src={item.avatar ? item.avatar.url : null} className="me-3" />
@@ -150,7 +152,7 @@ const EmployeePlan = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="5">
+                  <CTableDataCell colSpan={6}>
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}

@@ -31,8 +31,10 @@ import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import CheckIcon from '@mui/icons-material/Check'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
-import { monthArray } from 'src/utils/constant'
+import { monthArray, quarterArray } from 'src/utils/constant'
 import { formatNumber } from 'src/utils/function'
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle'
+import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 
 export const AssignMonthlyTargetButton = (props) => {
   const dispatch = useDispatch()
@@ -92,6 +94,147 @@ export const AssignMonthlyTargetButton = (props) => {
       fetchData()
     }
   }, [modalVisible, dispatch, getInfoTargetKpi])
+
+  const handleMonthTargetValue = (item, selectedMonth) => {
+    switch (selectedMonth) {
+      case 1: {
+        if (item.first_monthly_target) {
+          return item.first_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 2: {
+        if (item.second_monthly_target) {
+          return item.second_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 3: {
+        if (item.third_monthly_target) {
+          return item.third_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 4: {
+        if (item.fourth_monthly_target) {
+          return item.fourth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 5: {
+        if (item.fifth_monthly_target) {
+          return item.fifth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 6: {
+        if (item.sixth_monthly_target) {
+          return item.sixth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 7: {
+        if (item.seventh_monthly_target) {
+          return item.seventh_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 8: {
+        if (item.eighth_monthly_target) {
+          return item.eighth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 9: {
+        if (item.ninth_monthly_target) {
+          return item.ninth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 10: {
+        if (item.tenth_monthly_target) {
+          return item.tenth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 11: {
+        if (item.eleventh_monthly_target) {
+          return item.eleventh_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 12: {
+        if (item.twelfth_monthly_target) {
+          return item.twelfth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      default:
+        return 'Chưa có'
+    }
+  }
+
+  const handleQuarterTargetValue = (item, selectedQuarter) => {
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          return item.first_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      case 2: {
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      case 3: {
+        if (item.third_quarterly_target) {
+          return item.third_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          return item.fourth_quarterly_target.target
+        }
+        return 'Chưa đăng ký'
+      }
+      default:
+        return 'Chưa đăng ký'
+    }
+  }
+
+  const handleQuarterTargetStatus = (item, selectedQuarter) => {
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          return item.first_quarterly_target.approve
+        }
+        return ''
+      }
+      case 2: {
+        if (item.second_quarterly_target) {
+          return item.second_quarterly_target.approve
+        }
+        return ''
+      }
+      case 3: {
+        if (item.third_quarterly_target) {
+          return item.third_quarterly_target.approve
+        }
+        return ''
+      }
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          return item.fourth_quarterly_target.approve
+        }
+        return ''
+      }
+      default:
+        return ''
+    }
+  }
 
   const handleTargetList = (list, month) => {
     if (list.length > 0) {
@@ -264,6 +407,33 @@ export const AssignMonthlyTargetButton = (props) => {
     ),
   })
 
+  const TooltipTitle = (item, month, unit) => {
+    const displayMonth = monthArray.filter((item) => item !== month)
+    return (
+      <CRow>
+        {displayMonth.map((element, index) => {
+          const target = handleMonthTargetValue(item, element)
+          return (
+            <CCol xs={6} key={index}>
+              Chỉ tiêu tháng {element}:{' '}
+              {target !== 'Chưa có' ? `${formatNumber(target)} ${unit} ` : `Chưa có`}
+            </CCol>
+          )
+        })}
+      </CRow>
+    )
+  }
+
+  const AllMonthTargetDropdown = (item, month, unit) => {
+    return (
+      <CustomWidthTooltip title={TooltipTitle(item, month, unit)} placement="bottom-start">
+        <IconButton color="primary" size="small">
+          <ArrowDropDownCircleIcon fontSize="small" />
+        </IconButton>
+      </CustomWidthTooltip>
+    )
+  }
+
   const Table = () => {
     const { values, touched, errors, handleBlur, handleChange, setFieldValue } = useFormikContext()
 
@@ -348,6 +518,13 @@ export const AssignMonthlyTargetButton = (props) => {
                                 </CRow>
                                 <CRow>{item.user.user_name}</CRow>
                               </CCol>
+                              <CCol>
+                                {AllMonthTargetDropdown(
+                                  item,
+                                  values.month,
+                                  props.kpiItem.kpi_template.unit,
+                                )}
+                              </CCol>
                             </CTableDataCell>
                             <CTableHeaderCell className="w-25">
                               <CInputGroup size="sm">
@@ -414,6 +591,25 @@ export const AssignMonthlyTargetButton = (props) => {
           <CCol xs={12}>
             <b>Phòng ban:</b> {user.manage.dept_name}
           </CCol>
+        </CRow>
+        <CRow>
+          {quarterArray.map((item, index) => {
+            const target = handleQuarterTargetValue(props.kpiItem, item)
+            const status = handleQuarterTargetStatus(props.kpiItem, item)
+            return (
+              <CCol key={index} xs={12} sm={6} className="mt-2">
+                <b>Chỉ tiêu quý {item}:</b>{' '}
+                {target !== 'Chưa đăng ký'
+                  ? `${formatNumber(target)} ${props.kpiItem.kpi_template.unit} `
+                  : `Chưa đăng ký`}
+                {status !== ''
+                  ? status === 'Đang xử lý'
+                    ? `(Đang chờ duyệt...)`
+                    : `(${status})`
+                  : null}
+              </CCol>
+            )
+          })}
         </CRow>
         <Table />
       </>

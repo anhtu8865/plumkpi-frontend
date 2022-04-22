@@ -131,6 +131,7 @@ const Notif = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell className="w-50">Nội dung</CTableHeaderCell>
                   <CTableHeaderCell>Ngày gửi</CTableHeaderCell>
                   <CTableHeaderCell>Tháng gửi</CTableHeaderCell>
@@ -139,8 +140,9 @@ const Notif = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {entry.map((item) => (
+                {entry.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={item.notif_id}>
+                    <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                     <CTableDataCell className="w-50">
                       <ShowMoreText lines={1} more=" Xem thêm" less=" Thu gọn" expanded={false}>
                         {item.content}
@@ -160,7 +162,7 @@ const Notif = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan={5}>
+                  <CTableDataCell colSpan={6}>
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}

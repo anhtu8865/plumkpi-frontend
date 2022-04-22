@@ -80,6 +80,7 @@ const DeptPlan = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell>Quản lý</CTableHeaderCell>
                   <CTableHeaderCell />
@@ -88,6 +89,7 @@ const DeptPlan = () => {
               <CTableBody>
                 {entry.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{(page - 1) * entryPerPage + index + 1}</CTableDataCell>
                     <CTableDataCell>{item.dept_name}</CTableDataCell>
                     <CTableDataCell className="d-flex align-items-center">
                       <Avatar
@@ -113,7 +115,7 @@ const DeptPlan = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="3">
+                  <CTableDataCell colSpan={4}>
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={page}

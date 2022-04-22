@@ -563,6 +563,7 @@ export const PlanKpiTable = (catItem) => {
             <CTable align="middle" className="mb-0 border" hover responsive striped>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
                   {!checkedMonth && !checkedQuarter && (
                     <CTableHeaderCell>Chỉ tiêu cả năm</CTableHeaderCell>
@@ -582,6 +583,7 @@ export const PlanKpiTable = (catItem) => {
               <CTableBody>
                 {temInPlan.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>{(temPage - 1) * 10 + index + 1}</CTableDataCell>
                     <CTableDataCell>
                       {item.kpi_template.kpi_template_name}
                       {'    '}
@@ -753,7 +755,7 @@ export const PlanKpiTable = (catItem) => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
-                  <CTableDataCell colSpan="6">
+                  <CTableDataCell colSpan={7}>
                     <div className="d-flex flex-row justify-content-end">
                       <Pagination
                         page={temPage}
