@@ -252,6 +252,54 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
     }
   }
 
+  const isHaveActual = (item) => {
+    //console.log(item)
+    switch (selectedQuarter) {
+      case 1: {
+        if (item.first_quarterly_target) {
+          if (
+            item.first_quarterly_target.hasOwnProperty('actual') &&
+            item.first_quarterly_target.hasOwnProperty('actual_value')
+          )
+            return true
+        }
+        return false
+      }
+      case 2: {
+        if (item.second_quarterly_target) {
+          if (
+            item.second_quarterly_target.hasOwnProperty('actual') &&
+            item.second_quarterly_target.hasOwnProperty('actual_value')
+          )
+            return true
+        }
+        return false
+      }
+      case 3: {
+        if (item.third_quarterly_target) {
+          if (
+            item.third_quarterly_target.hasOwnProperty('actual') &&
+            item.third_quarterly_target.hasOwnProperty('actual_value')
+          )
+            return true
+        }
+        return false
+      }
+      case 4: {
+        if (item.fourth_quarterly_target) {
+          if (
+            item.fourth_quarterly_target.hasOwnProperty('actual') &&
+            item.fourth_quarterly_target.hasOwnProperty('actual_value')
+          )
+            return true
+        }
+        return false
+      }
+      default:
+        return false
+    }
+  }
+
   const handleQuarterDataStatus = (item) => {
     switch (selectedQuarter) {
       case 1: {
@@ -359,12 +407,11 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
               </CTableHead>
               <CTableBody>
                 {selectedDeptList.map((item, index) => {
-                  //console.log(item)
                   return (
                     <>
                       <CTableRow key={index}>
                         <CTableDataCell style={{ width: '5%' }} className="text-center">
-                          {handleQuarterDataValue(item) !== 'Chưa có' ? (
+                          {isHaveActual(item) ? (
                             <Checkbox
                               size="small"
                               checked={deptIDs.includes(item.dept.dept_id)}

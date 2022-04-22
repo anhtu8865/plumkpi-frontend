@@ -10,8 +10,9 @@ import {
   CFormLabel,
   CImage,
   CRow,
+  CForm,
 } from '@coreui/react'
-import { Alert, Snackbar } from '@mui/material'
+import SystemAlert from 'src/components/SystemAlert'
 import { useFormik } from 'formik'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
@@ -22,53 +23,11 @@ import * as yup from 'yup'
 import './Login.css'
 import { setUser } from 'src/slices/userSlice'
 import { useDispatch } from 'react-redux'
+import { createAlert } from 'src/slices/alertSlice'
 
 const Login = () => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const [error, setError] = React.useState(false)
-  const [success, setSuccess] = React.useState(false)
-  const [successMessage, setSuccessMessage] = React.useState('')
-  const [errorMessage, setErrorMessage] = React.useState('')
-
-  const SuccessErrorToast = () => {
-    const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return
-      }
-      if (success === true) {
-        setSuccess(false)
-        //setReload(true)
-      } else {
-        setError(false)
-      }
-    }
-
-    return (
-      <>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={error}
-          autoHideDuration={3000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={success}
-          autoHideDuration={1000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
-            {successMessage}
-          </Alert>
-        </Snackbar>
-      </>
-    )
-  }
 
   const validationSchema = yup.object({
     email: yup.string().email().required('Đây là trường bắt buộc'),
@@ -88,8 +47,12 @@ const Login = () => {
         .post('authentication/log-in', { email: values.email, password: values.password })
         .then((res) => {
           //alert('Đăng nhập thành công')
-          setSuccessMessage('Đăng nhập thành công')
-          setSuccess(true)
+          dispatch(
+            createAlert({
+              message: 'Đăng nhập thành công',
+              type: 'success',
+            }),
+          )
           dispatch(setUser({ value: res.data }))
           //setLoading(true)
           if (res.data.role === 'Admin') {
@@ -102,8 +65,14 @@ const Login = () => {
         .catch((error) => {
           //alert('Đăng nhập thất bại')
           //console.log(error.response.data.message)
-          setErrorMessage(error.response.data.message)
-          setError(true)
+          if (error.response) {
+            dispatch(
+              createAlert({
+                message: error.response.data.message,
+                type: 'error',
+              }),
+            )
+          }
         })
         .finally(() => formik.setSubmitting(false))
     },
@@ -117,7 +86,7 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <form onSubmit={formik.handleSubmit}>
+                  <CForm onSubmit={formik.handleSubmit}>
                     <CImage src={KPIlogo} className="login-logo" alt="logo" />
                     <h4 className="login-title">Chào mừng bạn đến PlumKPI! 👋🏻</h4>
                     <p className="text-medium-emphasis">Đăng nhập với tài khoản của bạn</p>
@@ -171,14 +140,14 @@ const Login = () => {
                         </div>
                       </CCol>
                     </CRow>
-                  </form>
+                  </CForm>
                 </CCardBody>
               </CCard>
             </CCardGroup>
           </CCol>
         </CRow>
       </CContainer>
-      <SuccessErrorToast />
+      <SystemAlert />
     </div>
   )
 }
