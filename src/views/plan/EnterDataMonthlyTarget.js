@@ -32,7 +32,7 @@ import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
 import { setLoading, setReload } from 'src/slices/viewSlice'
-import { formatNumber } from 'src/utils/function'
+//import { formatNumber } from 'src/utils/function'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 
@@ -807,7 +807,7 @@ const EnterDateMonthlyTarget = (props) => {
           <CFormInput
             type="number"
             placeholder="Chưa có"
-            defaultValue={formatNumber(handleMonthActualValue(item))}
+            defaultValue={handleMonthActualValue(item)}
             valid={handleMonthActualStatus(item) === 'Chấp nhận'}
             invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}

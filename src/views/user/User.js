@@ -27,7 +27,7 @@ import api from 'src/views/axiosConfig'
 
 import AddUser from './AddUser'
 import DeleteUser from './DeleteUser'
-import EditUser from './EditUser'
+//import EditUser from './EditUser'
 import InfoUser from './InfoUser'
 import ResetPwUser from './ResetPwUser'
 import StatusUser from './StatusUser'
@@ -320,7 +320,7 @@ const User = () => {
                             {['Admin', 'Giám đốc'].includes(row.role) ? null : (
                               <>
                                 <ResetPwUser userItem={row} />
-                                <EditUser inCat={row} />
+                                {/* <EditUser inCat={row} /> */}
                                 <DeleteUser inCat={row} />
                               </>
                             )}

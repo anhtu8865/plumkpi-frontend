@@ -5,7 +5,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
-import { formatNumber } from 'src/utils/function'
+//import { formatNumber } from 'src/utils/function'
 
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
@@ -224,7 +224,7 @@ const RegisterMonthlyTarget = (props) => {
         <CInputGroup>
           <CFormInput
             type="number"
-            defaultValue={formatNumber(handleMonthTargetValue(item))}
+            defaultValue={handleMonthTargetValue(item)}
             placeholder="Chưa có"
             valid={handleMonthTargetStatus(item) === 'Chấp nhận'}
             invalid={handleMonthTargetStatus(item) === 'Từ chối'}

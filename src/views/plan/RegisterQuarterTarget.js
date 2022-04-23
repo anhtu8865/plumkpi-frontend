@@ -5,7 +5,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
-import { formatNumber } from 'src/utils/function'
+//import { formatNumber } from 'src/utils/function'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
@@ -136,7 +136,7 @@ const RegisterQuarterTarget = (props) => {
           <CFormInput
             type="number"
             placeholder="Chưa có"
-            defaultValue={formatNumber(handleQuarterTargetValue(item))}
+            defaultValue={handleQuarterTargetValue(item)}
             valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
             disabled={handleQuarterTargetStatus(item) === 'Chấp nhận'}
