@@ -154,12 +154,7 @@ const DashboardDetail = () => {
                   </small>
                 </CRow>
                 <CRow className="mt-4">
-                  <Chart
-                    result={result}
-                    filter={props.chartItem.properties.filter}
-                    planId={props.chartItem.plan.plan_id}
-                    kpiIds={props.chartItem.properties.kpis}
-                  />
+                  <Chart result={result} />
                 </CRow>
               </CCardBody>
             </CCard>

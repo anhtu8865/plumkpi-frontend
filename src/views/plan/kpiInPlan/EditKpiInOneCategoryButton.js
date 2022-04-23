@@ -112,7 +112,11 @@ export const EditKpiInOneCategoryButton = (catItem) => {
         const res = await getSelectedKpiList()
         setSelectedKpiList(res)
       } catch (error) {
-        if (error.response && catItem.kpi_category.kpi_category_id) {
+        if (
+          error.response &&
+          catItem.kpi_category.kpi_category_id &&
+          error.response.status !== 401
+        ) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -137,7 +141,11 @@ export const EditKpiInOneCategoryButton = (catItem) => {
           setEntry(result)
         }
       } catch (error) {
-        if (error.response && catItem.kpi_category.kpi_category_id) {
+        if (
+          error.response &&
+          catItem.kpi_category.kpi_category_id &&
+          error.response.status !== 401
+        ) {
           dispatch(
             createAlert({
               message: error.response.data.message,

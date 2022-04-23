@@ -53,7 +53,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
       })
       return response.data
     } catch (error) {
-      if (error.response && plan.plan_id) {
+      if (error.response && plan.plan_id && error.response.status !== 401) {
         dispatch(
           createAlert({
             message: error.response.data.message,

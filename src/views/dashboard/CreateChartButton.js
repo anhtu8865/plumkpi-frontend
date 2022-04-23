@@ -234,14 +234,7 @@ export const CreateChartButton = () => {
     } else if (!result) {
       return null
     } else {
-      return (
-        <Chart
-          result={result}
-          filter={convertKpisOrFilter(values.filter)}
-          planId={values.plan_id}
-          kpiIds={convertKpisOrFilter(values.kpis)}
-        />
-      )
+      return <Chart result={result} />
     }
   }
 

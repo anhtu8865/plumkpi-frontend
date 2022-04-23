@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React from 'react'
 import { CCol, CRow } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { colorArray } from 'src/utils/constant'
@@ -7,57 +7,9 @@ import cloneDeep from 'lodash/cloneDeep'
 import GaugeChart from 'react-gauge-chart'
 import { Bar, Line, Pie } from 'react-chartjs-2'
 import 'chart.js/auto'
-import { useDispatch, useSelector } from 'react-redux'
-import { createAlert } from 'src/slices/alertSlice'
-import api from 'src/views/axiosConfig'
 
 export const Chart = (props) => {
-  const { result, filter, planId, kpiIds } = props
-  const { user } = useSelector((state) => state.user)
-  const [resultList, setResultList] = useState([])
-  const dispatch = useDispatch()
-
-  const getDeptsOrEmployees = useCallback(
-    async (planId, kpiId) => {
-      const array = []
-      switch (user.role) {
-        case 'Quản lý': {
-          const response = await api.get('/plans/plan/employees-assigned-kpi', {
-            params: { plan_id: Number(planId), kpi_template_id: kpiId },
-          })
-          response.data.forEach((item) => {
-            array.push({ id: item.user_id, name: item.user_name })
-          })
-          return array
-        }
-        default:
-          return []
-      }
-    },
-    [user.role],
-  )
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (kpiIds.length === 1) {
-          const result = await getDeptsOrEmployees(planId, kpiIds[0])
-          setResultList(result)
-        }
-      } catch (error) {
-        if (error.response && error.response.status !== 401) {
-          dispatch(
-            createAlert({
-              message: error.response.data.message,
-              type: 'error',
-            }),
-          )
-        }
-      }
-    }
-
-    fetchData()
-  }, [dispatch, getDeptsOrEmployees, kpiIds, planId])
+  const { result } = props
 
   if (result.datasets) {
     if (result.labels.length === 1 && result.datasets.length > 1) {
@@ -65,16 +17,7 @@ export const Chart = (props) => {
       const labels = []
       const data = []
       result.datasets.forEach((item) => {
-        if (filter.length === 0) {
-          labels.push(item.label)
-        } else {
-          const find = resultList.find((i) => i.name === item.label)
-          if (find) {
-            labels.push(`${item.label} (ID: ${find.id})`)
-          } else {
-            labels.push(item.label)
-          }
-        }
+        labels.push(item.label)
         data.push(item.data[0])
       })
       return (
@@ -123,12 +66,6 @@ export const Chart = (props) => {
       //vẽ biểu đồ đường
       let copyResult = cloneDeep(result)
       copyResult.datasets.forEach((item, index) => {
-        if (filter.length > 1) {
-          const find = resultList.find((i) => i.name === item.label)
-          if (find) {
-            item.label = `${item.label} (ID: ${find.id})`
-          }
-        }
         item.backgroundColor = colorArray[index]
         item.borderColor = colorArray[index]
         item.borderWidth = 2
@@ -199,9 +136,6 @@ export const Chart = (props) => {
       copyResult.datasets[0].backgroundColor = backgroundColor
       copyResult.datasets[0].borderColor = borderColor
       copyResult.datasets[0].borderWidth = 1
-      if (filter.length === 1 && user.role === 'Quản lý') {
-        copyResult.datasets[0].label = `${result.datasets[0].label} (ID: ${filter[0]})`
-      }
       return (
         <Bar
           style={{ width: '400px' }}
@@ -259,11 +193,7 @@ export const Chart = (props) => {
         <>
           <CRow className="mb-1">
             <CCol xs={12} className="d-flex justify-content-center">
-              {filter.length === 1 ? (
-                <small>
-                  {result.datasets[0].label} {user.role === 'Quản lý' ? `(ID: ${filter[0]})` : null}
-                </small>
-              ) : null}
+              <small>{result.datasets[0].label}</small>
             </CCol>
           </CRow>
           <CRow>
@@ -314,7 +244,4 @@ export const Chart = (props) => {
 
 Chart.propTypes = {
   result: PropTypes.object,
-  filter: PropTypes.array,
-  planId: PropTypes.number,
-  kpiIds: PropTypes.array,
 }

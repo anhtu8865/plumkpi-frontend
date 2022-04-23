@@ -191,8 +191,12 @@ const PlanDetail = () => {
     const fetchData = async () => {
       try {
         const result = await getPlan()
-        const res = await getCatPlan()
         const time = currentTime(today.time, result.year)
+        dispatch(
+          setPlan({
+            value: result,
+          }),
+        )
         dispatch(
           setSelectedQuarter({
             value: time.quarter,
@@ -205,6 +209,25 @@ const PlanDetail = () => {
         )
         setQuarterOpt(quarterOption(time.quarter))
         setMonthOpt(monthOption(time.month))
+        setCheckFirstOpen()
+      } catch (error) {
+        if (error.response && error.response.status !== 401) {
+          dispatch(
+            createAlert({
+              message: error.response.data.message,
+              type: 'error',
+            }),
+          )
+        }
+      }
+    }
+    fetchData()
+  }, [today, getPlan, setCheckFirstOpen, dispatch])
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getCatPlan()
         if (res) {
           dispatch(
             setCatInPlan({
@@ -212,12 +235,25 @@ const PlanDetail = () => {
             }),
           )
           if (res.length > 0) {
-            dispatch(
-              setCurrentCat({
-                value: res[0],
-              }),
-            )
-            setCheckFirstOpen()
+            if (currentCat.kpi_category && currentCat.kpi_category.kpi_category_id) {
+              const find = res.find(
+                (item) =>
+                  currentCat.kpi_category.kpi_category_id === item.kpi_category.kpi_category_id,
+              )
+              if (!find) {
+                dispatch(
+                  setCurrentCat({
+                    value: res[0],
+                  }),
+                )
+              }
+            } else {
+              dispatch(
+                setCurrentCat({
+                  value: res[0],
+                }),
+              )
+            }
           } else {
             dispatch(
               setCurrentCat({
@@ -226,11 +262,6 @@ const PlanDetail = () => {
             )
           }
         }
-        dispatch(
-          setPlan({
-            value: result,
-          }),
-        )
         dispatch(
           setLoading({
             value: false,
@@ -248,11 +279,12 @@ const PlanDetail = () => {
       }
     }
     fetchData()
-  }, [reload, today, getCatPlan, getPlan, setCheckFirstOpen, dispatch])
+    // eslint-disable-next-line
+  }, [reload, getCatPlan, dispatch])
 
   React.useEffect(() => {
     setNewResult([])
-  }, [temPage])
+  }, [reload, temPage])
 
   React.useEffect(() => {
     if (temPage !== 1) {
@@ -260,7 +292,8 @@ const PlanDetail = () => {
     } else {
       setNewResult([])
     }
-  }, [currentCat, temPage, dispatch])
+    // eslint-disable-next-line
+  }, [currentCat, dispatch])
 
   React.useEffect(() => {
     let isCalled = true
@@ -297,14 +330,8 @@ const PlanDetail = () => {
     }
     fetchData()
     return () => (isCalled = false)
-  }, [
-    newResult,
-    currentCat.kpi_category.kpi_category_id,
-    dispatch,
-    getTemInOneCatPlan,
-    temPage,
-    user.role,
-  ])
+    // eslint-disable-next-line
+  }, [newResult, dispatch, getTemInOneCatPlan, user.role])
 
   React.useEffect(() => {
     if (['Quản lý', 'Nhân viên'].includes(user.role)) {
@@ -337,7 +364,15 @@ const PlanDetail = () => {
     }
     fetchData()
     return () => (isCalled = false)
-  }, [checkedMonth, checkedQuarter, selectedMonth, selectedQuarter, dispatch, getPerformResult])
+  }, [
+    reload,
+    checkedMonth,
+    checkedQuarter,
+    selectedMonth,
+    selectedQuarter,
+    dispatch,
+    getPerformResult,
+  ])
 
   const handleCheck = (flag) => {
     if (flag === 'Month') {
