@@ -173,7 +173,7 @@ export const CreateReportButton = () => {
         const result1 = await getAllKpisInPlan(result[0].plan_id)
         setKpisOption(handleKpis(result1))
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -222,7 +222,7 @@ export const CreateReportButton = () => {
             }
           }
         } catch (error) {
-          if (error.response) {
+          if (error.response && error.response.status !== 401) {
             dispatch(
               createAlert({
                 message: error.response.data.message,
@@ -316,7 +316,7 @@ export const CreateReportButton = () => {
             dispatch(setReload())
             setModalVisible(false)
           } catch (error) {
-            if (error.response) {
+            if (error.response && error.response.status !== 401) {
               dispatch(
                 createAlert({
                   message: error.response.data.error,

@@ -73,7 +73,7 @@ export const AssignToEmployeeButton = (props) => {
         setEmployeeList(result)
         setSelectedEmployeeList(res)
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -205,7 +205,7 @@ export const AssignToEmployeeButton = (props) => {
             )
             setModalVisible(false)
           } catch (error) {
-            if (error.response) {
+            if (error.response && error.response.status !== 401) {
               dispatch(
                 createAlert({
                   message: error.response.data.message,

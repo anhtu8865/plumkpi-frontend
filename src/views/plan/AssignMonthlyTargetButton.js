@@ -77,7 +77,7 @@ export const AssignMonthlyTargetButton = (props) => {
         const result = await getInfoTargetKpi()
         setTargetList(result)
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -657,7 +657,7 @@ export const AssignMonthlyTargetButton = (props) => {
               )
               setModalVisible(false)
             } catch (error) {
-              if (error.response) {
+              if (error.response && error.response.status !== 401) {
                 dispatch(
                   createAlert({
                     message: error.response.data.message,

@@ -57,7 +57,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
       })
       return response.data
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.status !== 401) {
         dispatch(
           createAlert({
             message: error.response.data.message,

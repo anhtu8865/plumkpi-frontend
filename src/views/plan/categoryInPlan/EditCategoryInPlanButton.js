@@ -82,7 +82,7 @@ export const EditCategoryInPlanButton = () => {
         }
         setSelectedCatList(res)
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -158,7 +158,7 @@ export const EditCategoryInPlanButton = () => {
       try {
         await registerKpi(selectedCatList)
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,

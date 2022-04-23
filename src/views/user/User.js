@@ -121,7 +121,7 @@ const User = () => {
           setEntry(result.items)
         }
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,

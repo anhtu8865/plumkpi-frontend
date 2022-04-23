@@ -65,7 +65,7 @@ const Login = () => {
         .catch((error) => {
           //alert('Đăng nhập thất bại')
           //console.log(error.response.data.message)
-          if (error.response) {
+          if (error.response && error.response.status !== 401) {
             dispatch(
               createAlert({
                 message: error.response.data.message,

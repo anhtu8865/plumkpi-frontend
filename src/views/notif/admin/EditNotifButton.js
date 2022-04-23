@@ -89,7 +89,7 @@ export const EditNotifButton = (props) => {
             dispatch(setReload())
             setModalVisible(false)
           } catch (error) {
-            if (error.response) {
+            if (error.response && error.response.status !== 401) {
               dispatch(
                 createAlert({
                   message: error.response.data.error,

@@ -45,7 +45,7 @@ export const AssignToDeptButton = (kpiItem) => {
       const response = await api.get(`/depts/all`)
       return response.data
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.status !== 401) {
         dispatch(
           createAlert({
             message: error.response.data.message,
@@ -95,7 +95,7 @@ export const AssignToDeptButton = (kpiItem) => {
       )
       dispatch(setReload())
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.status !== 401) {
         dispatch(
           createAlert({
             message: error.response.data.message,

@@ -166,7 +166,7 @@ export const CreateChartButton = () => {
         const result1 = await getAllKpisInPlan(result[0].plan_id)
         setKpisOption(handleKpis(result1))
       } catch (error) {
-        if (error.response) {
+        if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,
@@ -214,7 +214,7 @@ export const CreateChartButton = () => {
             }
           }
         } catch (error) {
-          if (error.response) {
+          if (error.response && error.response.status !== 401) {
             dispatch(
               createAlert({
                 message: error.response.data.message,
@@ -288,7 +288,7 @@ export const CreateChartButton = () => {
             dispatch(setReload())
             setModalVisible(false)
           } catch (error) {
-            if (error.response) {
+            if (error.response && error.response.status !== 401) {
               dispatch(
                 createAlert({
                   message: error.response.data.error,
