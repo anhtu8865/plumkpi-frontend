@@ -30,7 +30,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
 import PropTypes from 'prop-types'
-
+import { formatNumber } from 'src/utils/function'
 import FileUploadMonthly from './FileUploadMonthly'
 import NoteDataMonthlyApprove from './NoteDataMonthlyApprove'
 
@@ -794,7 +794,10 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                         <CTableDataCell className="w-25">
                           {handleMonthTargetValue(item) !== 'Chưa có' ? (
                             <CInputGroup size="sm">
-                              <CFormInput value={handleMonthTargetValue(item)} disabled />
+                              <CFormInput
+                                value={formatNumber(handleMonthTargetValue(item))}
+                                disabled
+                              />
                               <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                             </CInputGroup>
                           ) : (
@@ -805,7 +808,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                           {handleMonthActualValue(item) !== 'Chưa có' ? (
                             <CInputGroup size="sm">
                               <CFormInput
-                                value={handleMonthActualValue(item)}
+                                value={formatNumber(handleMonthActualValue(item))}
                                 invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
                                 valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                                 disabled
