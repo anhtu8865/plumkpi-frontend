@@ -28,6 +28,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import { formatNumber } from 'src/utils/function'
+import NumberFormat from 'react-number-format'
 
 export const AssignToDeptButton = (kpiItem) => {
   const dispatch = useDispatch()
@@ -177,20 +178,20 @@ export const AssignToDeptButton = (kpiItem) => {
     return ''
   }
 
-  const handleTargetOnChange = (event, id) => {
+  const handleTargetOnChange = (value, id) => {
     const copySelectedDeptList = cloneDeep(selectedDeptList)
     const selectedDept = copySelectedDeptList.find((item) => item.dept.dept_id === id)
     if (selectedDept) {
-      selectedDept.target = event.target.value
+      selectedDept.target = value
     }
     setSelectedDeptList(copySelectedDeptList)
   }
 
-  const handleSampleTargetOnChange = (event) => {
-    setSampleTarget(event.target.value)
+  const handleSampleTargetOnChange = (value) => {
+    setSampleTarget(value)
     const copySelectedDeptList = cloneDeep(selectedDeptList)
     copySelectedDeptList.forEach((item) => {
-      item.target = event.target.value
+      item.target = value
     })
     setSelectedDeptList(copySelectedDeptList)
   }
@@ -241,12 +242,22 @@ export const AssignToDeptButton = (kpiItem) => {
                   <CTableHeaderCell />
                   <CTableHeaderCell className="w-25">
                     <CInputGroup size="sm">
-                      <CFormInput
+                      {/*<CFormInput
                         size="sm"
                         type="number"
                         value={sampleTarget}
                         onChange={(event) => {
                           handleSampleTargetOnChange(event)
+                        }}
+                      />*/}
+                      <NumberFormat
+                        customInput={CFormInput}
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        allowNegative={false}
+                        value={sampleTarget}
+                        onValueChange={(values) => {
+                          handleSampleTargetOnChange(values.value)
                         }}
                       />
                       <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
@@ -279,7 +290,23 @@ export const AssignToDeptButton = (kpiItem) => {
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
                           <CInputGroup size="sm">
-                            <CFormInput
+                            <NumberFormat
+                              customInput={CFormInput}
+                              thousandSeparator="."
+                              decimalSeparator=","
+                              placeholder="Chưa có"
+                              allowNegative={false}
+                              value={handleTargetValue(item.dept_id)}
+                              invalid={
+                                handleTargetValue(item.dept_id) === '' &&
+                                handleCheckboxValue(item.dept_id)
+                              }
+                              disabled={!handleCheckboxValue(item.dept_id)}
+                              onValueChange={(values) => {
+                                handleTargetOnChange(values.value, item.dept_id)
+                              }}
+                            />
+                            {/*<CFormInput
                               type="number"
                               value={handleTargetValue(item.dept_id)}
                               invalid={
@@ -290,7 +317,7 @@ export const AssignToDeptButton = (kpiItem) => {
                                 handleTargetOnChange(event, item.dept_id)
                               }}
                               disabled={!handleCheckboxValue(item.dept_id)}
-                            />
+                            />*/}
                             <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                           </CInputGroup>
                         </CTableDataCell>

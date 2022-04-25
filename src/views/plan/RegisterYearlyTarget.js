@@ -9,6 +9,7 @@ import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import NumberFormat from 'react-number-format'
 
 const RegisterYearlyTarget = (props) => {
   const { plan } = useSelector((state) => state.planDetail)
@@ -31,7 +32,7 @@ const RegisterYearlyTarget = (props) => {
         .put(`/plans/register-target/director`, {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
-          target: values.target,
+          target: Number(values.target),
         })
         .then(() => {
           dispatch(
@@ -66,11 +67,24 @@ const RegisterYearlyTarget = (props) => {
     <>
       <CForm onSubmit={formik.handleSubmit}>
         <CInputGroup>
-          <CFormInput
+          {/*<CFormInput
             type="number"
             defaultValue={item.target}
             placeholder="Chưa có"
             {...formik.getFieldProps('target')}
+  />*/}
+          <NumberFormat
+            id="target"
+            customInput={CFormInput}
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Chưa có"
+            allowNegative={false}
+            value={formik.values.target}
+            onBlur={formik.handleBlur}
+            onValueChange={(values) => {
+              formik.setFieldValue('target', values.value)
+            }}
           />
           <IconButton
             variant="contained"

@@ -5,7 +5,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
-//import { formatNumber } from 'src/utils/function'
+import NumberFormat from 'react-number-format'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
@@ -98,7 +98,7 @@ const RegisterQuarterTarget = (props) => {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           quarter: values.quarter,
-          target: values.target,
+          target: Number(values.target),
         })
         .then(() => {
           dispatch(
@@ -133,7 +133,7 @@ const RegisterQuarterTarget = (props) => {
     <>
       <CForm onSubmit={formik.handleSubmit}>
         <CInputGroup>
-          <CFormInput
+          {/*<CFormInput
             type="number"
             placeholder="Chưa có"
             defaultValue={handleQuarterTargetValue(item)}
@@ -141,6 +141,22 @@ const RegisterQuarterTarget = (props) => {
             invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
             disabled={handleQuarterTargetStatus(item) === 'Chấp nhận'}
             {...formik.getFieldProps('target')}
+  />*/}
+          <NumberFormat
+            id="target"
+            customInput={CFormInput}
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Chưa có"
+            allowNegative={false}
+            value={formik.values.target}
+            onBlur={formik.handleBlur}
+            valid={handleQuarterTargetStatus(item) === 'Chấp nhận'}
+            invalid={handleQuarterTargetStatus(item) === 'Từ chối'}
+            disabled={handleQuarterTargetStatus(item) === 'Chấp nhận'}
+            onValueChange={(values) => {
+              formik.setFieldValue('target', values.value)
+            }}
           />
           <IconButton
             variant="contained"

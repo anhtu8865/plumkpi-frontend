@@ -35,6 +35,7 @@ import { monthArray, quarterArray } from 'src/utils/constant'
 import { formatNumber } from 'src/utils/function'
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
+import NumberFormat from 'react-number-format'
 
 export const AssignMonthlyTargetButton = (props) => {
   const dispatch = useDispatch()
@@ -435,7 +436,7 @@ export const AssignMonthlyTargetButton = (props) => {
   }
 
   const Table = () => {
-    const { values, touched, errors, handleBlur, handleChange, setFieldValue } = useFormikContext()
+    const { values, touched, errors, handleBlur, setFieldValue } = useFormikContext()
 
     useEffect(() => {
       const newList = handleTargetList(targetList, values.month)
@@ -481,7 +482,7 @@ export const AssignMonthlyTargetButton = (props) => {
                   <CTableDataCell />
                   <CTableHeaderCell className="w-25">
                     <CInputGroup size="sm">
-                      <CFormInput
+                      {/*<CFormInput
                         size="sm"
                         type="number"
                         value={values.sampleTarget}
@@ -491,6 +492,19 @@ export const AssignMonthlyTargetButton = (props) => {
                             values.selectedList,
                             event.target.value,
                           )
+                          setFieldValue('selectedList', newList)
+                        }}
+                      />*/}
+                      <NumberFormat
+                        customInput={CFormInput}
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        allowNegative={false}
+                        value={values.sampleTarget}
+                        onBlur={handleBlur}
+                        onValueChange={(v) => {
+                          setFieldValue('sampleTarget', v.value)
+                          const newList = handleSampleTarget(values.selectedList, v.value)
                           setFieldValue('selectedList', newList)
                         }}
                       />
@@ -528,7 +542,7 @@ export const AssignMonthlyTargetButton = (props) => {
                             </CTableDataCell>
                             <CTableHeaderCell className="w-25">
                               <CInputGroup size="sm">
-                                <CFormInput
+                                {/*<CFormInput
                                   size="sm"
                                   type="number"
                                   placeholder="Chưa có"
@@ -537,6 +551,20 @@ export const AssignMonthlyTargetButton = (props) => {
                                   onChange={handleChange}
                                   onBlur={handleBlur}
                                   invalid={touchedTarget && errorTarget ? true : false}
+                                />*/}
+                                <NumberFormat
+                                  customInput={CFormInput}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  allowNegative={false}
+                                  placeholder="Chưa có"
+                                  value={item.target}
+                                  name={target}
+                                  onBlur={handleBlur}
+                                  invalid={touchedTarget && errorTarget ? true : false}
+                                  onValueChange={(values) => {
+                                    setFieldValue(target, values.value)
+                                  }}
                                 />
                                 <CInputGroupText>{props.kpiItem.kpi_template.unit}</CInputGroupText>
                               </CInputGroup>

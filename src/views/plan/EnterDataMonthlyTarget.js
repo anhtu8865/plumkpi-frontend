@@ -32,7 +32,7 @@ import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
 import { setLoading, setReload } from 'src/slices/viewSlice'
-//import { formatNumber } from 'src/utils/function'
+import NumberFormat from 'react-number-format'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 
@@ -495,7 +495,7 @@ const EnterDateMonthlyTarget = (props) => {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           month: values.month,
-          value: values.value,
+          value: Number(values.value),
         })
         .then(() => {
           dispatch(
@@ -804,7 +804,7 @@ const EnterDateMonthlyTarget = (props) => {
     <>
       <CForm onSubmit={formik.handleSubmit}>
         <CInputGroup>
-          <CFormInput
+          {/*<CFormInput
             type="number"
             placeholder="Chưa có"
             defaultValue={handleMonthActualValue(item)}
@@ -812,6 +812,22 @@ const EnterDateMonthlyTarget = (props) => {
             invalid={handleMonthActualStatus(item) === 'Từ chối'}
             {...formik.getFieldProps('value')}
             disabled={handleMonthActualStatus(item) === 'Chấp nhận' ? true : false}
+  />*/}
+          <NumberFormat
+            id="value"
+            customInput={CFormInput}
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Chưa có"
+            allowNegative={false}
+            value={formik.values.value}
+            onBlur={formik.handleBlur}
+            valid={handleMonthActualStatus(item) === 'Chấp nhận'}
+            invalid={handleMonthActualStatus(item) === 'Từ chối'}
+            disabled={handleMonthActualStatus(item) === 'Chấp nhận' ? true : false}
+            onValueChange={(values) => {
+              formik.setFieldValue('value', values.value)
+            }}
           />
           <EnterNoteData />
           <FileUploadMonthly />

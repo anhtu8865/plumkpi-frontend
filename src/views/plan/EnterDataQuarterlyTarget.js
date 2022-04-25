@@ -32,7 +32,7 @@ import { useDispatch } from 'react-redux'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { createAlert } from 'src/slices/alertSlice'
 import { setLoading, setReload } from 'src/slices/viewSlice'
-//import { formatNumber } from 'src/utils/function'
+import NumberFormat from 'react-number-format'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
 
@@ -209,7 +209,7 @@ const EnterDataQuarterlyTarget = (props) => {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           quarter: values.quarter,
-          value: values.value,
+          value: Number(values.value),
         })
         .then(() => {
           dispatch(
@@ -518,7 +518,7 @@ const EnterDataQuarterlyTarget = (props) => {
     <>
       <CForm onSubmit={formik.handleSubmit}>
         <CInputGroup>
-          <CFormInput
+          {/*<CFormInput
             type="number"
             placeholder="Chưa có"
             defaultValue={handleQuarterActualValue(item)}
@@ -526,6 +526,22 @@ const EnterDataQuarterlyTarget = (props) => {
             invalid={handleQuarterDataStatus(item) === 'Từ chối'}
             disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
             {...formik.getFieldProps('value')}
+  />*/}
+          <NumberFormat
+            id="value"
+            customInput={CFormInput}
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Chưa có"
+            allowNegative={false}
+            value={formik.values.value}
+            onBlur={formik.handleBlur}
+            valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
+            invalid={handleQuarterDataStatus(item) === 'Từ chối'}
+            disabled={handleQuarterDataStatus(item) === 'Chấp nhận' ? true : false}
+            onValueChange={(values) => {
+              formik.setFieldValue('value', values.value)
+            }}
           />
           <EnterNoteData />
           <FileUploadQuarterly />

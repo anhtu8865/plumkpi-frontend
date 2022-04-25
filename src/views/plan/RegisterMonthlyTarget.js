@@ -5,11 +5,11 @@ import SaveIcon from '@mui/icons-material/Save'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
-//import { formatNumber } from 'src/utils/function'
-
+import NumberFormat from 'react-number-format'
 import api from 'src/views/axiosConfig'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import { setReload, setLoading } from 'src/slices/viewSlice'
 
 const RegisterMonthlyTarget = (props) => {
   //console.log(props)
@@ -193,7 +193,7 @@ const RegisterMonthlyTarget = (props) => {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           month: values.month,
-          target: values.target,
+          target: Number(values.target),
         })
         .then(() => {
           dispatch(
@@ -202,6 +202,12 @@ const RegisterMonthlyTarget = (props) => {
               type: 'success',
             }),
           )
+          dispatch(
+            setLoading({
+              value: true,
+            }),
+          )
+          dispatch(setReload())
         })
         .catch((error) => {
           dispatch(
@@ -222,7 +228,7 @@ const RegisterMonthlyTarget = (props) => {
     <>
       <CForm onSubmit={formik.handleSubmit}>
         <CInputGroup>
-          <CFormInput
+          {/*CFormInput
             type="number"
             defaultValue={handleMonthTargetValue(item)}
             placeholder="Chưa có"
@@ -230,6 +236,22 @@ const RegisterMonthlyTarget = (props) => {
             invalid={handleMonthTargetStatus(item) === 'Từ chối'}
             disabled={handleMonthTargetStatus(item) === 'Chấp nhận' ? true : false}
             {...formik.getFieldProps('target')}
+  />*/}
+          <NumberFormat
+            id="target"
+            customInput={CFormInput}
+            thousandSeparator="."
+            decimalSeparator=","
+            placeholder="Chưa có"
+            allowNegative={false}
+            value={formik.values.target}
+            onBlur={formik.handleBlur}
+            valid={handleMonthTargetStatus(item) === 'Chấp nhận'}
+            invalid={handleMonthTargetStatus(item) === 'Từ chối'}
+            disabled={handleMonthTargetStatus(item) === 'Chấp nhận' ? true : false}
+            onValueChange={(values) => {
+              formik.setFieldValue('target', values.value)
+            }}
           />
           <IconButton
             variant="contained"
