@@ -15,13 +15,6 @@ import {
   CFormFeedback,
   CFormSelect,
   CFormCheck,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableFoot,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
   CFormTextarea,
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,6 +26,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload } from 'src/slices/viewSlice'
 import { dateTypeOption } from 'src/utils/constant'
 import Select from 'react-select'
+import { Report } from './Report'
 
 export const CreateReportButton = () => {
   const dispatch = useDispatch()
@@ -244,37 +238,7 @@ export const CreateReportButton = () => {
     } else if (!result) {
       return null
     } else {
-      if (result.datasets) {
-        return (
-          <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
-            <CTableHead color="light">
-              <CTableRow>
-                <CTableHeaderCell>Tên</CTableHeaderCell>
-                <CTableHeaderCell>Thực hiện</CTableHeaderCell>
-                <CTableHeaderCell>Chỉ tiêu</CTableHeaderCell>
-                <CTableHeaderCell>Kết quả</CTableHeaderCell>
-                <CTableHeaderCell>Đơn vị</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {result.datasets.map((item) =>
-                item.data.map((row, index) => (
-                  <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>{item.label}</CTableDataCell>
-                    <CTableDataCell>{row.actual ? row.actual : 'Chưa có'}</CTableDataCell>
-                    <CTableDataCell>{row.target ? row.target : 'Chưa có'}</CTableDataCell>
-                    <CTableDataCell>{row.resultOfKpi.result}%</CTableDataCell>
-                    <CTableDataCell>{row.unit}</CTableDataCell>
-                  </CTableRow>
-                )),
-              )}
-            </CTableBody>
-            <CTableFoot></CTableFoot>
-          </CTable>
-        )
-      } else {
-        return null
-      }
+      return <Report result={result} />
     }
   }
 
@@ -336,6 +300,7 @@ export const CreateReportButton = () => {
           isSubmitting,
           submitForm,
           setFieldValue,
+          resetForm,
         }) => (
           <>
             <CModal
@@ -345,6 +310,7 @@ export const CreateReportButton = () => {
               visible={modalVisible}
               onClose={() => {
                 setModalVisible(false)
+                resetForm(initialValues)
               }}
             >
               <CModalHeader>

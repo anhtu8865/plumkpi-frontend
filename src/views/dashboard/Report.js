@@ -10,6 +10,7 @@ import {
 import 'chart.js/auto'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { formatNumber } from 'src/utils/function'
 
 export const Report = (props) => {
   const result = props.result
@@ -19,8 +20,8 @@ export const Report = (props) => {
         <CTableHead color="light">
           <CTableRow>
             <CTableHeaderCell>Tên</CTableHeaderCell>
-            <CTableHeaderCell>Thực hiện</CTableHeaderCell>
             <CTableHeaderCell>Chỉ tiêu</CTableHeaderCell>
+            <CTableHeaderCell>Thực hiện</CTableHeaderCell>
             <CTableHeaderCell>Kết quả</CTableHeaderCell>
             <CTableHeaderCell>Đơn vị</CTableHeaderCell>
           </CTableRow>
@@ -30,8 +31,8 @@ export const Report = (props) => {
             item.data.map((row, index) => (
               <CTableRow v-for="item in tableItems" key={index}>
                 <CTableDataCell>{item.label}</CTableDataCell>
-                <CTableDataCell>{row.actual ? row.actual : 'Chưa có'}</CTableDataCell>
-                <CTableDataCell>{row.target ? row.target : 'Chưa có'}</CTableDataCell>
+                <CTableDataCell>{row.target ? formatNumber(row.target) : 'Chưa có'}</CTableDataCell>
+                <CTableDataCell>{row.actual ? formatNumber(row.actual) : 'Chưa có'}</CTableDataCell>
                 <CTableDataCell>{row.resultOfKpi.result}%</CTableDataCell>
                 <CTableDataCell>{row.unit}</CTableDataCell>
               </CTableRow>

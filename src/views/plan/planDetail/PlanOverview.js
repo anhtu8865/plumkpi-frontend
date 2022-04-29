@@ -36,88 +36,69 @@ export const PlanOverview = (props) => {
             <CCol xs={12} sm={6} className="d-flex justify-content-center">
               <GaugeChart
                 id="gauge-chart1"
-                nrOfLevels={1}
                 percent={
                   performResult && performResult.result
                     ? convertPercent(Number(performResult.result))
                     : 0
                 }
+                arcsLength={[0.5, 0.2, 0.3]}
                 style={{ width: '50%' }}
-                colors={['#0D6EFD']}
+                colors={['#b80000', '#fccb00', '#008b02']}
                 textColor="#000000"
+                arcPadding={0}
+                cornerRadius={3}
               />
             </CCol>
             <CCol xs={12} sm={6}>
-              {catInPlan.map((item) => (
-                <>
-                  <CRow className="mt-2">
-                    <div
-                      onClick={() => {
-                        dispatch(
-                          setCurrentCat({
-                            value: item,
-                          }),
-                        )
-                      }}
-                      style={{
-                        cursor: 'pointer',
-                        /*color:
-                          item.kpi_category.kpi_category_id ===
-                          currentCat.kpi_category.kpi_category_id
-                            ? 'dodgerblue'
-                            : 'black',*/
-                      }}
-                    >
-                      <small>
-                        {item.kpi_category.kpi_category_id ===
-                        currentCat.kpi_category.kpi_category_id ? (
-                          <CBadge color="danger">{item.kpi_category.kpi_category_name}</CBadge>
-                        ) : (
-                          item.kpi_category.kpi_category_name
-                        )}
-                        {'    '}
-                        {item.weight ? <CBadge color="dark">{item.weight}%</CBadge> : null}
-                        {/*{item.kpi_category.kpi_category_id ===
-                        currentCat.kpi_category.kpi_category_id ? (
-                          <CBadge color="danger">Đang chọn</CBadge>
-                        ) : null}*/}
-                      </small>
-                    </div>
-                  </CRow>
-                  <CRow className="mt-1">
-                    <div>
-                      <ProgressBar
-                        completed={handleCategoryResult(
-                          performResult,
-                          item.kpi_category.kpi_category_id,
-                        )}
-                        bgColor="#0d6efd"
-                        height="10px"
-                        labelSize="10px"
-                        labelAlignment="center"
-                        isLabelVisible={
-                          handleCategoryResult(performResult, item.kpi_category.kpi_category_id) ===
-                          0
-                            ? false
-                            : true
-                        }
-                      />
-                      {/*<CProgress>
-                        <CProgressBar
-                          color="info"
-                          variant="striped"
-                          value={handleCategoryResult(
-                            performResult,
-                            item.kpi_category.kpi_category_id,
+              {catInPlan.map((item) => {
+                const catResult = handleCategoryResult(
+                  performResult,
+                  item.kpi_category.kpi_category_id,
+                )
+                return (
+                  <>
+                    <CRow className="mt-2">
+                      <div
+                        onClick={() => {
+                          dispatch(
+                            setCurrentCat({
+                              value: item,
+                            }),
+                          )
+                        }}
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <small>
+                          {item.kpi_category.kpi_category_id ===
+                          currentCat.kpi_category.kpi_category_id ? (
+                            <CBadge color="danger">{item.kpi_category.kpi_category_name}</CBadge>
+                          ) : (
+                            item.kpi_category.kpi_category_name
                           )}
-                        >
-                          {handleCategoryResult(performResult, item.kpi_category.kpi_category_id)}%
-                        </CProgressBar>
-                          </CProgress>*/}
-                    </div>
-                  </CRow>
-                </>
-              ))}
+                          {'    '}
+                          {item.weight ? <CBadge color="dark">{item.weight}%</CBadge> : null}
+                        </small>
+                      </div>
+                    </CRow>
+                    <CRow className="mt-1">
+                      <div>
+                        <ProgressBar
+                          completed={catResult}
+                          bgColor={
+                            catResult <= 50 ? '#b80000' : catResult <= 70 ? '#fccb00' : '#008b02'
+                          }
+                          height="10px"
+                          labelSize="10px"
+                          labelAlignment="center"
+                          isLabelVisible={catResult === 0 ? false : true}
+                        />
+                      </div>
+                    </CRow>
+                  </>
+                )
+              })}
             </CCol>
           </CRow>
         </CCardBody>

@@ -208,9 +208,7 @@ export const AssignToDeptButton = (kpiItem) => {
         listToReturn.push({ dept_id: item.dept.dept_id, target: Number(item.target) })
       })
       if (valid) {
-        if (listToReturn.length > 0) {
-          await assignKpi(listToReturn)
-        }
+        await assignKpi(listToReturn)
       }
     }
     setIsSubmit(false)
