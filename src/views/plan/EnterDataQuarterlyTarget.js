@@ -50,28 +50,28 @@ const EnterDataQuarterlyTarget = (props) => {
         if (item.first_quarterly_target && item.first_quarterly_target.hasOwnProperty('actual')) {
           return item.first_quarterly_target.actual.value
         }
-        return 'Chưa có'
+        return ''
       }
       case 2: {
         if (item.second_quarterly_target && item.second_quarterly_target.hasOwnProperty('actual')) {
           return item.second_quarterly_target.actual.value
         }
-        return 'Chưa có'
+        return ''
       }
       case 3: {
         if (item.third_quarterly_target && item.third_quarterly_target.hasOwnProperty('actual')) {
           return item.third_quarterly_target.actual.value
         }
-        return 'Chưa có'
+        return ''
       }
       case 4: {
         if (item.fourth_quarterly_target && item.fourth_quarterly_target.hasOwnProperty('actual')) {
           return item.fourth_quarterly_target.actual.value
         }
-        return 'Chưa có'
+        return ''
       }
       default:
-        return 'Chưa có'
+        return ''
     }
   }
 
@@ -204,12 +204,13 @@ const EnterDataQuarterlyTarget = (props) => {
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
       //console.log(values)
+      const value = values.value === '' || values.value === null ? null : Number(values.value)
       api
         .put('plans/enter-data-quarterly-target/manager', {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           quarter: values.quarter,
-          value: Number(values.value),
+          value: value,
         })
         .then(() => {
           dispatch(

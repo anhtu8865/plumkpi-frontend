@@ -53,7 +53,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.first_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 2: {
         if (item.second_monthly_target) {
@@ -61,7 +61,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.second_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 3: {
         if (item.third_monthly_target) {
@@ -71,7 +71,7 @@ const EnterDateMonthlyTarget = (props) => {
             }
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 4: {
         if (item.fourth_monthly_target) {
@@ -79,7 +79,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.fourth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 5: {
         if (item.fifth_monthly_target) {
@@ -87,7 +87,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.fifth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 6: {
         if (item.sixth_monthly_target) {
@@ -95,7 +95,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.sixth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 7: {
         if (item.seventh_monthly_target) {
@@ -103,7 +103,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.seventh_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 8: {
         if (item.eighth_monthly_target) {
@@ -111,7 +111,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.eighth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 9: {
         if (item.ninth_monthly_target) {
@@ -119,7 +119,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.ninth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 10: {
         if (item.tenth_monthly_target) {
@@ -135,7 +135,7 @@ const EnterDateMonthlyTarget = (props) => {
             return item.eleventh_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       case 12: {
         if (item.twelfth_monthly_target) {
@@ -143,10 +143,10 @@ const EnterDateMonthlyTarget = (props) => {
             return item.twelfth_monthly_target.actual.value
           }
         }
-        return 'Chưa có'
+        return ''
       }
       default:
-        return 'Chưa có'
+        return ''
     }
   }
 
@@ -490,12 +490,13 @@ const EnterDateMonthlyTarget = (props) => {
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
       //console.log(values)
+      const value = values.value === '' || values.value === null ? null : Number(values.value)
       api
         .put('plans/enter-data-monthly-target/employee', {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           month: values.month,
-          value: Number(values.value),
+          value: value,
         })
         .then(() => {
           dispatch(

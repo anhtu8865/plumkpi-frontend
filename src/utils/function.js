@@ -271,6 +271,9 @@ export const getYearsList = () => {
 
 export const formatNumber = (num) => {
   try {
+    if (num === 0) {
+      return 0
+    }
     if (num) {
       return Number(num).toLocaleString('vi-VN', { maximumFractionDigits: 2 })
     }
