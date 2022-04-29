@@ -27,12 +27,12 @@ const RegisterYearlyTarget = (props) => {
     },
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
-      //console.log(values)
+      const target = values.target === '' || values.target === null ? null : Number(values.target)
       api
         .put(`/plans/register-target/director`, {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
-          target: Number(values.target),
+          target: target,
         })
         .then(() => {
           dispatch(

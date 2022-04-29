@@ -78,7 +78,7 @@ const AppHeader = () => {
         <CHeaderBrand className="mx-auto d-md-none" to="/">
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
-        <div className="ms-auto me-5 d-flex align-items-center">
+        <div className="ms-auto me-2 d-flex align-items-center">
           {!isEdit ? (
             <>
               <div className="me-1">
