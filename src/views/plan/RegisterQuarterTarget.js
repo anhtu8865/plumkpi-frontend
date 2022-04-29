@@ -94,7 +94,6 @@ const RegisterQuarterTarget = (props) => {
     onSubmit: (values, { resetForm }) => {
       //console.log(values)
       const target = values.target === '' || values.target === null ? null : Number(values.target)
-      alert(target)
       api
         .put('plans/register-quarterly-target/manager', {
           plan_id: values.plan_id,
