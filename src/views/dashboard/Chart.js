@@ -200,11 +200,16 @@ export const Chart = (props) => {
             <CCol xs={12} className="d-flex justify-content-center">
               <GaugeChart
                 id="gauge-chart1"
-                nrOfLevels={1}
+                arcsLength={[
+                  dataItem.resultOfKpi.result / 100,
+                  1 - dataItem.resultOfKpi.result / 100,
+                ]}
                 percent={dataItem.resultOfKpi.result / 100}
                 style={{ width: '250px' }}
-                colors={[handleColor(dataItem.resultOfKpi.color)]}
+                colors={[handleColor(dataItem.resultOfKpi.color), '#e0e0de']}
                 textColor="#000000"
+                arcPadding={0}
+                cornerRadius={1}
               />
             </CCol>
           </CRow>

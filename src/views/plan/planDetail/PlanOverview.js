@@ -41,7 +41,7 @@ export const PlanOverview = (props) => {
                     ? convertPercent(Number(performResult.result))
                     : 0
                 }
-                arcsLength={[0.5, 0.2, 0.3]}
+                arcsLength={[0.49, 0.3, 0.21]}
                 style={{ width: '50%' }}
                 colors={['#b80000', '#fccb00', '#008b02']}
                 textColor="#000000"
@@ -87,7 +87,7 @@ export const PlanOverview = (props) => {
                         <ProgressBar
                           completed={catResult}
                           bgColor={
-                            catResult <= 50 ? '#b80000' : catResult <= 70 ? '#fccb00' : '#008b02'
+                            catResult < 50 ? '#b80000' : catResult < 80 ? '#fccb00' : '#008b02'
                           }
                           height="10px"
                           labelSize="10px"

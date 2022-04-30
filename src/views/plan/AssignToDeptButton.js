@@ -228,6 +228,7 @@ export const AssignToDeptButton = (kpiItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell>Quản lý</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
@@ -235,6 +236,7 @@ export const AssignToDeptButton = (kpiItem) => {
               </CTableHead>
               <CTableBody>
                 <CTableRow>
+                  <CTableHeaderCell />
                   <CTableHeaderCell />
                   <CTableHeaderCell />
                   <CTableHeaderCell />
@@ -278,6 +280,7 @@ export const AssignToDeptButton = (kpiItem) => {
                             }}
                           />
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell>{item.dept_name}</CTableDataCell>
                         <CTableDataCell className="d-flex align-items-center">
                           <Avatar
@@ -326,6 +329,7 @@ export const AssignToDeptButton = (kpiItem) => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
+                  <CTableDataCell />
                   <CTableDataCell />
                   <CTableHeaderCell>
                     {kpiItem.kpi_template.aggregation !== 'Mới nhất'

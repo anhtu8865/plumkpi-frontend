@@ -192,6 +192,7 @@ export const EditCategoryInPlanButton = () => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Danh mục</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Trọng số</CTableHeaderCell>
                 </CTableRow>
@@ -204,7 +205,7 @@ export const EditCategoryInPlanButton = () => {
                         key={index}
                         color={handleCheckboxValue(item.kpi_category_id) ? null : 'secondary'}
                       >
-                        <CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>
                           <Checkbox
                             size="small"
                             checked={handleCheckboxValue(item.kpi_category_id)}
@@ -213,6 +214,7 @@ export const EditCategoryInPlanButton = () => {
                             }}
                           />
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell>{item.kpi_category_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
                           <CInputGroup size="sm">
@@ -238,6 +240,7 @@ export const EditCategoryInPlanButton = () => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
+                  <CTableDataCell />
                   <CTableDataCell />
                   <CTableHeaderCell>Tổng</CTableHeaderCell>
                   <CTableDataCell>

@@ -26,6 +26,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
+import { CreatePlanForEmployee } from './CreatePlanForEmployee'
 
 const EmployeePlan = () => {
   const { id } = useParams()
@@ -241,6 +242,7 @@ const EmployeePlan = () => {
           </CCol>
           <CCol xs={12} sm={6}>
             <div className="d-flex flex-row gap-1 justify-content-end">
+              <CreatePlanForEmployee />
               <Button
                 variant="contained"
                 color="primary"
