@@ -755,6 +755,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Thực hiện</CTableHeaderCell>
@@ -780,6 +781,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                             />
                           ) : null}
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell className="d-flex align-items-center">
                           <CCol xs={3}>
                             <Avatar src={item.user.avatar ? item.user.avatar.url : null} />

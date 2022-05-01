@@ -211,7 +211,7 @@ export const EditChartButton = (props) => {
       try {
         const result = await getAllPlans()
         setPlansOption(result)
-        const result1 = await getAllKpisInPlan(result[0].plan_id)
+        const result1 = await getAllKpisInPlan(props.chart.properties.plan_id)
         setKpisOption(handleKpis(result1))
         if (props.chart.properties.filter.length === 0) {
           if (props.chart.properties.kpis.length === 1) {
@@ -389,6 +389,7 @@ export const EditChartButton = (props) => {
           isSubmitting,
           submitForm,
           setFieldValue,
+          resetForm,
         }) => (
           <>
             <CModal
@@ -398,6 +399,7 @@ export const EditChartButton = (props) => {
               visible={modalVisible}
               onClose={() => {
                 setModalVisible(false)
+                resetForm(initialValues)
               }}
             >
               <CModalHeader>

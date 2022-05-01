@@ -400,6 +400,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Tiến độ</CTableHeaderCell>
@@ -421,6 +422,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
                             />
                           ) : null}
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
                           {handleQuarterTargetValue(item) !== 'Chưa có' ? (

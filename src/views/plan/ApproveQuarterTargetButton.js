@@ -298,6 +298,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu đăng ký</CTableHeaderCell>
                 </CTableRow>
@@ -318,9 +319,10 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
                             />
                           ) : null}
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell>
                           <CRow className="d-flex align-items-center">
-                            <CCol xs={3}>{item.dept.dept_name}</CCol>
+                            <CCol xs={6}>{item.dept.dept_name}</CCol>
                             <CCol>
                               {AllQuarterTargetDropdown(
                                 item,

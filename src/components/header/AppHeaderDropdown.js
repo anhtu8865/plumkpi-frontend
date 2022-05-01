@@ -31,7 +31,7 @@ const AppHeaderDropdown = () => {
         }
       })
       .catch((error) => {
-        alert(error.response.data.message)
+        //alert(error.response.data.message)
       })
   }, [dispatch, user.user_id])
 

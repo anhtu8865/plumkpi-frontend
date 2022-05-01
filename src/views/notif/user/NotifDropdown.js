@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import { handleDiffDayDisplay } from 'src/utils/function'
 import ShowMoreText from 'react-show-more-text'
+import './DropdownMenu.scss'
 
 export const NotifDropdown = () => {
   const dispatch = useDispatch()
@@ -58,8 +59,8 @@ export const NotifDropdown = () => {
   }, [dispatch, counter, user.role])
 
   return (
-    <CDropdown variant="nav-item">
-      <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
+    <CDropdown variant="nav-item" alignment="end">
+      <CDropdownToggle className="py-0" caret={false}>
         {entry.length > 0 &&
           handleDiffDayDisplay(
             new Date(today.time.slice(0, 4), entry[0].month - 1, entry[0].day),
@@ -71,11 +72,7 @@ export const NotifDropdown = () => {
           )}
         <CIcon icon={cilBell} size="lg"></CIcon>
       </CDropdownToggle>
-      <CDropdownMenu
-        style={{ width: '400px', maxHeight: '350px', overflow: 'auto' }}
-        className="pt-0"
-        placement="bottom-end"
-      >
+      <CDropdownMenu className="pt-0 lovedive">
         <CDropdownHeader className="bg-light fw-semibold py-2">Thông báo hệ thống</CDropdownHeader>
         {entry.length > 0 ? (
           entry.map((item, index) => (

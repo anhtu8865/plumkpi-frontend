@@ -301,6 +301,7 @@ export const CreateChartButton = () => {
           isSubmitting,
           submitForm,
           setFieldValue,
+          resetForm,
         }) => (
           <>
             <CModal
@@ -310,6 +311,7 @@ export const CreateChartButton = () => {
               visible={modalVisible}
               onClose={() => {
                 setModalVisible(false)
+                resetForm(initialValues)
               }}
             >
               <CModalHeader>

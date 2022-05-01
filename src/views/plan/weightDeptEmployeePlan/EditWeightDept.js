@@ -16,7 +16,7 @@ import {
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
-import { IconButton, Button, Pagination, Avatar } from '@mui/material'
+import { IconButton, Button, Pagination, Avatar, Tooltip } from '@mui/material'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,6 +30,7 @@ import HelpIcon from '@mui/icons-material/Help'
 import cloneDeep from 'lodash/cloneDeep'
 import { weightKpiRule } from 'src/utils/constant'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
+import AssistantIcon from '@mui/icons-material/Assistant'
 
 const EditWeightDept = () => {
   const { id, deptId } = useParams()
@@ -39,7 +40,7 @@ const EditWeightDept = () => {
   const [plan, setPlan] = useState({ plan_name: '' })
   const [dept, setDept] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
-  const entryPerPage = 5
+  const entryPerPage = 10
   const [entry, setEntry] = useState([])
 
   const getPlan = useCallback(async () => {
@@ -201,6 +202,26 @@ const EditWeightDept = () => {
     setEntry(copyEntry)
   }
 
+  const splitWeightEqually = () => {
+    const copyEntry = cloneDeep(entry)
+    copyEntry.forEach((item, index) => {
+      if (index === copyEntry.length - 1) {
+        item.weight = 100 - (copyEntry.length - 1) * Math.round(100 / copyEntry.length)
+      } else {
+        item.weight = Math.round(100 / copyEntry.length)
+      }
+      item.toBeSentKpis.forEach((element, idx) => {
+        if (idx === item.toBeSentKpis.length - 1) {
+          element.weight =
+            100 - (item.toBeSentKpis.length - 1) * Math.round(100 / item.toBeSentKpis.length)
+        } else {
+          element.weight = Math.round(100 / item.toBeSentKpis.length)
+        }
+      })
+    })
+    setEntry(copyEntry)
+  }
+
   const handleSumValue = (catId) => {
     if (catId === 0) {
       let sum = 0
@@ -274,7 +295,7 @@ const EditWeightDept = () => {
         {entry.length > 0 ? (
           <>
             <CRow>
-              <CCol xs>
+              <CCol xs={12} sm={6}>
                 <div className="d-flex align-items-start flex-row">
                   <CustomWidthTooltip title={weightKpiRule} placement="right">
                     <IconButton size="small">
@@ -283,6 +304,18 @@ const EditWeightDept = () => {
                   </CustomWidthTooltip>
                   <div className="ms-1">Lưu ý</div>
                 </div>
+              </CCol>
+              <CCol xs={12} sm={6} className="d-flex justify-content-end">
+                <Tooltip title="Tự động chia đều trọng số">
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      splitWeightEqually()
+                    }}
+                  >
+                    <AssistantIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
               </CCol>
             </CRow>
             {entry.map((item, index) => {

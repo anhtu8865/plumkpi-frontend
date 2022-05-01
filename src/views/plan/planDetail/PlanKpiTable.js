@@ -581,43 +581,44 @@ export const PlanKpiTable = (catItem) => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {temInPlan.map((item, index) => (
-                  <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>{(temPage - 1) * 10 + index + 1}</CTableDataCell>
-                    <CTableDataCell>
-                      {item.kpi_template.kpi_template_name}
-                      {'    '}
-                      {item.weight ? (
-                        <CBadge color="dark" size="sm">
-                          {item.weight}%
-                        </CBadge>
+                {temInPlan.map((item, index) => {
+                  const target = handleTargetValue(item.kpi_template.kpi_template_id)
+                  const actual = handleActualValue(item.kpi_template.kpi_template_id)
+                  return (
+                    <CTableRow v-for="item in tableItems" key={index}>
+                      <CTableDataCell>{(temPage - 1) * 10 + index + 1}</CTableDataCell>
+                      <CTableDataCell>
+                        {item.kpi_template.kpi_template_name}
+                        {'    '}
+                        {item.weight ? (
+                          <CBadge color="dark" size="sm">
+                            {item.weight}%
+                          </CBadge>
+                        ) : null}
+                      </CTableDataCell>
+                      {!checkedMonth && !checkedQuarter ? (
+                        user.role === 'Giám đốc' ? (
+                          <CTableDataCell>
+                            <RegisterYearlyTarget item={item} />
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>{target}</CTableDataCell>
+                        )
                       ) : null}
-                    </CTableDataCell>
-                    {!checkedMonth && !checkedQuarter ? (
-                      user.role === 'Giám đốc' ? (
-                        <CTableDataCell>
-                          <RegisterYearlyTarget item={item} />
-                        </CTableDataCell>
-                      ) : (
-                        <CTableDataCell>
-                          {handleTargetValue(item.kpi_template.kpi_template_id)}
-                        </CTableDataCell>
-                      )
-                    ) : null}
-                    {checkedQuarter ? (
-                      user.role === 'Quản lý' ? (
-                        <CTableDataCell>
-                          <RegisterQuarterTarget
-                            plan={plan}
-                            item={item}
-                            selectedQuarter={selectedQuarter}
-                          />
-                        </CTableDataCell>
-                      ) : (
-                        <CTableDataCell>
-                          <div className="d-flex flex-row">
-                            {handleTargetValue(item.kpi_template.kpi_template_id)}
-                            {/*{user.role === 'Quản lý' &&
+                      {checkedQuarter ? (
+                        user.role === 'Quản lý' ? (
+                          <CTableDataCell>
+                            <RegisterQuarterTarget
+                              plan={plan}
+                              item={item}
+                              selectedQuarter={selectedQuarter}
+                            />
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>
+                            <div className="d-flex flex-row">
+                              {target}
+                              {/*{user.role === 'Quản lý' &&
                             handleQuarterTargetStatus(item) === 'Đang xử lý' ? (
                               <AutorenewIcon className="ms-2" fontSize="small" />
                             ) : null}
@@ -629,49 +630,48 @@ export const PlanKpiTable = (catItem) => {
                             handleQuarterTargetStatus(item) === 'Từ chối' ? (
                               <ErrorOutlineIcon className="ms-2" color="error" fontSize="small" />
                             ) : null}*/}
-                          </div>
-                        </CTableDataCell>
-                      )
-                    ) : null}
-                    {checkedMonth && ['Giám đốc', 'Quản lý'].includes(user.role) && (
-                      <CTableDataCell>
-                        {handleTargetValue(item.kpi_template.kpi_template_id)}
-                      </CTableDataCell>
-                    )}
-                    {user.role === 'Giám đốc' && (
-                      <CTableDataCell>
-                        {formatNumber(handleActualValue(item.kpi_template.kpi_template_id))}
-                      </CTableDataCell>
-                    )}
-                    {user.role === 'Quản lý' ? (
-                      checkedQuarter && catItem.kpi_category.kpi_category_name === 'Cá nhân' ? (
-                        // <CTableDataCell>
-                        //   {handleActualValue(item.kpi_template.kpi_template_id)}
-                        // </CTableDataCell>
+                            </div>
+                          </CTableDataCell>
+                        )
+                      ) : null}
+                      {checkedMonth && ['Giám đốc', 'Quản lý'].includes(user.role) && (
+                        <CTableDataCell>{target}</CTableDataCell>
+                      )}
+                      {user.role === 'Giám đốc' && (
                         <CTableDataCell>
-                          <EnterDataQuarterlyTarget
-                            plan={plan}
-                            item={item}
-                            selectedQuarter={selectedQuarter}
-                            // value={handleActualValue(item.kpi_template.kpi_template_id)}
-                          />
+                          {actual !== 'Chưa có' ? formatNumber(actual) : 'Chưa có'}
                         </CTableDataCell>
-                      ) : checkedQuarter && catItem.kpi_category.kpi_category_name !== 'Cá nhân' ? (
-                        <CTableDataCell>
-                          <EnterNoteFileQuarterly
-                            plan={plan}
-                            item={item}
-                            selectedQuarter={selectedQuarter}
-                            value={handleActualValue(item.kpi_template.kpi_template_id)}
-                          />
-                        </CTableDataCell>
-                      ) : (
-                        <CTableDataCell>
-                          {formatNumber(handleActualValue(item.kpi_template.kpi_template_id))}
-                        </CTableDataCell>
-                      )
-                    ) : null}
-                    {/*
+                      )}
+                      {user.role === 'Quản lý' ? (
+                        checkedQuarter && catItem.kpi_category.kpi_category_name === 'Cá nhân' ? (
+                          // <CTableDataCell>
+                          //   {handleActualValue(item.kpi_template.kpi_template_id)}
+                          // </CTableDataCell>
+                          <CTableDataCell>
+                            <EnterDataQuarterlyTarget
+                              plan={plan}
+                              item={item}
+                              selectedQuarter={selectedQuarter}
+                              // value={handleActualValue(item.kpi_template.kpi_template_id)}
+                            />
+                          </CTableDataCell>
+                        ) : checkedQuarter &&
+                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' ? (
+                          <CTableDataCell>
+                            <EnterNoteFileQuarterly
+                              plan={plan}
+                              item={item}
+                              selectedQuarter={selectedQuarter}
+                              value={actual}
+                            />
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>
+                            {actual !== 'Chưa có' ? formatNumber(actual) : 'Chưa có'}
+                          </CTableDataCell>
+                        )
+                      ) : null}
+                      {/*
                     {checkedMonth && user.role === 'Quản lý' && (
                       <CTableDataCell>
                         <EnterDataQuarterlyTarget
@@ -682,76 +682,77 @@ export const PlanKpiTable = (catItem) => {
                         />
                       </CTableDataCell>
                     )} */}
-                    {/*Nhân viên đăng ký target, data cá nhân*/}
-                    {checkedMonth && user.role === 'Nhân viên' ? (
-                      catItem.kpi_category.kpi_category_name === 'Cá nhân' ? (
-                        <CTableDataCell>
-                          {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
-                          <RegisterMonthlyTarget
-                            plan={plan}
-                            item={item}
-                            selectedMonth={selectedMonth}
-                          />
-                        </CTableDataCell>
-                      ) : (
-                        <CTableDataCell>
-                          {handleTargetValue(item.kpi_template.kpi_template_id)}
-                        </CTableDataCell>
-                      )
-                    ) : null}
-                    {user.role === 'Nhân viên' ? (
-                      checkedMonth ? (
-                        <CTableDataCell>
-                          <EnterDataMonthlyTarget
-                            plan={plan}
-                            item={item}
-                            selectedMonth={selectedMonth}
-                          />
-                        </CTableDataCell>
-                      ) : (
-                        <CTableDataCell>
-                          {formatNumber(handleActualValue(item.kpi_template.kpi_template_id))}
-                        </CTableDataCell>
-                      )
-                    ) : null}
-                    <CTableDataCell>{item.kpi_template.unit}</CTableDataCell>
-                    <CTableDataCell>
-                      <ProgressBar
-                        completed={handleResultValue(item.kpi_template.kpi_template_id)}
-                        bgColor={handleProgressBarColor(item.kpi_template.kpi_template_id)}
-                        height="10px"
-                        labelSize="10px"
-                        labelAlignment="center"
-                        isLabelVisible={
-                          handleResultValue(item.kpi_template.kpi_template_id) === 0 ? false : true
-                        }
-                      />
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      <div className="d-flex flex-row justify-content-center">
-                        {user.role === 'Giám đốc' &&
-                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                          AssignToDeptButton(item)}
-                        {user.role === 'Giám đốc' &&
-                          ApproveQuarterTargetButton(item, selectedQuarter)}
-                        {user.role === 'Giám đốc' &&
-                          ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
-                        {user.role === 'Quản lý' &&
-                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
-                            <AssignToEmployeeButton kpiItem={item} />
-                          )}
-                        {user.role === 'Quản lý' &&
-                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
-                            <AssignMonthlyTargetButton kpiItem={item} month={selectedMonth} />
-                          )}
-                        {user.role === 'Quản lý' &&
-                          catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                          ApproveDataMonthlyTarget(plan.plan_id, item, selectedMonth)}
-                        <KpiInfoButton kpiItem={item} />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
-                ))}
+                      {/*Nhân viên đăng ký target, data cá nhân*/}
+                      {checkedMonth && user.role === 'Nhân viên' ? (
+                        catItem.kpi_category.kpi_category_name === 'Cá nhân' ? (
+                          <CTableDataCell>
+                            {/* <CFormInput value={formatNumber(handleMonthTargetValue(item))} /> */}
+                            <RegisterMonthlyTarget
+                              plan={plan}
+                              item={item}
+                              selectedMonth={selectedMonth}
+                            />
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>{target}</CTableDataCell>
+                        )
+                      ) : null}
+                      {user.role === 'Nhân viên' ? (
+                        checkedMonth ? (
+                          <CTableDataCell>
+                            <EnterDataMonthlyTarget
+                              plan={plan}
+                              item={item}
+                              selectedMonth={selectedMonth}
+                            />
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>
+                            {actual !== 'Chưa có' ? formatNumber(actual) : 'Chưa có'}
+                          </CTableDataCell>
+                        )
+                      ) : null}
+                      <CTableDataCell>{item.kpi_template.unit}</CTableDataCell>
+                      <CTableDataCell>
+                        <ProgressBar
+                          completed={handleResultValue(item.kpi_template.kpi_template_id)}
+                          bgColor={handleProgressBarColor(item.kpi_template.kpi_template_id)}
+                          height="10px"
+                          labelSize="10px"
+                          labelAlignment="center"
+                          isLabelVisible={
+                            handleResultValue(item.kpi_template.kpi_template_id) === 0
+                              ? false
+                              : true
+                          }
+                        />
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        <div className="d-flex flex-row justify-content-center">
+                          {user.role === 'Giám đốc' &&
+                            catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
+                            AssignToDeptButton(item)}
+                          {user.role === 'Giám đốc' &&
+                            ApproveQuarterTargetButton(item, selectedQuarter)}
+                          {user.role === 'Giám đốc' &&
+                            ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
+                          {user.role === 'Quản lý' &&
+                            catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
+                              <AssignToEmployeeButton kpiItem={item} />
+                            )}
+                          {user.role === 'Quản lý' &&
+                            catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
+                              <AssignMonthlyTargetButton kpiItem={item} month={selectedMonth} />
+                            )}
+                          {user.role === 'Quản lý' &&
+                            catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
+                            ApproveDataMonthlyTarget(plan.plan_id, item, selectedMonth)}
+                          <KpiInfoButton kpiItem={item} />
+                        </div>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </CTableBody>
               <CTableFoot>
                 <CTableRow>

@@ -78,17 +78,7 @@ const AppHeader = () => {
         <CHeaderBrand className="mx-auto d-md-none" to="/">
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto">
-          {' '}
-          {['Giám đốc', 'Quản lý', 'Nhân viên'].includes(user.role) && (
-            <CNavItem>
-              <CNavLink>
-                <NotifDropdown />
-              </CNavLink>
-            </CNavItem>
-          )}
-        </CHeaderNav>
-        <div className="me-2 d-flex align-items-center">
+        <div className="ms-auto me-2 d-flex align-items-center">
           {!isEdit ? (
             <>
               <div className="me-1">
@@ -160,6 +150,15 @@ const AppHeader = () => {
             </>
           )}
         </div>
+        <CHeaderNav className="d-none d-md-flex">
+          {['Giám đốc', 'Quản lý', 'Nhân viên'].includes(user.role) && (
+            <CNavItem>
+              <CNavLink>
+                <NotifDropdown />
+              </CNavLink>
+            </CNavItem>
+          )}
+        </CHeaderNav>
         <CHeaderNav>
           <AppHeaderDropdown />
         </CHeaderNav>

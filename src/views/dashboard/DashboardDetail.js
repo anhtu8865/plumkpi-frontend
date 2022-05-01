@@ -48,14 +48,14 @@ const DashboardDetail = () => {
           }
         }
       } catch (error) {
-        if (error.response && error.response.status !== 401) {
+        /*if (error.response && error.response.status !== 401) {
           dispatch(
             createAlert({
               message: error.response.data.message,
               type: 'error',
             }),
           )
-        }
+        }*/
       } finally {
         dispatch(
           setLoading({

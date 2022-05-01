@@ -55,28 +55,28 @@ const RegisterQuarterTarget = (props) => {
         if (item.first_quarterly_target) {
           return item.first_quarterly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 2: {
         if (item.second_quarterly_target) {
           return item.second_quarterly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 3: {
         if (item.third_quarterly_target) {
           return item.third_quarterly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 4: {
         if (item.fourth_quarterly_target) {
           return item.fourth_quarterly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       default:
-        return 'Chưa có'
+        return ''
     }
   }
 
@@ -93,12 +93,13 @@ const RegisterQuarterTarget = (props) => {
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
       //console.log(values)
+      const target = values.target === '' || values.target === null ? null : Number(values.target)
       api
         .put('plans/register-quarterly-target/manager', {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           quarter: values.quarter,
-          target: Number(values.target),
+          target: target,
         })
         .then(() => {
           dispatch(

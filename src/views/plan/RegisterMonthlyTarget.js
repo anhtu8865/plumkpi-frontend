@@ -23,76 +23,76 @@ const RegisterMonthlyTarget = (props) => {
         if (item.first_monthly_target) {
           return item.first_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 2: {
         if (item.second_monthly_target) {
           return item.second_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 3: {
         if (item.third_monthly_target) {
           return item.third_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 4: {
         if (item.fourth_monthly_target) {
           return item.fourth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 5: {
         if (item.fifth_monthly_target) {
           return item.fifth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 6: {
         if (item.sixth_monthly_target) {
           return item.sixth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 7: {
         if (item.seventh_monthly_target) {
           return item.seventh_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 8: {
         if (item.eighth_monthly_target) {
           return item.eighth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 9: {
         if (item.ninth_monthly_target) {
           return item.ninth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 10: {
         if (item.tenth_monthly_target) {
           return item.tenth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 11: {
         if (item.eleventh_monthly_target) {
           return item.eleventh_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       case 12: {
         if (item.twelfth_monthly_target) {
           return item.twelfth_monthly_target.target
         }
-        return 'Chưa có'
+        return ''
       }
       default:
-        return 'Chưa có'
+        return ''
     }
   }
 
@@ -188,12 +188,13 @@ const RegisterMonthlyTarget = (props) => {
     validateOnBlur: true,
     onSubmit: (values, { resetForm }) => {
       //console.log(values)
+      const target = values.target === '' || values.target === null ? null : Number(values.target)
       api
         .put('plans/register-monthly-target/employee', {
           plan_id: values.plan_id,
           kpi_template_id: values.kpi_template_id,
           month: values.month,
-          target: Number(values.target),
+          target: target,
         })
         .then(() => {
           dispatch(

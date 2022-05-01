@@ -106,6 +106,7 @@ export const AssignToEmployeeButton = (props) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -132,6 +133,7 @@ export const AssignToEmployeeButton = (props) => {
                                 }}
                               />
                             </CTableDataCell>
+                            <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                             <CTableDataCell className="d-flex align-items-center">
                               <CCol xs={2}>
                                 <Avatar src={item.avatar ? item.avatar.url : null} />

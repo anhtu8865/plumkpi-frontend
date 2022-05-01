@@ -15,13 +15,6 @@ import {
   CFormFeedback,
   CFormSelect,
   CFormCheck,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableFoot,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
   CFormTextarea,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
@@ -34,6 +27,7 @@ import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import { dateTypeOption } from 'src/utils/constant'
 import Select from 'react-select'
+import { Report } from './Report'
 
 export const EditReportButton = (props) => {
   const dispatch = useDispatch()
@@ -219,7 +213,7 @@ export const EditReportButton = (props) => {
       try {
         const result = await getAllPlans()
         setPlansOption(result)
-        const result1 = await getAllKpisInPlan(result[0].plan_id)
+        const result1 = await getAllKpisInPlan(props.chart.properties.plan_id)
         setKpisOption(handleKpis(result1))
         if (props.chart.properties.filter.length === 0) {
           if (props.chart.properties.kpis.length === 1) {
@@ -341,37 +335,7 @@ export const EditReportButton = (props) => {
     } else if (!result) {
       return null
     } else {
-      if (result.datasets) {
-        return (
-          <CTable align="middle" className="mb-0 border table-bordered" hover responsive striped>
-            <CTableHead color="light">
-              <CTableRow>
-                <CTableHeaderCell>Tên</CTableHeaderCell>
-                <CTableHeaderCell>Thực hiện</CTableHeaderCell>
-                <CTableHeaderCell>Chỉ tiêu</CTableHeaderCell>
-                <CTableHeaderCell>Kết quả</CTableHeaderCell>
-                <CTableHeaderCell>Đơn vị</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {result.datasets.map((item) =>
-                item.data.map((row, index) => (
-                  <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>{item.label}</CTableDataCell>
-                    <CTableDataCell>{row.actual ? row.actual : 'Chưa có'}</CTableDataCell>
-                    <CTableDataCell>{row.target ? row.target : 'Chưa có'}</CTableDataCell>
-                    <CTableDataCell>{row.resultOfKpi.result}%</CTableDataCell>
-                    <CTableDataCell>{row.unit}</CTableDataCell>
-                  </CTableRow>
-                )),
-              )}
-            </CTableBody>
-            <CTableFoot></CTableFoot>
-          </CTable>
-        )
-      } else {
-        return null
-      }
+      return <Report result={result} />
     }
   }
 
@@ -430,6 +394,7 @@ export const EditReportButton = (props) => {
           isSubmitting,
           submitForm,
           setFieldValue,
+          resetForm,
         }) => (
           <>
             <CModal
@@ -439,6 +404,7 @@ export const EditReportButton = (props) => {
               visible={modalVisible}
               onClose={() => {
                 setModalVisible(false)
+                resetForm(initialValues)
               }}
             >
               <CModalHeader>

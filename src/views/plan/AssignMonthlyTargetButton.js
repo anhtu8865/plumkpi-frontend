@@ -473,12 +473,14 @@ export const AssignMonthlyTargetButton = (props) => {
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 <CTableRow>
+                  <CTableDataCell />
                   <CTableDataCell />
                   <CTableHeaderCell className="w-25">
                     <CInputGroup size="sm">
@@ -522,6 +524,7 @@ export const AssignMonthlyTargetButton = (props) => {
 
                         return (
                           <CTableRow key={index}>
+                            <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                             <CTableDataCell className="d-flex align-items-center">
                               <CCol xs={2}>
                                 <Avatar src={item.user.avatar ? item.user.avatar.url : null} />
@@ -579,6 +582,7 @@ export const AssignMonthlyTargetButton = (props) => {
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
+                  <CTableDataCell />
                   <CTableHeaderCell>
                     {props.kpiItem.kpi_template.aggregation !== 'Mới nhất'
                       ? props.kpiItem.kpi_template.aggregation

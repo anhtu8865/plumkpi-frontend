@@ -471,7 +471,7 @@ const EnterNoteFileQuarterly = (props) => {
         <CInputGroup>
           <CFormInput
             placeholder="Chưa có"
-            defaultValue={formatNumber(value)}
+            defaultValue={value !== 'Chưa có' ? formatNumber(value) : null}
             valid={handleQuarterDataStatus(item) === 'Chấp nhận'}
             invalid={handleQuarterDataStatus(item) === 'Từ chối'}
             disabled

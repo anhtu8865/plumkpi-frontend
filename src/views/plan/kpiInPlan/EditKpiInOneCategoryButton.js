@@ -246,6 +246,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>KPI</CTableHeaderCell>
                   <CTableHeaderCell />
                   <CTableHeaderCell className="w-25">Trọng số</CTableHeaderCell>
@@ -259,7 +260,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                         key={index}
                         color={handleCheckboxValue(item.kpi_template_id) ? null : 'secondary'}
                       >
-                        <CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>
                           <Checkbox
                             size="small"
                             checked={handleCheckboxValue(item.kpi_template_id)}
@@ -267,6 +268,9 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                               handleCheckbox(item.kpi_template_id)
                             }}
                           />
+                        </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>
+                          {(page - 1) * entryPerPage + index + 1}
                         </CTableDataCell>
                         <CTableDataCell>{item.kpi_template_name}</CTableDataCell>
                         <CTableDataCell>
@@ -303,7 +307,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                 })}
               </CTableBody>
               <CTableFoot>
-                <CTableDataCell colSpan="4">
+                <CTableDataCell colSpan="5">
                   <div className="d-flex flex-row justify-content-end">
                     <Pagination
                       page={page}
@@ -318,6 +322,7 @@ export const EditKpiInOneCategoryButton = (catItem) => {
                   </div>
                 </CTableDataCell>
                 <CTableRow>
+                  <CTableDataCell />
                   <CTableDataCell />
                   <CTableDataCell />
                   <CTableHeaderCell>Tổng</CTableHeaderCell>
