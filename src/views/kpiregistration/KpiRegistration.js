@@ -52,6 +52,7 @@ const KpiRegistration = () => {
   const { reload } = useSelector((state) => state.view)
 
   const [selectedKpi, setSelectedKpi] = React.useState([])
+  const [isCheckedAll, setIsCheckedAll] = React.useState(false)
 
   const handleKpiChange = (item) => {
     if (!selectedKpi.includes(item)) {
@@ -62,6 +63,15 @@ const KpiRegistration = () => {
           return tmp !== item
         }),
       )
+    }
+  }
+
+  const handleAllKpiChange = () => {
+    setIsCheckedAll(!isCheckedAll)
+    if (!isCheckedAll) {
+      setSelectedKpi(entry)
+    } else {
+      setSelectedKpi([])
     }
   }
 
@@ -265,7 +275,15 @@ const KpiRegistration = () => {
         <CTable align="middle" className="mb-0 border table-bordered" hover responsive>
           <CTableHead color="light">
             <CTableRow>
-              <CTableHeaderCell />
+              <CTableHeaderCell>
+                <Checkbox
+                  size="small"
+                  checked={isCheckedAll}
+                  onChange={() => {
+                    handleAllKpiChange()
+                  }}
+                />
+              </CTableHeaderCell>
               <CTableHeaderCell>STT</CTableHeaderCell>
               <CTableHeaderCell>ID</CTableHeaderCell>
               <CTableHeaderCell>KPI</CTableHeaderCell>

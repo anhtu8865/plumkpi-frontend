@@ -50,6 +50,8 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
   const [smModalVisible2, setSmModalVisible2] = useState(false) //deny modal
   const { reload } = useSelector((state) => state.view)
 
+  const [isCheckedAll, setIsCheckedAll] = React.useState(false)
+
   const getEmployeeList = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-employees`, {
@@ -86,78 +88,6 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
     }
   }, [kpiItem.kpi_template.kpi_template_id, plan.plan_id, dispatch])
 
-  /*const assignKpi = async (listToReturn, listUser) => {
-    try {
-      await api.post(`/plans/assign-kpi-employees`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        users: listUser,
-      })
-      await api.put(`/plans/register-monthly-target/manager`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        target: Number(monthTarget),
-        month: Number(selectedMonth),
-        users: listToReturn,
-      })
-      dispatch(
-        createAlert({
-          message: 'Gán KPI cho nhân viên thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }
-
-  const registerQuarterTarget = async (target) => {
-    try {
-      await api.put(`/plans/register-quarterly-target/manager`, {
-        plan_id: plan.plan_id,
-        kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-        target: Number(target),
-        quarter: Number(selectedQuarter),
-      })
-      dispatch(
-        createAlert({
-          message: 'Đăng ký chỉ tiêu KPI thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }*/
-
   React.useEffect(() => {
     const fetchData = async () => {
       const employees = await getEmployeeList()
@@ -172,258 +102,6 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
     fetchData()
   }, [reload, getEmployeeList, getInfoTargetKpi])
 
-  /*React.useEffect(() => {
-    setSelectedEmployeeList([])
-    setSampleTarget('')
-    if (tempSelectedList.length > 0) {
-      switch (selectedMonth) {
-        case 1: {
-          tempSelectedList.forEach((item) => {
-            if (item.first_monthly_target) {
-              item.target = item.first_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 2: {
-          tempSelectedList.forEach((item) => {
-            if (item.second_monthly_target) {
-              item.target = item.second_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 3: {
-          tempSelectedList.forEach((item) => {
-            if (item.third_monthly_target) {
-              item.target = item.third_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 4: {
-          tempSelectedList.forEach((item) => {
-            if (item.fourth_monthly_target) {
-              item.target = item.fourth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 5: {
-          tempSelectedList.forEach((item) => {
-            if (item.fifth_monthly_target) {
-              item.target = item.fifth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 6: {
-          tempSelectedList.forEach((item) => {
-            if (item.sixth_monthly_target) {
-              item.target = item.sixth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 7: {
-          tempSelectedList.forEach((item) => {
-            if (item.seventh_monthly_target) {
-              item.target = item.seventh_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 8: {
-          tempSelectedList.forEach((item) => {
-            if (item.eighth_monthly_target) {
-              item.target = item.eighth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 9: {
-          tempSelectedList.forEach((item) => {
-            if (item.ninth_monthly_target) {
-              item.target = item.ninth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 10: {
-          tempSelectedList.forEach((item) => {
-            if (item.tenth_monthly_target) {
-              item.target = item.tenth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 11: {
-          tempSelectedList.forEach((item) => {
-            if (item.eleventh_monthly_target) {
-              item.target = item.eleventh_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 12: {
-          tempSelectedList.forEach((item) => {
-            if (item.twelfth_monthly_target) {
-              item.target = item.twelfth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        default:
-          break
-      }
-    }
-  }, [selectedMonth, tempSelectedList])*/
-
-  /*const handleCheckbox = (userItem) => {
-    const result = handleCheckboxValue(userItem.user_id)
-    if (result) {
-      setSelectedEmployeeList(
-        selectedEmployeeList.filter((item) => item.user_id !== userItem.user_id),
-      )
-    } else {
-      setSelectedEmployeeList([...selectedEmployeeList, { user: userItem, target: 0 }])
-    }
-  }
-
-  const handleCheckboxValue = (id) => {
-    const find = selectedEmployeeList.find((item) => item.user.user_id === id)
-    if (find) {
-      return true
-    }
-    return false
-  }*/
-
-  /*const handleTargetValue = (id) => {
-    const find = selectedEmployeeList.find((item) => item.user.user_id === id)
-    if (find) {
-      return find.target
-    }
-    return ''
-  }
-
-  const handleTargetOnChange = (event, id) => {
-    const copyselectedEmployeeList = cloneDeep(selectedEmployeeList)
-    const selectedDept = copyselectedEmployeeList.find((item) => item.user.user_id === id)
-    if (selectedDept) {
-      selectedDept.target = event.target.value
-    }
-    setSelectedEmployeeList(copyselectedEmployeeList)
-  }
-
-  const handleSampleTargetOnChange = (event) => {
-    setSampleTarget(event.target.value)
-    const copyselectedEmployeeList = cloneDeep(selectedEmployeeList)
-    copyselectedEmployeeList.map((item) => {
-      item.target = event.target.value
-    })
-    setSelectedEmployeeList(copyselectedEmployeeList)
-  }
-
-  const onMonthSubmit = async () => {
-    setIsSubmit(true)
-    if (selectValue === 'Month') {
-      const listToReturn = []
-      const listUser = []
-      let valid = true
-      selectedEmployeeList.map((item) => {
-        if (item.target === '') {
-          valid = false
-        }
-        listToReturn.push({ user_id: item.user.user_id, target: Number(item.target) })
-        listUser.push({ user_id: item.user.user_id })
-      })
-      if (valid) {
-        await assignKpi(listToReturn, listUser)
-      }
-    }
-    setIsSubmit(false)
-  }
-
-  const onQuarterSubmit = async (event, target) => {
-    setIsSubmit(true)
-    await registerQuarterTarget(target)
-    setIsSubmit(false)
-  }*/
-
-  /*const handleQuarterTargetValue = (item) => {
-    switch (selectedQuarter) {
-      case 1: {
-        if (item.first_quarterly_target) {
-          return item.first_quarterly_target.target
-        }
-        return 0
-      }
-      case 2: {
-        if (item.second_quarterly_target) {
-          return item.second_quarterly_target.target
-        }
-        return 0
-      }
-      case 3: {
-        if (item.third_quarterly_target) {
-          return item.third_quarterly_target.target
-        }
-        return 0
-      }
-      case 4: {
-        if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.target
-        }
-        return 0
-      }
-      default:
-        return 0
-    }
-  }
-
-  /*const handleQuarterTargetStatus = (item) => {
-    switch (selectedQuarter) {
-      case 1: {
-        if (item.first_quarterly_target) {
-          return item.first_quarterly_target.approve
-        }
-        return ''
-      }
-      case 2: {
-        if (item.second_quarterly_target) {
-          return item.second_quarterly_target.approve
-        }
-        return ''
-      }
-      case 3: {
-        if (item.third_quarterly_target) {
-          return item.third_quarterly_target.approve
-        }
-        return ''
-      }
-      case 4: {
-        if (item.fourth_quarterly_target) {
-          return item.fourth_quarterly_target.approve
-        }
-        return ''
-      }
-      default:
-        return ''
-    }
-  }*/
-
   const handleDataTargetKpiChange = (item) => {
     if (!userIDs.includes(item.user.user_id)) {
       setUserIDs((userIDs) => [...userIDs, item.user.user_id])
@@ -433,6 +111,15 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
           return tmp !== item.user.user_id
         }),
       )
+    }
+  }
+
+  const handleAllDataTargetKpiChange = () => {
+    setIsCheckedAll(!isCheckedAll)
+    if (!isCheckedAll) {
+      employeeList.map((item) => setUserIDs((userIDs) => [...userIDs, item.user.user_id]))
+    } else {
+      setUserIDs([])
     }
   }
 
@@ -754,7 +441,15 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={isCheckedAll}
+                      onChange={() => {
+                        handleAllDataTargetKpiChange()
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>

@@ -49,6 +49,8 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
+  const [isCheckedAll, setIsCheckedAll] = React.useState(false)
+
   const { reload } = useSelector((state) => state.view)
 
   const getEmployeeList = useCallback(async () => {
@@ -91,133 +93,15 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
     const fetchData = async () => {
       const employees = await getEmployeeList()
       //console.log(employees)
-      const assignEmployees = await getInfoTargetKpi()
+      //const assignEmployees = await getInfoTargetKpi()
       //console.log(assignEmployees)
-      if (assignEmployees) {
-        //setTempSelectedList(assignEmployees)
-      }
+      //if (assignEmployees) {
+      //setTempSelectedList(assignEmployees)
+      //}
       setEmployeeList(employees)
     }
     fetchData()
   }, [reload, getEmployeeList, getInfoTargetKpi])
-
-  /* React.useEffect(() => {
-    setSelectedEmployeeList([])
-    if (tempSelectedList.length > 0) {
-      switch (selectedMonth) {
-        case 1: {
-          tempSelectedList.map((item) => {
-            if (item.first_monthly_target) {
-              item.target = item.first_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 2: {
-          tempSelectedList.map((item) => {
-            if (item.second_monthly_target) {
-              item.target = item.second_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 3: {
-          tempSelectedList.map((item) => {
-            if (item.third_monthly_target) {
-              item.target = item.third_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 4: {
-          tempSelectedList.map((item) => {
-            if (item.fourth_monthly_target) {
-              item.target = item.fourth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 5: {
-          tempSelectedList.map((item) => {
-            if (item.fifth_monthly_target) {
-              item.target = item.fifth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 6: {
-          tempSelectedList.map((item) => {
-            if (item.sixth_monthly_target) {
-              item.target = item.sixth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 7: {
-          tempSelectedList.map((item) => {
-            if (item.seventh_monthly_target) {
-              item.target = item.seventh_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 8: {
-          tempSelectedList.map((item) => {
-            if (item.eighth_monthly_target) {
-              item.target = item.eighth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 9: {
-          tempSelectedList.map((item) => {
-            if (item.ninth_monthly_target) {
-              item.target = item.ninth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 10: {
-          tempSelectedList.map((item) => {
-            if (item.tenth_monthly_target) {
-              item.target = item.tenth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 11: {
-          tempSelectedList.map((item) => {
-            if (item.eleventh_monthly_target) {
-              item.target = item.eleventh_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        case 12: {
-          tempSelectedList.map((item) => {
-            if (item.twelfth_monthly_target) {
-              item.target = item.twelfth_monthly_target.target
-              setSelectedEmployeeList((selectedEmployeeList) => [...selectedEmployeeList, item])
-            }
-          })
-          break
-        }
-        default:
-          break
-      }
-    }
-  }, [selectedMonth, tempSelectedList])*/
 
   const handleDataTargetKpiChange = (item) => {
     if (!userIDs.includes(item.user.user_id)) {
@@ -228,6 +112,15 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
           return tmp !== item.user.user_id
         }),
       )
+    }
+  }
+
+  const handleAllDataTargetKpiChange = (item) => {
+    setIsCheckedAll(!isCheckedAll)
+    if (!isCheckedAll) {
+      employeeList.map((item) => setUserIDs((userIDs) => [...userIDs, item.user.user_id]))
+    } else {
+      setUserIDs([])
     }
   }
 
@@ -646,7 +539,15 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={isCheckedAll}
+                      onChange={() => {
+                        handleAllDataTargetKpiChange()
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
@@ -997,7 +898,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
           }}
           size="small"
         >
-          <FactCheckIcon />
+          <FactCheckIcon fontSize="small" />
         </IconButton>
       </Tooltip>
 

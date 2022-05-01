@@ -46,6 +46,8 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
+  const [isCheckedAll, setIsCheckedAll] = React.useState(false)
+
   const { reload } = useSelector((state) => state.view)
 
   const getInfoTargetKpi = useCallback(async () => {
@@ -324,6 +326,15 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
     //setSelectedDept(item)
   }
 
+  const handleAllTargetKpiCheckboxChange = (item) => {
+    setIsCheckedAll(!isCheckedAll)
+    if (!isCheckedAll) {
+      selectedDeptList.map((item) => setDeptIDs((deptIDs) => [...deptIDs, item.dept.dept_id]))
+    } else {
+      setDeptIDs([])
+    }
+  }
+
   const QuarterTargetView = () => {
     return (
       <>
@@ -354,7 +365,15 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={isCheckedAll}
+                      onChange={() => {
+                        handleAllTargetKpiCheckboxChange()
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">CHỈ TIÊU ĐĂNG KÝ</CTableHeaderCell>
@@ -365,7 +384,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
                   return (
                     <>
                       <CTableRow key={index}>
-                        <CTableDataCell className="text-center">
+                        <CTableDataCell className="text-center" style={{ width: '5%' }}>
                           {handleQuarterTargetValue(item) !== 'Chưa có' ? (
                             <Checkbox
                               size="small"

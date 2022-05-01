@@ -46,6 +46,8 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
+  const [isCheckedAll, setIsCheckedAll] = React.useState(false)
+
   const getInfoTargetKpi = useCallback(async () => {
     try {
       const response = await api.get(`plans/plan/target-kpi-of-depts`, {
@@ -63,78 +65,6 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
       }
     }
   }, [dispatch, plan.plan_id, kpiItem.kpi_template.kpi_template_id])
-
-  /*const approveQuarterTarget = async (selectedDeptApprove) => {
-    try {
-      selectedDeptApprove.map(async (item) => {
-        await api.put(`/plans/approve-quarterly-target/director`, {
-          plan_id: plan.plan_id,
-          kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-          dept_id: Number(item),
-          quarter: Number(selectedQuarter),
-          approve: 'Chấp nhận',
-        })
-      })
-      dispatch(
-        createAlert({
-          message: 'Duyệt chỉ tiêu KPI cho phòng ban thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }
-
-  const denyQuarterTarget = async (selectedDeptApprove) => {
-    try {
-      selectedDeptApprove.map(async (item) => {
-        await api.put(`/plans/approve-quarterly-target/director`, {
-          plan_id: plan.plan_id,
-          kpi_template_id: kpiItem.kpi_template.kpi_template_id,
-          dept_id: Number(item),
-          quarter: Number(selectedQuarter),
-          approve: 'Từ chối',
-        })
-      })
-      dispatch(
-        createAlert({
-          message: 'Từ chối chỉ tiêu KPI của phòng ban thành công',
-          type: 'success',
-        }),
-      )
-      setModalVisible(false)
-      dispatch(
-        setLoading({
-          value: true,
-        }),
-      )
-      dispatch(setReload())
-    } catch (error) {
-      if (error.response) {
-        dispatch(
-          createAlert({
-            message: error.response.data.message,
-            type: 'error',
-          }),
-        )
-      }
-    }
-  }*/
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -369,6 +299,15 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
     //setSelectedDept(item)
   }
 
+  const handleAllDataTargetKpiChange = (item) => {
+    setIsCheckedAll(!isCheckedAll)
+    if (!isCheckedAll) {
+      selectedDeptList.map((item) => setDeptIDs((deptIDs) => [...deptIDs, item.dept.dept_id]))
+    } else {
+      setDeptIDs([])
+    }
+  }
+
   const QuarterTargetView = () => {
     return (
       <>
@@ -399,7 +338,15 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={isCheckedAll}
+                      onChange={() => {
+                        handleAllDataTargetKpiChange()
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu</CTableHeaderCell>
@@ -552,6 +499,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={deptIDs.length === 0}
         >
           Chấp nhận
         </Button>
@@ -646,6 +594,7 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
           type="submit"
           onClick={() => setSmModalVisible2(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={deptIDs.length === 0}
         >
           Từ chối
         </Button>

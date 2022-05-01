@@ -47,6 +47,8 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
   const [smModalVisible1, setSmModalVisible1] = useState(false)
   const [smModalVisible2, setSmModalVisible2] = useState(false)
 
+  const [isCheckedAll, setIsCheckedAll] = React.useState(false)
+
   const { reload } = useSelector((state) => state.view)
 
   const getEmployeeList = useCallback(async () => {
@@ -357,6 +359,15 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
     }
   }
 
+  const handleAllTargetKpiCheckboxChange = () => {
+    setIsCheckedAll(!isCheckedAll)
+    if (!isCheckedAll) {
+      employeeList.map((item) => setUserIDs((userIDs) => [...userIDs, item.user.user_id]))
+    } else {
+      setUserIDs([])
+    }
+  }
+
   const MonthTargetView = () => {
     return (
       <>
@@ -388,7 +399,15 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
-                  <CTableHeaderCell />
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={isCheckedAll}
+                      onChange={() => {
+                        handleAllTargetKpiCheckboxChange()
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
