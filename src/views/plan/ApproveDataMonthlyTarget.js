@@ -771,7 +771,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
                         // color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
                       >
                         <CTableDataCell style={{ width: '5%' }}>
-                          {handleMonthTargetValue(item) !== 'Chưa có' ? (
+                          {handleMonthActualValue(item) !== 'Chưa có' ? (
                             <Checkbox
                               size="small"
                               checked={userIDs.includes(item.user.user_id)}
@@ -911,6 +911,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={userIDs.length === 0}
         >
           Chấp nhận
         </Button>
@@ -1005,6 +1006,7 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
           type="submit"
           onClick={() => setSmModalVisible2(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={userIDs.length === 0}
         >
           Từ chối
         </Button>

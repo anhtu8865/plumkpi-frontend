@@ -648,12 +648,16 @@ export const PlanKpiTable = (catItem) => {
                           //   {handleActualValue(item.kpi_template.kpi_template_id)}
                           // </CTableDataCell>
                           <CTableDataCell>
-                            <EnterDataQuarterlyTarget
-                              plan={plan}
-                              item={item}
-                              selectedQuarter={selectedQuarter}
-                              // value={handleActualValue(item.kpi_template.kpi_template_id)}
-                            />
+                            {target !== 'Chưa có' ? (
+                              <EnterDataQuarterlyTarget
+                                plan={plan}
+                                item={item}
+                                selectedQuarter={selectedQuarter}
+                                // value={handleActualValue(item.kpi_template.kpi_template_id)}
+                              />
+                            ) : (
+                              'Chưa có'
+                            )}
                           </CTableDataCell>
                         ) : checkedQuarter &&
                           catItem.kpi_category.kpi_category_name !== 'Cá nhân' ? (
@@ -700,11 +704,15 @@ export const PlanKpiTable = (catItem) => {
                       {user.role === 'Nhân viên' ? (
                         checkedMonth ? (
                           <CTableDataCell>
-                            <EnterDataMonthlyTarget
-                              plan={plan}
-                              item={item}
-                              selectedMonth={selectedMonth}
-                            />
+                            {target !== 'Chưa có' ? (
+                              <EnterDataMonthlyTarget
+                                plan={plan}
+                                item={item}
+                                selectedMonth={selectedMonth}
+                              />
+                            ) : (
+                              'Chưa có'
+                            )}
                           </CTableDataCell>
                         ) : (
                           <CTableDataCell>

@@ -355,6 +355,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">CHỈ TIÊU ĐĂNG KÝ</CTableHeaderCell>
                 </CTableRow>
@@ -375,6 +376,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
                             />
                           ) : null}
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
                           {handleQuarterTargetValue(item) !== 'Chưa có' ? (
@@ -480,6 +482,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={deptIDs.length === 0}
         >
           Chấp nhận
         </Button>
@@ -574,6 +577,7 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
           type="submit"
           onClick={() => setSmModalVisible2(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={deptIDs.length === 0}
         >
           Từ chối
         </Button>

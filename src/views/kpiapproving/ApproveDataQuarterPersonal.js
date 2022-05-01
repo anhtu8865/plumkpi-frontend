@@ -354,6 +354,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">TIẾN ĐỘ</CTableHeaderCell>
@@ -366,7 +367,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem, quarter) => {
                     <>
                       <CTableRow key={index}>
                         <CTableDataCell className="text-center">
-                          {handleQuarterTargetValue(item) !== 'Chưa có' ? (
+                          {handleQuarterDataValue(item) !== 'Chưa có' ? (
                             <Checkbox
                               size="small"
                               checked={deptIDs.includes(item.dept.dept_id)}
@@ -376,6 +377,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem, quarter) => {
                             />
                           ) : null}
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell>{item.dept.dept_name}</CTableDataCell>
                         <CTableDataCell className="w-25">
                           {handleQuarterTargetValue(item) !== 'Chưa có' ? (
@@ -505,6 +507,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem, quarter) => {
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={deptIDs.length === 0}
         >
           Chấp nhận
         </Button>
@@ -599,6 +602,7 @@ export const ApproveDataQuarterPersonal = (plan_id, kpiItem, quarter) => {
           type="submit"
           onClick={() => setSmModalVisible2(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={deptIDs.length === 0}
         >
           Từ chối
         </Button>

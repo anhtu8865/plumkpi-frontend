@@ -647,6 +647,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell />
+                  <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">CHỈ TIÊU</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">THỰC HIỆN</CTableHeaderCell>
@@ -678,8 +679,8 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
                         key={index}
                         // color={handleCheckboxValue(item.user.id) ? null : 'secondary'}
                       >
-                        <CTableDataCell>
-                          {handleMonthTargetValue(item) ? (
+                        <CTableDataCell style={{ width: '5%' }}>
+                          {handleMonthActualValue(item) !== 'Chưa có' ? (
                             <Checkbox
                               size="small"
                               checked={userIDs.includes(item.user.user_id)}
@@ -689,6 +690,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
                             />
                           ) : null}
                         </CTableDataCell>
+                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
                         <CTableDataCell className="d-flex align-items-center">
                           <CCol xs={3}>
                             <Avatar src={item.user.avatar ? item.user.avatar.url : null} />
@@ -846,6 +848,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
           startIcon={<CheckIcon />}
           onClick={() => setSmModalVisible1(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={userIDs.length === 0}
         >
           Chấp nhận
         </Button>
@@ -940,6 +943,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
           type="submit"
           onClick={() => setSmModalVisible2(true)}
           sx={{ textTransform: 'none', borderRadius: 10 }}
+          disabled={userIDs.length === 0}
         >
           Từ chối
         </Button>
@@ -991,6 +995,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
           onClick={() => {
             setModalVisible(true)
           }}
+          size="small"
         >
           <FactCheckIcon />
         </IconButton>
