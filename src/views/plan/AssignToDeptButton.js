@@ -19,27 +19,35 @@ import {
   CInputGroup,
   CInputGroupText,
 } from '@coreui/react'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { setReload, setLoading } from 'src/slices/viewSlice'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import cloneDeep from 'lodash/cloneDeep'
 import CheckIcon from '@mui/icons-material/Check'
 import { formatNumber } from 'src/utils/function'
 import NumberFormat from 'react-number-format'
+import { FieldArray, Form, Formik, getIn, useFormikContext } from 'formik'
+import * as yup from 'yup'
 
-export const AssignToDeptButton = (kpiItem) => {
+export const AssignToDeptButton = (props) => {
+  const { kpiItem } = props
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
   const [deptList, setDeptList] = useState([])
-  const [selectedDeptList, setSelectedDeptList] = useState([])
-  const selectValue = 'Year'
   const { plan } = useSelector((state) => state.planDetail)
-  const [sum, setSum] = useState(0)
-  const [sampleTarget, setSampleTarget] = useState('')
+
+  const validationSchema = yup.object({
+    deptList: yup.array().of(
+      yup.object().shape({
+        isChecked: yup.boolean(),
+        target: yup.number().when('isChecked', { is: true, then: yup.number().required() }),
+      }),
+    ),
+  })
 
   const getDeptList = useCallback(async () => {
     try {
@@ -74,6 +82,23 @@ export const AssignToDeptButton = (kpiItem) => {
       }
     }
   }, [dispatch, plan.plan_id, kpiItem.kpi_template.kpi_template_id])
+
+  const handleDeptList = async (all, assigned) => {
+    const array = []
+    all.forEach((item) => {
+      let newItem = item
+      const find = assigned.find((i) => i.dept.dept_id === item.dept_id)
+      if (find) {
+        newItem.target = find.target
+        newItem.isChecked = true
+      } else {
+        newItem.target = ''
+        newItem.isChecked = false
+      }
+      array.push(newItem)
+    })
+    return array
+  }
 
   const assignKpi = async (listToReturn) => {
     try {
@@ -110,16 +135,12 @@ export const AssignToDeptButton = (kpiItem) => {
   React.useEffect(() => {
     const fetchData = async () => {
       setIsSubmit(true)
-      const deptList = []
       const depts = await getDeptList()
       const assignDepts = await getInfoTargetKpi()
       if (assignDepts) {
-        assignDepts.forEach((item) => {
-          deptList.push(item)
-        })
-        setSelectedDeptList(deptList)
+        const result = await handleDeptList(depts, assignDepts)
+        setDeptList(result)
       }
-      setDeptList(depts)
       setIsSubmit(false)
     }
     if (modalVisible) {
@@ -127,94 +148,67 @@ export const AssignToDeptButton = (kpiItem) => {
     }
   }, [modalVisible, getDeptList, getInfoTargetKpi])
 
-  React.useEffect(() => {
-    let target = 0
-    const targetArray = []
-    selectedDeptList.forEach((item) => {
-      targetArray.push(Number(item.target))
-    })
-    switch (kpiItem.kpi_template.aggregation) {
-      case 'Tổng':
-        targetArray.map((item) => (target = target + item))
-        break
-      case 'Trung bình':
-        targetArray.map((item) => (target = target + item))
-        target = (target / targetArray.length).toFixed(0)
-        break
-      case 'Lớn nhất':
-        target = Math.max(...targetArray)
-        break
-      case 'Bé nhất':
-        target = Math.min(...targetArray)
-        break
-      default:
-        target = 0
-    }
-    setSum(target)
-  }, [selectedDeptList, kpiItem.kpi_template.aggregation])
+  const YearTargetView = () => {
+    const { values, touched, errors, handleBlur, setFieldValue, handleChange } = useFormikContext()
 
-  const handleCheckbox = (deptItem) => {
-    const result = handleCheckboxValue(deptItem.dept_id)
-    if (result) {
-      setSelectedDeptList(selectedDeptList.filter((item) => item.dept.dept_id !== deptItem.dept_id))
-    } else {
-      setSelectedDeptList([...selectedDeptList, { dept: deptItem, target: 0 }])
+    const handleLastTarget = (list) => {
+      let target = 0
+      const targetArray = []
+      list.forEach((item) => {
+        targetArray.push(Number(item.target))
+      })
+      switch (kpiItem.kpi_template.aggregation) {
+        case 'Tổng':
+          targetArray.map((item) => (target = target + item))
+          break
+        case 'Trung bình':
+          targetArray.map((item) => (target = target + item))
+          target = (target / targetArray.length).toFixed(0)
+          break
+        case 'Lớn nhất':
+          target = Math.max(...targetArray)
+          break
+        case 'Bé nhất':
+          target = Math.min(...targetArray)
+          break
+        default:
+          target = 0
+      }
+      return target
     }
-  }
 
-  const handleCheckboxValue = (id) => {
-    const find = selectedDeptList.find((item) => item.dept.dept_id === id)
-    if (find) {
+    const handleSampleTarget = (list, target) => {
+      list.forEach((item) => {
+        if (item.isChecked) {
+          item.target = target
+        }
+      })
+      return list
+    }
+
+    const isAllChecked = (list) => {
+      const find = list.find((item) => item.isChecked === false)
+      if (find) {
+        return false
+      }
       return true
     }
-    return false
-  }
 
-  const handleTargetValue = (id) => {
-    const selectedDept = selectedDeptList.find((item) => item.dept.dept_id === id)
-    if (selectedDept) {
-      return selectedDept.target
-    }
-    return ''
-  }
-
-  const handleTargetOnChange = (value, id) => {
-    const copySelectedDeptList = cloneDeep(selectedDeptList)
-    const selectedDept = copySelectedDeptList.find((item) => item.dept.dept_id === id)
-    if (selectedDept) {
-      selectedDept.target = value
-    }
-    setSelectedDeptList(copySelectedDeptList)
-  }
-
-  const handleSampleTargetOnChange = (value) => {
-    setSampleTarget(value)
-    const copySelectedDeptList = cloneDeep(selectedDeptList)
-    copySelectedDeptList.forEach((item) => {
-      item.target = value
-    })
-    setSelectedDeptList(copySelectedDeptList)
-  }
-
-  const onSubmit = async (event) => {
-    setIsSubmit(true)
-    if (selectValue === 'Year') {
-      const listToReturn = []
-      let valid = true
-      selectedDeptList.forEach((item) => {
-        if (item.target === '') {
-          valid = false
-        }
-        listToReturn.push({ dept_id: item.dept.dept_id, target: Number(item.target) })
-      })
-      if (valid) {
-        await assignKpi(listToReturn)
+    const handleCheckAll = (list, checked) => {
+      if (checked) {
+        list.forEach((item) => {
+          if (!item.isChecked) {
+            item.isChecked = true
+          }
+        })
+      } else {
+        list.forEach((item) => {
+          item.isChecked = false
+        })
       }
+      return list
     }
-    setIsSubmit(false)
-  }
 
-  const YearTargetView = () => {
     return (
       <>
         <CRow className="mt-4">
@@ -223,11 +217,20 @@ export const AssignToDeptButton = (kpiItem) => {
           </div>
         </CRow>
         <CRow>
-          {deptList.length > 0 ? (
+          {values.deptList.length > 0 ? (
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell />
+                <CTableRow align="middle">
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={isAllChecked(values.deptList) ? true : false}
+                      onChange={(event) => {
+                        const newList = handleCheckAll(values.deptList, event.target.checked)
+                        setFieldValue('deptList', newList)
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell>Quản lý</CTableHeaderCell>
@@ -242,90 +245,78 @@ export const AssignToDeptButton = (kpiItem) => {
                   <CTableHeaderCell />
                   <CTableHeaderCell className="w-25">
                     <CInputGroup size="sm">
-                      {/*<CFormInput
-                        size="sm"
-                        type="number"
-                        value={sampleTarget}
-                        onChange={(event) => {
-                          handleSampleTargetOnChange(event)
-                        }}
-                      />*/}
                       <NumberFormat
+                        id="sampleTarget"
                         customInput={CFormInput}
                         thousandSeparator="."
                         decimalSeparator=","
                         allowNegative={false}
-                        value={sampleTarget}
-                        onValueChange={(values) => {
-                          handleSampleTargetOnChange(values.value)
+                        value={values.sampleTarget}
+                        onBlur={handleBlur}
+                        onValueChange={(v) => {
+                          setFieldValue('sampleTarget', v.value)
+                          const newList = handleSampleTarget(values.deptList, v.value)
+                          setFieldValue('deptList', newList)
                         }}
                       />
                       <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                     </CInputGroup>
                   </CTableHeaderCell>
                 </CTableRow>
-                {deptList.map((item, index) => {
-                  return (
+                <FieldArray name="deptList">
+                  {() => (
                     <>
-                      <CTableRow
-                        key={index}
-                        color={handleCheckboxValue(item.dept_id) ? null : 'secondary'}
-                      >
-                        <CTableDataCell style={{ width: '5%' }}>
-                          <Checkbox
-                            size="small"
-                            checked={handleCheckboxValue(item.dept_id)}
-                            onChange={() => {
-                              handleCheckbox(item)
-                            }}
-                          />
-                        </CTableDataCell>
-                        <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
-                        <CTableDataCell>{item.dept_name}</CTableDataCell>
-                        <CTableDataCell className="d-flex align-items-center">
-                          <Avatar
-                            src={item.manager.avatar ? item.manager.avatar.url : null}
-                            className="me-3"
-                          />
-                          {item.manager.user_name}
-                        </CTableDataCell>
-                        <CTableDataCell className="w-25">
-                          <CInputGroup size="sm">
-                            <NumberFormat
-                              customInput={CFormInput}
-                              thousandSeparator="."
-                              decimalSeparator=","
-                              placeholder="Chưa có"
-                              allowNegative={false}
-                              value={handleTargetValue(item.dept_id)}
-                              invalid={
-                                handleTargetValue(item.dept_id) === '' &&
-                                handleCheckboxValue(item.dept_id)
-                              }
-                              disabled={!handleCheckboxValue(item.dept_id)}
-                              onValueChange={(values) => {
-                                handleTargetOnChange(values.value, item.dept_id)
-                              }}
-                            />
-                            {/*<CFormInput
-                              type="number"
-                              value={handleTargetValue(item.dept_id)}
-                              invalid={
-                                handleTargetValue(item.dept_id) === '' &&
-                                handleCheckboxValue(item.dept_id)
-                              }
-                              onChange={(event) => {
-                                handleTargetOnChange(event, item.dept_id)
-                              }}
-                              disabled={!handleCheckboxValue(item.dept_id)}
-                            />*/}
-                            <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
-                          </CInputGroup>
-                        </CTableDataCell>
-                      </CTableRow>
+                      {values.deptList.map((item, index) => {
+                        const target = `deptList[${index}].target`
+                        const isChecked = `deptList[${index}].isChecked`
+                        const touchedTarget = getIn(touched, target)
+                        const errorTarget = getIn(errors, target)
+
+                        return (
+                          <CTableRow key={index} color={item.isChecked ? null : 'secondary'}>
+                            <CTableDataCell style={{ width: '5%' }}>
+                              <Checkbox
+                                name={isChecked}
+                                size="small"
+                                checked={item.isChecked}
+                                onChange={handleChange}
+                              />
+                            </CTableDataCell>
+                            <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
+                            <CTableDataCell>{item.dept_name}</CTableDataCell>
+                            <CTableDataCell className="d-flex align-items-center">
+                              <Avatar
+                                src={item.manager.avatar ? item.manager.avatar.url : null}
+                                className="me-3"
+                              />
+                              {item.manager.user_name}
+                            </CTableDataCell>
+                            <CTableDataCell className="w-25">
+                              <CInputGroup size="sm">
+                                <NumberFormat
+                                  customInput={CFormInput}
+                                  thousandSeparator="."
+                                  decimalSeparator=","
+                                  placeholder="Chưa có"
+                                  allowNegative={false}
+                                  name={target}
+                                  onBlur={handleBlur}
+                                  value={item.isChecked ? item.target : ''}
+                                  invalid={touchedTarget && errorTarget}
+                                  disabled={!item.isChecked}
+                                  onValueChange={(values) => {
+                                    setFieldValue(target, values.value)
+                                  }}
+                                />
+                                <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
+                              </CInputGroup>
+                            </CTableDataCell>
+                          </CTableRow>
+                        )
+                      })}
                     </>
-                  )
-                })}
+                  )}
+                </FieldArray>
               </CTableBody>
               <CTableFoot>
                 <CTableRow>
@@ -340,7 +331,11 @@ export const AssignToDeptButton = (kpiItem) => {
                   <CTableDataCell>
                     {kpiItem.kpi_template.aggregation !== 'Mới nhất' ? (
                       <CInputGroup size="sm">
-                        <CFormInput size="sm" disabled value={formatNumber(sum)} />
+                        <CFormInput
+                          size="sm"
+                          disabled
+                          value={formatNumber(handleLastTarget(values.deptList))}
+                        />
                         <CInputGroupText>{kpiItem.kpi_template.unit}</CInputGroupText>
                       </CInputGroup>
                     ) : null}
@@ -372,7 +367,7 @@ export const AssignToDeptButton = (kpiItem) => {
               : 'Chưa có'}
           </CCol>
         </CRow>
-        {selectValue === 'Year' && YearTargetView()}
+        <YearTargetView />
       </>
     )
   }
@@ -391,38 +386,69 @@ export const AssignToDeptButton = (kpiItem) => {
         </IconButton>
       </Tooltip>
 
-      <CModal
-        alignment="center"
-        size="lg"
-        scrollable
-        visible={modalVisible}
-        onClose={() => {
-          setModalVisible(false)
+      <Formik
+        enableReinitialize={true}
+        initialValues={{ deptList: deptList, sampleTarget: '' }}
+        validationSchema={validationSchema}
+        onSubmit={async (values) => {
+          const array = []
+          values.deptList.forEach((item) => {
+            if (item.isChecked) {
+              array.push({ dept_id: item.dept_id, target: Number(item.target) })
+            }
+          })
+          await assignKpi(array)
         }}
       >
-        <CModalHeader>
-          <CModalTitle>Gán KPI cho phòng ban theo năm</CModalTitle>
-        </CModalHeader>
-        <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
-        <CModalFooter>
-          {selectValue === 'Year' && (
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<CheckIcon />}
-              type="submit"
-              onClick={(event) => {
-                onSubmit(event)
-              }}
-              disabled={isSubmit}
-              sx={{ textTransform: 'none', borderRadius: 10 }}
-            >
-              Xác nhận
-            </Button>
-          )}
-          {isSubmit && <LoadingCircle />}
-        </CModalFooter>
-      </CModal>
+        {({
+          values,
+          handleChange,
+          handleBlur,
+          isSubmitting,
+          submitForm,
+          setFieldValue,
+          resetForm,
+        }) => (
+          <CModal
+            alignment="center"
+            size="lg"
+            scrollable
+            visible={modalVisible}
+            onClose={() => {
+              setModalVisible(false)
+              resetForm({ deptList: deptList, sampleTarget: '' })
+            }}
+          >
+            <CModalHeader>
+              <CModalTitle>Gán KPI cho phòng ban theo năm</CModalTitle>
+            </CModalHeader>
+            <CModalBody className="mx-4 mb-3">
+              <Form>
+                <HasTargetView />
+              </Form>
+            </CModalBody>
+            <CModalFooter>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<CheckIcon />}
+                type="submit"
+                onClick={submitForm}
+                disabled={isSubmitting}
+                sx={{ textTransform: 'none', borderRadius: 10 }}
+              >
+                Xác nhận
+              </Button>
+
+              {(isSubmit || isSubmitting) && <LoadingCircle />}
+            </CModalFooter>
+          </CModal>
+        )}
+      </Formik>
     </>
   )
+}
+
+AssignToDeptButton.propTypes = {
+  kpiItem: PropTypes.object,
 }

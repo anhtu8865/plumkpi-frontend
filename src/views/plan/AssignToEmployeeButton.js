@@ -92,7 +92,8 @@ export const AssignToEmployeeButton = (props) => {
   }, [modalVisible, dispatch, getAssignedEmployeeList])
 
   const Table = () => {
-    const { values } = useFormikContext()
+    const { values, setFieldValue } = useFormikContext()
+
     return (
       <>
         <CRow className="mt-4">
@@ -104,8 +105,24 @@ export const AssignToEmployeeButton = (props) => {
           {employeeList.length > 0 ? (
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell />
+                <CTableRow align="middle">
+                  <CTableHeaderCell>
+                    <Checkbox
+                      size="small"
+                      checked={values.selectedList.length === employeeList.length ? true : false}
+                      onChange={(event) => {
+                        if (event.target.checked) {
+                          const array = []
+                          employeeList.forEach((item) => {
+                            array.push(item.user_id)
+                          })
+                          setFieldValue('selectedList', array)
+                        } else {
+                          setFieldValue('selectedList', [])
+                        }
+                      }}
+                    />
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>
                 </CTableRow>
@@ -120,7 +137,7 @@ export const AssignToEmployeeButton = (props) => {
                             key={index}
                             color={values.selectedList.includes(item.user_id) ? null : 'secondary'}
                           >
-                            <CTableDataCell>
+                            <CTableDataCell style={{ width: '5%' }}>
                               <Checkbox
                                 size="small"
                                 checked={values.selectedList.includes(item.user_id)}
@@ -133,7 +150,7 @@ export const AssignToEmployeeButton = (props) => {
                                 }}
                               />
                             </CTableDataCell>
-                            <CTableDataCell style={{ width: '5%' }}>{index + 1}</CTableDataCell>
+                            <CTableDataCell style={{ width: '20%' }}>{index + 1}</CTableDataCell>
                             <CTableDataCell className="d-flex align-items-center">
                               <CCol xs={2}>
                                 <Avatar src={item.avatar ? item.avatar.url : null} />
@@ -218,7 +235,7 @@ export const AssignToEmployeeButton = (props) => {
           }
         }}
       >
-        {({ values, isSubmitting, submitForm, setFieldValue }) => (
+        {({ values, isSubmitting, submitForm, setFieldValue, resetForm }) => (
           <>
             <CModal
               alignment="center"
@@ -227,6 +244,7 @@ export const AssignToEmployeeButton = (props) => {
               visible={modalVisible}
               onClose={() => {
                 setModalVisible(false)
+                resetForm({ selectedList: selectedEmployeeList })
               }}
             >
               <CModalHeader>

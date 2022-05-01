@@ -738,10 +738,12 @@ export const PlanKpiTable = (catItem) => {
                       <CTableDataCell className="text-center">
                         <div className="d-flex flex-row justify-content-center">
                           {user.role === 'Giám đốc' &&
-                            catItem.kpi_category.kpi_category_name !== 'Cá nhân' &&
-                            AssignToDeptButton(item)}
-                          {user.role === 'Giám đốc' &&
-                            ApproveQuarterTargetButton(item, selectedQuarter)}
+                            catItem.kpi_category.kpi_category_name !== 'Cá nhân' && (
+                              <AssignToDeptButton kpiItem={item} />
+                            )}
+                          {user.role === 'Giám đốc' && (
+                            <ApproveQuarterTargetButton kpiItem={item} quarter={selectedQuarter} />
+                          )}
                           {user.role === 'Giám đốc' &&
                             ApproveDataQuarterTarget(plan.plan_id, item, selectedQuarter)}
                           {user.role === 'Quản lý' &&

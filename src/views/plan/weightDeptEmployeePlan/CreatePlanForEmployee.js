@@ -112,7 +112,7 @@ export const CreatePlanForEmployee = () => {
     }
 
     const checkIfAllKpisEmpty = (kpiList) => {
-      const find = kpiList.find((item) => item.weight !== '')
+      const find = kpiList.find((item) => item.weight !== '' && item.weight !== null)
       if (!find) {
         return true
       }
@@ -128,6 +128,8 @@ export const CreatePlanForEmployee = () => {
                 <>
                   {values.kpi_categories.map((item, index) => {
                     const weight = `kpi_categories[${index}].weight`
+                    const sum = handleSumValue(item.kpi_category_id)
+                    const allKpisEmpty = checkIfAllKpisEmpty(item.kpi_templates)
 
                     return (
                       <CCol xs={12} lg={6} key={index}>
@@ -175,10 +177,14 @@ export const CreatePlanForEmployee = () => {
                                       type="number"
                                       placeholder="Không áp dụng"
                                       name={`kpi_categories[${index}].kpi_templates[${idx}].weight`}
-                                      value={item.weight === '' ? '' : element.weight}
+                                      value={
+                                        item.weight === '' || item.weight === null
+                                          ? ''
+                                          : element.weight
+                                      }
                                       onChange={handleChange}
                                       onBlur={handleBlur}
-                                      disabled={item.weight === ''}
+                                      disabled={item.weight === '' || item.weight === null}
                                     />
                                     <CInputGroupText>%</CInputGroupText>
                                   </CInputGroup>
@@ -195,9 +201,21 @@ export const CreatePlanForEmployee = () => {
                                   <CFormInput
                                     size="sm"
                                     disabled
-                                    value={handleSumValue(item.kpi_category_id)}
-                                    invalid={handleSumValue(item.kpi_category_id) !== 100}
-                                    valid={handleSumValue(item.kpi_category_id) === 100}
+                                    value={
+                                      item.weight === '' || item.weight === null || allKpisEmpty
+                                        ? ''
+                                        : sum
+                                    }
+                                    invalid={
+                                      item.weight === '' || item.weight === null || allKpisEmpty
+                                        ? null
+                                        : sum !== 100
+                                    }
+                                    valid={
+                                      item.weight === '' || item.weight === null || allKpisEmpty
+                                        ? null
+                                        : sum === 100
+                                    }
                                   />
                                   <CInputGroupText>%</CInputGroupText>
                                 </CInputGroup>
@@ -205,7 +223,7 @@ export const CreatePlanForEmployee = () => {
                             </CTableRow>
                           </CTableFoot>
                         </CTable>
-                        {checkIfAllKpisEmpty(item.kpi_templates) && (
+                        {allKpisEmpty && (
                           <small>Danh mục bị bỏ qua do không có KPI nào được áp dụng.</small>
                         )}
                       </CCol>
@@ -314,10 +332,10 @@ export const CreatePlanForEmployee = () => {
             user_ids.push(item.value)
           })
           values.kpi_categories.forEach((item) => {
-            if (item.weight !== '') {
+            if (item.weight !== '' && item.weight !== null) {
               const kpi_templates = []
               item.kpi_templates.forEach((element) => {
-                if (element.weight !== '') {
+                if (element.weight !== '' && element.weight !== null) {
                   kpi_templates.push({
                     kpi_template_id: element.kpi_template_id,
                     weight: Number(element.weight),

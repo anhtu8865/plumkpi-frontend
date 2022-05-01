@@ -16,7 +16,7 @@ import SystemAlert from 'src/components/SystemAlert'
 import { useFormik } from 'formik'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import KPIlogo from 'src/assets/plum-kpi-img/logo.png'
+import KPIlogo from 'src/assets/plum-kpi-img/anotherlogo.png'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import api from 'src/views/axiosConfig'
 import * as yup from 'yup'
@@ -87,7 +87,7 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={formik.handleSubmit}>
-                    <CImage src={KPIlogo} className="login-logo" alt="logo" />
+                    <CImage src={KPIlogo} className="login-logo" alt="logo" height={32} />
                     <h4 className="login-title">Chào mừng bạn đến PlumKPI! 👋🏻</h4>
                     <p className="text-medium-emphasis">Đăng nhập với tài khoản của bạn</p>
                     <div className="mb-3">
@@ -130,7 +130,8 @@ const Login = () => {
                       <CCol>
                         <div className="d-grid gap-1 mx-auto">
                           <CButton
-                            className="btn btn-primary"
+                            className="btn btn-info"
+                            style={{ color: 'white' }}
                             type="submit"
                             disabled={formik.isSubmitting}
                           >

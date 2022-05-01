@@ -9,12 +9,14 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
+  CImage,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import api from 'src/views/axiosConfig'
 import { cilMenu } from '@coreui/icons'
 import { AppHeaderDropdown } from './header/index'
-import { logo } from 'src/assets/brand/logo'
+//import { logo } from 'src/assets/brand/logo'
+import KPIlogo from 'src/assets/plum-kpi-img/anotherlogo.png'
 import { setSidebarShow } from 'src/slices/sidebarSlice'
 import { createAlert } from 'src/slices/alertSlice'
 import { setTime } from 'src/slices/timeSlice'
@@ -76,7 +78,8 @@ const AppHeader = () => {
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <CIcon icon={logo} height={48} alt="Logo" />
+          {/*<CIcon icon={logo} height={48} alt="Logo" />*/}
+          <CImage src={KPIlogo} height={27} alt="Logo" />
         </CHeaderBrand>
         <div className="ms-auto me-2 d-flex align-items-center">
           {!isEdit ? (

@@ -32,8 +32,10 @@ import { quarterArray } from 'src/utils/constant'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle'
 import { CustomWidthTooltip } from 'src/components/CustomWidthTooltip'
+import PropTypes from 'prop-types'
 
-export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
+export const ApproveQuarterTargetButton = (props) => {
+  const { kpiItem, quarter } = props
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -221,6 +223,26 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
     }
   }
 
+  const allDisplayCheckbox = (list, quarter) => {
+    const array = []
+    list.forEach((item) => {
+      const ifHadTarget = handleQuarterTargetValue(item, quarter)
+      if (ifHadTarget !== 'Chưa đăng ký') {
+        array.push(item.dept.dept_id)
+      }
+    })
+    return array
+  }
+
+  const handleCheckAll = (list, quarter, checked) => {
+    if (checked) {
+      const newList = allDisplayCheckbox(list, quarter)
+      setSelectedDeptApprove(newList)
+    } else {
+      setSelectedDeptApprove([])
+    }
+  }
+
   const onApproveSubmit = async () => {
     setIsSubmit(true)
     await approveQuarterTarget(selectedDeptApprove)
@@ -296,8 +318,23 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
           {selectedDeptList.length > 0 ? (
             <CTable align="middle" className="mb-0 border overflow-auto mt-2" hover responsive>
               <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell />
+                <CTableRow align="middle">
+                  <CTableHeaderCell>
+                    {allDisplayCheckbox(selectedDeptList, selectedQuarter).length > 0 && (
+                      <Checkbox
+                        size="small"
+                        checked={
+                          allDisplayCheckbox(selectedDeptList, selectedQuarter).length ===
+                          selectedDeptApprove.length
+                            ? true
+                            : false
+                        }
+                        onChange={(event) => {
+                          handleCheckAll(selectedDeptList, selectedQuarter, event.target.checked)
+                        }}
+                      />
+                    )}
+                  </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
                   <CTableHeaderCell className="w-25">Chỉ tiêu đăng ký</CTableHeaderCell>
@@ -409,6 +446,7 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false)
+          setSelectedDeptApprove([])
         }}
       >
         <CModalHeader>
@@ -455,4 +493,9 @@ export const ApproveQuarterTargetButton = (kpiItem, quarter) => {
       </CModal>
     </>
   )
+}
+
+ApproveQuarterTargetButton.propTypes = {
+  kpiItem: PropTypes.object,
+  quarter: PropTypes.number,
 }
