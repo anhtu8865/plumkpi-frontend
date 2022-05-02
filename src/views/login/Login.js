@@ -78,6 +78,21 @@ const Login = () => {
     },
   })
 
+  React.useEffect(() => {
+    api
+      .get('authentication')
+      .then((res) => {
+        if (res.data.role === 'Admin') {
+          history.push('/kpicategory')
+        } else {
+          history.push('/plan')
+        }
+      })
+      .catch((error) => {
+        history.push('/login')
+      })
+  }, [history])
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
