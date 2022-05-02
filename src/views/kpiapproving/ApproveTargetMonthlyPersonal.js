@@ -230,6 +230,85 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
     return ''
   }
 
+  const handleMonthTargetValue = (item) => {
+    switch (selectedMonth) {
+      case 1: {
+        if (item.first_monthly_target) {
+          return item.first_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 2: {
+        if (item.second_monthly_target) {
+          return item.second_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 3: {
+        if (item.third_monthly_target) {
+          return item.third_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 4: {
+        if (item.fourth_monthly_target) {
+          return item.fourth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 5: {
+        if (item.fifth_monthly_target) {
+          return item.fifth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 6: {
+        if (item.sixth_monthly_target) {
+          return item.sixth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 7: {
+        if (item.seventh_monthly_target) {
+          return item.seventh_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 8: {
+        if (item.eighth_monthly_target) {
+          return item.eighth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 9: {
+        if (item.ninth_monthly_target) {
+          return item.ninth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 10: {
+        if (item.tenth_monthly_target) {
+          return item.tenth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 11: {
+        if (item.eleventh_monthly_target) {
+          return item.eleventh_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      case 12: {
+        if (item.twelfth_monthly_target) {
+          return item.twelfth_monthly_target.target
+        }
+        return 'Chưa có'
+      }
+      default:
+        return 'Chưa có'
+    }
+  }
+
   const handleMonthlyTargetStatus = (item) => {
     switch (selectedMonth) {
       case 1: {
@@ -359,10 +438,22 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
     }
   }
 
-  const handleAllTargetKpiCheckboxChange = () => {
+  const allDisplayCheckbox = (list, month) => {
+    const array = []
+    list.forEach((item) => {
+      const ifHadTarget = handleMonthTargetValue(item, month)
+      if (ifHadTarget !== 'Chưa có') {
+        array.push(item.user.user_id)
+      }
+    })
+    return array
+  }
+
+  const handleCheckAll = (list, month) => {
     setIsCheckedAll(!isCheckedAll)
     if (!isCheckedAll) {
-      employeeList.map((item) => setUserIDs((userIDs) => [...userIDs, item.user.user_id]))
+      const newList = allDisplayCheckbox(list, month)
+      setUserIDs(newList)
     } else {
       setUserIDs([])
     }
@@ -400,13 +491,19 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>
-                    <Checkbox
-                      size="small"
-                      checked={isCheckedAll}
-                      onChange={() => {
-                        handleAllTargetKpiCheckboxChange()
-                      }}
-                    />
+                    {allDisplayCheckbox(employeeList, selectedMonth).length > 0 && (
+                      <Checkbox
+                        size="small"
+                        checked={
+                          allDisplayCheckbox(employeeList, selectedMonth).length === userIDs.length
+                            ? true
+                            : false
+                        }
+                        onChange={() => {
+                          handleCheckAll(employeeList, selectedMonth)
+                        }}
+                      />
+                    )}
                   </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>NHÂN VIÊN</CTableHeaderCell>
@@ -445,10 +542,11 @@ export const ApproveTargetMonthlyPersonal = (plan_id, kpiItem, month) => {
                           </CCol>
                         </CTableDataCell>
                         <CTableDataCell className="w-25">
-                          {handleTargetValue(item.user.user_id) !== '' ? (
+                          {handleMonthTargetValue(item) !== 'Chưa có' ? (
                             <CInputGroup size="sm">
                               <CFormInput
-                                value={handleTargetValue(item.user.user_id)}
+                                type="number"
+                                value={handleMonthTargetValue(item)}
                                 invalid={handleMonthlyTargetStatus(item) === 'Từ chối'}
                                 valid={handleMonthlyTargetStatus(item) === 'Chấp nhận'}
                                 disabled

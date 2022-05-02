@@ -326,10 +326,22 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
     //setSelectedDept(item)
   }
 
-  const handleAllTargetKpiCheckboxChange = (item) => {
+  const allDisplayCheckbox = (list, quarter) => {
+    const array = []
+    list.forEach((item) => {
+      const ifHadTarget = handleQuarterTargetValue(item, quarter)
+      if (ifHadTarget !== 'Chưa có') {
+        array.push(item.dept.dept_id)
+      }
+    })
+    return array
+  }
+
+  const handleCheckAll = (list, quarter) => {
     setIsCheckedAll(!isCheckedAll)
     if (!isCheckedAll) {
-      selectedDeptList.map((item) => setDeptIDs((deptIDs) => [...deptIDs, item.dept.dept_id]))
+      const newList = allDisplayCheckbox(list, quarter)
+      setDeptIDs(newList)
     } else {
       setDeptIDs([])
     }
@@ -366,13 +378,20 @@ export const ApproveTargetQuarterPersonal = (plan_id, kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>
-                    <Checkbox
-                      size="small"
-                      checked={isCheckedAll}
-                      onChange={() => {
-                        handleAllTargetKpiCheckboxChange()
-                      }}
-                    />
+                    {allDisplayCheckbox(selectedDeptList, selectedQuarter).length > 0 && (
+                      <Checkbox
+                        size="small"
+                        checked={
+                          allDisplayCheckbox(selectedDeptList, selectedQuarter).length ===
+                          deptIDs.length
+                            ? true
+                            : false
+                        }
+                        onChange={() => {
+                          handleCheckAll(selectedDeptList, selectedQuarter)
+                        }}
+                      />
+                    )}
                   </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>PHÒNG BAN</CTableHeaderCell>

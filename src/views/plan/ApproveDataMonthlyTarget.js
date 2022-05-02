@@ -114,10 +114,22 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
     }
   }
 
-  const handleAllDataTargetKpiChange = () => {
+  const allDisplayCheckbox = (list, month) => {
+    const array = []
+    list.forEach((item) => {
+      const ifHadTarget = handleMonthActualValue(item, month)
+      if (ifHadTarget !== 'Chưa có') {
+        array.push(item.user.user_id)
+      }
+    })
+    return array
+  }
+
+  const handleCheckAll = (list, month) => {
     setIsCheckedAll(!isCheckedAll)
     if (!isCheckedAll) {
-      employeeList.map((item) => setUserIDs((userIDs) => [...userIDs, item.user.user_id]))
+      const newList = allDisplayCheckbox(list, month)
+      setUserIDs(newList)
     } else {
       setUserIDs([])
     }
@@ -442,13 +454,19 @@ export const ApproveDataMonthlyTarget = (plan_id, kpiItem, month) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>
-                    <Checkbox
-                      size="small"
-                      checked={isCheckedAll}
-                      onChange={() => {
-                        handleAllDataTargetKpiChange()
-                      }}
-                    />
+                    {allDisplayCheckbox(employeeList, selectedMonth).length > 0 && (
+                      <Checkbox
+                        size="small"
+                        checked={
+                          allDisplayCheckbox(employeeList, selectedMonth).length === userIDs.length
+                            ? true
+                            : false
+                        }
+                        onChange={() => {
+                          handleCheckAll(employeeList, selectedMonth)
+                        }}
+                      />
+                    )}
                   </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Nhân viên</CTableHeaderCell>

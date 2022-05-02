@@ -299,10 +299,22 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
     //setSelectedDept(item)
   }
 
-  const handleAllDataTargetKpiChange = (item) => {
+  const allDisplayCheckbox = (list, quarter) => {
+    const array = []
+    list.forEach((item) => {
+      const ifHadTarget = isHaveActual(item)
+      if (ifHadTarget !== false) {
+        array.push(item.dept.dept_id)
+      }
+    })
+    return array
+  }
+
+  const handleCheckAll = (list, quarter) => {
     setIsCheckedAll(!isCheckedAll)
     if (!isCheckedAll) {
-      selectedDeptList.map((item) => setDeptIDs((deptIDs) => [...deptIDs, item.dept.dept_id]))
+      const newList = allDisplayCheckbox(list, quarter)
+      setDeptIDs(newList)
     } else {
       setDeptIDs([])
     }
@@ -339,13 +351,20 @@ export const ApproveDataQuarterTarget = (plan_id, kpiItem, quarter) => {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>
-                    <Checkbox
-                      size="small"
-                      checked={isCheckedAll}
-                      onChange={() => {
-                        handleAllDataTargetKpiChange()
-                      }}
-                    />
+                    {allDisplayCheckbox(selectedDeptList, selectedQuarter).length > 0 && (
+                      <Checkbox
+                        size="small"
+                        checked={
+                          allDisplayCheckbox(selectedDeptList, selectedQuarter).length ===
+                          deptIDs.length
+                            ? true
+                            : false
+                        }
+                        onChange={() => {
+                          handleCheckAll(selectedDeptList, selectedQuarter)
+                        }}
+                      />
+                    )}
                   </CTableHeaderCell>
                   <CTableHeaderCell>STT</CTableHeaderCell>
                   <CTableHeaderCell>Phòng ban</CTableHeaderCell>
