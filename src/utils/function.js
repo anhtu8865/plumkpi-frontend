@@ -283,6 +283,20 @@ export const formatNumber = (num) => {
   }
 }
 
+export const formatNumberForExcel = (num) => {
+  try {
+    if (num === 0) {
+      return 0
+    }
+    if (num) {
+      return Number(num).toLocaleString('en-IN')
+    }
+    return ''
+  } catch {
+    return ''
+  }
+}
+
 export const convertPercent = (num) => {
   return num / 100
 }
