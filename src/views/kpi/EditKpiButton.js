@@ -118,7 +118,7 @@ export const EditKpiButton = (props) => {
 
   const editKpi = async (values) => {
     let selectedCat = categoryList.filter(
-      (catItem) => catItem.kpi_category_id === values.category,
+      (catItem) => catItem.kpi_category_id === Number(values.category),
     )[0]
 
     const convertMeasures = []
