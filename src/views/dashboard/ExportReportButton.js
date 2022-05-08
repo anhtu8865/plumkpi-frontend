@@ -18,8 +18,13 @@ export const ExportReportButton = (props) => {
     array.push(
       { r1: chart.properties.chart_name.toUpperCase(), r2: '', r3: '', r4: '', r5: '' },
       {},
-      { r1: 'ID', r2: user.user_id, r3: '', r4: '', r5: '' },
-      { r1: 'Họ và tên', r2: user.user_name, r3: '', r4: '', r5: '' },
+      {
+        r1: 'Nhân viên',
+        r2: user.user_name + ' - ID: ' + user.user_id,
+        r3: '',
+        r4: '',
+        r5: '',
+      },
       { r1: 'Chức vụ', r2: user.role, r3: '', r4: '', r5: '' },
       {},
       { r1: 'Kế hoạch', r2: chart.plan.plan_name, r3: '', r4: '', r5: '' },
@@ -36,22 +41,25 @@ export const ExportReportButton = (props) => {
       array.push(
         {
           r1: 'KPI trong báo cáo:',
-          r2: '',
+          r2:
+            chart.kpi_templates[0].kpi_template_name +
+            ' - ID: ' +
+            chart.kpi_templates[0].kpi_template_id,
           r3: '',
           r4: '',
           r5: '',
         },
-        { r1: 'ID', r2: 'Tên KPI', r3: '', r4: '', r5: '' },
+        // { r1: 'ID', r2: 'Tên KPI', r3: '', r4: '', r5: '' },
       )
-      chart.kpi_templates.map((item, index) =>
-        array.push({
-          r1: item.kpi_template_id,
-          r2: item.kpi_template_name,
-          r3: '',
-          r4: '',
-          r5: '',
-        }),
-      )
+      // chart.kpi_templates.map((item, index) =>
+      //   array.push({
+      //     r1: item.kpi_template_id,
+      //     r2: item.kpi_template_name,
+      //     r3: '',
+      //     r4: '',
+      //     r5: '',
+      //   }),
+      // )
     }
     array.push({}, { r1: 'Tên', r2: 'Thực hiện', r3: 'Chỉ tiêu', r4: 'Kết quả', r5: 'Đơn vị' })
 
