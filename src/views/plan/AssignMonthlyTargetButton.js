@@ -371,24 +371,28 @@ export const AssignMonthlyTargetButton = (props) => {
     let target = 0
     const targetArray = []
     list.forEach((item) => {
-      targetArray.push(Number(item.target))
+      if (item.target !== null && item.target !== '') {
+        targetArray.push(Number(item.target))
+      }
     })
-    switch (props.kpiItem.kpi_template.aggregation) {
-      case 'Tổng':
-        targetArray.map((item) => (target = target + item))
-        break
-      case 'Trung bình':
-        targetArray.map((item) => (target = target + item))
-        target = (target / targetArray.length).toFixed(0)
-        break
-      case 'Lớn nhất':
-        target = Math.max(...targetArray)
-        break
-      case 'Bé nhất':
-        target = Math.min(...targetArray)
-        break
-      default:
-        target = 0
+    if (targetArray.length > 0) {
+      switch (props.kpiItem.kpi_template.aggregation) {
+        case 'Tổng':
+          targetArray.map((item) => (target = target + item))
+          break
+        case 'Trung bình':
+          targetArray.map((item) => (target = target + item))
+          target = (target / targetArray.length).toFixed(0)
+          break
+        case 'Lớn nhất':
+          target = Math.max(...targetArray)
+          break
+        case 'Bé nhất':
+          target = Math.min(...targetArray)
+          break
+        default:
+          target = 0
+      }
     }
     return target
   }
@@ -703,7 +707,7 @@ export const AssignMonthlyTargetButton = (props) => {
           {({ values, handleChange, handleBlur, isSubmitting, submitForm, setFieldValue }) => (
             <>
               <Form>
-                <CModalBody className="mx-4 mb-3" style={{ maxHeight: '450px' }}>
+                <CModalBody className="mx-4 mb-3" style={{ maxHeight: '70vh' }}>
                   <View />
                 </CModalBody>
               </Form>

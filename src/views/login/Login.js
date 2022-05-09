@@ -143,7 +143,7 @@ const Login = () => {
                     </div>
                     <CRow>
                       <CCol>
-                        <div className="d-grid gap-1 mx-auto">
+                        <div className="d-grid gap-2 mx-auto">
                           <CButton
                             className="btn btn-info"
                             style={{ color: 'white' }}

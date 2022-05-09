@@ -452,13 +452,13 @@ export const ApproveQuarterTargetButton = (props) => {
         <CModalHeader>
           <CModalTitle>Duyệt chỉ tiêu phòng ban theo quý</CModalTitle>
         </CModalHeader>
-        <CModalBody className="mx-4 mb-3" style={{ maxHeight: '450px' }}>
+        <CModalBody className="mx-4 mb-3" style={{ maxHeight: '70vh' }}>
           {HasTargetView()}
         </CModalBody>
         <CModalFooter>
           {selectValue === 'Quarter' && (
             <>
-              <div className="d-grid gap-1 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="error"

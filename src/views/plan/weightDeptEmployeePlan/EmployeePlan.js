@@ -15,9 +15,9 @@ import {
   CFormInput,
   CFormLabel,
 } from '@coreui/react'
-import { Avatar, Pagination, Button } from '@mui/material'
+import { Avatar, Pagination, Button, Badge } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
 import { createAlert } from 'src/slices/alertSlice'
 import api from 'src/views/axiosConfig'
@@ -44,6 +44,8 @@ const EmployeePlan = () => {
     email: '',
     phone: '',
   })
+  const [noWeightPlan, setNoWeightPlan] = useState([])
+  const { reload } = useSelector((state) => state.view)
 
   const getEmployeeList = useCallback(async (offset, values) => {
     let paramsObject = { offset: offset, limit: entryPerPage }
@@ -78,6 +80,24 @@ const EmployeePlan = () => {
     // eslint-disable-next-line
   }, [])
 
+  const checkPlan = useCallback(
+    async (list) => {
+      list.forEach(async (item) => {
+        const response = await api.get(`plans/${id}/kpi-categories/manager/user`, {
+          params: { user_id: item.user_id },
+        })
+        const find = response.data.find((i) => i.weight !== null)
+        if (!find && response.data.length > 0) {
+          if (!noWeightPlan.includes(item.user_id)) {
+            setNoWeightPlan((i) => [...i, item.user_id])
+          }
+        }
+      })
+    },
+    // eslint-disable-next-line
+    [id],
+  )
+
   const formik = useFormik({
     initialValues: {
       id: '',
@@ -90,8 +110,10 @@ const EmployeePlan = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
+        setNoWeightPlan([])
         const result = await getEmployeeList((page - 1) * entryPerPage, formik.values)
         if (result) {
+          await checkPlan(result)
           setEntry(result)
         }
         setLoading(false)
@@ -107,7 +129,7 @@ const EmployeePlan = () => {
       }
     }
     fetchData()
-  }, [page, formik.values, dispatch, getEmployeeList])
+  }, [page, reload, formik.values, dispatch, getEmployeeList, checkPlan])
 
   const Table = () => {
     return (
@@ -137,16 +159,31 @@ const EmployeePlan = () => {
                     <CTableDataCell>{item.email}</CTableDataCell>
                     <CTableDataCell>{item.phone ? item.phone : 'Không có'}</CTableDataCell>
                     <CTableDataCell>
-                      <Button
-                        variant="contained"
-                        startIcon={<KeyboardDoubleArrowRightIcon />}
-                        onClick={() => {
-                          history.push(`/plan/${id}/employeeplan/${item.user_id}`)
-                        }}
-                        sx={{ textTransform: 'none', borderRadius: 10 }}
-                      >
-                        Trọng số kế hoạch
-                      </Button>
+                      {noWeightPlan.includes(item.user_id) ? (
+                        <Badge badgeContent={'!'} color="error">
+                          <Button
+                            variant="contained"
+                            startIcon={<KeyboardDoubleArrowRightIcon />}
+                            onClick={() => {
+                              history.push(`/plan/${id}/employeeplan/${item.user_id}`)
+                            }}
+                            sx={{ textTransform: 'none', borderRadius: 10 }}
+                          >
+                            Trọng số kế hoạch
+                          </Button>
+                        </Badge>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          startIcon={<KeyboardDoubleArrowRightIcon />}
+                          onClick={() => {
+                            history.push(`/plan/${id}/employeeplan/${item.user_id}`)
+                          }}
+                          sx={{ textTransform: 'none', borderRadius: 10 }}
+                        >
+                          Trọng số kế hoạch
+                        </Button>
+                      )}
                     </CTableDataCell>
                   </CTableRow>
                 ))}

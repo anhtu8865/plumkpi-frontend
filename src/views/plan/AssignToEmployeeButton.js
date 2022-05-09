@@ -251,7 +251,7 @@ export const AssignToEmployeeButton = (props) => {
                 <CModalTitle>Gán KPI cho nhân viên theo năm</CModalTitle>
               </CModalHeader>
               <Form>
-                <CModalBody className="mx-4 mb-3" style={{ maxHeight: '450px' }}>
+                <CModalBody className="mx-4 mb-3" style={{ maxHeight: '70vh' }}>
                   <View />
                 </CModalBody>
               </Form>

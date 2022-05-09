@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CCard,
   CCardBody,
@@ -15,7 +15,7 @@ import {
   CFormLabel,
   CFormInput,
 } from '@coreui/react'
-import { Avatar, Pagination, Button } from '@mui/material'
+import { Avatar, Pagination, Button, Badge } from '@mui/material'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import { useDispatch } from 'react-redux'
 import SystemAlert from 'src/components/SystemAlert'
@@ -37,6 +37,7 @@ const DeptPlan = () => {
   const [totalPage, setTotalPage] = useState(1)
   const [searchVisible, setSearchVisible] = useState(false)
   const [name, setName] = useState('')
+  const [noWeightPlan, setNoWeightPlan] = useState([])
 
   const getDeptList = async (offset, name) => {
     let paramsObject = { offset: offset, limit: entryPerPage }
@@ -50,11 +51,30 @@ const DeptPlan = () => {
     return response.data.items
   }
 
+  const checkPlan = useCallback(
+    async (list) => {
+      list.forEach(async (item) => {
+        const response = await api.get(`plans/${id}/kpi-categories/director/dept`, {
+          params: { dept_id: item.dept_id },
+        })
+        const find = response.data.find((i) => i.weight !== null)
+        if (!find && response.data.length > 0) {
+          if (!noWeightPlan.includes(item.dept_id)) {
+            setNoWeightPlan((i) => [...i, item.dept_id])
+          }
+        }
+      })
+    },
+    // eslint-disable-next-line
+    [id],
+  )
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getDeptList((page - 1) * entryPerPage, name)
         if (result) {
+          await checkPlan(result)
           setEntry(result)
         }
         setLoading(false)
@@ -70,7 +90,7 @@ const DeptPlan = () => {
       }
     }
     fetchData()
-  }, [page, name, dispatch])
+  }, [page, name, dispatch, checkPlan])
 
   const Table = () => {
     return (
@@ -99,16 +119,31 @@ const DeptPlan = () => {
                       {item.manager.user_name}
                     </CTableDataCell>
                     <CTableDataCell>
-                      <Button
-                        variant="contained"
-                        startIcon={<KeyboardDoubleArrowRightIcon />}
-                        onClick={() => {
-                          history.push(`/plan/${id}/deptplan/${item.dept_id}`)
-                        }}
-                        sx={{ textTransform: 'none', borderRadius: 10 }}
-                      >
-                        Trọng số kế hoạch
-                      </Button>
+                      {noWeightPlan.includes(item.dept_id) ? (
+                        <Badge badgeContent={'!'} color="error">
+                          <Button
+                            variant="contained"
+                            startIcon={<KeyboardDoubleArrowRightIcon />}
+                            onClick={() => {
+                              history.push(`/plan/${id}/deptplan/${item.dept_id}`)
+                            }}
+                            sx={{ textTransform: 'none', borderRadius: 10 }}
+                          >
+                            Trọng số kế hoạch
+                          </Button>
+                        </Badge>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          startIcon={<KeyboardDoubleArrowRightIcon />}
+                          onClick={() => {
+                            history.push(`/plan/${id}/deptplan/${item.dept_id}`)
+                          }}
+                          sx={{ textTransform: 'none', borderRadius: 10 }}
+                        >
+                          Trọng số kế hoạch
+                        </Button>
+                      )}
                     </CTableDataCell>
                   </CTableRow>
                 ))}
@@ -180,7 +215,7 @@ const DeptPlan = () => {
             </h3>
           </CCol>
           <CCol xs={12} sm={6}>
-            <div className="d-flex flex-row gap-1 justify-content-end">
+            <div className="d-flex flex-row gap-2 justify-content-end">
               <Button
                 variant="contained"
                 color="primary"

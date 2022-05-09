@@ -23,6 +23,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { FieldArray, Form, Formik, useFormikContext } from 'formik'
 import { createAlert } from 'src/slices/alertSlice'
+import { setReload } from 'src/slices/viewSlice'
 import api from 'src/views/axiosConfig'
 import { LoadingCircle } from 'src/components/LoadingCircle'
 import CheckIcon from '@mui/icons-material/Check'
@@ -360,6 +361,7 @@ export const CreatePlanForEmployee = () => {
               }),
             )
             setModalVisible(false)
+            dispatch(setReload())
           } catch (error) {
             if (error.response && error.response.status !== 401) {
               dispatch(
@@ -396,7 +398,7 @@ export const CreatePlanForEmployee = () => {
                 <CModalTitle>Tạo kế hoạch cho nhân viên</CModalTitle>
               </CModalHeader>
               <Form>
-                <CModalBody className="mx-4 mb-3" style={{ maxHeight: '450px' }}>
+                <CModalBody className="mx-4 mb-3" style={{ maxHeight: '70vh' }}>
                   <View />
                 </CModalBody>
               </Form>

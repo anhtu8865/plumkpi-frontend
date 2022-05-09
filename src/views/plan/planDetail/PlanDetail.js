@@ -463,7 +463,7 @@ const PlanDetail = () => {
           </CCol>
           {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={6}>
-              <div className="d-grid gap-1 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 {EditCategoryInPlanButton()}
               </div>
             </CCol>
@@ -488,7 +488,7 @@ const PlanDetail = () => {
           </CCol>
           {user.role === 'Nhân viên' && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-1 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -505,7 +505,7 @@ const PlanDetail = () => {
           )}
           {user.role === 'Quản lý' && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-1 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"
@@ -544,7 +544,7 @@ const PlanDetail = () => {
           )}
           {user.role === 'Giám đốc' && (
             <CCol xs={12} sm={7}>
-              <div className="d-grid gap-1 d-md-flex justify-content-end">
+              <div className="d-grid gap-2 d-md-flex justify-content-end">
                 <Button
                   variant="contained"
                   color="primary"

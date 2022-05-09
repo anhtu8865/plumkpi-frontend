@@ -183,7 +183,7 @@ const UserDepartment = (props) => {
                     </h3>
                   </CCol>
                   <CCol xs={12} sm={6}>
-                    <div className="d-flex flex-row gap-1 justify-content-end"></div>
+                    <div className="d-flex flex-row gap-2 justify-content-end"></div>
                   </CCol>
                 </CRow>
                 {/*Table*/}

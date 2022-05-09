@@ -317,7 +317,7 @@ export const CreateChartButton = () => {
               <CModalHeader>
                 <CModalTitle>Tạo biểu đồ</CModalTitle>
               </CModalHeader>
-              <CModalBody style={{ minHeight: '450px' }} className="mx-4 mb-3">
+              <CModalBody style={{ minHeight: '70vh' }} className="mx-4 mb-3">
                 <Form>
                   <CRow>
                     <CCol xs={12} sm={3}>

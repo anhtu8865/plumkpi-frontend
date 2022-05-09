@@ -935,7 +935,7 @@ export const ApproveDataMonthlyPersonal = (plan_id, kpiItem, month) => {
         <CModalBody className="mx-4 mb-3">{HasTargetView()}</CModalBody>
         <CModalFooter>
           {selectValue === 'Month' && (
-            <div className="d-grid gap-1 d-md-flex justify-content-end">
+            <div className="d-grid gap-2 d-md-flex justify-content-end">
               <DenyActualButton
                 plan_id={plan_id}
                 kpi_template_id={kpiItem.kpi_template_id}
