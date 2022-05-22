@@ -357,12 +357,32 @@ const UserInfo = () => {
     const pwValidationSchema = yup.object({
       oldpw: yup
         .string()
-        .min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
+        //.min(6, 'Mật khẩu luôn có độ dài ít nhất 6 kí tự')
         .required('Đây là trường bắt buộc'),
       newpw: yup
         .string()
-        .min(6, 'Mật khẩu mới phải có độ dài ít nhất 6 kí tự')
-        .required('Đây là trường bắt buộc'),
+        .min(8, 'Mật khẩu mới phải có độ dài ít nhất 8 kí tự')
+        .required('Đây là trường bắt buộc')
+        .test('validate-pw', 'Password không hợp lệ.', function (value, { createError }) {
+          const hasUpperCase = /[A-Z]/.test(value)
+          const hasLowerCase = /[a-z]/.test(value)
+          const hasNumber = /[0-9]/.test(value)
+          if (hasUpperCase && hasLowerCase && hasNumber) {
+            return true
+          } else {
+            return createError({
+              message: `Mật khẩu mới phải chứa ít nhất ${
+                hasUpperCase ? '' : 'một chữ cái in hoa'
+              } ${
+                hasLowerCase
+                  ? ''
+                  : !hasUpperCase
+                  ? ', một chữ cái in thường'
+                  : 'một chữ cái in thường'
+              } ${hasNumber ? '' : !hasUpperCase || !hasLowerCase ? ', một số' : 'một số'}`,
+            })
+          }
+        }),
       retypepw: yup
         .string()
         .required('Đây là trường bắt buộc')
